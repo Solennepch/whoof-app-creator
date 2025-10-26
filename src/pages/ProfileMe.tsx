@@ -3,13 +3,16 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { CheckCircle } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { CheckCircle, AlertTriangle } from "lucide-react";
+import ErrorBoundary from "@/components/ErrorBoundary";
 import logoWhoof from "@/assets/logo-whoof.png";
 
-export default function ProfileMe() {
+function ProfileMeContent() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [showSuccess, setShowSuccess] = useState(false);
+  const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
     async function checkSubscriptionAndRedirect() {
@@ -44,7 +47,6 @@ export default function ProfileMe() {
               
               if (isPremium) {
                 toast.success('Abonnement Premium activé ! 🎉');
-                // UI updates handled by profile data refresh
               }
               
               console.log('Subscription status:', { isPremium, proPlan });
@@ -73,26 +75,80 @@ export default function ProfileMe() {
           }
         );
 
-        if (response.status === 401 || response.status === 400) {
+        // Handle 401 - Unauthorized
+        if (response.status === 401) {
           navigate('/login', { replace: true });
           return;
         }
 
-        if (response.ok) {
-          const profile = await response.json();
-          navigate(`/profile/${profile.id}`, { replace: true });
-        } else {
-          navigate('/login', { replace: true });
+        // Handle 404 - Profile not found
+        if (response.status === 404) {
+          setNotFound(true);
+          return;
         }
+
+        // Handle 200 - Success
+        if (response.ok) {
+          const data = await response.json();
+          const profileId = data.id || data.profile?.id;
+          
+          if (!profileId) {
+            setNotFound(true);
+            return;
+          }
+          
+          navigate(`/profile/${profileId}`, { replace: true });
+          return;
+        }
+
+        // Handle other errors
+        console.error('Unexpected response status:', response.status);
+        setNotFound(true);
+
       } catch (error) {
         console.error('Error loading profile:', error);
-        navigate('/login', { replace: true });
+        toast.error('Erreur lors du chargement du profil');
+        setNotFound(true);
       }
     }
 
     checkSubscriptionAndRedirect();
   }, [navigate, searchParams]);
 
+  // Show "Profile not found" card
+  if (notFound) {
+    return (
+      <div 
+        className="min-h-screen flex items-center justify-center p-4" 
+        style={{ backgroundColor: "var(--paper)" }}
+      >
+        <Card className="max-w-md w-full p-8 rounded-3xl shadow-soft text-center">
+          <div 
+            className="flex items-center justify-center w-16 h-16 rounded-2xl mb-6 mx-auto"
+            style={{ backgroundColor: "var(--brand-yellow)20" }}
+          >
+            <AlertTriangle 
+              className="w-8 h-8" 
+              style={{ color: "var(--brand-yellow)" }} 
+            />
+          </div>
+          
+          <h2 
+            className="text-2xl font-bold mb-4" 
+            style={{ fontFamily: "Fredoka", color: "var(--ink)" }}
+          >
+            Profil non trouvé
+          </h2>
+          
+          <p className="text-muted-foreground mb-6">
+            Impossible de trouver votre profil. Veuillez créer un profil ou contacter le support.
+          </p>
+        </Card>
+      </div>
+    );
+  }
+
+  // Show loading screen
   return (
     <div 
       className="min-h-screen flex items-center justify-center animate-fade-in" 
@@ -147,5 +203,13 @@ export default function ProfileMe() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ProfileMe() {
+  return (
+    <ErrorBoundary>
+      <ProfileMeContent />
+    </ErrorBoundary>
   );
 }
