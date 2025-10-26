@@ -1,9 +1,11 @@
 import axios from "axios";
 import { supabase } from "@/integrations/supabase/client";
 
-const baseURL = import.meta.env.VITE_SUPABASE_URL 
-  ? `${import.meta.env.VITE_SUPABASE_URL}/functions/v1`
-  : "https://ozdaxhiqnfapfevdropz.supabase.co/functions/v1";
+// Utilise l'URL personnalisée si définie, sinon les edge functions Supabase
+const baseURL = import.meta.env.VITE_API_URL 
+  || (import.meta.env.VITE_SUPABASE_URL 
+    ? `${import.meta.env.VITE_SUPABASE_URL}/functions/v1`
+    : "https://ozdaxhiqnfapfevdropz.supabase.co/functions/v1");
 
 export const api = axios.create({
   baseURL,
