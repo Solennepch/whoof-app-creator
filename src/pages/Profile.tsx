@@ -4,6 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { DogCarousel } from "@/components/profile/DogCarousel";
 import { OwnerSection } from "@/components/profile/OwnerSection";
+import { GamificationSection } from "@/components/profile/GamificationSection";
+import { RecommendationSection } from "@/components/profile/RecommendationSection";
+import { FunSection } from "@/components/profile/FunSection";
 import { XpProgress } from "@/components/ui/XpProgress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { safeFetch } from "@/lib/safeFetch";
@@ -332,14 +335,26 @@ function ProfileContent() {
           <OwnerSection profile={profile} />
         </div>
 
-        {/* Stats and XP */}
-        <div className="grid gap-6 lg:grid-cols-2">
-          {/* XP Progress */}
-          <div>
-            <XpProgress current={850} min={500} max={1200} />
-          </div>
+        {/* Gamification & Communauté Section */}
+        {isOwnProfile && (
+          <GamificationSection 
+            level={3}
+            currentXP={1200}
+            maxXP={1500}
+            totalRecommendations={12}
+          />
+        )}
 
-          {/* Stats */}
+        {/* Recommendation Section */}
+        {isOwnProfile && (
+          <RecommendationSection 
+            totalRecommendations={12}
+            canRecommend={true}
+          />
+        )}
+
+        {/* Stats - Only show for non-own profiles or as secondary info */}
+        {!isOwnProfile && (
           <div className="grid grid-cols-3 gap-4">
             <div className="rounded-2xl bg-white p-4 text-center shadow-soft ring-1 ring-black/5">
               <p className="text-2xl font-bold" style={{ color: "var(--brand-plum)" }}>
@@ -360,30 +375,12 @@ function ProfileContent() {
               <p className="text-xs text-muted-foreground">Événements</p>
             </div>
           </div>
-        </div>
+        )}
 
-        {/* Badges */}
-        <div className="rounded-2xl bg-white p-6 shadow-soft ring-1 ring-black/5">
-          <h2 className="mb-4 text-lg font-semibold" style={{ color: "var(--ink)" }}>
-            Badges débloqués
-          </h2>
-
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {badges.map((badge, i) => (
-              <div
-                key={i}
-                className="rounded-2xl p-4 text-center transition hover:scale-105"
-                style={{ backgroundColor: "var(--paper)" }}
-              >
-                <div className="mb-2 text-4xl">{badge.icon}</div>
-                <p className="mb-1 font-semibold" style={{ color: "var(--ink)" }}>
-                  {badge.name}
-                </p>
-                <p className="text-xs text-muted-foreground">{badge.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
+        {/* Fun Section */}
+        {isOwnProfile && (
+          <FunSection dogSign={dogs[0]?.breed || "Labrador"} />
+        )}
       </div>
     </div>
   );
