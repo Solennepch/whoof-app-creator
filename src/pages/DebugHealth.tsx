@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { api } from "@/lib/api";
 
 type Check = {
   name: string;
@@ -7,28 +8,6 @@ type Check = {
   statusCode: number;
   message: string;
 };
-
-async function getToken(): Promise<string | null> {
-  try {
-    // @ts-ignore - supabase attachée globalement dans Lovable
-    const session = await window?.supabase?.auth?.getSession?.();
-    return session?.data?.session?.access_token ?? null;
-  } catch {
-    return null;
-  }
-}
-
-async function kfetch(path: string, init: RequestInit = {}) {
-  const token = await getToken();
-  const baseUrl = import.meta.env.VITE_SUPABASE_URL;
-  const fullPath = path.startsWith('http') ? path : `${baseUrl}/functions/v1${path}`;
-  
-  const headers = new Headers(init.headers || {});
-  headers.set("Content-Type", "application/json");
-  if (token) headers.set("Authorization", `Bearer ${token}`);
-  const res = await fetch(fullPath, { ...init, headers });
-  return res;
-}
 
 export default function DebugHealth() {
   const [rows, setRows] = useState<Check[]>([]);
@@ -45,71 +24,59 @@ export default function DebugHealth() {
 
       // 1) /profile (profil courant)
       try {
-        const r = await kfetch("/profile");
-        const msg = r.ok ? "OK" : await r.text().catch(() => "");
+        const response = await api.get("/profile");
         list.push({
           name: "GET /profile",
-          status: r.ok ? "success" : "error",
-          statusCode: r.status,
-          message: msg || r.statusText,
+          status: "success",
+          statusCode: response.status,
+          message: "OK - Profile récupéré",
         });
       } catch (e: any) {
         list.push({
           name: "GET /profile",
           status: "error",
-          statusCode: 0,
-          message: String(e?.message || e),
+          statusCode: e.response?.status || 0,
+          message: e.response?.data?.message || e.message || String(e),
         });
       }
 
-      // 2) /dog?owner=:me (ou fallback /dog simple)
+      // 2) /dog?owner=me (ou fallback /dog simple)
       try {
-        const r = await kfetch("/dog?owner=me");
-        let info = "";
-        if (r.ok) {
-          const js = await r.json().catch(() => null);
-          const count = Array.isArray(js) ? js.length : Array.isArray(js?.data) ? js.data.length : 0;
-          info = `${count} dog(s)`;
-        } else {
-          info = await r.text().catch(() => "");
-        }
+        const response = await api.get("/dog?owner=me");
+        const data = response.data;
+        const count = Array.isArray(data) ? data.length : Array.isArray(data?.data) ? data.data.length : 0;
         list.push({
           name: "GET /dog?owner=me",
-          status: r.ok ? "success" : "error",
-          statusCode: r.status,
-          message: info || r.statusText,
+          status: "success",
+          statusCode: response.status,
+          message: `${count} dog(s)`,
         });
       } catch (e: any) {
         list.push({
           name: "GET /dog?owner=me",
           status: "error",
-          statusCode: 0,
-          message: String(e?.message || e),
+          statusCode: e.response?.status || 0,
+          message: e.response?.data?.message || e.message || String(e),
         });
       }
 
       // 3) /check-subscription
       try {
-        const r = await kfetch("/check-subscription");
-        let msg = r.statusText;
-        if (r.ok) {
-          const data = await r.json().catch(() => ({} as any));
-          msg = `isPremium: ${Boolean(data?.isPremium)}; proPlan: ${data?.proPlan ?? "none"}`;
-        } else {
-          msg = await r.text().catch(() => r.statusText);
-        }
+        const response = await api.get("/check-subscription");
+        const data = response.data;
+        const msg = `isPremium: ${Boolean(data?.isPremium)}; proPlan: ${data?.proPlan ?? "none"}`;
         list.push({
           name: "GET /check-subscription",
-          status: r.ok ? "success" : "error",
-          statusCode: r.status,
+          status: "success",
+          statusCode: response.status,
           message: msg,
         });
       } catch (e: any) {
         list.push({
           name: "GET /check-subscription",
           status: "error",
-          statusCode: 0,
-          message: String(e?.message || e),
+          statusCode: e.response?.status || 0,
+          message: e.response?.data?.message || e.message || String(e),
         });
       }
 
