@@ -23,6 +23,9 @@ import ProOnboarding from "./pages/pro/Onboarding";
 import ProDashboard from "./pages/pro/Dashboard";
 import ProPricing from "./pages/pro/Pricing";
 import PremiumPricing from "./pages/premium/Pricing";
+import Premium from "./pages/Premium";
+import Parrainage from "./pages/Parrainage";
+import AstroDog from "./pages/AstroDog";
 import ProfileOnboarding from "./pages/onboarding/Profile";
 import DogOnboarding from "./pages/onboarding/Dog";
 import DebugHealth from "./pages/DebugHealth";
@@ -55,6 +58,9 @@ const App = () => (
           <Route path="/pro/dashboard" element={<ProDashboard />} />
           <Route path="/pro/pricing" element={<ProPricing />} />
           <Route path="/premium/pricing" element={<PremiumPricing />} />
+          <Route path="/premium" element={<Premium />} />
+          <Route path="/parrainage" element={<Parrainage />} />
+          <Route path="/astro-dog" element={<AstroDog />} />
           <Route path="/onboarding/profile" element={<ProfileOnboarding />} />
           <Route path="/onboarding/dog" element={<DogOnboarding />} />
           <Route path="/profile/me" element={<ProfileMe />} />

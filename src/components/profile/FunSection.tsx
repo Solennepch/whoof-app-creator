@@ -1,8 +1,9 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Send } from "lucide-react";
+import { Send, Star } from "lucide-react";
 import { toast } from "sonner";
 
 const dogHoroscopes = [
@@ -48,33 +49,27 @@ export function FunSection({ dogSign = "🐕 Labrador" }: FunSectionProps) {
         Section Fun
       </h2>
 
-      {/* Dog Horoscope - Compact */}
-      <div 
-        className="p-3 rounded-xl space-y-2"
+      {/* Astro Dog Link */}
+      <Link
+        to="/astro-dog"
+        className="block p-4 rounded-xl transition hover:opacity-80"
         style={{ 
-          backgroundColor: `${currentHoroscope.color}10`,
-          border: `1px solid ${currentHoroscope.color}30`
+          backgroundColor: "hsl(var(--brand-yellow) / 0.1)",
+          border: "1px solid hsl(var(--brand-yellow) / 0.3)"
         }}
       >
-        <div className="flex items-center justify-between">
-          <h4 className="text-base font-semibold" style={{ color: "hsl(var(--ink))" }}>
-            🔮 Horoscope
-          </h4>
-          <span 
-            className="text-xs font-medium px-2 py-1 rounded-full"
-            style={{ 
-              backgroundColor: currentHoroscope.color,
-              color: "white"
-            }}
-          >
-            {currentHoroscope.mood}
-          </span>
+        <div className="flex items-center gap-3">
+          <Star className="h-6 w-6" style={{ color: "hsl(var(--brand-yellow))" }} />
+          <div className="flex-1">
+            <h4 className="text-base font-semibold" style={{ color: "hsl(var(--ink))" }}>
+              🌟 Mon Astro Dog
+            </h4>
+            <p className="text-sm" style={{ color: "hsl(var(--ink) / 0.6)" }}>
+              Découvre l'horoscope de ton chien
+            </p>
+          </div>
         </div>
-        
-        <p className="text-sm leading-relaxed line-clamp-4" style={{ color: "hsl(var(--ink) / 0.8)" }}>
-          {currentHoroscope.text}
-        </p>
-      </div>
+      </Link>
 
       {/* Weekly Phrase - Compact */}
       <div className="space-y-3">
