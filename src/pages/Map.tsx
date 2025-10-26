@@ -464,36 +464,45 @@ export default function Map() {
   };
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "var(--paper)" }}>
-      <div className="mx-auto max-w-6xl px-4 py-6">
-        <div className="mb-6 flex items-center justify-between">
-          <div>
-            <h1 className="mb-2 text-3xl font-bold" style={{ color: "var(--ink)" }}>
+    <div className="min-h-screen pb-20 md:pb-6" style={{ backgroundColor: "var(--paper)" }}>
+      <div className="mx-auto max-w-6xl px-4 py-4 md:py-6">
+        {/* Header - Mobile optimized */}
+        <div className="mb-4 md:mb-6 flex items-center justify-between gap-2">
+          <div className="min-w-0">
+            <h1 className="mb-1 text-2xl md:text-3xl font-bold truncate" style={{ color: "var(--ink)" }}>
               Carte
             </h1>
-            <p className="text-muted-foreground">Trouve des chiens près de toi</p>
+            <p className="text-xs md:text-sm text-muted-foreground hidden sm:block">Trouve des chiens près de toi</p>
           </div>
 
-          <Button onClick={handleGoToUser} className="rounded-2xl" style={{ backgroundColor: "var(--brand-plum)" }}>
-            <Navigation className="mr-2 h-4 w-4" />
-            Ma position
+          <Button 
+            onClick={handleGoToUser} 
+            size="sm"
+            className="rounded-2xl shrink-0 shadow-glow" 
+            style={{ backgroundColor: "var(--brand-plum)" }}
+          >
+            <Navigation className="h-4 w-4 md:mr-2" />
+            <span className="hidden md:inline">Ma position</span>
           </Button>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-3">
-          {/* Interactive Map */}
+        <div className="grid gap-4 md:gap-6 lg:grid-cols-3">
+          {/* Interactive Map - Responsive height */}
           <div className="lg:col-span-2">
-            <div ref={mapContainer} className="h-[500px] rounded-3xl shadow-soft ring-1 ring-black/5" />
+            <div 
+              ref={mapContainer} 
+              className="h-[400px] md:h-[500px] lg:h-[600px] rounded-2xl md:rounded-3xl shadow-soft ring-1 ring-black/5" 
+            />
           </div>
 
-          {/* Sidebar */}
-          <div className="space-y-4">
+          {/* Sidebar - Hidden on mobile, shows as overlay via Sheet */}
+          <div className="space-y-4 hidden lg:block">
             <div className="rounded-2xl bg-white p-4 shadow-soft ring-1 ring-black/5">
               <h3 className="mb-4 font-semibold" style={{ color: "var(--ink)" }}>
                 À proximité
               </h3>
 
-              <div className="space-y-3">
+              <div className="space-y-3 max-h-[400px] overflow-y-auto">
                 {isLoading ? (
                   <div className="text-center py-4 text-sm text-muted-foreground">
                     Recherche en cours...
@@ -563,15 +572,63 @@ export default function Map() {
               </p>
             </div>
           </div>
+
+          {/* Mobile: Nearby profiles as a floating card */}
+          <div className="lg:hidden fixed bottom-20 left-4 right-4 z-40">
+            <div className="rounded-2xl bg-white p-3 shadow-vibrant ring-1 ring-black/10 backdrop-blur-sm">
+              <h3 className="mb-3 text-sm font-semibold" style={{ color: "var(--ink)" }}>
+                🐾 {nearbyProfiles.length} profils à proximité
+              </h3>
+              <div className="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1">
+                {isLoading ? (
+                  <div className="text-xs text-muted-foreground py-2">
+                    Recherche...
+                  </div>
+                ) : nearbyProfiles.length === 0 ? (
+                  <div className="text-xs text-muted-foreground py-2">
+                    Aucun profil trouvé
+                  </div>
+                ) : (
+                  nearbyProfiles.slice(0, 5).map((profile) => (
+                    <button
+                      key={profile.id}
+                      onClick={() => handleSelectProfile(profile)}
+                      className="shrink-0 flex flex-col items-center gap-1.5 p-2 rounded-xl hover:bg-accent/10 transition-smooth"
+                    >
+                      <div
+                        className="h-12 w-12 rounded-full ring-2 shadow-sm"
+                        style={{
+                          background: profile.avatar_url 
+                            ? `url(${profile.avatar_url})` 
+                            : "linear-gradient(135deg, #EC4899 0%, #BE185D 100%)",
+                          backgroundSize: "cover",
+                          backgroundPosition: "center",
+                          borderColor: "#EC4899",
+                        }}
+                      />
+                      <div className="text-center max-w-[60px]">
+                        <p className="text-xs font-medium truncate" style={{ color: "var(--ink)" }}>
+                          {profile.display_name || 'Profil'}
+                        </p>
+                        <p className="text-[10px] text-muted-foreground">
+                          {profile.distance_km ? `${profile.distance_km.toFixed(1)}km` : '?'}
+                        </p>
+                      </div>
+                    </button>
+                  ))
+                )}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Profile Details Drawer */}
+      {/* Profile Details Drawer - Mobile optimized */}
       <Sheet open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
         <SheetContent className="w-full sm:max-w-md overflow-y-auto">
-          <SheetHeader>
+          <SheetHeader className="pb-4">
             <SheetTitle className="flex items-center justify-between">
-              <span>Profil</span>
+              <span className="text-lg">Profil</span>
               <div className="flex items-center gap-2">
                 {selectedProfile && (
                   <AnimatedLikeButton
@@ -581,7 +638,7 @@ export default function Map() {
                   />
                 )}
                 <SheetClose asChild>
-                  <Button variant="ghost" size="icon" className="rounded-full">
+                  <Button variant="ghost" size="icon" className="rounded-full h-8 w-8">
                     <X className="h-4 w-4" />
                   </Button>
                 </SheetClose>
@@ -590,27 +647,27 @@ export default function Map() {
           </SheetHeader>
 
           {selectedProfile && (
-            <div className="mt-6 space-y-6">
-              {/* Avatar and Name */}
-              <div className="flex flex-col items-center text-center space-y-4">
-                <Avatar className="h-32 w-32 ring-4 ring-primary/20">
+            <div className="mt-4 space-y-5">
+              {/* Avatar and Name - Mobile optimized */}
+              <div className="flex flex-col items-center text-center space-y-3">
+                <Avatar className="h-24 w-24 md:h-32 md:w-32 ring-4 ring-primary/20 shadow-glow">
                   <AvatarImage src={selectedProfile.avatar_url} />
-                  <AvatarFallback className="text-4xl bg-gradient-to-br from-pink-500 to-rose-600 text-white">
+                  <AvatarFallback className="text-3xl md:text-4xl bg-gradient-to-br from-pink-500 to-rose-600 text-white">
                     {(selectedProfile.display_name || 'P')[0].toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
 
                 <div>
-                  <h2 className="text-2xl font-bold flex items-center justify-center gap-2">
+                  <h2 className="text-xl md:text-2xl font-bold flex items-center justify-center gap-2 flex-wrap">
                     {selectedProfile.display_name || 'Profil'}
                     {selectedProfile.verified && (
-                      <Badge variant="outline" className="gap-1">
+                      <Badge variant="outline" className="gap-1 text-xs">
                         <Shield className="h-3 w-3" />
                         Vérifié
                       </Badge>
                     )}
                   </h2>
-                  <p className="text-muted-foreground mt-1">
+                  <p className="text-sm text-muted-foreground mt-1">
                     {selectedProfile.distance_km 
                       ? `À ${selectedProfile.distance_km.toFixed(1)} km de vous` 
                       : 'Distance inconnue'}
@@ -618,34 +675,34 @@ export default function Map() {
                 </div>
               </div>
 
-              {/* Details */}
+              {/* Details - Mobile optimized */}
               {(selectedProfile.breed || selectedProfile.temperament || selectedProfile.size) && (
-                <div className="space-y-3 p-4 rounded-2xl bg-muted/50">
+                <div className="space-y-3 p-3 md:p-4 rounded-2xl bg-muted/50">
                   {selectedProfile.breed && (
                     <div>
-                      <p className="text-sm text-muted-foreground">Race</p>
-                      <p className="font-medium">{selectedProfile.breed}</p>
+                      <p className="text-xs md:text-sm text-muted-foreground">Race</p>
+                      <p className="text-sm md:text-base font-medium">{selectedProfile.breed}</p>
                     </div>
                   )}
                   {selectedProfile.size && (
                     <div>
-                      <p className="text-sm text-muted-foreground">Taille</p>
-                      <p className="font-medium capitalize">{selectedProfile.size}</p>
+                      <p className="text-xs md:text-sm text-muted-foreground">Taille</p>
+                      <p className="text-sm md:text-base font-medium capitalize">{selectedProfile.size}</p>
                     </div>
                   )}
                   {selectedProfile.temperament && (
                     <div>
-                      <p className="text-sm text-muted-foreground">Tempérament</p>
-                      <p className="font-medium capitalize">{selectedProfile.temperament}</p>
+                      <p className="text-xs md:text-sm text-muted-foreground">Tempérament</p>
+                      <p className="text-sm md:text-base font-medium capitalize">{selectedProfile.temperament}</p>
                     </div>
                   )}
                 </div>
               )}
 
-              {/* Action Buttons */}
-              <div className="space-y-3">
+              {/* Action Buttons - Mobile optimized */}
+              <div className="space-y-2 md:space-y-3 pb-4">
                 <Button 
-                  className="w-full rounded-2xl" 
+                  className="w-full rounded-2xl shadow-glow hover:shadow-vibrant transition-bounce" 
                   size="lg"
                   style={{ backgroundColor: "var(--brand-plum)" }}
                   onClick={() => {
@@ -653,11 +710,11 @@ export default function Map() {
                     navigate(`/profile/${profileId}`);
                   }}
                 >
-                  Voir le profil
+                  Voir le profil complet
                 </Button>
 
                 <Button 
-                  className="w-full rounded-2xl gap-2" 
+                  className="w-full rounded-2xl gap-2 transition-smooth" 
                   variant="outline"
                   size="lg"
                   onClick={handleInviteWalk}
