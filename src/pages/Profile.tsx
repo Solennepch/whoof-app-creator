@@ -11,7 +11,7 @@ import { XpProgress } from "@/components/ui/XpProgress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { safeFetch } from "@/lib/safeFetch";
 import ErrorBoundary from "@/components/ErrorBoundary";
-import { AlertTriangle, User, Dog as DogIcon, Settings, Briefcase, ChevronRight } from "lucide-react";
+import { AlertTriangle, User, Dog as DogIcon, Settings, Briefcase, ChevronRight, Edit, Crown, Zap, Heart } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 const badges = [
@@ -53,6 +53,33 @@ function isValidUUID(str: string): boolean {
   return uuidV4Regex.test(str);
 }
 
+// Calculate profile completion percentage
+function calculateProfileCompletion(profile: Profile | null, dogs: Dog[]): number {
+  if (!profile) return 0;
+  
+  let completed = 0;
+  let total = 10;
+  
+  // Profile fields (5 points)
+  if (profile.display_name) completed++;
+  if (profile.avatar_url) completed++;
+  if (profile.bio) completed++;
+  if (profile.birth_date) completed++;
+  if (profile.interests && profile.interests.length > 0) completed++;
+  
+  // Dog fields (5 points)
+  if (dogs.length > 0) {
+    const dog = dogs[0];
+    if (dog.name) completed++;
+    if (dog.avatar_url) completed++;
+    if (dog.breed) completed++;
+    if (dog.birthdate || dog.age_years) completed++;
+    if (dog.temperament) completed++;
+  }
+  
+  return Math.round((completed / total) * 100);
+}
+
 function ProfileContent() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -62,6 +89,7 @@ function ProfileContent() {
   const [error, setError] = useState<Error | null>(null);
   const [isOwnProfile, setIsOwnProfile] = useState(false);
   const [isPro, setIsPro] = useState(false);
+  const [isPremium, setIsPremium] = useState(false);
 
   const fetchProfileData = async () => {
     if (!id) {
@@ -97,7 +125,7 @@ function ProfileContent() {
       setDogs(data.dogs || []);
       setIsOwnProfile(currentUserId === id);
 
-      // Check pro status if it's own profile
+      // Check pro status and premium status if it's own profile
       if (currentUserId === id && user) {
         const { data: proAccount } = await supabase
           .from('pro_accounts')
@@ -106,6 +134,27 @@ function ProfileContent() {
           .maybeSingle();
         
         setIsPro(!!proAccount);
+
+        // Check premium status
+        try {
+          const checkResponse = await fetch(
+            `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/check-subscription`,
+            {
+              method: 'GET',
+              headers: {
+                'Authorization': `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
+                'Content-Type': 'application/json',
+              },
+            }
+          );
+          
+          if (checkResponse.ok) {
+            const { isPremium: premiumStatus } = await checkResponse.json();
+            setIsPremium(premiumStatus);
+          }
+        } catch (error) {
+          console.error('Error checking premium status:', error);
+        }
       }
 
     } catch (err) {
@@ -241,70 +290,160 @@ function ProfileContent() {
     );
   }
 
+  const completionPercentage = calculateProfileCompletion(profile, dogs);
+  const primaryDog = dogs[0];
+
   // Main profile view
   return (
     <main className="min-h-screen pb-24" style={{ backgroundColor: "var(--paper)" }}>
-      <div className="mx-auto max-w-[700px] px-4 pt-20 pb-6 space-y-6">
-        {/* Quick Access Menu - Only show for own profile */}
+      <div className="mx-auto max-w-[700px] px-4 pt-20 pb-6 space-y-5">
+        {/* Tinder-style Header with Dog Avatar & Completion */}
         {isOwnProfile && (
-          <Card className="p-4 rounded-3xl shadow-soft">
-            <h3 className="text-lg font-semibold mb-3" style={{ color: "var(--ink)" }}>
-              Accès rapide
-            </h3>
-            <div className="grid gap-2">
-              <button
+          <div className="flex items-center justify-between">
+            {/* Dog Avatar with Progress Circle */}
+            <div className="relative">
+              <div className="relative w-24 h-24">
+                {/* Progress Circle Background */}
+                <svg className="absolute inset-0 w-full h-full -rotate-90">
+                  <circle
+                    cx="48"
+                    cy="48"
+                    r="44"
+                    fill="none"
+                    stroke="#E5E7EB"
+                    strokeWidth="4"
+                  />
+                  <circle
+                    cx="48"
+                    cy="48"
+                    r="44"
+                    fill="none"
+                    stroke="#FF5DA2"
+                    strokeWidth="4"
+                    strokeDasharray={`${(completionPercentage / 100) * 276.46} 276.46`}
+                    strokeLinecap="round"
+                    className="transition-all duration-500"
+                  />
+                </svg>
+                
+                {/* Dog Avatar */}
+                <div className="absolute inset-2 rounded-full overflow-hidden bg-white">
+                  {primaryDog?.avatar_url ? (
+                    <img 
+                      src={primaryDog.avatar_url} 
+                      alt={primaryDog.name}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#7B61FF] to-[#FF5DA2]">
+                      <DogIcon className="w-10 h-10 text-white" />
+                    </div>
+                  )}
+                </div>
+
+                {/* Completion Percentage Badge */}
+                <div 
+                  className="absolute -bottom-1 -right-1 w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold text-white shadow-lg"
+                  style={{ backgroundColor: "#FF5DA2" }}
+                >
+                  {completionPercentage}%
+                </div>
+              </div>
+            </div>
+
+            {/* Dog Name & Edit Button */}
+            <div className="flex-1 ml-4">
+              <div className="flex items-center gap-2 mb-1">
+                <h1 className="text-2xl font-bold" style={{ color: "#111827", fontFamily: "Fredoka" }}>
+                  {primaryDog?.name || "Mon chien"}
+                </h1>
+                {profile.human_verified && (
+                  <div className="w-6 h-6 rounded-full bg-[#7B61FF] flex items-center justify-center">
+                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                )}
+              </div>
+              
+              <Button
                 onClick={() => navigate('/onboarding/profile')}
-                className="flex items-center justify-between p-3 rounded-2xl bg-paper hover:bg-muted transition"
+                variant="outline"
+                className="rounded-full font-medium text-sm h-10 px-6 border-2"
+                style={{ borderColor: "#111827" }}
               >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "var(--brand-plum)20" }}>
-                    <User className="h-5 w-5" style={{ color: "var(--brand-plum)" }} />
-                  </div>
-                  <span className="font-medium" style={{ color: "var(--ink)" }}>Mon compte</span>
-                </div>
-                <ChevronRight className="h-5 w-5 text-muted-foreground" />
-              </button>
+                <Edit className="w-4 h-4 mr-2" />
+                Modifier mon profil
+              </Button>
+            </div>
+          </div>
+        )}
 
-              <button
-                onClick={() => navigate('/onboarding/dog')}
-                className="flex items-center justify-between p-3 rounded-2xl bg-paper hover:bg-muted transition"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "var(--brand-raspberry)20" }}>
-                    <DogIcon className="h-5 w-5" style={{ color: "var(--brand-raspberry)" }} />
+        {/* Premium Section - Only for non-premium users */}
+        {isOwnProfile && !isPremium && (
+          <Card 
+            className="rounded-2xl shadow-lg overflow-hidden cursor-pointer transition-transform hover:scale-[1.02]"
+            onClick={() => navigate('/premium')}
+          >
+            <div className="bg-gradient-to-r from-[#7B61FF] to-[#FF5DA2] p-6 text-white">
+              <div className="flex items-start justify-between mb-4">
+                <div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <Crown className="w-6 h-6" />
+                    <h3 className="text-xl font-bold">Whoof Premium</h3>
                   </div>
-                  <span className="font-medium" style={{ color: "var(--ink)" }}>Mon chien</span>
+                  <p className="text-sm opacity-90">Débloquez toutes les fonctionnalités</p>
                 </div>
-                <ChevronRight className="h-5 w-5 text-muted-foreground" />
-              </button>
+                <ChevronRight className="w-6 h-6" />
+              </div>
 
-              <button
-                onClick={() => navigate('/onboarding/profile')}
-                className="flex items-center justify-between p-3 rounded-2xl bg-paper hover:bg-muted transition"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "var(--brand-yellow)20" }}>
-                    <Settings className="h-5 w-5" style={{ color: "var(--brand-yellow)" }} />
-                  </div>
-                  <span className="font-medium" style={{ color: "var(--ink)" }}>Paramètres</span>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 text-sm">
+                  <Zap className="w-4 h-4" />
+                  <span>Matchs illimités</span>
                 </div>
-                <ChevronRight className="h-5 w-5 text-muted-foreground" />
-              </button>
+                <div className="flex items-center gap-2 text-sm">
+                  <Heart className="w-4 h-4" />
+                  <span>Voir qui a liké ton profil</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <Crown className="w-4 h-4" />
+                  <span>Badge vérifié</span>
+                </div>
+              </div>
 
-              <button
-                onClick={() => navigate(isPro ? '/pro/dashboard' : '/pro/onboarding')}
-                className="flex items-center justify-between p-3 rounded-2xl bg-paper hover:bg-muted transition"
+              <Button
+                className="w-full mt-4 bg-white text-[#7B61FF] hover:bg-white/90 font-bold rounded-full"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate('/premium');
+                }}
               >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "var(--brand-plum)20" }}>
-                    <Briefcase className="h-5 w-5" style={{ color: "var(--brand-plum)" }} />
-                  </div>
-                  <span className="font-medium" style={{ color: "var(--ink)" }}>
-                    {isPro ? 'Espace Pro' : 'Devenir partenaire'}
-                  </span>
+                Passer à Premium
+              </Button>
+            </div>
+          </Card>
+        )}
+
+        {/* Premium Badge - For premium users */}
+        {isOwnProfile && isPremium && (
+          <Card className="rounded-2xl shadow-soft overflow-hidden">
+            <div className="bg-gradient-to-r from-[#FFC14D] to-[#FF5DA2] p-4 text-white flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Crown className="w-6 h-6" />
+                <div>
+                  <p className="font-bold">Membre Premium</p>
+                  <p className="text-xs opacity-90">Profite de tous les avantages</p>
                 </div>
-                <ChevronRight className="h-5 w-5 text-muted-foreground" />
-              </button>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-white hover:bg-white/20 rounded-full"
+                onClick={() => navigate('/premium')}
+              >
+                Gérer
+              </Button>
             </div>
           </Card>
         )}
