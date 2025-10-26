@@ -43,65 +43,24 @@ export default function DebugHealth() {
         });
       }
 
-      // 2) /dog avec params owner=me
-      try {
-        const response = await api.get("/dog", { params: { owner: "me" } });
-        const data = response.data;
-        const count = Array.isArray(data) ? data.length : Array.isArray(data?.data) ? data.data.length : 0;
-        list.push({
-          name: "GET /dog?owner=me",
-          status: "success",
-          statusCode: response.status,
-          message: `${count} dog(s)`,
-          data: data,
-        });
-      } catch (e: any) {
-        list.push({
-          name: "GET /dog?owner=me",
-          status: "error",
-          statusCode: e.response?.status || 0,
-          message: e.response?.statusText || e.message || "Network error",
-          data: e.response?.data || { error: String(e) },
-        });
-      }
-
-      // 2b) /dog avec params ownerId=me (variante)
+      // 2) /dog avec params ownerId=me
       try {
         const response = await api.get("/dog", { params: { ownerId: "me" } });
         const data = response.data;
         const count = Array.isArray(data) ? data.length : Array.isArray(data?.data) ? data.data.length : 0;
+        const message = count === 0 
+          ? "Tu n'as pas encore de chien enregistré. Crée ton premier profil dans Profil → Mes chiens."
+          : `${count} dog(s)`;
         list.push({
           name: "GET /dog?ownerId=me",
           status: "success",
           statusCode: response.status,
-          message: `${count} dog(s)`,
+          message: message,
           data: data,
         });
       } catch (e: any) {
         list.push({
           name: "GET /dog?ownerId=me",
-          status: "error",
-          statusCode: e.response?.status || 0,
-          message: e.response?.statusText || e.message || "Network error",
-          data: e.response?.data || { error: String(e) },
-        });
-      }
-
-      // 2c) /dogs (pluriel) avec params owner=me (variante)
-      try {
-        const response = await api.get("/dogs", { params: { owner: "me" } });
-        const data = response.data;
-        const count = Array.isArray(data) ? data.length : Array.isArray(data?.data) ? data.data.length : 0;
-        list.push({
-          name: "GET /dogs?owner=me",
-          status: "success",
-          statusCode: response.status,
-          message: `${count} dog(s)`,
-          data: data,
-        });
-      } catch (e: any) {
-        list.push({
-          name: "GET /dogs?owner=me",
           status: "error",
           statusCode: e.response?.status || 0,
           message: e.response?.statusText || e.message || "Network error",
