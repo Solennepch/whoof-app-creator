@@ -214,20 +214,58 @@ export default function ProDashboard() {
               </h2>
             </div>
             <div className="mb-4">
-              <Badge variant="outline" className="text-lg px-4 py-1">
-                {proAccount.plan.toUpperCase()}
+              <Badge 
+                variant="outline" 
+                className="text-lg px-4 py-1"
+                style={
+                  proAccount.plan === 'pro_premium' 
+                    ? { backgroundColor: 'var(--brand-plum)', color: 'white', borderColor: 'var(--brand-plum)' }
+                    : proAccount.plan === 'pro_plus'
+                    ? { backgroundColor: 'var(--brand-raspberry)', color: 'white', borderColor: 'var(--brand-raspberry)' }
+                    : undefined
+                }
+              >
+                {proAccount.plan === 'free' && 'FREE'}
+                {proAccount.plan === 'pro_plus' && 'PRO PLUS'}
+                {proAccount.plan === 'pro_premium' && 'PRO PREMIUM'}
               </Badge>
             </div>
             <p className="text-sm text-muted-foreground mb-4">
-              Passez au plan Pro+ ou Premium pour plus de visibilité
+              {proAccount.plan === 'free' 
+                ? 'Passez au plan Pro+ ou Premium pour plus de visibilité'
+                : 'Gérez votre abonnement depuis le portail Stripe'}
             </p>
-            <Button
-              variant="outline"
-              className="w-full rounded-2xl"
-              onClick={() => toast.info('Fonctionnalité à venir')}
-            >
-              Voir les plans
-            </Button>
+            {proAccount.plan === 'free' ? (
+              <Button
+                className="w-full rounded-2xl"
+                style={{ backgroundColor: "var(--brand-plum)" }}
+                onClick={() => navigate('/pro/pricing')}
+              >
+                Passer au plan supérieur
+              </Button>
+            ) : (
+              <Button
+                variant="outline"
+                className="w-full rounded-2xl"
+                onClick={async () => {
+                  try {
+                    const { data: { session } } = await supabase.auth.getSession();
+                    if (!session) return;
+
+                    const { data, error } = await supabase.functions.invoke('customer-portal', {
+                      headers: { Authorization: `Bearer ${session.access_token}` },
+                    });
+
+                    if (error) throw error;
+                    if (data.url) window.open(data.url, '_blank');
+                  } catch (error) {
+                    toast.error('Erreur lors de l\'ouverture du portail');
+                  }
+                }}
+              >
+                Gérer l'abonnement
+              </Button>
+            )}
           </Card>
         </div>
       </div>
