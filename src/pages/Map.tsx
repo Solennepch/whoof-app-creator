@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { MapPin, Navigation, Heart, MessageCircle, X, Shield } from "lucide-react";
+import { MapPin, Navigation, MessageCircle, X, Shield } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from "@/components/ui/sheet";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { AnimatedLikeButton } from "@/components/ui/AnimatedLikeButton";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { supabase } from "@/integrations/supabase/client";
@@ -41,6 +42,7 @@ export default function Map() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isLiking, setIsLiking] = useState(false);
   const [isInviting, setIsInviting] = useState(false);
+  const [likedProfiles, setLikedProfiles] = useState<Set<string>>(new Set());
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -90,41 +92,82 @@ export default function Map() {
     }
   };
 
-  // Handle like action
+  // Handle like action with optimistic UI
   const handleLike = async () => {
     if (!selectedProfile?.user_id) return;
+
+    const profileId = selectedProfile.user_id;
+    const wasLiked = likedProfiles.has(profileId);
+
+    // Optimistic UI: update state immediately
+    setLikedProfiles((prev) => {
+      const newSet = new Set(prev);
+      if (wasLiked) {
+        newSet.delete(profileId);
+      } else {
+        newSet.add(profileId);
+      }
+      return newSet;
+    });
 
     setIsLiking(true);
     try {
       const { data: { session } } = await supabase.auth.getSession();
       
+      if (!session) {
+        throw new Error("Vous devez être connecté pour aimer un profil");
+      }
+
       const { data, error } = await supabase.functions.invoke('swipe', {
         body: { 
-          action: 'like',
-          to_user: selectedProfile.user_id 
+          action: wasLiked ? 'pass' : 'like',
+          to_user: profileId 
         },
-        headers: session ? {
+        headers: {
           Authorization: `Bearer ${session.access_token}`,
-        } : undefined,
+        },
       });
 
       if (error) throw error;
 
-      toast({
-        title: data.match ? "C'est un match ! 🎉" : "Like envoyé ❤️",
-        description: data.match 
-          ? "Vous pouvez maintenant échanger ensemble !" 
-          : "Votre intérêt a été envoyé avec succès",
-      });
-
-      if (data.match) {
-        setIsDrawerOpen(false);
+      // Show match toast if applicable
+      if (data.match && !wasLiked) {
+        toast({
+          title: "C'est un match ! 🎉",
+          description: "Vous pouvez maintenant échanger ensemble !",
+          action: data.chat_id ? (
+            <Button
+              size="sm"
+              onClick={() => navigate(`/chat?c=${data.chat_id}`)}
+              className="rounded-full"
+            >
+              Ouvrir le chat
+            </Button>
+          ) : undefined,
+        });
+      } else if (!wasLiked) {
+        toast({
+          title: "Like envoyé ❤️",
+          description: "Votre intérêt a été envoyé avec succès",
+        });
       }
     } catch (error) {
       console.error('Error liking profile:', error);
+      
+      // Rollback optimistic UI on error
+      setLikedProfiles((prev) => {
+        const newSet = new Set(prev);
+        if (wasLiked) {
+          newSet.add(profileId);
+        } else {
+          newSet.delete(profileId);
+        }
+        return newSet;
+      });
+
       toast({
         title: "Erreur",
-        description: "Impossible d'envoyer le like. Réessayez plus tard.",
+        description: error instanceof Error ? error.message : "Impossible d'aimer ce profil, réessaie plus tard.",
         variant: "destructive",
       });
     } finally {
@@ -524,11 +567,20 @@ export default function Map() {
           <SheetHeader>
             <SheetTitle className="flex items-center justify-between">
               <span>Profil</span>
-              <SheetClose asChild>
-                <Button variant="ghost" size="icon" className="rounded-full">
-                  <X className="h-4 w-4" />
-                </Button>
-              </SheetClose>
+              <div className="flex items-center gap-2">
+                {selectedProfile && (
+                  <AnimatedLikeButton
+                    isLiked={likedProfiles.has(selectedProfile.user_id || selectedProfile.id)}
+                    isLoading={isLiking}
+                    onLike={handleLike}
+                  />
+                )}
+                <SheetClose asChild>
+                  <Button variant="ghost" size="icon" className="rounded-full">
+                    <X className="h-4 w-4" />
+                  </Button>
+                </SheetClose>
+              </div>
             </SheetTitle>
           </SheetHeader>
 
@@ -597,18 +649,6 @@ export default function Map() {
                   }}
                 >
                   Voir le profil
-                </Button>
-
-                <Button 
-                  className="w-full rounded-2xl gap-2" 
-                  variant="outline"
-                  size="lg"
-                  onClick={handleLike}
-                  disabled={isLiking}
-                  style={{ borderColor: "var(--brand-raspberry)", color: "var(--brand-raspberry)" }}
-                >
-                  <Heart className={`h-5 w-5 ${isLiking ? 'animate-pulse' : ''}`} />
-                  {isLiking ? "Envoi..." : "J'aime"}
                 </Button>
 
                 <Button 
