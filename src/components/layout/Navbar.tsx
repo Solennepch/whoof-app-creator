@@ -1,44 +1,16 @@
 import { useState, useEffect } from "react";
-import { Dog, Home, Compass, Calendar, MapPin, User, Building, Percent, Briefcase, Bug } from "lucide-react";
+import { Dog, Menu } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { XpProgress } from "@/components/ui/XpProgress";
 import { CongratsModal } from "@/components/ui/CongratsModal";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import { SidebarMenu } from "./SidebarMenu";
 
 export function Navbar() {
   const [xp, setXp] = useState(850);
   const [showCongrats, setShowCongrats] = useState(false);
-  const [isPro, setIsPro] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const checkProStatus = async () => {
-      try {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user) {
-          const { data } = await supabase
-            .from('pro_accounts')
-            .select('id')
-            .eq('user_id', user.id)
-            .single();
-          setIsPro(!!data);
-        }
-      } catch (error) {
-        console.error('Error checking pro status:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    checkProStatus();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
-      checkProStatus();
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const addXp = () => {
     const newXp = xp + 200;
@@ -48,67 +20,35 @@ export function Navbar() {
     }
   };
 
-  const baseNavItems = [
-    { to: "/", icon: Home, label: "Accueil" },
-    { to: "/discover", icon: Compass, label: "Découvrir" },
-    { to: "/annuaire", icon: Building, label: "Annuaire" },
-    { to: "/partenariats", icon: Percent, label: "Partenariats" },
-    { to: "/events", icon: Calendar, label: "Événements" },
-    { to: "/map", icon: MapPin, label: "Carte" },
-    { to: "/profile/me", icon: User, label: "Profil" },
-  ];
-
-  const proNavItem = isPro
-    ? { to: "/pro/dashboard", icon: Briefcase, label: "Espace Pro" }
-    : { to: "/pro/onboarding", icon: Briefcase, label: "Devenir partenaire" };
-
-  // Debug link (visible only in dev/preview)
-  const isDev = import.meta.env.DEV || window.location.hostname.includes('lovable.app');
-  const debugNavItem = isDev ? { to: "/debug/health", icon: Bug, label: "Debug" } : null;
-
-  const navItems = isLoading 
-    ? baseNavItems 
-    : [...baseNavItems, proNavItem, ...(debugNavItem ? [debugNavItem] : [])];
-
   return (
     <>
       <nav className="sticky top-0 z-50 border-b bg-white shadow-soft">
         <div className="mx-auto max-w-7xl px-4">
           {/* Top bar */}
           <div className="flex h-16 items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div
-                className="flex h-10 w-10 items-center justify-center rounded-2xl shadow-sm"
-                style={{
-                  background: "linear-gradient(135deg, var(--brand-plum) 0%, var(--brand-raspberry) 100%)",
-                }}
+            <div className="flex items-center gap-3">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setSidebarOpen(true)}
+                className="md:hidden"
               >
-                <Dog className="h-5 w-5 text-white" />
-              </div>
-              <span className="text-xl font-bold" style={{ color: "var(--ink)" }}>
-                Whoof
-              </span>
-            </div>
-
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-1">
-              {navItems.map((item) => (
-                <NavLink
-                  key={item.to}
-                  to={item.to}
-                  end
-                  className={({ isActive }) =>
-                    `flex items-center gap-2 rounded-2xl px-4 py-2 text-sm font-medium transition ${
-                      isActive
-                        ? "bg-primary/10 text-primary"
-                        : "text-muted-foreground hover:bg-muted"
-                    }`
-                  }
+                <Menu className="h-5 w-5" />
+              </Button>
+              
+              <div className="flex items-center gap-2">
+                <div
+                  className="flex h-10 w-10 items-center justify-center rounded-2xl shadow-sm"
+                  style={{
+                    background: "linear-gradient(135deg, var(--brand-plum) 0%, var(--brand-raspberry) 100%)",
+                  }}
                 >
-                  <item.icon className="h-4 w-4" />
-                  <span>{item.label}</span>
-                </NavLink>
-              ))}
+                  <Dog className="h-5 w-5 text-white" />
+                </div>
+                <span className="text-xl font-bold" style={{ color: "var(--ink)" }}>
+                  Whoof
+                </span>
+              </div>
             </div>
 
             <Button
@@ -147,6 +87,7 @@ export function Navbar() {
 
       </nav>
 
+      <SidebarMenu open={sidebarOpen} onOpenChange={setSidebarOpen} />
       <CongratsModal open={showCongrats} level={2} onClose={() => setShowCongrats(false)} />
     </>
   );
