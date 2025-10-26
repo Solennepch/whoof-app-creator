@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { DogCarousel } from "@/components/profile/DogCarousel";
@@ -40,57 +40,114 @@ interface Profile {
   verified?: boolean;
 }
 
+// Helper function to check if a string is a valid UUID
+function isValidUUID(str: string): boolean {
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  return uuidRegex.test(str);
+}
+
 export default function Profile() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { toast } = useToast();
   const [dogs, setDogs] = useState<Dog[]>([]);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isOwner, setIsOwner] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchProfileData() {
-      if (!id) return;
+      if (!id) {
+        setError("ID de profil manquant");
+        setIsLoading(false);
+        return;
+      }
 
       setIsLoading(true);
-      try {
-        // Check if current user is the owner
-        const { data: { user } } = await supabase.auth.getUser();
-        setIsOwner(user?.id === id);
+      setError(null);
 
-        // Fetch profile
+      try {
+        // Check if user is authenticated
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
+        
+        if (userError || !user) {
+          // Not authenticated, redirect to login
+          navigate('/login');
+          return;
+        }
+
+        let targetUserId: string;
+
+        // Determine which profile to fetch
+        if (id === 'me' || !isValidUUID(id)) {
+          // Fetch current user's profile
+          targetUserId = user.id;
+          setIsOwner(true);
+        } else {
+          // Fetch specific user's profile by UUID
+          targetUserId = id;
+          setIsOwner(user.id === id);
+        }
+
+        // Fetch profile directly from profiles table
         const { data: profileData, error: profileError } = await supabase
           .from('profiles')
           .select('*')
-          .eq('id', id)
+          .eq('id', targetUserId)
           .single();
 
-        if (profileError) throw profileError;
+        if (profileError) {
+          if (profileError.code === 'PGRST116') {
+            // No rows returned - profile not found
+            setError("Profil non trouvé");
+          } else {
+            throw profileError;
+          }
+          setIsLoading(false);
+          return;
+        }
+
+        if (!profileData) {
+          setError("Profil non trouvé");
+          setIsLoading(false);
+          return;
+        }
+
         setProfile(profileData);
 
-        // Fetch dogs
+        // Fetch dogs for this user via direct table query
         const { data: dogsData, error: dogsError } = await supabase
           .from('dogs')
           .select('*')
-          .eq('owner_id', id);
+          .eq('owner_id', targetUserId);
 
-        if (dogsError) throw dogsError;
-        setDogs(dogsData || []);
+        if (dogsError) {
+          console.error('Error fetching dogs:', dogsError);
+          // Don't fail the whole page if dogs fail to load
+        } else {
+          setDogs(dogsData || []);
+        }
 
       } catch (error) {
         console.error('Error fetching profile:', error);
-        toast({
-          title: "Erreur",
-          description: "Impossible de charger le profil",
-          variant: "destructive",
-        });
+        
+        if (error instanceof Error) {
+          if (error.message.includes('401') || error.message.includes('Unauthorized')) {
+            navigate('/login');
+            return;
+          }
+          setError(error.message);
+        } else {
+          setError("Une erreur est survenue lors du chargement du profil");
+        }
       } finally {
         setIsLoading(false);
       }
     }
 
     fetchProfileData();
-  }, [id, toast]);
+  }, [id, navigate]);
 
   const handleLike = () => {
     toast({
@@ -117,11 +174,47 @@ export default function Profile() {
     );
   }
 
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: "var(--paper)" }}>
+        <div className="text-center max-w-md px-4">
+          <div className="text-6xl mb-6">😕</div>
+          <h2 className="text-2xl font-bold mb-4" style={{ color: "var(--ink)", fontFamily: "Fredoka" }}>
+            {error}
+          </h2>
+          <p className="text-muted-foreground mb-6">
+            Ce profil n'existe pas ou n'est plus disponible.
+          </p>
+          <Button 
+            onClick={() => navigate('/')}
+            className="rounded-2xl"
+            style={{ backgroundColor: "var(--brand-plum)" }}
+          >
+            Retour à l'accueil
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   if (!profile) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: "var(--paper)" }}>
-        <div className="text-center">
-          <p className="text-muted-foreground">Profil non trouvé</p>
+        <div className="text-center max-w-md px-4">
+          <div className="text-6xl mb-6">🐾</div>
+          <h2 className="text-2xl font-bold mb-4" style={{ color: "var(--ink)", fontFamily: "Fredoka" }}>
+            Profil non trouvé
+          </h2>
+          <p className="text-muted-foreground mb-6">
+            Impossible de charger ce profil. Veuillez réessayer plus tard.
+          </p>
+          <Button 
+            onClick={() => navigate('/')}
+            className="rounded-2xl"
+            style={{ backgroundColor: "var(--brand-plum)" }}
+          >
+            Retour à l'accueil
+          </Button>
         </div>
       </div>
     );
