@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import logoWhoof from "@/assets/logo-whoof.png";
 
 export default function ProfileMe() {
   const navigate = useNavigate();
@@ -28,12 +29,49 @@ export default function ProfileMe() {
     redirectToUserProfile();
   }, [navigate]);
 
-  // Show a loading state while redirecting
+  // Show an elegant loading state while redirecting
   return (
-    <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: "var(--paper)" }}>
+    <div 
+      className="min-h-screen flex items-center justify-center animate-fade-in" 
+      style={{ backgroundColor: "var(--paper)" }}
+    >
       <div className="text-center">
-        <div className="animate-pulse text-4xl mb-4">🐕</div>
-        <p className="text-muted-foreground">Redirection...</p>
+        {/* Logo Whoof with scale-in animation */}
+        <div className="mb-8 animate-scale-in">
+          <img 
+            src={logoWhoof} 
+            alt="Whoof Logo" 
+            className="w-32 h-32 mx-auto"
+          />
+        </div>
+        
+        {/* Pulsating loading indicator */}
+        <div className="flex justify-center gap-2">
+          <div 
+            className="w-3 h-3 rounded-full animate-pulse"
+            style={{ 
+              backgroundColor: "var(--brand-plum)",
+              animationDelay: "0ms",
+              animationDuration: "1.5s"
+            }}
+          />
+          <div 
+            className="w-3 h-3 rounded-full animate-pulse"
+            style={{ 
+              backgroundColor: "var(--brand-raspberry)",
+              animationDelay: "150ms",
+              animationDuration: "1.5s"
+            }}
+          />
+          <div 
+            className="w-3 h-3 rounded-full animate-pulse"
+            style={{ 
+              backgroundColor: "var(--brand-yellow)",
+              animationDelay: "300ms",
+              animationDuration: "1.5s"
+            }}
+          />
+        </div>
       </div>
     </div>
   );
