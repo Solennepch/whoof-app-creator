@@ -62,7 +62,6 @@ export function SidebarMenu({ open, onOpenChange }: SidebarMenuProps) {
   const menuItems = [
     { to: "/profile/me", icon: User, label: "Profil" },
     { to: "/astro-dog", icon: Star, label: "Mon Astro Dog" },
-    { to: "/parrainage", icon: Gift, label: "Parrainer" },
     { to: "/annuaire", icon: Building, label: "Annuaire" },
     { to: "/partenariats", icon: Percent, label: "Bons plans" },
   ];
