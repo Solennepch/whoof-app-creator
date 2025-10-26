@@ -47,9 +47,12 @@ export default function Discover() {
   if (!current) return null;
 
   return (
-    <div className="min-h-screen pb-24" style={{ backgroundColor: "var(--paper)" }}>
-      <div className="mx-auto max-w-2xl px-4 pt-20">
-        <div className="mb-6 text-center">
+    <div className="flex flex-col min-h-screen pb-24" style={{ backgroundColor: "var(--paper)" }}>
+      {/* Header spacing to avoid overlap with sticky header */}
+      <div className="h-20" />
+      
+      <div className="mx-auto max-w-2xl px-4 pt-4">
+        <div className="mb-8 text-center">
           <h1 className="mb-2 text-3xl font-bold" style={{ color: "var(--ink)" }}>
             Découvrir
           </h1>
@@ -87,21 +90,22 @@ export default function Discover() {
                 </Button>
               </div>
 
-              <p className="mb-4 text-sm" style={{ color: "var(--ink)", opacity: 0.8 }}>
+              <p className="text-sm" style={{ color: "var(--ink)", opacity: 0.8 }}>
                 {current.bio}
               </p>
-
-              <div className="flex flex-wrap gap-2">
-                {current.reasons.map((reason, i) => (
-                  <ReasonChip key={i} label={reason} />
-                ))}
-              </div>
             </div>
           </div>
         </div>
 
-        {/* Actions */}
-        <div className="mt-6 flex justify-center gap-4">
+        {/* Tags with more spacing */}
+        <div className="mt-6 mb-8 flex flex-wrap justify-center gap-2">
+          {current.reasons.map((reason, i) => (
+            <ReasonChip key={i} label={reason} />
+          ))}
+        </div>
+
+        {/* Actions with better spacing */}
+        <div className="flex justify-center gap-6 mb-6">
           <Button
             size="lg"
             variant="outline"
@@ -122,7 +126,7 @@ export default function Discover() {
         </div>
 
         {/* Progress */}
-        <div className="mt-6 text-center text-sm text-muted-foreground">
+        <div className="text-center text-sm text-muted-foreground">
           {currentIndex + 1} / {profiles.length}
         </div>
       </div>
