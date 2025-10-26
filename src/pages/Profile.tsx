@@ -3,15 +3,11 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { DogCarousel } from "@/components/profile/DogCarousel";
-import { OwnerSection } from "@/components/profile/OwnerSection";
 import { GamificationSection } from "@/components/profile/GamificationSection";
-import { RecommendationSection } from "@/components/profile/RecommendationSection";
-import { FunSection } from "@/components/profile/FunSection";
-import { XpProgress } from "@/components/ui/XpProgress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { safeFetch } from "@/lib/safeFetch";
 import ErrorBoundary from "@/components/ErrorBoundary";
-import { AlertTriangle, User, Dog as DogIcon, Settings, Briefcase, ChevronRight, Edit, Crown, Zap, Heart } from "lucide-react";
+import { AlertTriangle, User, Dog as DogIcon, Edit, Crown, Zap, Heart, ChevronRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 const badges = [
@@ -463,17 +459,6 @@ function ProfileContent() {
           />
         </div>
 
-        {/* Section 2: Owner Section */}
-        <div>
-          <h2 
-            className="text-2xl font-bold mb-4" 
-            style={{ color: "var(--ink)", fontFamily: "Fredoka" }}
-          >
-            {profile.gender === 'female' ? 'Dog Mom' : 'Dog Dad'}
-          </h2>
-          <OwnerSection profile={profile} />
-        </div>
-
         {/* Gamification & Communauté Section */}
         {isOwnProfile && (
           <GamificationSection 
@@ -484,12 +469,98 @@ function ProfileContent() {
           />
         )}
 
-        {/* Recommendation Section */}
+        {/* XP Rewards Section */}
         {isOwnProfile && (
-          <RecommendationSection 
-            totalRecommendations={12}
-            canRecommend={true}
-          />
+          <Card className="p-6 rounded-3xl shadow-soft">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="text-xl font-bold mb-1" style={{ color: "var(--ink)", fontFamily: "Fredoka" }}>
+                  Convertir mes XP
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  Échange tes points contre des récompenses
+                </p>
+              </div>
+              <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: "var(--brand-yellow)20" }}>
+                <Zap className="w-6 h-6" style={{ color: "var(--brand-yellow)" }} />
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <div className="flex items-center justify-between p-4 rounded-2xl bg-gradient-to-r from-[#FFC14D]/10 to-[#FF5DA2]/10">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-[#FFC14D] flex items-center justify-center">
+                    <Crown className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-sm" style={{ color: "var(--ink)" }}>1 mois Premium</p>
+                    <p className="text-xs text-muted-foreground">500 XP</p>
+                  </div>
+                </div>
+                <Button
+                  size="sm"
+                  className="rounded-full font-semibold"
+                  style={{ backgroundColor: "var(--brand-yellow)" }}
+                >
+                  Échanger
+                </Button>
+              </div>
+
+              <div className="flex items-center justify-between p-4 rounded-2xl bg-gradient-to-r from-[#7B61FF]/10 to-[#FF5DA2]/10">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-[#FF5DA2] flex items-center justify-center">
+                    <Heart className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-sm" style={{ color: "var(--ink)" }}>5 Super Likes</p>
+                    <p className="text-xs text-muted-foreground">200 XP</p>
+                  </div>
+                </div>
+                <Button
+                  size="sm"
+                  className="rounded-full font-semibold"
+                  style={{ backgroundColor: "var(--brand-raspberry)" }}
+                >
+                  Échanger
+                </Button>
+              </div>
+            </div>
+          </Card>
+        )}
+
+        {/* Parrainage Section */}
+        {isOwnProfile && (
+          <Card className="p-6 rounded-3xl shadow-soft">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="text-xl font-bold mb-1" style={{ color: "var(--ink)", fontFamily: "Fredoka" }}>
+                  Parrainage
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  Invite tes amis et gagne des récompenses
+                </p>
+              </div>
+              <Button
+                onClick={() => navigate('/parrainage')}
+                size="sm"
+                className="rounded-full font-semibold"
+                style={{ backgroundColor: "var(--brand-plum)" }}
+              >
+                Voir plus
+              </Button>
+            </div>
+
+            <div className="flex items-center gap-3 p-4 rounded-2xl bg-gradient-to-r from-[#7B61FF]/10 to-[#FF5DA2]/10">
+              <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: "var(--brand-plum)" }}>
+                <User className="w-6 h-6 text-white" />
+              </div>
+              <div className="flex-1">
+                <p className="font-semibold" style={{ color: "var(--ink)" }}>12 amis parrainés</p>
+                <p className="text-xs text-muted-foreground">Continue comme ça !</p>
+              </div>
+              <ChevronRight className="w-5 h-5 text-muted-foreground" />
+            </div>
+          </Card>
         )}
 
         {/* Stats - Only show for non-own profiles or as secondary info */}
@@ -514,11 +585,6 @@ function ProfileContent() {
               <p className="text-xs text-muted-foreground">Événements</p>
             </div>
           </div>
-        )}
-
-        {/* Fun Section */}
-        {isOwnProfile && (
-          <FunSection dogSign={dogs[0]?.breed || "Labrador"} />
         )}
       </div>
     </main>
