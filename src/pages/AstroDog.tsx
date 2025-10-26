@@ -1,10 +1,10 @@
 import { Card } from "@/components/ui/card";
 import { Link } from "react-router-dom";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Star } from "lucide-react";
 
 const dogHoroscopes = [
   {
-    sign: "🐕 Labrador",
+    sign: "Labrador",
     week: "Semaine du 27 Jan - 2 Fév",
     text: "Cette semaine, ton énergie débordante attirera de nouveaux amis ! Les balades au parc seront particulièrement favorables. N'hésite pas à explorer de nouveaux chemins et à rencontrer de nouvelles têtes poilues. La chance est de ton côté pour les jeux de balle et les courses effrénées.",
     mood: "Énergique",
@@ -30,8 +30,9 @@ export default function AstroDog() {
 
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold" style={{ color: "hsl(var(--ink))" }}>
-            🌟 Mon Astro Dog
+          <h1 className="text-3xl font-bold flex items-center gap-2" style={{ color: "hsl(var(--ink))" }}>
+            <Star className="w-8 h-8 text-accent" />
+            Mon Astro Dog
           </h1>
           <p className="text-sm mt-2" style={{ color: "hsl(var(--ink) / 0.6)" }}>
             Découvre l'horoscope de ton chien chaque semaine

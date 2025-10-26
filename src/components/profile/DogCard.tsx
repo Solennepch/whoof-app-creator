@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Heart, Shield, Calendar, Info } from "lucide-react";
+import { Heart, Shield, Calendar, Info, Dog } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -99,7 +99,7 @@ export function DogCard({ dog, isOwner, onLike, onMessage }: DogCardProps) {
         >
           {!dog.avatar_url && (
             <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-8xl">🐕</span>
+              <Dog className="w-20 h-20 text-primary" strokeWidth={1.5} />
             </div>
           )}
           
@@ -193,7 +193,7 @@ export function DogCard({ dog, isOwner, onLike, onMessage }: DogCardProps) {
                     <Avatar className="h-32 w-32">
                       <AvatarImage src={dog.avatar_url} />
                       <AvatarFallback className="text-4xl bg-gradient-to-br from-pink-500 to-purple-600 text-white">
-                        🐕
+                        <Dog className="w-4 h-4" />
                       </AvatarFallback>
                     </Avatar>
                   </div>

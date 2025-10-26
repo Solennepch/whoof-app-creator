@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Crown, Check, Sparkles } from "lucide-react";
+import { Crown, Check, Sparkles, Award, Zap, Map, Gift, Bell, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -9,24 +9,26 @@ export default function Premium() {
   const [isPremium] = useState(false); // TODO: Connect to actual subscription state
 
   const features = [
-    { icon: "🏅", text: "Badges exclusifs et avatars premium" },
-    { icon: "⚡", text: "Boost XP x2 sur toutes les activités" },
-    { icon: "🗺️", text: "Filtres avancés dans l'annuaire" },
-    { icon: "🎁", text: "Réductions partenaires jusqu'à -30%" },
-    { icon: "🔔", text: "Notifications prioritaires pour les events" },
-    { icon: "💬", text: "Badge premium visible sur ton profil" }
+    { icon: Award, text: "Badges exclusifs et avatars premium", color: "text-secondary" },
+    { icon: Zap, text: "Boost XP x2 sur toutes les activités", color: "text-accent" },
+    { icon: Map, text: "Filtres avancés dans l'annuaire", color: "text-primary" },
+    { icon: Gift, text: "Réductions partenaires jusqu'à -30%", color: "text-secondary" },
+    { icon: Bell, text: "Notifications prioritaires pour les events", color: "text-accent" },
+    { icon: MessageCircle, text: "Badge premium visible sur ton profil", color: "text-primary" }
   ];
 
   const handleStartTrial = () => {
     console.log('Analytics: start_trial_premium');
-    toast.success("🎉 Essai gratuit activé !", {
+    toast.success("Essai gratuit activé !", {
+      icon: <Gift className="w-4 h-4 text-primary" />,
       description: "Profite de 14 jours de Premium gratuit"
     });
   };
 
   const handleSubscribe = () => {
     console.log('Analytics: subscribe_premium');
-    toast.success("✨ Bienvenue dans Premium !", {
+    toast.success("Bienvenue dans Premium !", {
+      icon: <Sparkles className="w-4 h-4 text-accent" />,
       description: "Ton abonnement a été activé avec succès"
     });
   };
@@ -80,15 +82,18 @@ export default function Premium() {
               Tes avantages Premium
             </h3>
             <ul className="space-y-3">
-              {features.map((feature, index) => (
-                <li key={index} className="flex items-start gap-3">
-                  <span className="text-xl mt-0.5">{feature.icon}</span>
-                  <span className="text-sm flex-1" style={{ color: "hsl(var(--ink) / 0.8)" }}>
-                    {feature.text}
-                  </span>
-                  <Check className="h-5 w-5 flex-shrink-0" style={{ color: "hsl(var(--brand-plum))" }} />
-                </li>
-              ))}
+              {features.map((feature, index) => {
+                const Icon = feature.icon;
+                return (
+                  <li key={index} className="flex items-start gap-3">
+                    <Icon className={`w-5 h-5 mt-0.5 flex-shrink-0 ${feature.color}`} />
+                    <span className="text-sm flex-1" style={{ color: "hsl(var(--ink) / 0.8)" }}>
+                      {feature.text}
+                    </span>
+                    <Check className="h-5 w-5 flex-shrink-0" style={{ color: "hsl(var(--brand-plum))" }} />
+                  </li>
+                );
+              })}
             </ul>
           </Card>
         </div>
@@ -130,17 +135,21 @@ export default function Premium() {
         {/* Features Card */}
         <Card className="rounded-2xl shadow-sm p-6 space-y-4">
           <h3 className="text-lg font-semibold" style={{ color: "hsl(var(--ink))" }}>
-            ✨ Ce que tu obtiens
+            <Sparkles className="w-4 h-4 inline-block mr-2 text-accent" />
+            Ce que tu obtiens
           </h3>
           <ul className="space-y-3">
-            {features.map((feature, index) => (
-              <li key={index} className="flex items-start gap-3">
-                <span className="text-xl mt-0.5">{feature.icon}</span>
-                <span className="text-sm flex-1" style={{ color: "hsl(var(--ink) / 0.8)" }}>
-                  {feature.text}
-                </span>
-              </li>
-            ))}
+            {features.map((feature, index) => {
+              const Icon = feature.icon;
+              return (
+                <li key={index} className="flex items-start gap-3">
+                  <Icon className={`w-5 h-5 mt-0.5 flex-shrink-0 ${feature.color}`} />
+                  <span className="text-sm flex-1" style={{ color: "hsl(var(--ink) / 0.8)" }}>
+                    {feature.text}
+                  </span>
+                </li>
+              );
+            })}
           </ul>
         </Card>
 

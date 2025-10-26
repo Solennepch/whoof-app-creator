@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
-import { MapPin, Phone, Navigation as NavigationIcon, ExternalLink, Map as MapIcon } from "lucide-react";
+import { MapPin, Phone, Navigation as NavigationIcon, ExternalLink, Map as MapIcon, Dog } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const CATEGORIES = [
@@ -208,7 +208,7 @@ export default function Annuaire() {
             </>
           ) : pros.length === 0 ? (
             <Card className="p-8 rounded-2xl shadow-sm text-center">
-              <div className="text-5xl mb-4">🐕</div>
+              <Dog className="w-16 h-16 mb-4 text-primary" strokeWidth={1.5} />
               <h3 className="text-lg font-semibold mb-2" style={{ color: "var(--ink)" }}>
                 Aucun professionnel trouvé
               </h3>

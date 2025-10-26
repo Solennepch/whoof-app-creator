@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Copy, Gift, Users } from "lucide-react";
+import { Copy, Gift, Users, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 
 export default function Parrainage() {
@@ -28,7 +28,8 @@ export default function Parrainage() {
     } else {
       // Fallback: copy to clipboard
       navigator.clipboard.writeText(referralLink);
-      toast.success("✨ Lien copié !", {
+      toast.success("Lien copié !", {
+        icon: <Sparkles className="w-4 h-4 text-accent" />,
         description: "Partage-le avec tes amis pour les parrainer"
       });
       console.log('Analytics: share_parrainage');
@@ -105,7 +106,8 @@ export default function Parrainage() {
         {/* Rewards Card */}
         <Card className="rounded-2xl shadow-sm p-6 space-y-3">
           <h3 className="text-lg font-semibold" style={{ color: "hsl(var(--ink))" }}>
-            🎉 Récompenses
+              <Gift className="w-5 h-5 inline-block mr-2 text-primary" />
+              Récompenses
           </h3>
           <ul className="space-y-2">
             <li className="flex items-center gap-3 text-sm">

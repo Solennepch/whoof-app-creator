@@ -1,26 +1,26 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Trophy } from "lucide-react";
+import { Trophy, Dog, User } from "lucide-react";
 
 const weeklyRankings = [
-  { rank: 1, name: "Luna", walks: 28, distance: "42 km", avatar: "🐕" },
-  { rank: 2, name: "Max", walks: 25, distance: "38 km", avatar: "🐶" },
-  { rank: 3, name: "Toi", walks: 22, distance: "33 km", avatar: "👤", isMe: true },
-  { rank: 4, name: "Bella", walks: 20, distance: "30 km", avatar: "🦮" },
-  { rank: 5, name: "Charlie", walks: 18, distance: "27 km", avatar: "🐕‍🦺" },
-  { rank: 6, name: "Lucy", walks: 16, distance: "24 km", avatar: "🐩" },
-  { rank: 7, name: "Rocky", walks: 15, distance: "22 km", avatar: "🐕" },
+  { rank: 1, name: "Luna", walks: 28, distance: "42 km", avatar: "Dog" },
+  { rank: 2, name: "Max", walks: 25, distance: "38 km", avatar: "Dog" },
+  { rank: 3, name: "Toi", walks: 22, distance: "33 km", avatar: "User", isMe: true },
+  { rank: 4, name: "Bella", walks: 20, distance: "30 km", avatar: "Dog" },
+  { rank: 5, name: "Charlie", walks: 18, distance: "27 km", avatar: "Dog" },
+  { rank: 6, name: "Lucy", walks: 16, distance: "24 km", avatar: "Dog" },
+  { rank: 7, name: "Rocky", walks: 15, distance: "22 km", avatar: "Dog" },
 ];
 
 const monthlyRankings = [
-  { rank: 1, name: "Max", walks: 98, distance: "147 km", avatar: "🐶" },
-  { rank: 2, name: "Toi", walks: 85, distance: "128 km", avatar: "👤", isMe: true },
-  { rank: 3, name: "Luna", walks: 82, distance: "123 km", avatar: "🐕" },
-  { rank: 4, name: "Bella", walks: 76, distance: "114 km", avatar: "🦮" },
-  { rank: 5, name: "Charlie", walks: 70, distance: "105 km", avatar: "🐕‍🦺" },
-  { rank: 6, name: "Lucy", walks: 65, distance: "98 km", avatar: "🐩" },
-  { rank: 7, name: "Rocky", walks: 60, distance: "90 km", avatar: "🐕" },
+  { rank: 1, name: "Max", walks: 98, distance: "147 km", avatar: "Dog" },
+  { rank: 2, name: "Toi", walks: 85, distance: "128 km", avatar: "User", isMe: true },
+  { rank: 3, name: "Luna", walks: 82, distance: "123 km", avatar: "Dog" },
+  { rank: 4, name: "Bella", walks: 76, distance: "114 km", avatar: "Dog" },
+  { rank: 5, name: "Charlie", walks: 70, distance: "105 km", avatar: "Dog" },
+  { rank: 6, name: "Lucy", walks: 65, distance: "98 km", avatar: "Dog" },
+  { rank: 7, name: "Rocky", walks: 60, distance: "90 km", avatar: "Dog" },
 ];
 
 export default function Ranking() {
@@ -51,7 +51,7 @@ export default function Ranking() {
           >
             <div className="flex items-center justify-between text-white">
               <div className="flex items-center gap-2 sm:gap-4">
-                <div className="text-2xl sm:text-4xl">🏆</div>
+                <Trophy className="w-6 h-6 sm:w-10 sm:h-10 text-secondary" />
                 <div>
                   <p className="text-xs sm:text-sm opacity-90">Ta position</p>
                   <p className="text-2xl sm:text-3xl font-bold">#{myRanking.rank}</p>
@@ -96,7 +96,11 @@ export default function Ranking() {
                                          user.rank === 2 ? "hsl(var(--muted))" : 
                                          "hsl(var(--border))"
                         }}>
-                          <span className="text-xl sm:text-2xl">{user.rank === 1 ? "🥇" : user.rank === 2 ? "🥈" : "🥉"}</span>
+                          <Trophy className={`w-5 h-5 sm:w-6 sm:h-6 ${
+                            user.rank === 1 ? "text-white" : 
+                            user.rank === 2 ? "text-muted-foreground" :
+                            "text-accent"
+                          }`} />
                         </div>
                       ) : (
                         <div className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full" style={{ backgroundColor: "hsl(var(--muted))" }}>

@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef } from "react";
+import { PartyPopper } from "lucide-react";
 
 interface Props { open: boolean; level: number; onClose: () => void; }
 
@@ -32,7 +33,10 @@ export function CongratsModal({ open, level, onClose }: Props) {
   return (
     <div role="dialog" aria-modal="true" className="fixed inset-0 grid place-items-center bg-black/40" onClick={onClose}>
       <div className="rounded-2xl relative overflow-hidden bg-white p-5 shadow-soft ring-1 ring-black/5" onClick={(e)=>e.stopPropagation()}>
-        <h2 className="font-display text-xl mb-1">🎉 Félicitations !</h2>
+        <div className="flex items-center gap-2 justify-center mb-1">
+          <PartyPopper className="w-6 h-6 text-primary" />
+          <h2 className="font-display text-xl">Félicitations !</h2>
+        </div>
         <p>Tu as atteint le <b>niveau {level}</b>. Continue et débloque de nouveaux badges !</p>
         <canvas ref={canvasRef} width={480} height={240} className="absolute inset-0 pointer-events-none opacity-70 -z-10" />
         <button onClick={onClose} className="mt-3 rounded-2xl px-3 py-2 text-sm text-white" style={{ backgroundColor: "var(--brand-plum, #7B61FF)" }}>Fermer</button>

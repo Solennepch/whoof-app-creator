@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Send, Star } from "lucide-react";
+import { Send, Star, Sparkles, Pencil } from "lucide-react";
 import { toast } from "sonner";
 
 const dogHoroscopes = [
@@ -20,7 +20,7 @@ interface FunSectionProps {
   dogSign?: string;
 }
 
-export function FunSection({ dogSign = "🐕 Labrador" }: FunSectionProps) {
+export function FunSection({ dogSign = "Labrador" }: FunSectionProps) {
   const [weeklyPhrase, setWeeklyPhrase] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   
@@ -35,7 +35,8 @@ export function FunSection({ dogSign = "🐕 Labrador" }: FunSectionProps) {
     setIsSubmitting(true);
     await new Promise(resolve => setTimeout(resolve, 1000));
     
-    toast.success("✨ Phrase publiée dans le feed !", {
+    toast.success("Phrase publiée dans le feed !", {
+      icon: <Sparkles className="w-4 h-4 text-accent" />,
       description: "Ta phrase inspirante est maintenant visible par toute la communauté !",
     });
     
@@ -62,7 +63,8 @@ export function FunSection({ dogSign = "🐕 Labrador" }: FunSectionProps) {
           <Star className="h-6 w-6" style={{ color: "hsl(var(--brand-yellow))" }} />
           <div className="flex-1">
             <h4 className="text-base font-semibold" style={{ color: "hsl(var(--ink))" }}>
-              🌟 Mon Astro Dog
+              <Star className="w-4 h-4 inline-block mr-1 text-accent" />
+              Mon Astro Dog
             </h4>
             <p className="text-sm" style={{ color: "hsl(var(--ink) / 0.6)" }}>
               Découvre l'horoscope de ton chien
@@ -74,7 +76,8 @@ export function FunSection({ dogSign = "🐕 Labrador" }: FunSectionProps) {
       {/* Weekly Phrase - Compact */}
       <div className="space-y-3">
         <h4 className="text-base font-semibold" style={{ color: "hsl(var(--ink))" }}>
-          ✍️ Phrase de la semaine
+          <Pencil className="w-4 h-4 inline-block mr-1 text-secondary" />
+          Phrase de la semaine
         </h4>
         
         <div 

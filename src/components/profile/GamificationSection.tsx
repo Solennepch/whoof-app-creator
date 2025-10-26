@@ -2,28 +2,27 @@ import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Trophy } from "lucide-react";
+import { Trophy, Heart, Star, CircleDot, Sparkles, Target, Palette, type LucideIcon } from "lucide-react";
 import { XpProgress } from "@/components/ui/XpProgress";
 
 interface Badge {
-  icon: string;
+  icon: LucideIcon;
   name: string;
   desc: string;
   unlocked: boolean;
   unlockedAt?: string;
+  color: string;
 }
 
-const allBadges: Badge[] = [
-  { icon: "🦴", name: "Premier pas", desc: "Créé ton profil", unlocked: true, unlockedAt: "2024-01-15" },
-  { icon: "❤️", name: "Sociable", desc: "10 matchs", unlocked: true, unlockedAt: "2024-02-10" },
-  { icon: "⭐", name: "Star", desc: "50 likes reçus", unlocked: true, unlockedAt: "2024-02-20" },
-  { icon: "🎾", name: "Joueur", desc: "5 événements", unlocked: true, unlockedAt: "2024-03-01" },
-  { icon: "🏆", name: "Champion", desc: "100 balades", unlocked: false },
-  { icon: "🌟", name: "Populaire", desc: "100 likes reçus", unlocked: false },
-  { icon: "🎯", name: "Fidèle", desc: "30 jours consécutifs", unlocked: false },
-  { icon: "💪", name: "Marathonien", desc: "500km de balades", unlocked: false },
-  { icon: "🦮", name: "Guide", desc: "Aide 5 nouveaux membres", unlocked: false },
-  { icon: "🎨", name: "Créatif", desc: "Publie 20 photos", unlocked: false },
+const ACHIEVEMENTS = [
+  { icon: Heart, name: "Sociable", desc: "10 matchs", unlocked: true, unlockedAt: "2024-02-10", color: "text-primary" },
+  { icon: Star, name: "Star", desc: "50 likes reçus", unlocked: true, unlockedAt: "2024-02-20", color: "text-accent" },
+  { icon: CircleDot, name: "Joueur", desc: "5 événements", unlocked: true, unlockedAt: "2024-03-01", color: "text-secondary" },
+  { icon: Trophy, name: "Champion", desc: "100 balades", unlocked: false, color: "text-secondary" },
+  { icon: Sparkles, name: "Populaire", desc: "100 likes reçus", unlocked: false, color: "text-accent" },
+  { icon: Target, name: "Fidèle", desc: "30 jours consécutifs", unlocked: false, color: "text-primary" },
+  { icon: Heart, name: "Amoureux", desc: "10 matchs parfaits", unlocked: false, color: "text-primary" },
+  { icon: Palette, name: "Créatif", desc: "Publie 20 photos", unlocked: false, color: "text-accent" },
 ];
 
 interface GamificationSectionProps {
@@ -40,7 +39,7 @@ export function GamificationSection({
   totalRecommendations = 12 
 }: GamificationSectionProps) {
   const [showAllBadges, setShowAllBadges] = useState(false);
-  const unlockedBadges = allBadges.filter(b => b.unlocked);
+  const unlockedBadges = ACHIEVEMENTS.filter(b => b.unlocked);
 
   return (
     <Card className="rounded-2xl shadow-sm p-4 space-y-3" style={{ backgroundColor: "hsl(var(--paper))" }}>
@@ -68,7 +67,7 @@ export function GamificationSection({
       {/* Quick Stats - Compact */}
       <div className="grid grid-cols-3 gap-3">
         <div className="text-center py-2 px-3 rounded-xl" style={{ backgroundColor: "hsl(var(--muted) / 0.5)" }}>
-          <div className="text-xl mb-1">🏆</div>
+          <Trophy className="w-6 h-6 mb-1 text-secondary" />
           <p className="text-lg font-bold" style={{ color: "hsl(var(--brand-plum))" }}>
             {unlockedBadges.length}
           </p>
@@ -84,7 +83,7 @@ export function GamificationSection({
         </div>
         
         <div className="text-center py-2 px-3 rounded-xl" style={{ backgroundColor: "hsl(var(--muted) / 0.5)" }}>
-          <div className="text-xl mb-1">🌟</div>
+          <Star className="w-6 h-6 mb-1 text-accent" />
           <p className="text-lg font-bold" style={{ color: "hsl(var(--brand-yellow))" }}>
             #{level * 100}
           </p>
@@ -95,16 +94,19 @@ export function GamificationSection({
       {/* Badges Preview - Scrollable without scrollbar */}
       <div className="overflow-x-auto -mx-2 px-2 no-scrollbar">
         <div className="flex gap-2">
-          {unlockedBadges.slice(0, 6).map((badge, i) => (
-            <div
-              key={i}
-              className="flex-shrink-0 w-14 h-14 rounded-xl flex items-center justify-center text-2xl transition-transform hover:scale-110"
-              style={{ backgroundColor: "hsl(var(--muted) / 0.5)" }}
-              title={`${badge.name}: ${badge.desc}`}
-            >
-              {badge.icon}
-            </div>
-          ))}
+          {unlockedBadges.slice(0, 6).map((badge, i) => {
+            const Icon = badge.icon;
+            return (
+              <div
+                key={i}
+                className="flex-shrink-0 w-14 h-14 rounded-xl flex items-center justify-center transition-transform hover:scale-110"
+                style={{ backgroundColor: "hsl(var(--muted) / 0.5)" }}
+                title={`${badge.name}: ${badge.desc}`}
+              >
+                <Icon className={`w-6 h-6 ${badge.color}`} />
+              </div>
+            );
+          })}
         </div>
       </div>
 
@@ -123,7 +125,8 @@ export function GamificationSection({
         <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto rounded-3xl">
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold" style={{ fontFamily: "Fredoka", color: "hsl(var(--ink))" }}>
-              🏆 Toutes mes récompenses
+              <Trophy className="w-4 h-4 inline-block mr-1 text-secondary" />
+              Toutes mes récompenses
             </DialogTitle>
           </DialogHeader>
           
@@ -134,50 +137,56 @@ export function GamificationSection({
                 Badges débloqués ({unlockedBadges.length})
               </h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                {unlockedBadges.map((badge, i) => (
-                  <div
-                    key={i}
-                    className="p-4 rounded-2xl text-center transition-transform hover:scale-105"
-                    style={{ backgroundColor: "hsl(var(--paper))" }}
-                  >
-                    <div className="text-4xl mb-2">{badge.icon}</div>
-                    <p className="font-semibold text-sm mb-1" style={{ color: "hsl(var(--ink))" }}>
-                      {badge.name}
-                    </p>
-                    <p className="text-xs mb-1" style={{ color: "hsl(var(--ink) / 0.6)" }}>
-                      {badge.desc}
-                    </p>
-                    {badge.unlockedAt && (
-                      <p className="text-xs" style={{ color: "hsl(var(--brand-plum))" }}>
-                        Débloqué le {new Date(badge.unlockedAt).toLocaleDateString('fr-FR')}
+                {unlockedBadges.map((badge, i) => {
+                  const Icon = badge.icon;
+                  return (
+                    <div
+                      key={i}
+                      className="p-4 rounded-2xl text-center transition-transform hover:scale-105"
+                      style={{ backgroundColor: "hsl(var(--paper))" }}
+                    >
+                      <Icon className={`w-12 h-12 mx-auto mb-2 ${badge.color}`} />
+                      <p className="font-semibold text-sm mb-1" style={{ color: "hsl(var(--ink))" }}>
+                        {badge.name}
                       </p>
-                    )}
-                  </div>
-                ))}
+                      <p className="text-xs mb-1" style={{ color: "hsl(var(--ink) / 0.6)" }}>
+                        {badge.desc}
+                      </p>
+                      {badge.unlockedAt && (
+                        <p className="text-xs" style={{ color: "hsl(var(--brand-plum))" }}>
+                          Débloqué le {new Date(badge.unlockedAt).toLocaleDateString('fr-FR')}
+                        </p>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
             {/* Locked Badges */}
             <div>
               <h3 className="text-lg font-semibold mb-3" style={{ color: "hsl(var(--ink))" }}>
-                À débloquer ({allBadges.filter(b => !b.unlocked).length})
+                À débloquer ({ACHIEVEMENTS.filter(b => !b.unlocked).length})
               </h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                {allBadges.filter(b => !b.unlocked).map((badge, i) => (
-                  <div
-                    key={i}
-                    className="p-4 rounded-2xl text-center opacity-50"
-                    style={{ backgroundColor: "hsl(var(--muted))" }}
-                  >
-                    <div className="text-4xl mb-2 grayscale">{badge.icon}</div>
-                    <p className="font-semibold text-sm mb-1" style={{ color: "hsl(var(--ink))" }}>
-                      {badge.name}
-                    </p>
-                    <p className="text-xs" style={{ color: "hsl(var(--ink) / 0.6)" }}>
-                      {badge.desc}
-                    </p>
-                  </div>
-                ))}
+                {ACHIEVEMENTS.filter(b => !b.unlocked).map((badge, i) => {
+                  const Icon = badge.icon;
+                  return (
+                    <div
+                      key={i}
+                      className="p-4 rounded-2xl text-center opacity-50"
+                      style={{ backgroundColor: "hsl(var(--muted))" }}
+                    >
+                      <Icon className={`w-12 h-12 mx-auto mb-2 grayscale ${badge.color}`} />
+                      <p className="font-semibold text-sm mb-1" style={{ color: "hsl(var(--ink))" }}>
+                        {badge.name}
+                      </p>
+                      <p className="text-xs" style={{ color: "hsl(var(--ink) / 0.6)" }}>
+                        {badge.desc}
+                      </p>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>
