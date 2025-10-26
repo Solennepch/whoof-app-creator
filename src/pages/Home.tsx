@@ -1,6 +1,8 @@
 import { IconContainer } from "@/components/ui/IconContainer";
 import { DogCard } from "@/components/feed/DogCard";
-import { Sparkles, TrendingUp, Award } from "lucide-react";
+import { Sparkles, TrendingUp, Award, Briefcase } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 const mockDogs = [
   {
@@ -42,6 +44,8 @@ const mockDogs = [
 ];
 
 export default function Home() {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen" style={{ backgroundColor: "var(--paper)" }}>
       <div className="mx-auto max-w-4xl px-4 py-6">
@@ -95,6 +99,32 @@ export default function Home() {
             <p className="text-2xl font-bold" style={{ color: "var(--brand-yellow)" }}>
               5
             </p>
+          </div>
+        </div>
+
+        {/* Professionnels Block */}
+        <div className="mb-6 rounded-2xl bg-white p-6 shadow-soft ring-1 ring-black/5">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-start gap-3">
+              <IconContainer>
+                <Briefcase className="h-5 w-5" />
+              </IconContainer>
+              <div>
+                <h2 className="text-xl font-bold mb-1" style={{ color: "var(--ink)" }}>
+                  Professionnels
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  Vous êtes un professionnel canin ? Rejoignez notre réseau de partenaires
+                </p>
+              </div>
+            </div>
+            <Button
+              onClick={() => navigate('/pro/onboarding')}
+              className="rounded-2xl whitespace-nowrap"
+              style={{ backgroundColor: "var(--brand-plum)" }}
+            >
+              Référencer mon activité
+            </Button>
           </div>
         </div>
 

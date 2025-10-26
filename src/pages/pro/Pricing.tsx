@@ -131,7 +131,7 @@ export default function ProPricing() {
                 }`}
                 style={
                   isPopular || isBest
-                    ? { ringColor: plan.color }
+                    ? { borderColor: plan.color, borderWidth: '2px', borderStyle: 'solid' }
                     : undefined
                 }
               >

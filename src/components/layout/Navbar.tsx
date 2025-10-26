@@ -1,13 +1,44 @@
-import { useState } from "react";
-import { Dog, Home, Compass, Calendar, MapPin, User, Building, Percent } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Dog, Home, Compass, Calendar, MapPin, User, Building, Percent, Briefcase } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { XpProgress } from "@/components/ui/XpProgress";
 import { CongratsModal } from "@/components/ui/CongratsModal";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
 
 export function Navbar() {
   const [xp, setXp] = useState(850);
   const [showCongrats, setShowCongrats] = useState(false);
+  const [isPro, setIsPro] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const checkProStatus = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          const { data } = await supabase
+            .from('pro_accounts')
+            .select('id')
+            .eq('user_id', user.id)
+            .single();
+          setIsPro(!!data);
+        }
+      } catch (error) {
+        console.error('Error checking pro status:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkProStatus();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
+      checkProStatus();
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const addXp = () => {
     const newXp = xp + 200;
@@ -17,7 +48,7 @@ export function Navbar() {
     }
   };
 
-  const navItems = [
+  const baseNavItems = [
     { to: "/", icon: Home, label: "Accueil" },
     { to: "/discover", icon: Compass, label: "Découvrir" },
     { to: "/annuaire", icon: Building, label: "Annuaire" },
@@ -26,6 +57,12 @@ export function Navbar() {
     { to: "/map", icon: MapPin, label: "Carte" },
     { to: "/profile/me", icon: User, label: "Profil" },
   ];
+
+  const proNavItem = isPro
+    ? { to: "/pro/dashboard", icon: Briefcase, label: "Espace Pro" }
+    : { to: "/pro/onboarding", icon: Briefcase, label: "Devenir partenaire" };
+
+  const navItems = isLoading ? baseNavItems : [...baseNavItems, proNavItem];
 
   return (
     <>
