@@ -112,7 +112,7 @@ export default function Discover() {
             className="h-16 w-16 rounded-full shadow-soft"
             onClick={() => handleSwipe(false)}
           >
-            <X className="h-6 w-6" style={{ color: "var(--ink)", opacity: 0.6 }} />
+            <X className="h-8 w-8" style={{ color: "var(--ink)", opacity: 0.6 }} />
           </Button>
 
           <Button
@@ -120,7 +120,7 @@ export default function Discover() {
             className="h-20 w-20 rounded-full shadow-soft bg-[#FF5DA2] hover:bg-[#FF5DA2]/90"
             onClick={() => handleSwipe(true)}
           >
-            <Heart className="h-8 w-8 text-white fill-white" />
+            <Heart className="h-10 w-10 text-white fill-white" />
           </Button>
         </div>
 
