@@ -1,6 +1,4 @@
 import { useState } from "react";
-import { Card } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Trophy, Dog, User, Star, Sparkles } from "lucide-react";
 
 const weeklyRankings = [
@@ -30,7 +28,7 @@ export default function Ranking() {
   const myRanking = rankings.find(r => r.isMe);
 
   return (
-    <div className="min-h-screen pb-24 relative overflow-hidden" style={{ 
+    <div className="min-h-screen pb-20 relative overflow-hidden" style={{ 
       background: "linear-gradient(135deg, #7B61FF 0%, #FF5DA2 50%, #FFC14D 100%)"
     }}>
       {/* Animated Stars Background */}
@@ -45,166 +43,123 @@ export default function Ranking() {
         <Star className="absolute bottom-60 right-16 w-6 h-6 text-white/30 animate-pulse" style={{ animationDelay: "3.5s" }} />
       </div>
 
-      <main className="pt-20 px-3 sm:px-4 max-w-7xl mx-auto relative z-10">
-        <div className="flex items-center justify-end mb-4">
-          <h1 
-            className="text-2xl sm:text-3xl font-bold text-white" 
-            style={{ fontFamily: "Fredoka" }}
-          >
+      <main className="mx-auto max-w-[720px] px-4 pb-20 space-y-5 relative z-10">
+        {/* Header */}
+        <div className="pt-20 pb-4">
+          <h1 className="text-3xl font-bold text-white text-center" style={{ fontFamily: "Fredoka" }}>
             Classement
           </h1>
         </div>
 
-        {/* My Stats Card */}
+        {/* Sticky Summary Card */}
         {myRanking && (
-          <Card 
-            className="mb-4 p-4 sm:p-6 rounded-2xl sm:rounded-3xl shadow-soft"
-            style={{ 
-              background: "linear-gradient(135deg, hsl(var(--brand-plum)) 0%, hsl(var(--brand-raspberry)) 100%)" 
-            }}
-          >
-            <div className="flex items-center justify-between text-white">
-              <div className="flex items-center gap-2 sm:gap-4">
-                <Trophy className="w-6 h-6 sm:w-10 sm:h-10 text-secondary" />
-                <div>
-                  <p className="text-xs sm:text-sm opacity-90">Ta position</p>
-                  <p className="text-2xl sm:text-3xl font-bold">#{myRanking.rank}</p>
-                </div>
+          <section className="sticky top-[56px] z-10 rounded-2xl p-4 bg-gradient-to-r from-[#7B61FF] to-[#FF5DA2] text-white shadow-lg">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs leading-4 opacity-90">Ta position</p>
+                <p className="text-2xl font-extrabold">#{myRanking.rank}</p>
               </div>
               <div className="text-right">
-                <p className="text-xs sm:text-sm opacity-90">{activeTab === "weekly" ? "Cette semaine" : "Ce mois"}</p>
-                <p className="text-lg sm:text-xl font-semibold">{myRanking.walks} balades</p>
-                <p className="text-xs sm:text-sm opacity-90">{myRanking.distance}</p>
+                <p className="text-xs leading-4 opacity-90">{activeTab === "weekly" ? "Cette semaine" : "Ce mois"}</p>
+                <p className="text-2xl font-extrabold">{myRanking.walks} balades</p>
+                <p className="text-xs leading-4 opacity-90">{myRanking.distance}</p>
               </div>
             </div>
-          </Card>
+            <div className="mt-3 h-2 rounded-full bg-white/30 overflow-hidden">
+              <div 
+                className="h-full bg-white/90 transition-all duration-300" 
+                style={{ width: `${Math.min((myRanking.walks / (rankings[0]?.walks || 1)) * 100, 100)}%` }}
+              />
+            </div>
+          </section>
         )}
 
         {/* Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-2 mb-4 rounded-2xl">
-            <TabsTrigger value="weekly" className="rounded-xl text-xs sm:text-sm">
-              Hebdo
-            </TabsTrigger>
-            <TabsTrigger value="monthly" className="rounded-xl text-xs sm:text-sm">
-              Mensuel
-            </TabsTrigger>
-          </TabsList>
+        <div className="grid grid-cols-2 p-1 rounded-full bg-white/70 shadow-sm backdrop-blur-sm">
+          <button
+            onClick={() => setActiveTab("weekly")}
+            className={`rounded-full py-2 text-sm font-medium transition-all ${
+              activeTab === "weekly" 
+                ? "bg-white shadow text-[#111827]" 
+                : "text-gray-600"
+            }`}
+          >
+            Hebdo
+          </button>
+          <button
+            onClick={() => setActiveTab("monthly")}
+            className={`rounded-full py-2 text-sm font-medium transition-all ${
+              activeTab === "monthly" 
+                ? "bg-white shadow text-[#111827]" 
+                : "text-gray-600"
+            }`}
+          >
+            Mensuel
+          </button>
+        </div>
 
-          <TabsContent value="weekly" className="space-y-2">
-            {weeklyRankings.map((user) => (
-              <Card
-                key={user.rank}
-                className={`p-3 sm:p-4 rounded-2xl shadow-soft transition-all ${
-                  user.isMe ? "ring-2 ring-brand-raspberry" : ""
+        {/* Rankings List */}
+        <ul className="space-y-3">
+          {rankings.map((user) => (
+            <li key={user.rank}>
+              <article 
+                className={`rounded-2xl p-4 shadow-sm flex items-center justify-between transition-all ${
+                  user.isMe 
+                    ? "ring-2 ring-[#7B61FF] bg-gradient-to-r from-[#7B61FF]/10 to-[#FF5DA2]/10 backdrop-blur-sm" 
+                    : "bg-white"
                 }`}
-                style={{ backgroundColor: user.isMe ? "hsl(var(--brand-raspberry) / 0.05)" : "hsl(var(--paper))" }}
               >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 sm:gap-4">
-                    {/* Rank Badge */}
-                    <div className="relative shrink-0">
-                      {user.rank <= 3 ? (
-                        <div className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full" style={{
-                          backgroundColor: user.rank === 1 ? "hsl(var(--brand-yellow))" : 
-                                         user.rank === 2 ? "hsl(var(--muted))" : 
-                                         "hsl(var(--border))"
-                        }}>
-                          <Trophy className={`w-5 h-5 sm:w-6 sm:h-6 ${
-                            user.rank === 1 ? "text-white" : 
-                            user.rank === 2 ? "text-muted-foreground" :
-                            "text-accent"
-                          }`} />
-                        </div>
+                <div className="flex items-center gap-3 min-w-0">
+                  {/* Rank Badge */}
+                  {user.rank <= 3 ? (
+                    <div 
+                      className="w-9 h-9 rounded-full flex items-center justify-center shrink-0"
+                      style={{
+                        backgroundColor: user.rank === 1 ? "#FFC14D" : 
+                                       user.rank === 2 ? "#E5E7EB" : 
+                                       "#D1D5DB"
+                      }}
+                    >
+                      <Trophy 
+                        className="w-5 h-5"
+                        style={{
+                          color: user.rank === 1 ? "#ffffff" : 
+                                user.rank === 2 ? "#6B7280" :
+                                "#7B61FF"
+                        }}
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-sm font-semibold text-[#111827] shrink-0">
+                      #{user.rank}
+                    </div>
+                  )}
+
+                  {/* User Info */}
+                  <div className="min-w-0">
+                    <p className="text-base font-semibold truncate text-[#111827] flex items-center gap-1">
+                      {user.avatar === "Dog" ? (
+                        <Dog className="w-4 h-4 inline" />
                       ) : (
-                        <div className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full" style={{ backgroundColor: "hsl(var(--muted))" }}>
-                          <span className="font-bold text-sm sm:text-base" style={{ color: "hsl(var(--ink))" }}>#{user.rank}</span>
-                        </div>
+                        <User className="w-4 h-4 inline" />
                       )}
-                    </div>
-
-                    {/* User Info */}
-                    <div className="min-w-0">
-                      <p className="font-semibold text-sm sm:text-lg truncate" style={{ color: "hsl(var(--ink))" }}>
-                        <span className="text-base sm:text-xl">{user.avatar}</span> {user.name}
-                      </p>
-                      <p className="text-xs sm:text-sm" style={{ color: "hsl(var(--ink) / 0.6)" }}>
-                        {user.distance}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Walks Count */}
-                  <div className="text-right shrink-0">
-                    <p className="text-xl sm:text-2xl font-bold" style={{ color: "hsl(var(--brand-plum))" }}>
-                      {user.walks}
+                      {user.name}
                     </p>
-                    <p className="text-xs whitespace-nowrap" style={{ color: "hsl(var(--ink) / 0.6)" }}>
-                      balades
-                    </p>
+                    <p className="text-xs text-gray-500 truncate">{user.distance}</p>
                   </div>
                 </div>
-              </Card>
-            ))}
-          </TabsContent>
 
-          <TabsContent value="monthly" className="space-y-2">
-            {monthlyRankings.map((user) => (
-              <Card
-                key={user.rank}
-                className={`p-3 sm:p-4 rounded-2xl shadow-soft transition-all ${
-                  user.isMe ? "ring-2 ring-brand-raspberry" : ""
-                }`}
-                style={{ backgroundColor: user.isMe ? "hsl(var(--brand-raspberry) / 0.05)" : "hsl(var(--paper))" }}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 sm:gap-4">
-                    {/* Rank Badge */}
-                    <div className="relative shrink-0">
-                      {user.rank <= 3 ? (
-                        <div className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full" style={{
-                          backgroundColor: user.rank === 1 ? "hsl(var(--brand-yellow))" : 
-                                         user.rank === 2 ? "hsl(var(--muted))" : 
-                                         "hsl(var(--border))"
-                        }}>
-                          <Trophy className={`w-5 h-5 sm:w-6 sm:h-6 ${
-                            user.rank === 1 ? "text-white" : 
-                            user.rank === 2 ? "text-muted-foreground" :
-                            "text-accent"
-                          }`} />
-                        </div>
-                      ) : (
-                        <div className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full" style={{ backgroundColor: "hsl(var(--muted))" }}>
-                          <span className="font-bold text-sm sm:text-base" style={{ color: "hsl(var(--ink))" }}>#{user.rank}</span>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* User Info */}
-                    <div className="min-w-0">
-                      <p className="font-semibold text-sm sm:text-lg truncate" style={{ color: "hsl(var(--ink))" }}>
-                        <span className="text-base sm:text-xl">{user.avatar}</span> {user.name}
-                      </p>
-                      <p className="text-xs sm:text-sm" style={{ color: "hsl(var(--ink) / 0.6)" }}>
-                        {user.distance}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Walks Count */}
-                  <div className="text-right shrink-0">
-                    <p className="text-xl sm:text-2xl font-bold" style={{ color: "hsl(var(--brand-plum))" }}>
-                      {user.walks}
-                    </p>
-                    <p className="text-xs whitespace-nowrap" style={{ color: "hsl(var(--ink) / 0.6)" }}>
-                      balades
-                    </p>
-                  </div>
+                {/* Walks Count */}
+                <div className="text-right shrink-0">
+                  <p className="text-xl font-bold leading-none" style={{ color: "#7B61FF" }}>
+                    {user.walks}
+                  </p>
+                  <p className="text-[10px] uppercase tracking-wide text-gray-400">balades</p>
                 </div>
-              </Card>
-            ))}
-          </TabsContent>
-        </Tabs>
+              </article>
+            </li>
+          ))}
+        </ul>
       </main>
     </div>
   );
