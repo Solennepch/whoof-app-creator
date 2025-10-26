@@ -59,8 +59,13 @@ export default function Profile() {
   useEffect(() => {
     async function fetchProfileData() {
       if (!id) {
-        setError("ID de profil manquant");
-        setIsLoading(false);
+        navigate('/profile/me', { replace: true });
+        return;
+      }
+
+      // Validate UUID - if not valid, redirect to /profile/me
+      if (!isValidUUID(id)) {
+        navigate('/profile/me', { replace: true });
         return;
       }
 
@@ -68,33 +73,24 @@ export default function Profile() {
       setError(null);
 
       try {
-        // Check if user is authenticated
-        const { data: { user }, error: userError } = await supabase.auth.getUser();
+        // Get current session for auth token
+        const { data: { session } } = await supabase.auth.getSession();
         
-        if (userError || !user) {
+        if (!session) {
           // Not authenticated, redirect to login
-          navigate('/login');
+          navigate('/login', { replace: true });
           return;
         }
 
-        let targetUserId: string;
+        // Check if viewing own profile
+        const { data: { user } } = await supabase.auth.getUser();
+        setIsOwner(user?.id === id);
 
-        // Determine which profile to fetch
-        if (id === 'me' || !isValidUUID(id)) {
-          // Fetch current user's profile
-          targetUserId = user.id;
-          setIsOwner(true);
-        } else {
-          // Fetch specific user's profile by UUID
-          targetUserId = id;
-          setIsOwner(user.id === id);
-        }
-
-        // Fetch profile directly from profiles table
+        // Fetch profile from profiles table (public access via RLS)
         const { data: profileData, error: profileError } = await supabase
           .from('profiles')
           .select('*')
-          .eq('id', targetUserId)
+          .eq('id', id)
           .single();
 
         if (profileError) {
@@ -116,17 +112,24 @@ export default function Profile() {
 
         setProfile(profileData);
 
-        // Fetch dogs for this user via direct table query
-        const { data: dogsData, error: dogsError } = await supabase
-          .from('dogs')
-          .select('*')
-          .eq('owner_id', targetUserId);
+        // Fetch dogs via edge function GET /dog?owner=:id
+        const dogsResponse = await fetch(
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/dog?owner=${id}`,
+          {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${session.access_token}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        );
 
-        if (dogsError) {
-          console.error('Error fetching dogs:', dogsError);
-          // Don't fail the whole page if dogs fail to load
-        } else {
+        if (dogsResponse.ok) {
+          const dogsData = await dogsResponse.json();
           setDogs(dogsData || []);
+        } else {
+          console.error('Error fetching dogs:', dogsResponse.statusText);
+          // Don't fail the whole page if dogs fail to load
         }
 
       } catch (error) {
@@ -134,7 +137,7 @@ export default function Profile() {
         
         if (error instanceof Error) {
           if (error.message.includes('401') || error.message.includes('Unauthorized')) {
-            navigate('/login');
+            navigate('/login', { replace: true });
             return;
           }
           setError(error.message);
