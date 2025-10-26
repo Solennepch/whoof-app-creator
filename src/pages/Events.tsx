@@ -35,8 +35,8 @@ export default function Events() {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "var(--paper)" }}>
-      <div className="mx-auto max-w-4xl px-4 py-6">
+    <div className="min-h-screen pb-24" style={{ backgroundColor: "var(--paper)" }}>
+      <div className="mx-auto max-w-4xl px-4 pt-20">
         <div className="mb-6 flex items-center justify-between">
           <div>
             <h1 className="mb-2 text-3xl font-bold" style={{ color: "var(--ink)" }}>

@@ -244,7 +244,7 @@ function ProfileContent() {
   // Main profile view
   return (
     <div className="min-h-screen pb-24" style={{ backgroundColor: "var(--paper)" }}>
-      <div className="mx-auto max-w-4xl px-4 py-6 space-y-6">
+      <div className="mx-auto max-w-4xl px-4 pt-20 pb-6 space-y-6">
         {/* Quick Access Menu - Only show for own profile */}
         {isOwnProfile && (
           <Card className="p-4 rounded-3xl shadow-soft">

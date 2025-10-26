@@ -47,8 +47,8 @@ export default function Discover() {
   if (!current) return null;
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "var(--paper)" }}>
-      <div className="mx-auto max-w-2xl px-4 py-6">
+    <div className="min-h-screen pb-24" style={{ backgroundColor: "var(--paper)" }}>
+      <div className="mx-auto max-w-2xl px-4 pt-20">
         <div className="mb-6 text-center">
           <h1 className="mb-2 text-3xl font-bold" style={{ color: "var(--ink)" }}>
             Découvrir

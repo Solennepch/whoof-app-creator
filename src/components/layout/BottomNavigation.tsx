@@ -11,8 +11,17 @@ export function BottomNavigation() {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-paper shadow-soft md:hidden" style={{ borderTop: "1px solid hsl(var(--border))" }}>
-      <div className="flex items-center justify-around px-2 py-3">
+    <nav 
+      className="fixed bottom-0 left-0 right-0 z-50 bg-paper shadow-soft md:hidden w-full overflow-hidden" 
+      style={{ 
+        borderTop: "1px solid hsl(var(--border))",
+        paddingLeft: "env(safe-area-inset-left)",
+        paddingRight: "env(safe-area-inset-right)",
+        paddingBottom: "calc(8px + env(safe-area-inset-bottom))",
+        paddingTop: "8px"
+      }}
+    >
+      <div className="flex items-center justify-between w-full">
         {navItems.map((item) => {
           const Icon = item.icon;
           return (
@@ -20,14 +29,13 @@ export function BottomNavigation() {
               key={item.to}
               to={item.to}
               end
-              className="relative group"
+              className="flex-1 min-w-0"
+              style={{ flex: "1 1 20%" }}
             >
               {({ isActive }) => (
-                <div className={`flex flex-col items-center gap-1 px-4 py-2 rounded-2xl transition-all duration-300 ${
-                  isActive ? '' : 'group-hover:-translate-y-0.5'
-                }`}>
+                <div className="flex flex-col items-center justify-center gap-1 py-2 transition-all duration-300">
                   <Icon 
-                    className="h-6 w-6 transition-colors duration-300" 
+                    className="w-6 h-6 max-w-full transition-colors duration-300" 
                     style={{ 
                       color: isActive 
                         ? "hsl(var(--brand-raspberry))" 
@@ -37,11 +45,12 @@ export function BottomNavigation() {
                     strokeWidth={isActive ? 0 : 2}
                   />
                   <span 
-                    className="text-xs font-medium transition-colors duration-300"
+                    className="text-xs font-medium transition-colors duration-300 whitespace-nowrap overflow-hidden text-ellipsis text-center w-full px-1"
                     style={{ 
                       color: isActive 
                         ? "hsl(var(--brand-raspberry))" 
-                        : "hsl(var(--ink) / 0.6)"
+                        : "hsl(var(--ink) / 0.6)",
+                      lineHeight: "1"
                     }}
                   >
                     {item.label}

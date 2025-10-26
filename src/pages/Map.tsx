@@ -733,8 +733,8 @@ export default function Map() {
   };
 
   return (
-    <div className="min-h-screen pb-20 md:pb-6" style={{ backgroundColor: "var(--paper)" }}>
-      <div className="mx-auto max-w-6xl px-4 py-4 md:py-6">
+    <div className="min-h-screen pb-24 md:pb-6" style={{ backgroundColor: "var(--paper)" }}>
+      <div className="mx-auto max-w-6xl px-4 pt-20 md:pt-6">
         {/* Header - Mobile optimized */}
         <div className="mb-4 md:mb-6 flex items-center justify-between gap-2">
           <div className="min-w-0">

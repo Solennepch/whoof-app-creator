@@ -1,10 +1,7 @@
 import { useState } from "react";
-import { Header } from "@/components/layout/Header";
-import { BottomNavigation } from "@/components/layout/BottomNavigation";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Trophy, TrendingUp, Award } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Trophy } from "lucide-react";
 
 const weeklyRankings = [
   { rank: 1, name: "Luna", walks: 28, distance: "42 km", avatar: "🐕" },
@@ -33,10 +30,8 @@ export default function Ranking() {
   const myRanking = rankings.find(r => r.isMe);
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "hsl(var(--paper))" }}>
-      <Header />
-      
-      <main className="pt-16 pb-24 px-3 sm:px-4 max-w-7xl mx-auto">
+    <div className="min-h-screen pb-24" style={{ backgroundColor: "hsl(var(--paper))" }}>
+      <main className="pt-20 px-3 sm:px-4 max-w-7xl mx-auto">
         <div className="flex items-center justify-end mb-4">
           <h1 
             className="text-2xl sm:text-3xl font-bold" 
@@ -189,8 +184,6 @@ export default function Ranking() {
           </TabsContent>
         </Tabs>
       </main>
-
-      <BottomNavigation />
     </div>
   );
 }
