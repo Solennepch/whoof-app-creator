@@ -43,33 +43,47 @@ const App = () => (
       <BrowserRouter>
         <Header />
         <Routes>
+          {/* Auth & Onboarding Flow */}
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/onboarding/profile" element={<ProfileOnboarding />} />
+          <Route path="/onboarding/dog" element={<DogOnboarding />} />
+          
+          {/* Main App Pages */}
           <Route path="/" element={<Navigate to="/map" replace />} />
-          <Route path="/home" element={<Home />} />
+          <Route path="/map" element={<Map />} />
           <Route path="/discover" element={<Discover />} />
           <Route path="/messages" element={<Messages />} />
           <Route path="/events" element={<Events />} />
-          <Route path="/map" element={<Map />} />
           <Route path="/ranking" element={<Ranking />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
+          
+          {/* Profile Pages */}
+          <Route path="/profile/me" element={<ProfileMe />} />
+          <Route path="/profile/:id" element={<Profile />} />
+          
+          {/* Features */}
+          <Route path="/astro-dog" element={<AstroDog />} />
+          <Route path="/recompenses" element={<Recompenses />} />
+          <Route path="/parrainage" element={<Parrainage />} />
+          
+          {/* Directory & Partnerships */}
           <Route path="/annuaire" element={<Annuaire />} />
           <Route path="/annuaire/carte" element={<AnnuaireMap />} />
           <Route path="/annuaire/:id" element={<AnnuaireDetail />} />
           <Route path="/partenariats" element={<Partenariats />} />
           <Route path="/partenariats/:id" element={<PartenariatDetail />} />
+          
+          {/* Premium & Pro */}
+          <Route path="/premium" element={<Premium />} />
+          <Route path="/premium/pricing" element={<PremiumPricing />} />
           <Route path="/pro/onboarding" element={<ProOnboarding />} />
           <Route path="/pro/dashboard" element={<ProDashboard />} />
           <Route path="/pro/pricing" element={<ProPricing />} />
-          <Route path="/premium/pricing" element={<PremiumPricing />} />
-          <Route path="/premium" element={<Premium />} />
-          <Route path="/parrainage" element={<Parrainage />} />
-          <Route path="/recompenses" element={<Recompenses />} />
-          <Route path="/astro-dog" element={<AstroDog />} />
-          <Route path="/onboarding/profile" element={<ProfileOnboarding />} />
-          <Route path="/onboarding/dog" element={<DogOnboarding />} />
-          <Route path="/profile/me" element={<ProfileMe />} />
-          <Route path="/profile/:id" element={<Profile />} />
+          
+          {/* Legacy & Debug */}
+          <Route path="/home" element={<Home />} />
           <Route path="/debug/health" element={<DebugHealth />} />
+          
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
