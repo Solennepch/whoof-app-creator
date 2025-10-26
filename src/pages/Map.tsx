@@ -14,6 +14,10 @@ import { useToast } from "@/hooks/use-toast";
 // Initialize Mapbox token
 const mapboxToken = import.meta.env.VITE_MAPBOX_TOKEN as string;
 
+console.log('🔑 Checking Mapbox token...');
+console.log('Token exists:', !!mapboxToken);
+console.log('Token prefix:', mapboxToken ? mapboxToken.substring(0, 8) + '...' : 'NO TOKEN');
+
 if (!mapboxToken) {
   console.error('❌ MAPBOX TOKEN ERROR: No Mapbox token found. Please set VITE_MAPBOX_TOKEN in your environment variables.');
 } else {
