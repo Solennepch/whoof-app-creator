@@ -65,7 +65,7 @@ export function SidebarMenu({ open, onOpenChange }: SidebarMenuProps) {
     { to: "/parrainage", icon: Gift, label: "Parrainer" },
     { to: "/premium", icon: Crown, label: "Passer Premium" },
     { to: "/annuaire", icon: Building, label: "Annuaire" },
-    { to: "/partenariats", icon: Percent, label: "Partenariats" },
+    { to: "/partenariats", icon: Percent, label: "Bons plans" },
     { 
       to: isPro ? "/pro/dashboard" : "/pro/onboarding", 
       icon: Briefcase, 
