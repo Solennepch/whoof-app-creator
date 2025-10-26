@@ -1,9 +1,11 @@
 import { useParams } from "react-router-dom";
-import { MapPin, Calendar, Award, Heart, MessageCircle, Settings } from "lucide-react";
-import { IconContainer } from "@/components/ui/IconContainer";
-import { XpProgress } from "@/components/ui/XpProgress";
-import { ReasonChip } from "@/components/ui/ReasonChip";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { DogCarousel } from "@/components/profile/DogCarousel";
+import { OwnerSection } from "@/components/profile/OwnerSection";
+import { XpProgress } from "@/components/ui/XpProgress";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 const badges = [
   { icon: "🦴", name: "Premier pas", desc: "Créé ton profil" },
@@ -12,72 +14,137 @@ const badges = [
   { icon: "🎾", name: "Joueur", desc: "5 événements" },
 ];
 
+interface Dog {
+  id: string;
+  name: string;
+  breed?: string;
+  age_years?: number;
+  birth_date?: string;
+  temperament?: string;
+  size?: string;
+  avatar_url?: string;
+  vaccination?: any;
+  anecdote?: string;
+}
+
+interface Profile {
+  id: string;
+  display_name?: string;
+  avatar_url?: string;
+  birth_date?: string;
+  bio?: string;
+  gender?: string;
+  relationship_status?: string;
+  interests?: string[];
+  verified?: boolean;
+}
+
 export default function Profile() {
   const { id } = useParams();
+  const { toast } = useToast();
+  const [dogs, setDogs] = useState<Dog[]>([]);
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isOwner, setIsOwner] = useState(false);
+
+  useEffect(() => {
+    async function fetchProfileData() {
+      if (!id) return;
+
+      setIsLoading(true);
+      try {
+        // Check if current user is the owner
+        const { data: { user } } = await supabase.auth.getUser();
+        setIsOwner(user?.id === id);
+
+        // Fetch profile
+        const { data: profileData, error: profileError } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', id)
+          .single();
+
+        if (profileError) throw profileError;
+        setProfile(profileData);
+
+        // Fetch dogs
+        const { data: dogsData, error: dogsError } = await supabase
+          .from('dogs')
+          .select('*')
+          .eq('owner_id', id);
+
+        if (dogsError) throw dogsError;
+        setDogs(dogsData || []);
+
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+        toast({
+          title: "Erreur",
+          description: "Impossible de charger le profil",
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchProfileData();
+  }, [id, toast]);
+
+  const handleLike = () => {
+    toast({
+      title: "Like envoyé ❤️",
+      description: "Votre intérêt a été envoyé avec succès",
+    });
+  };
+
+  const handleMessage = () => {
+    toast({
+      title: "Message",
+      description: "Fonctionnalité de messagerie bientôt disponible",
+    });
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: "var(--paper)" }}>
+        <div className="text-center">
+          <div className="animate-pulse text-4xl mb-4">🐕</div>
+          <p className="text-muted-foreground">Chargement du profil...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!profile) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: "var(--paper)" }}>
+        <div className="text-center">
+          <p className="text-muted-foreground">Profil non trouvé</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: "var(--paper)" }}>
-      <div className="mx-auto max-w-4xl px-4 py-6">
-        {/* Header */}
-        <div className="mb-6 rounded-3xl bg-white p-6 shadow-soft ring-1 ring-black/5">
-          <div className="flex flex-col items-center text-center sm:flex-row sm:text-left">
-            <div
-              className="mb-4 h-24 w-24 flex-shrink-0 rounded-full bg-cover bg-center ring-4 sm:mb-0 sm:mr-6"
-              style={{
-                backgroundImage: "url(https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=400&h=400&fit=crop)",
-                borderColor: "var(--brand-plum)",
-              }}
-            />
-
-            <div className="flex-1">
-              <div className="mb-2 flex items-center justify-center gap-2 sm:justify-start">
-                <h1 className="text-2xl font-bold" style={{ color: "var(--ink)" }}>
-                  Buddy
-                </h1>
-                <ReasonChip label="Niveau 2" />
-              </div>
-              <p className="mb-3 text-muted-foreground">Golden Retriever • 3 ans • Paris</p>
-
-              <div className="mb-4 flex flex-wrap justify-center gap-4 text-sm sm:justify-start">
-                <div className="flex items-center gap-1">
-                  <MapPin className="h-4 w-4" style={{ color: "var(--brand-plum)" }} />
-                  <span style={{ color: "var(--ink)", opacity: 0.8 }}>2.1 km</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Calendar className="h-4 w-4" style={{ color: "var(--brand-raspberry)" }} />
-                  <span style={{ color: "var(--ink)", opacity: 0.8 }}>Actif depuis Mars 2024</span>
-                </div>
-              </div>
-
-              <div className="flex justify-center gap-2 sm:justify-start">
-                <Button className="rounded-2xl" style={{ backgroundColor: "var(--brand-raspberry)" }}>
-                  <Heart className="mr-2 h-4 w-4" />
-                  J'aime
-                </Button>
-                <Button variant="outline" className="rounded-2xl">
-                  <MessageCircle className="mr-2 h-4 w-4" />
-                  Message
-                </Button>
-                <Button variant="ghost" size="icon" className="rounded-full">
-                  <Settings className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-          </div>
+      <div className="mx-auto max-w-4xl px-4 py-6 space-y-6">
+        {/* Dog Section - Priority */}
+        <div>
+          <DogCarousel 
+            dogs={dogs}
+            isOwner={isOwner}
+            onLike={handleLike}
+            onMessage={handleMessage}
+          />
         </div>
 
-        {/* Bio */}
-        <div className="mb-6 rounded-2xl bg-white p-6 shadow-soft ring-1 ring-black/5">
-          <h2 className="mb-3 text-lg font-semibold" style={{ color: "var(--ink)" }}>
-            À propos
-          </h2>
-          <p style={{ color: "var(--ink)", opacity: 0.8 }}>
-            Bonjour ! Je m'appelle Buddy et j'adore rencontrer de nouveaux amis au parc. 
-            Je suis très joueur et j'aime particulièrement courir après les balles. 
-            Toujours partant pour une balade ou une session de jeu ! 🎾
-          </p>
+        {/* Owner Section */}
+        <div>
+          <OwnerSection profile={profile} />
         </div>
 
+        {/* Stats and XP */}
         <div className="grid gap-6 lg:grid-cols-2">
           {/* XP Progress */}
           <div>
@@ -108,7 +175,7 @@ export default function Profile() {
         </div>
 
         {/* Badges */}
-        <div className="mt-6 rounded-2xl bg-white p-6 shadow-soft ring-1 ring-black/5">
+        <div className="rounded-2xl bg-white p-6 shadow-soft ring-1 ring-black/5">
           <h2 className="mb-4 text-lg font-semibold" style={{ color: "var(--ink)" }}>
             Badges débloqués
           </h2>
