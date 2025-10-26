@@ -18,6 +18,7 @@ import PartenariatDetail from "./pages/PartenariatDetail";
 import ProOnboarding from "./pages/pro/Onboarding";
 import ProDashboard from "./pages/pro/Dashboard";
 import ProPricing from "./pages/pro/Pricing";
+import PremiumPricing from "./pages/premium/Pricing";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -42,6 +43,7 @@ const App = () => (
           <Route path="/pro/onboarding" element={<ProOnboarding />} />
           <Route path="/pro/dashboard" element={<ProDashboard />} />
           <Route path="/pro/pricing" element={<ProPricing />} />
+          <Route path="/premium/pricing" element={<PremiumPricing />} />
           <Route path="/profile/me" element={<ProfileMe />} />
           <Route path="/profile/:id" element={<Profile />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
