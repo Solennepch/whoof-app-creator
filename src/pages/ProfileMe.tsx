@@ -1,21 +1,46 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { CheckCircle } from "lucide-react";
 import logoWhoof from "@/assets/logo-whoof.png";
 
 export default function ProfileMe() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
-    async function redirectToUserProfile() {
+    async function checkSubscriptionAndRedirect() {
       try {
-        // Get current session to extract auth token
         const { data: { session } } = await supabase.auth.getSession();
         
         if (!session) {
-          // Not authenticated, redirect to login
           navigate('/login', { replace: true });
           return;
+        }
+
+        // Check if returning from successful checkout
+        const success = searchParams.get('success');
+        if (success === 'true') {
+          setShowSuccess(true);
+          
+          // Call check-subscription endpoint
+          try {
+            const { data, error } = await supabase.functions.invoke('check-subscription');
+            
+            if (error) {
+              console.error('Error checking subscription:', error);
+            } else if (data?.isPremium) {
+              toast.success('Abonnement Premium activé ! 🎉');
+            }
+          } catch (error) {
+            console.error('Error checking subscription:', error);
+          }
+
+          // Wait a bit before redirecting to show the success message
+          await new Promise(resolve => setTimeout(resolve, 2000));
         }
 
         // Call GET /profile edge function
@@ -31,17 +56,14 @@ export default function ProfileMe() {
         );
 
         if (response.status === 401 || response.status === 400) {
-          // Unauthorized or error, redirect to login
           navigate('/login', { replace: true });
           return;
         }
 
         if (response.ok) {
           const profile = await response.json();
-          // Redirect to user's profile page
           navigate(`/profile/${profile.id}`, { replace: true });
         } else {
-          // Other errors, redirect to login
           navigate('/login', { replace: true });
         }
       } catch (error) {
@@ -50,16 +72,25 @@ export default function ProfileMe() {
       }
     }
 
-    redirectToUserProfile();
-  }, [navigate]);
+    checkSubscriptionAndRedirect();
+  }, [navigate, searchParams]);
 
-  // Show an elegant loading state while redirecting
   return (
     <div 
       className="min-h-screen flex items-center justify-center animate-fade-in" 
       style={{ backgroundColor: "var(--paper)" }}
     >
-      <div className="text-center">
+      <div className="text-center max-w-md px-4">
+        {/* Success Message */}
+        {showSuccess && (
+          <Alert className="mb-8 bg-green-50 border-green-200">
+            <CheckCircle className="h-5 w-5 text-green-600" />
+            <AlertDescription className="text-green-800 font-semibold">
+              Paiement réussi ! Votre abonnement Premium est maintenant actif.
+            </AlertDescription>
+          </Alert>
+        )}
+
         {/* Logo Whoof with scale-in animation */}
         <div className="mb-8 animate-scale-in">
           <img 

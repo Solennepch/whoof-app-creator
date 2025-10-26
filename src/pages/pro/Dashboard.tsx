@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Building, Edit, Eye, Percent, BarChart3, CreditCard, CheckCircle, Clock, XCircle } from "lucide-react";
 import { toast } from "sonner";
 
@@ -22,8 +23,10 @@ interface ProAccount {
 
 export default function ProDashboard() {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [proAccount, setProAccount] = useState<ProAccount | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
     async function loadProAccount() {
@@ -32,6 +35,28 @@ export default function ProDashboard() {
         if (!session) {
           navigate('/login');
           return;
+        }
+
+        // Check if returning from successful checkout
+        const success = searchParams.get('success');
+        if (success === 'true') {
+          setShowSuccess(true);
+          
+          // Call check-subscription endpoint
+          try {
+            const { data, error } = await supabase.functions.invoke('check-subscription');
+            
+            if (error) {
+              console.error('Error checking subscription:', error);
+            } else if (data?.proPlan) {
+              toast.success('Abonnement Pro Premium activé ! 🎉');
+            }
+          } catch (error) {
+            console.error('Error checking subscription:', error);
+          }
+
+          // Remove success param from URL
+          setSearchParams({});
         }
 
         const response = await fetch(
@@ -63,7 +88,7 @@ export default function ProDashboard() {
     }
 
     loadProAccount();
-  }, [navigate]);
+  }, [navigate, searchParams, setSearchParams]);
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -108,6 +133,16 @@ export default function ProDashboard() {
   return (
     <div className="min-h-screen" style={{ backgroundColor: "var(--paper)" }}>
       <div className="mx-auto max-w-7xl px-4 py-8">
+        {/* Success Message */}
+        {showSuccess && (
+          <Alert className="mb-6 bg-green-50 border-green-200">
+            <CheckCircle className="h-5 w-5 text-green-600" />
+            <AlertDescription className="text-green-800 font-semibold">
+              Paiement réussi ! Votre abonnement Pro Premium est maintenant actif.
+            </AlertDescription>
+          </Alert>
+        )}
+
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
