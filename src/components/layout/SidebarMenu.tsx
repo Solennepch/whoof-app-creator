@@ -63,7 +63,6 @@ export function SidebarMenu({ open, onOpenChange }: SidebarMenuProps) {
     { to: "/profile/me", icon: User, label: "Profil" },
     { to: "/astro-dog", icon: Star, label: "Mon Astro Dog" },
     { to: "/parrainage", icon: Gift, label: "Parrainer" },
-    { to: "/premium", icon: Crown, label: "Passer Premium" },
     { to: "/annuaire", icon: Building, label: "Annuaire" },
     { to: "/partenariats", icon: Percent, label: "Bons plans" },
   ];
