@@ -8,7 +8,8 @@ import { XpProgress } from "@/components/ui/XpProgress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { safeFetch } from "@/lib/safeFetch";
 import ErrorBoundary from "@/components/ErrorBoundary";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, User, Dog as DogIcon, Settings, Briefcase, ChevronRight } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 const badges = [
   { icon: "🦴", name: "Premier pas", desc: "Créé ton profil" },
@@ -56,6 +57,8 @@ function ProfileContent() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
+  const [isOwnProfile, setIsOwnProfile] = useState(false);
+  const [isPro, setIsPro] = useState(false);
 
   const fetchProfileData = async () => {
     if (!id) {
@@ -73,6 +76,10 @@ function ProfileContent() {
     setError(null);
 
     try {
+      // Check if this is the user's own profile
+      const { data: { user } } = await supabase.auth.getUser();
+      const currentUserId = user?.id;
+      
       // Fetch profile and dogs from unified endpoint
       const data = await safeFetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/profile/${id}`);
 
@@ -85,6 +92,18 @@ function ProfileContent() {
 
       setProfile(data.profile);
       setDogs(data.dogs || []);
+      setIsOwnProfile(currentUserId === id);
+
+      // Check pro status if it's own profile
+      if (currentUserId === id && user) {
+        const { data: proAccount } = await supabase
+          .from('pro_accounts')
+          .select('id')
+          .eq('user_id', user.id)
+          .maybeSingle();
+        
+        setIsPro(!!proAccount);
+      }
 
     } catch (err) {
       console.error('Error fetching profile:', err);
@@ -221,8 +240,71 @@ function ProfileContent() {
 
   // Main profile view
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "var(--paper)" }}>
+    <div className="min-h-screen pb-24" style={{ backgroundColor: "var(--paper)" }}>
       <div className="mx-auto max-w-4xl px-4 py-6 space-y-6">
+        {/* Quick Access Menu - Only show for own profile */}
+        {isOwnProfile && (
+          <Card className="p-4 rounded-3xl shadow-soft">
+            <h3 className="text-lg font-semibold mb-3" style={{ color: "var(--ink)" }}>
+              Accès rapide
+            </h3>
+            <div className="grid gap-2">
+              <button
+                onClick={() => navigate('/onboarding/profile')}
+                className="flex items-center justify-between p-3 rounded-2xl bg-paper hover:bg-muted transition"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "var(--brand-plum)20" }}>
+                    <User className="h-5 w-5" style={{ color: "var(--brand-plum)" }} />
+                  </div>
+                  <span className="font-medium" style={{ color: "var(--ink)" }}>Mon compte</span>
+                </div>
+                <ChevronRight className="h-5 w-5 text-muted-foreground" />
+              </button>
+
+              <button
+                onClick={() => navigate('/onboarding/dog')}
+                className="flex items-center justify-between p-3 rounded-2xl bg-paper hover:bg-muted transition"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "var(--brand-raspberry)20" }}>
+                    <DogIcon className="h-5 w-5" style={{ color: "var(--brand-raspberry)" }} />
+                  </div>
+                  <span className="font-medium" style={{ color: "var(--ink)" }}>Mon chien</span>
+                </div>
+                <ChevronRight className="h-5 w-5 text-muted-foreground" />
+              </button>
+
+              <button
+                onClick={() => navigate('/onboarding/profile')}
+                className="flex items-center justify-between p-3 rounded-2xl bg-paper hover:bg-muted transition"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "var(--brand-yellow)20" }}>
+                    <Settings className="h-5 w-5" style={{ color: "var(--brand-yellow)" }} />
+                  </div>
+                  <span className="font-medium" style={{ color: "var(--ink)" }}>Paramètres</span>
+                </div>
+                <ChevronRight className="h-5 w-5 text-muted-foreground" />
+              </button>
+
+              <button
+                onClick={() => navigate(isPro ? '/pro/dashboard' : '/pro/onboarding')}
+                className="flex items-center justify-between p-3 rounded-2xl bg-paper hover:bg-muted transition"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "var(--brand-plum)20" }}>
+                    <Briefcase className="h-5 w-5" style={{ color: "var(--brand-plum)" }} />
+                  </div>
+                  <span className="font-medium" style={{ color: "var(--ink)" }}>
+                    {isPro ? 'Espace Pro' : 'Devenir partenaire'}
+                  </span>
+                </div>
+                <ChevronRight className="h-5 w-5 text-muted-foreground" />
+              </button>
+            </div>
+          </Card>
+        )}
         {/* Section 1: Dog Section */}
         <div>
           <h2 
