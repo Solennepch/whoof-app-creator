@@ -302,6 +302,13 @@ export type Database = {
             referencedRelation: "pro_accounts_public"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "partnerships_pro_id_fkey"
+            columns: ["pro_id"]
+            isOneToOne: false
+            referencedRelation: "pro_accounts_safe"
+            referencedColumns: ["id"]
+          },
         ]
       }
       pro_accounts: {
@@ -809,6 +816,66 @@ export type Database = {
           geo?: unknown
           id?: string | null
           location?: unknown
+          logo_url?: string | null
+          phone?: never
+          plan?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          website?: string | null
+        }
+        Relationships: []
+      }
+      pro_accounts_safe: {
+        Row: {
+          address: string | null
+          business_name: string | null
+          category: string | null
+          contact_public: boolean | null
+          created_at: string | null
+          description: string | null
+          email: string | null
+          gallery_urls: string[] | null
+          geo: unknown
+          id: string | null
+          logo_url: string | null
+          phone: string | null
+          plan: string | null
+          status: string | null
+          updated_at: string | null
+          user_id: string | null
+          website: string | null
+        }
+        Insert: {
+          address?: string | null
+          business_name?: string | null
+          category?: string | null
+          contact_public?: boolean | null
+          created_at?: string | null
+          description?: string | null
+          email?: never
+          gallery_urls?: string[] | null
+          geo?: unknown
+          id?: string | null
+          logo_url?: string | null
+          phone?: never
+          plan?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          website?: string | null
+        }
+        Update: {
+          address?: string | null
+          business_name?: string | null
+          category?: string | null
+          contact_public?: boolean | null
+          created_at?: string | null
+          description?: string | null
+          email?: never
+          gallery_urls?: string[] | null
+          geo?: unknown
+          id?: string | null
           logo_url?: string | null
           phone?: never
           plan?: string | null
