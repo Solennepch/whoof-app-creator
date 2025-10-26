@@ -4,7 +4,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Card } from "@/components/ui/card";
-import { CheckCircle, AlertTriangle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { CheckCircle, AlertTriangle, Sparkles } from "lucide-react";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import logoWhoof from "@/assets/logo-whoof.png";
 
@@ -12,10 +13,11 @@ function ProfileMeContent() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [showSuccess, setShowSuccess] = useState(false);
-  const [notFound, setNotFound] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    async function checkSubscriptionAndRedirect() {
+    async function checkAndRedirect() {
       try {
         const { data: { session } } = await supabase.auth.getSession();
         
@@ -43,24 +45,17 @@ function ProfileMeContent() {
             );
 
             if (checkResponse.ok) {
-              const { isPremium, proPlan } = await checkResponse.json();
-              
+              const { isPremium } = await checkResponse.json();
               if (isPremium) {
                 toast.success('Abonnement Premium activé ! 🎉');
               }
-              
-              console.log('Subscription status:', { isPremium, proPlan });
-            } else {
-              console.error('Error checking subscription:', await checkResponse.text());
-              toast.info('Impossible de vérifier l\'abonnement, mais vous êtes bien connecté.');
             }
           } catch (error) {
             console.error('Error checking subscription:', error);
-            toast.info('Impossible de vérifier l\'abonnement, mais vous êtes bien connecté.');
           }
 
-          // Wait a bit before redirecting to show the success message
-          await new Promise(resolve => setTimeout(resolve, 2000));
+          // Wait a bit before continuing
+          await new Promise(resolve => setTimeout(resolve, 1500));
         }
 
         // Call GET /profile edge function
@@ -81,43 +76,49 @@ function ProfileMeContent() {
           return;
         }
 
-        // Handle 404 - Profile not found
-        if (response.status === 404) {
-          setNotFound(true);
-          return;
-        }
-
         // Handle 200 - Success
         if (response.ok) {
           const data = await response.json();
-          // Extract profile ID from new structure { profile: {...}, dogs: [...] }
-          const profileId = data?.profile?.id;
+          const profile = data?.profile;
           
-          if (!profileId) {
-            setNotFound(true);
+          if (!profile || !profile.id) {
+            toast.error('Erreur lors du chargement du profil');
+            setIsLoading(false);
+            return;
+          }
+
+          // Check if profile is empty/newly created (no display_name or empty)
+          const isEmpty = !profile.display_name || profile.display_name.trim() === '';
+          
+          if (isEmpty) {
+            // Show onboarding card
+            setShowOnboarding(true);
+            setIsLoading(false);
             return;
           }
           
-          navigate(`/profile/${profileId}`, { replace: true });
+          // Profile exists and is filled → redirect to profile page
+          navigate(`/profile/${profile.id}`, { replace: true });
           return;
         }
 
         // Handle other errors
         console.error('Unexpected response status:', response.status);
-        setNotFound(true);
+        toast.error('Erreur lors du chargement du profil');
+        setIsLoading(false);
 
       } catch (error) {
         console.error('Error loading profile:', error);
         toast.error('Erreur lors du chargement du profil');
-        setNotFound(true);
+        setIsLoading(false);
       }
     }
 
-    checkSubscriptionAndRedirect();
+    checkAndRedirect();
   }, [navigate, searchParams]);
 
-  // Show "Profile not found" card
-  if (notFound) {
+  // Show onboarding card for empty profile
+  if (showOnboarding) {
     return (
       <div 
         className="min-h-screen flex items-center justify-center p-4" 
@@ -126,11 +127,12 @@ function ProfileMeContent() {
         <Card className="max-w-md w-full p-8 rounded-3xl shadow-soft text-center">
           <div 
             className="flex items-center justify-center w-16 h-16 rounded-2xl mb-6 mx-auto"
-            style={{ backgroundColor: "var(--brand-yellow)20" }}
+            style={{ 
+              background: "linear-gradient(135deg, var(--brand-plum) 0%, var(--brand-raspberry) 100%)" 
+            }}
           >
-            <AlertTriangle 
-              className="w-8 h-8" 
-              style={{ color: "var(--brand-yellow)" }} 
+            <Sparkles 
+              className="w-8 h-8 text-white" 
             />
           </div>
           
@@ -138,73 +140,95 @@ function ProfileMeContent() {
             className="text-2xl font-bold mb-4" 
             style={{ fontFamily: "Fredoka", color: "var(--ink)" }}
           >
-            Profil non trouvé
+            Bienvenue sur Whoof !
           </h2>
           
           <p className="text-muted-foreground mb-6">
-            Impossible de trouver votre profil. Veuillez créer un profil ou contacter le support.
+            Crée ton profil et celui de ton chien pour démarrer l'aventure avec la communauté Whoof.
           </p>
+
+          <div className="flex flex-col gap-3">
+            <Button
+              onClick={() => navigate('/onboarding/profile')}
+              className="rounded-2xl text-white font-semibold"
+              style={{ backgroundColor: "var(--brand-plum)" }}
+            >
+              Créer mon profil maintenant
+            </Button>
+            
+            <Button
+              onClick={() => navigate('/')}
+              variant="ghost"
+              className="rounded-2xl"
+            >
+              Plus tard
+            </Button>
+          </div>
         </Card>
       </div>
     );
   }
 
   // Show loading screen
-  return (
-    <div 
-      className="min-h-screen flex items-center justify-center animate-fade-in" 
-      style={{ backgroundColor: "var(--paper)" }}
-    >
-      <div className="text-center max-w-md px-4">
-        {/* Success Message */}
-        {showSuccess && (
-          <Alert className="mb-8 bg-green-50 border-green-200">
-            <CheckCircle className="h-5 w-5 text-green-600" />
-            <AlertDescription className="text-green-800 font-semibold">
-              Paiement réussi ! Votre abonnement Premium est maintenant actif.
-            </AlertDescription>
-          </Alert>
-        )}
+  if (isLoading) {
+    return (
+      <div 
+        className="min-h-screen flex items-center justify-center animate-fade-in" 
+        style={{ backgroundColor: "var(--paper)" }}
+      >
+        <div className="text-center max-w-md px-4">
+          {/* Success Message */}
+          {showSuccess && (
+            <Alert className="mb-8 bg-green-50 border-green-200">
+              <CheckCircle className="h-5 w-5 text-green-600" />
+              <AlertDescription className="text-green-800 font-semibold">
+                Paiement réussi ! Votre abonnement Premium est maintenant actif.
+              </AlertDescription>
+            </Alert>
+          )}
 
-        {/* Logo Whoof with scale-in animation */}
-        <div className="mb-8 animate-scale-in">
-          <img 
-            src={logoWhoof} 
-            alt="Whoof Logo" 
-            className="w-32 h-32 mx-auto"
-          />
-        </div>
-        
-        {/* Pulsating loading indicator */}
-        <div className="flex justify-center gap-2">
-          <div 
-            className="w-3 h-3 rounded-full animate-pulse"
-            style={{ 
-              backgroundColor: "var(--brand-plum)",
-              animationDelay: "0ms",
-              animationDuration: "1.5s"
-            }}
-          />
-          <div 
-            className="w-3 h-3 rounded-full animate-pulse"
-            style={{ 
-              backgroundColor: "var(--brand-raspberry)",
-              animationDelay: "150ms",
-              animationDuration: "1.5s"
-            }}
-          />
-          <div 
-            className="w-3 h-3 rounded-full animate-pulse"
-            style={{ 
-              backgroundColor: "var(--brand-yellow)",
-              animationDelay: "300ms",
-              animationDuration: "1.5s"
-            }}
-          />
+          {/* Logo Whoof with scale-in animation */}
+          <div className="mb-8 animate-scale-in">
+            <img 
+              src={logoWhoof} 
+              alt="Whoof Logo" 
+              className="w-32 h-32 mx-auto"
+            />
+          </div>
+          
+          {/* Pulsating loading indicator */}
+          <div className="flex justify-center gap-2">
+            <div 
+              className="w-3 h-3 rounded-full animate-pulse"
+              style={{ 
+                backgroundColor: "var(--brand-plum)",
+                animationDelay: "0ms",
+                animationDuration: "1.5s"
+              }}
+            />
+            <div 
+              className="w-3 h-3 rounded-full animate-pulse"
+              style={{ 
+                backgroundColor: "var(--brand-raspberry)",
+                animationDelay: "150ms",
+                animationDuration: "1.5s"
+              }}
+            />
+            <div 
+              className="w-3 h-3 rounded-full animate-pulse"
+              style={{ 
+                backgroundColor: "var(--brand-yellow)",
+                animationDelay: "300ms",
+                animationDuration: "1.5s"
+              }}
+            />
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  }
+
+  return null;
 }
 
 export default function ProfileMe() {
