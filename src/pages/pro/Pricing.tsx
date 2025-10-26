@@ -11,6 +11,7 @@ const PLANS = [
   {
     name: 'Free',
     price: 0,
+    lookupKey: null,
     priceId: null,
     icon: Zap,
     color: 'var(--brand-yellow)',
@@ -20,19 +21,15 @@ const PLANS = [
       'Coordonnées publiques',
       'Logo et description',
     ],
-    limitations: [
-      'Pas d\'offre partenaire',
-      'Pas de mise en avant',
-      'Statistiques limitées',
-    ],
   },
   {
     name: 'Pro Plus',
-    price: 19.90,
-    priceId: 'price_1SMY3rDL0qnGuzb7P4DcyhG7',
+    price: 4.99,
+    lookupKey: 'whoof_pro_plus_monthly',
+    priceId: 'price_1SMYI9DL0qnGuzb7ck7wYRfz', // Fallback si lookup_key échoue
     icon: Star,
     color: 'var(--brand-raspberry)',
-    badge: 'Populaire',
+    badge: 'Le plus populaire',
     features: [
       'Tout du plan Free',
       'Fiche enrichie avec galerie photos',
@@ -42,12 +39,12 @@ const PLANS = [
       'Statistiques de vues et clics',
       'Support prioritaire',
     ],
-    limitations: [],
   },
   {
     name: 'Pro Premium',
-    price: 49.90,
-    priceId: 'price_1SMY4MDL0qnGuzb70gJe0k0B',
+    price: 19.90,
+    lookupKey: 'whoof_pro_premium_monthly',
+    priceId: 'price_1SMYIODL0qnGuzb7w0btGE8o', // Fallback si lookup_key échoue
     icon: Crown,
     color: 'var(--brand-plum)',
     badge: 'Meilleur choix',
@@ -61,7 +58,6 @@ const PLANS = [
       'Support dédié 24/7',
       'Campagnes promotionnelles (à venir)',
     ],
-    limitations: [],
   },
 ];
 
@@ -69,34 +65,52 @@ export default function ProPricing() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState<string | null>(null);
 
-  const handleSubscribe = async (priceId: string, planName: string) => {
-    if (!priceId) {
-      navigate('/pro/onboarding');
+  const handleSubscribe = async (lookupKey: string | null, priceId: string | null, planName: string) => {
+    // Plan Free: redirect to dashboard
+    if (!lookupKey && !priceId) {
+      navigate('/pro/dashboard');
       return;
     }
 
-    setIsLoading(priceId);
+    setIsLoading(planName);
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
+        toast.error('Vous devez être connecté');
         navigate('/login');
         return;
       }
 
-      const { data, error } = await supabase.functions.invoke('create-checkout', {
-        body: { price_id: priceId },
+      // Call the edge function to create checkout session
+      const { data, error } = await supabase.functions.invoke('stripe-create-checkout-session', {
+        body: {
+          lookupKey: lookupKey,
+          priceId: priceId, // Fallback if lookupKey fails
+          successUrl: `${window.location.origin}/pro/dashboard?success=true`,
+          cancelUrl: `${window.location.origin}/pro/pricing?canceled=true`,
+        },
       });
 
-      if (error) throw error;
-
-      if (data?.url) {
-        window.open(data.url, '_blank');
-      } else {
-        toast.error('Impossible de créer la session de paiement');
+      if (error) {
+        console.error('Edge function error:', error);
+        throw new Error(error.message || 'Erreur lors de la création de la session');
       }
+
+      if (!data?.id && !data?.url) {
+        throw new Error('Aucune URL de paiement reçue');
+      }
+
+      // Redirect to Stripe Checkout URL
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        toast.error('URL de paiement non disponible');
+      }
+
     } catch (error) {
-      console.error('Error:', error);
-      toast.error('Erreur lors de la création du paiement');
+      console.error('Subscription error:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Erreur lors de la création du paiement';
+      toast.error(errorMessage);
     } finally {
       setIsLoading(null);
     }
@@ -119,17 +133,16 @@ export default function ProPricing() {
         <div className="grid gap-8 md:grid-cols-3 max-w-6xl mx-auto">
           {PLANS.map((plan) => {
             const Icon = plan.icon;
-            const isPopular = plan.badge === 'Populaire';
-            const isBest = plan.badge === 'Meilleur choix';
+            const isPopular = plan.badge === 'Le plus populaire';
 
             return (
               <Card
                 key={plan.name}
                 className={`p-8 rounded-3xl shadow-soft relative ${
-                  isPopular || isBest ? 'ring-2 ring-offset-4' : ''
+                  isPopular ? 'ring-2 ring-offset-4' : ''
                 }`}
                 style={
-                  isPopular || isBest
+                  isPopular
                     ? { borderColor: plan.color, borderWidth: '2px', borderStyle: 'solid' }
                     : undefined
                 }
@@ -137,7 +150,7 @@ export default function ProPricing() {
                 {/* Badge */}
                 {plan.badge && (
                   <Badge
-                    className="absolute -top-3 left-1/2 -translate-x-1/2"
+                    className="absolute -top-3 left-1/2 -translate-x-1/2 text-white font-semibold"
                     style={{ backgroundColor: plan.color }}
                   >
                     {plan.badge}
@@ -166,7 +179,7 @@ export default function ProPricing() {
                   ) : (
                     <>
                       <div className="text-4xl font-bold" style={{ color: plan.color }}>
-                        {plan.price}€
+                        {plan.price.toFixed(2)}€
                       </div>
                       <div className="text-sm text-muted-foreground">par mois</div>
                     </>
@@ -185,16 +198,17 @@ export default function ProPricing() {
 
                 {/* CTA */}
                 <Button
-                  className="w-full rounded-2xl"
+                  className="w-full rounded-2xl text-white font-semibold"
                   style={{ backgroundColor: plan.color }}
-                  onClick={() => handleSubscribe(plan.priceId || '', plan.name)}
-                  disabled={isLoading === plan.priceId}
+                  onClick={() => handleSubscribe(plan.lookupKey, plan.priceId, plan.name)}
+                  disabled={isLoading === plan.name || (plan.price === 0)}
+                  variant={plan.price === 0 ? "outline" : "default"}
                 >
-                  {isLoading === plan.priceId
-                    ? 'Redirection...'
+                  {isLoading === plan.name
+                    ? 'Chargement...'
                     : plan.price === 0
-                    ? 'Commencer gratuitement'
-                    : 'Souscrire maintenant'}
+                    ? 'Rester sur Free'
+                    : 'S\'abonner'}
                 </Button>
               </Card>
             );
