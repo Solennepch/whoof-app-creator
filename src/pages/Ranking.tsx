@@ -105,9 +105,13 @@ export default function Ranking() {
               <article 
                 className={`rounded-2xl p-4 shadow-sm flex items-center justify-between transition-all ${
                   user.isMe 
-                    ? "ring-2 ring-[#7B61FF] bg-gradient-to-r from-[#7B61FF]/10 to-[#FF5DA2]/10 backdrop-blur-sm" 
+                    ? "ring-4 ring-[#7B61FF] shadow-lg scale-[1.02]" 
                     : "bg-white"
                 }`}
+                style={user.isMe ? {
+                  background: "linear-gradient(135deg, rgba(123, 97, 255, 0.15) 0%, rgba(255, 93, 162, 0.15) 100%)",
+                  backdropFilter: "blur(10px)"
+                } : {}}
               >
                 <div className="flex items-center gap-3 min-w-0">
                   {/* Rank Badge */}
