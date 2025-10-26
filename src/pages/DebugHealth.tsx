@@ -7,6 +7,7 @@ type Check = {
   status: "success" | "error";
   statusCode: number;
   message: string;
+  data?: any;
 };
 
 export default function DebugHealth() {
@@ -30,13 +31,15 @@ export default function DebugHealth() {
           status: "success",
           statusCode: response.status,
           message: "OK - Profile récupéré",
+          data: response.data,
         });
       } catch (e: any) {
         list.push({
           name: "GET /profile",
           status: "error",
           statusCode: e.response?.status || 0,
-          message: e.response?.data?.message || e.message || String(e),
+          message: e.response?.statusText || e.message || "Network error",
+          data: e.response?.data || { error: String(e) },
         });
       }
 
@@ -49,14 +52,16 @@ export default function DebugHealth() {
           name: "GET /dog?owner=me",
           status: "success",
           statusCode: response.status,
-          message: `${count} dog(s) - ${JSON.stringify(data).substring(0, 100)}...`,
+          message: `${count} dog(s)`,
+          data: data,
         });
       } catch (e: any) {
         list.push({
           name: "GET /dog?owner=me",
           status: "error",
           statusCode: e.response?.status || 0,
-          message: e.response?.data?.message || e.message || String(e),
+          message: e.response?.statusText || e.message || "Network error",
+          data: e.response?.data || { error: String(e) },
         });
       }
 
@@ -70,13 +75,15 @@ export default function DebugHealth() {
           status: "success",
           statusCode: response.status,
           message: msg,
+          data: data,
         });
       } catch (e: any) {
         list.push({
           name: "GET /check-subscription",
           status: "error",
           statusCode: e.response?.status || 0,
-          message: e.response?.data?.message || e.message || String(e),
+          message: e.response?.statusText || e.message || "Network error",
+          data: e.response?.data || { error: String(e) },
         });
       }
 
@@ -126,6 +133,16 @@ export default function DebugHealth() {
                 </span>
                 {r.message}
               </div>
+              {r.data && (
+                <details className="mt-3">
+                  <summary className="cursor-pointer text-xs font-medium text-gray-600 hover:text-gray-900">
+                    Voir la réponse complète
+                  </summary>
+                  <pre className="mt-2 p-3 bg-gray-900 text-green-400 rounded-lg text-xs overflow-x-auto">
+                    {JSON.stringify(r.data, null, 2)}
+                  </pre>
+                </details>
+              )}
             </div>
           ))}
         </div>
