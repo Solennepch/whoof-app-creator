@@ -32,9 +32,106 @@ export type Database = {
         }
         Relationships: []
       }
+      direct_messages: {
+        Row: {
+          body: string
+          created_at: string | null
+          id: string
+          sender_id: string
+          thread_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string | null
+          id?: string
+          sender_id: string
+          thread_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string | null
+          id?: string
+          sender_id?: string
+          thread_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "direct_messages_sender_id_fkey"
+            columns: ["sender_id"]
+            isOneToOne: false
+            referencedRelation: "profile_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "direct_messages_sender_id_fkey"
+            columns: ["sender_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "direct_messages_thread_id_fkey"
+            columns: ["thread_id"]
+            isOneToOne: false
+            referencedRelation: "direct_threads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      direct_threads: {
+        Row: {
+          a: string
+          b: string
+          created_at: string | null
+          id: string
+        }
+        Insert: {
+          a: string
+          b: string
+          created_at?: string | null
+          id?: string
+        }
+        Update: {
+          a?: string
+          b?: string
+          created_at?: string | null
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "direct_threads_a_fkey"
+            columns: ["a"]
+            isOneToOne: false
+            referencedRelation: "profile_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "direct_threads_a_fkey"
+            columns: ["a"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "direct_threads_b_fkey"
+            columns: ["b"]
+            isOneToOne: false
+            referencedRelation: "profile_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "direct_threads_b_fkey"
+            columns: ["b"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       dogs: {
         Row: {
           age_years: number | null
+          anecdote: string | null
           avatar_url: string | null
           birthdate: string | null
           breed: string | null
@@ -42,14 +139,17 @@ export type Database = {
           id: string
           name: string
           owner_id: string
+          photo: string | null
           size: string | null
           temperament: string | null
           updated_at: string | null
           vaccination: Json | null
+          vaccinations: string[] | null
           zodiac_sign: string | null
         }
         Insert: {
           age_years?: number | null
+          anecdote?: string | null
           avatar_url?: string | null
           birthdate?: string | null
           breed?: string | null
@@ -57,14 +157,17 @@ export type Database = {
           id?: string
           name: string
           owner_id: string
+          photo?: string | null
           size?: string | null
           temperament?: string | null
           updated_at?: string | null
           vaccination?: Json | null
+          vaccinations?: string[] | null
           zodiac_sign?: string | null
         }
         Update: {
           age_years?: number | null
+          anecdote?: string | null
           avatar_url?: string | null
           birthdate?: string | null
           breed?: string | null
@@ -72,10 +175,12 @@ export type Database = {
           id?: string
           name?: string
           owner_id?: string
+          photo?: string | null
           size?: string | null
           temperament?: string | null
           updated_at?: string | null
           vaccination?: Json | null
+          vaccinations?: string[] | null
           zodiac_sign?: string | null
         }
         Relationships: [
@@ -204,6 +309,7 @@ export type Database = {
           gallery_urls: string[] | null
           geo: unknown
           id: string
+          location: unknown
           logo_url: string | null
           phone: string | null
           plan: string | null
@@ -223,6 +329,7 @@ export type Database = {
           gallery_urls?: string[] | null
           geo?: unknown
           id?: string
+          location?: unknown
           logo_url?: string | null
           phone?: string | null
           plan?: string | null
@@ -242,6 +349,7 @@ export type Database = {
           gallery_urls?: string[] | null
           geo?: unknown
           id?: string
+          location?: unknown
           logo_url?: string | null
           phone?: string | null
           plan?: string | null
@@ -254,10 +362,13 @@ export type Database = {
       }
       profiles: {
         Row: {
+          avatar: string | null
           avatar_url: string | null
           bio: string | null
+          city: string | null
           created_at: string | null
           display_name: string | null
+          gender: string | null
           home_geom: unknown
           id: string
           mood_tags: string[] | null
@@ -266,10 +377,13 @@ export type Database = {
           updated_at: string | null
         }
         Insert: {
+          avatar?: string | null
           avatar_url?: string | null
           bio?: string | null
+          city?: string | null
           created_at?: string | null
           display_name?: string | null
+          gender?: string | null
           home_geom?: unknown
           id: string
           mood_tags?: string[] | null
@@ -278,10 +392,13 @@ export type Database = {
           updated_at?: string | null
         }
         Update: {
+          avatar?: string | null
           avatar_url?: string | null
           bio?: string | null
+          city?: string | null
           created_at?: string | null
           display_name?: string | null
+          gender?: string | null
           home_geom?: unknown
           id?: string
           mood_tags?: string[] | null
@@ -327,6 +444,67 @@ export type Database = {
           {
             foreignKeyName: "push_subscriptions_user_id_fkey"
             columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      reports: {
+        Row: {
+          created_at: string | null
+          details: string | null
+          dog_id: string | null
+          id: string
+          kind: Database["public"]["Enums"]["report_kind"]
+          point: unknown
+          reporter_id: string
+          status: Database["public"]["Enums"]["hazard_status"] | null
+          title: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          details?: string | null
+          dog_id?: string | null
+          id?: string
+          kind: Database["public"]["Enums"]["report_kind"]
+          point?: unknown
+          reporter_id: string
+          status?: Database["public"]["Enums"]["hazard_status"] | null
+          title?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          details?: string | null
+          dog_id?: string | null
+          id?: string
+          kind?: Database["public"]["Enums"]["report_kind"]
+          point?: unknown
+          reporter_id?: string
+          status?: Database["public"]["Enums"]["hazard_status"] | null
+          title?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reports_dog_id_fkey"
+            columns: ["dog_id"]
+            isOneToOne: false
+            referencedRelation: "dogs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reports_reporter_id_fkey"
+            columns: ["reporter_id"]
+            isOneToOne: false
+            referencedRelation: "profile_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reports_reporter_id_fkey"
+            columns: ["reporter_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
@@ -381,6 +559,7 @@ export type Database = {
       verifications: {
         Row: {
           created_at: string | null
+          dog_id: string | null
           file_url: string
           id: string
           notes: string | null
@@ -388,9 +567,11 @@ export type Database = {
           type: string
           updated_at: string | null
           user_id: string
+          v_type: Database["public"]["Enums"]["verification_type"] | null
         }
         Insert: {
           created_at?: string | null
+          dog_id?: string | null
           file_url: string
           id?: string
           notes?: string | null
@@ -398,9 +579,11 @@ export type Database = {
           type: string
           updated_at?: string | null
           user_id: string
+          v_type?: Database["public"]["Enums"]["verification_type"] | null
         }
         Update: {
           created_at?: string | null
+          dog_id?: string | null
           file_url?: string
           id?: string
           notes?: string | null
@@ -408,8 +591,16 @@ export type Database = {
           type?: string
           updated_at?: string | null
           user_id?: string
+          v_type?: Database["public"]["Enums"]["verification_type"] | null
         }
         Relationships: [
+          {
+            foreignKeyName: "verifications_dog_id_fkey"
+            columns: ["dog_id"]
+            isOneToOne: false
+            referencedRelation: "dogs"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "verifications_user_id_fkey"
             columns: ["user_id"]
@@ -419,6 +610,97 @@ export type Database = {
           },
           {
             foreignKeyName: "verifications_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      walk_events: {
+        Row: {
+          capacity: number | null
+          created_at: string | null
+          host_id: string
+          id: string
+          place_name: string | null
+          place_point: unknown
+          starts_at: string
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          capacity?: number | null
+          created_at?: string | null
+          host_id: string
+          id?: string
+          place_name?: string | null
+          place_point?: unknown
+          starts_at: string
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          capacity?: number | null
+          created_at?: string | null
+          host_id?: string
+          id?: string
+          place_name?: string | null
+          place_point?: unknown
+          starts_at?: string
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "walk_events_host_id_fkey"
+            columns: ["host_id"]
+            isOneToOne: false
+            referencedRelation: "profile_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "walk_events_host_id_fkey"
+            columns: ["host_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      walk_participants: {
+        Row: {
+          event_id: string
+          joined_at: string | null
+          user_id: string
+        }
+        Insert: {
+          event_id: string
+          joined_at?: string | null
+          user_id: string
+        }
+        Update: {
+          event_id?: string
+          joined_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "walk_participants_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "walk_events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "walk_participants_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profile_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "walk_participants_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
@@ -1447,6 +1729,12 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "pro" | "user"
+      friendship_status: "pending" | "accepted" | "rejected"
+      hazard_status: "open" | "resolved" | "expired"
+      pro_status: "pending" | "approved" | "rejected"
+      report_kind: "lost_dog" | "hazard"
+      verification_status: "pending" | "verified" | "rejected"
+      verification_type: "dog_chip" | "id_card"
     }
     CompositeTypes: {
       geometry_dump: {
@@ -1583,6 +1871,12 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "pro", "user"],
+      friendship_status: ["pending", "accepted", "rejected"],
+      hazard_status: ["open", "resolved", "expired"],
+      pro_status: ["pending", "approved", "rejected"],
+      report_kind: ["lost_dog", "hazard"],
+      verification_status: ["pending", "verified", "rejected"],
+      verification_type: ["dog_chip", "id_card"],
     },
   },
 } as const
