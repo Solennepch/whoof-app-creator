@@ -9,6 +9,7 @@ import Home from "./pages/Home";
 import Discover from "./pages/Discover";
 import Events from "./pages/Events";
 import Map from "./pages/Map";
+import Messages from "./pages/Messages";
 import Profile from "./pages/Profile";
 import ProfileMe from "./pages/ProfileMe";
 import Login from "./pages/Login";
@@ -38,6 +39,7 @@ const App = () => (
           <Route path="/" element={<Navigate to="/map" replace />} />
           <Route path="/home" element={<Home />} />
           <Route path="/discover" element={<Discover />} />
+          <Route path="/messages" element={<Messages />} />
           <Route path="/events" element={<Events />} />
           <Route path="/map" element={<Map />} />
           <Route path="/login" element={<Login />} />

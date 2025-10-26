@@ -1,11 +1,12 @@
 import { NavLink } from "react-router-dom";
-import { MapPin, Search, Calendar, User } from "lucide-react";
+import { Map, Heart, MessageCircle, Calendar, User } from "lucide-react";
 
 export function BottomNavigation() {
   const navItems = [
-    { to: "/map", icon: MapPin, label: "Carte" },
-    { to: "/discover", icon: Search, label: "Découvrir" },
-    { to: "/events", icon: Calendar, label: "Événements" },
+    { to: "/map", icon: Map, label: "Explore" },
+    { to: "/discover", icon: Heart, label: "Matche" },
+    { to: "/messages", icon: MessageCircle, label: "Messages" },
+    { to: "/events", icon: Calendar, label: "Agenda" },
     { to: "/profile/me", icon: User, label: "Profil" },
   ];
 
