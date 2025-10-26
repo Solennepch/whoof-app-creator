@@ -295,6 +295,13 @@ export type Database = {
             referencedRelation: "pro_accounts"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "partnerships_pro_id_fkey"
+            columns: ["pro_id"]
+            isOneToOne: false
+            referencedRelation: "pro_accounts_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       pro_accounts: {
@@ -752,6 +759,66 @@ export type Database = {
         }
         Relationships: []
       }
+      pro_accounts_public: {
+        Row: {
+          address: string | null
+          business_name: string | null
+          category: string | null
+          created_at: string | null
+          description: string | null
+          email: string | null
+          gallery_urls: string[] | null
+          geo: unknown
+          id: string | null
+          location: unknown
+          logo_url: string | null
+          phone: string | null
+          plan: string | null
+          status: string | null
+          updated_at: string | null
+          user_id: string | null
+          website: string | null
+        }
+        Insert: {
+          address?: string | null
+          business_name?: string | null
+          category?: string | null
+          created_at?: string | null
+          description?: string | null
+          email?: never
+          gallery_urls?: string[] | null
+          geo?: unknown
+          id?: string | null
+          location?: unknown
+          logo_url?: string | null
+          phone?: never
+          plan?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          website?: string | null
+        }
+        Update: {
+          address?: string | null
+          business_name?: string | null
+          category?: string | null
+          created_at?: string | null
+          description?: string | null
+          email?: never
+          gallery_urls?: string[] | null
+          geo?: unknown
+          id?: string | null
+          location?: unknown
+          logo_url?: string | null
+          phone?: never
+          plan?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          website?: string | null
+        }
+        Relationships: []
+      }
       profile_view: {
         Row: {
           avatar_url: string | null
@@ -760,9 +827,7 @@ export type Database = {
           created_at: string | null
           display_name: string | null
           gender: string | null
-          home_geom: unknown
           id: string | null
-          mood_tags: string[] | null
           updated_at: string | null
         }
         Insert: {
@@ -772,9 +837,7 @@ export type Database = {
           created_at?: string | null
           display_name?: string | null
           gender?: string | null
-          home_geom?: unknown
           id?: string | null
-          mood_tags?: string[] | null
           updated_at?: string | null
         }
         Update: {
@@ -784,9 +847,7 @@ export type Database = {
           created_at?: string | null
           display_name?: string | null
           gender?: string | null
-          home_geom?: unknown
           id?: string | null
-          mood_tags?: string[] | null
           updated_at?: string | null
         }
         Relationships: []
