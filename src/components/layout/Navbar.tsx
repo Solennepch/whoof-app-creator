@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Dog, Home, Compass, Calendar, MapPin, User } from "lucide-react";
+import { Dog, Home, Compass, Calendar, MapPin, User, Building, Percent } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { XpProgress } from "@/components/ui/XpProgress";
 import { CongratsModal } from "@/components/ui/CongratsModal";
@@ -20,6 +20,8 @@ export function Navbar() {
   const navItems = [
     { to: "/", icon: Home, label: "Accueil" },
     { to: "/discover", icon: Compass, label: "Découvrir" },
+    { to: "/annuaire", icon: Building, label: "Annuaire" },
+    { to: "/partenariats", icon: Percent, label: "Partenariats" },
     { to: "/events", icon: Calendar, label: "Événements" },
     { to: "/map", icon: MapPin, label: "Carte" },
     { to: "/profile/me", icon: User, label: "Profil" },

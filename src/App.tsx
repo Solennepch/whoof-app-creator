@@ -11,6 +11,12 @@ import Map from "./pages/Map";
 import Profile from "./pages/Profile";
 import ProfileMe from "./pages/ProfileMe";
 import Login from "./pages/Login";
+import Annuaire from "./pages/Annuaire";
+import AnnuaireDetail from "./pages/AnnuaireDetail";
+import Partenariats from "./pages/Partenariats";
+import PartenariatDetail from "./pages/PartenariatDetail";
+import ProOnboarding from "./pages/pro/Onboarding";
+import ProDashboard from "./pages/pro/Dashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +34,12 @@ const App = () => (
           <Route path="/events" element={<Events />} />
           <Route path="/map" element={<Map />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/annuaire" element={<Annuaire />} />
+          <Route path="/annuaire/:id" element={<AnnuaireDetail />} />
+          <Route path="/partenariats" element={<Partenariats />} />
+          <Route path="/partenariats/:id" element={<PartenariatDetail />} />
+          <Route path="/pro/onboarding" element={<ProOnboarding />} />
+          <Route path="/pro/dashboard" element={<ProDashboard />} />
           <Route path="/profile/me" element={<ProfileMe />} />
           <Route path="/profile/:id" element={<Profile />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
