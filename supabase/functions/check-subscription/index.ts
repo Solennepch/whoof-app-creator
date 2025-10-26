@@ -1,11 +1,12 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import Stripe from "https://esm.sh/stripe@18.5.0";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
+
+const SUPABASE_URL = Deno.env.get('SUPABASE_URL') ?? '';
+const SUPABASE_ANON_KEY = Deno.env.get('SUPABASE_ANON_KEY') ?? '';
 
 const logStep = (step: string, details?: any) => {
   const detailsStr = details ? ` - ${JSON.stringify(details)}` : '';
@@ -18,172 +19,130 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  // Only allow GET
+  if (req.method !== 'GET') {
+    return new Response(
+      JSON.stringify({ ok: false, error: 'Method not allowed' }),
+      { 
+        status: 405, 
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+      }
+    );
+  }
+
   try {
     logStep("Function started");
 
-    // Verify Stripe secret key is configured
-    const stripeKey = Deno.env.get("STRIPE_SECRET_KEY") || Deno.env.get("STRIPE_RESTRICTED_KEY");
-    if (!stripeKey) {
-      logStep("ERROR: Missing Stripe key");
-      return new Response(
-        JSON.stringify({ error: 'Stripe configuration missing' }),
-        { 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          status: 500 
-        }
-      );
-    }
-
-    // Authenticate user
-    const supabaseClient = createClient(
-      Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
-      { auth: { persistSession: false } }
-    );
-
-    const authHeader = req.headers.get("Authorization");
+    // Check Authorization header
+    const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
       logStep("ERROR: No authorization header");
       return new Response(
-        JSON.stringify({ error: 'Unauthorized' }),
+        JSON.stringify({ ok: false, error: 'Unauthorized' }),
         { 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          status: 401 
+          status: 401, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
         }
       );
     }
 
-    const token = authHeader.replace("Bearer ", "");
-    const { data: userData, error: userError } = await supabaseClient.auth.getUser(token);
-    
-    if (userError || !userData.user?.email) {
-      logStep("ERROR: Invalid user", { error: userError?.message });
+    const token = authHeader.replace('Bearer ', '');
+    logStep("Authorization header found");
+
+    // Get current user from Supabase Auth
+    const userResponse = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'apikey': SUPABASE_ANON_KEY,
+      },
+    });
+
+    if (!userResponse.ok) {
+      logStep("ERROR: Failed to authenticate user", { status: userResponse.status });
       return new Response(
-        JSON.stringify({ error: 'Unauthorized' }),
+        JSON.stringify({ ok: false, error: 'Unauthorized' }),
         { 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          status: 401 
+          status: 401, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
         }
       );
     }
 
-    const user = userData.user;
-    logStep("User authenticated", { userId: user.id, email: user.email });
+    const user = await userResponse.json();
+    const userId = user.id;
+    logStep("User authenticated", { userId });
 
-    // Initialize Stripe
-    const stripe = new Stripe(stripeKey, { apiVersion: "2025-08-27.basil" });
+    // Read profiles.premium
+    const profileResponse = await fetch(
+      `${SUPABASE_URL}/rest/v1/profiles?id=eq.${userId}&select=premium`,
+      {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
 
-    // Check if customer exists
-    const customers = await stripe.customers.list({ email: user.email, limit: 1 });
-    
     let isPremium = false;
+    if (profileResponse.ok) {
+      const profileData = await profileResponse.json();
+      if (profileData && profileData.length > 0) {
+        isPremium = profileData[0].premium === true;
+        logStep("Profile premium status", { isPremium });
+      }
+    } else {
+      logStep("WARNING: Failed to read profile", { status: profileResponse.status });
+    }
+
+    // Read pro_accounts.plan
+    const proResponse = await fetch(
+      `${SUPABASE_URL}/rest/v1/pro_accounts?user_id=eq.${userId}&select=plan`,
+      {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
     let proPlan: string | null = null;
-
-    if (customers.data.length > 0) {
-      const customerId = customers.data[0].id;
-      logStep("Found Stripe customer", { customerId });
-
-      // List active subscriptions
-      const subscriptions = await stripe.subscriptions.list({
-        customer: customerId,
-        status: "active",
-        expand: ['data.items.data.price'],
-        limit: 10,
-      });
-
-      logStep("Found subscriptions", { count: subscriptions.data.length });
-
-      // Check each subscription
-      for (const subscription of subscriptions.data) {
-        for (const item of subscription.items.data) {
-          const price = item.price;
-          const lookupKey = (price as any).lookup_key || '';
-          
-          logStep("Checking price", { lookupKey, priceId: price.id });
-
-          const lookupKeyLower = lookupKey.toLowerCase();
-          
-          if (lookupKeyLower.includes('premium') && !lookupKeyLower.includes('pro')) {
-            isPremium = true;
-            logStep("Found premium subscription", { lookupKey });
-          }
-          
-          if (lookupKeyLower.includes('pro')) {
-            proPlan = 'pro_premium';
-            logStep("Found pro subscription", { lookupKey });
-          }
+    if (proResponse.ok) {
+      const proData = await proResponse.json();
+      if (proData && proData.length > 0) {
+        const plan = proData[0].plan;
+        if (plan === 'pro_premium' || plan === 'pro_plus') {
+          proPlan = plan;
         }
+        logStep("Pro account plan", { proPlan });
       }
     } else {
-      logStep("No Stripe customer found");
-    }
-
-    // Update profiles.premium
-    const { error: profileError } = await supabaseClient
-      .from('profiles')
-      .upsert({
-        id: user.id,
-        premium: isPremium,
-        updated_at: new Date().toISOString(),
-      }, {
-        onConflict: 'id',
-      });
-
-    if (profileError) {
-      logStep("ERROR: Failed to update profile", { error: profileError.message });
-    } else {
-      logStep("Profile updated", { userId: user.id, premium: isPremium });
-    }
-
-    // Update pro_accounts.plan if applicable
-    if (proPlan) {
-      const { error: proError } = await supabaseClient
-        .from('pro_accounts')
-        .update({
-          plan: proPlan,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('user_id', user.id);
-
-      if (proError) {
-        logStep("ERROR: Failed to update pro_account", { error: proError.message });
-      } else {
-        logStep("Pro account updated", { userId: user.id, plan: proPlan });
-      }
-    } else {
-      // Reset pro plan if no active pro subscription
-      const { error: proError } = await supabaseClient
-        .from('pro_accounts')
-        .update({
-          plan: 'free',
-          updated_at: new Date().toISOString(),
-        })
-        .eq('user_id', user.id);
-
-      if (proError && proError.code !== 'PGRST116') { // Ignore "no rows" error
-        logStep("ERROR: Failed to reset pro_account", { error: proError.message });
-      }
+      logStep("WARNING: Failed to read pro_account", { status: proResponse.status });
     }
 
     logStep("Check complete", { isPremium, proPlan });
 
     return new Response(
-      JSON.stringify({ isPremium, proPlan }),
+      JSON.stringify({ ok: true, isPremium, proPlan }),
       {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         status: 200,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       }
     );
 
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
+    const errorMessage = error instanceof Error ? error.message : 'Internal server error';
     logStep("ERROR: Unhandled exception", { message: errorMessage });
     
     return new Response(
-      JSON.stringify({ error: 'Internal server error', details: errorMessage }),
+      JSON.stringify({ ok: false, error: errorMessage }),
       {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       }
     );
   }
