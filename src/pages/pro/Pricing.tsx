@@ -85,15 +85,14 @@ export default function ProPricing() {
 
       const { data, error } = await supabase.functions.invoke('create-checkout', {
         body: { price_id: priceId },
-        headers: {
-          Authorization: `Bearer ${session.access_token}`,
-        },
       });
 
       if (error) throw error;
 
-      if (data.url) {
+      if (data?.url) {
         window.open(data.url, '_blank');
+      } else {
+        toast.error('Impossible de créer la session de paiement');
       }
     } catch (error) {
       console.error('Error:', error);

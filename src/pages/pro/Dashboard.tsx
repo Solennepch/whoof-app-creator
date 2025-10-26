@@ -250,15 +250,21 @@ export default function ProDashboard() {
                 onClick={async () => {
                   try {
                     const { data: { session } } = await supabase.auth.getSession();
-                    if (!session) return;
+                    if (!session) {
+                      navigate('/login');
+                      return;
+                    }
 
-                    const { data, error } = await supabase.functions.invoke('customer-portal', {
-                      headers: { Authorization: `Bearer ${session.access_token}` },
-                    });
+                    const { data, error } = await supabase.functions.invoke('customer-portal');
 
                     if (error) throw error;
-                    if (data.url) window.open(data.url, '_blank');
+                    if (data?.url) {
+                      window.open(data.url, '_blank');
+                    } else {
+                      toast.error('Impossible d\'ouvrir le portail');
+                    }
                   } catch (error) {
+                    console.error('Error:', error);
                     toast.error('Erreur lors de l\'ouverture du portail');
                   }
                 }}
