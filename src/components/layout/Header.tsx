@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Dog, Menu } from "lucide-react";
+import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SidebarMenu } from "./SidebarMenu";
+import logoWhoofApp from "@/assets/logo-whoof-app.png";
 
 export function Header() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -22,16 +23,13 @@ export function Header() {
               </Button>
               
               <div className="flex items-center gap-2">
-                <div
-                  className="flex h-10 w-10 items-center justify-center rounded-2xl shadow-sm"
-                  style={{
-                    background: "linear-gradient(135deg, hsl(var(--brand-plum)) 0%, hsl(var(--brand-raspberry)) 100%)",
-                  }}
-                >
-                  <Dog className="h-5 w-5 text-white" />
-                </div>
+                <img 
+                  src={logoWhoofApp} 
+                  alt="Whoof Apps Logo" 
+                  className="h-10 w-10 rounded-full shadow-sm"
+                />
                 <span className="text-xl font-bold" style={{ color: "hsl(var(--ink))" }}>
-                  Whoof
+                  Whoof Apps
                 </span>
               </div>
             </div>
