@@ -27,6 +27,7 @@ import PremiumPricing from "./pages/premium/Pricing";
 import Premium from "./pages/Premium";
 import Parrainage from "./pages/Parrainage";
 import AstroDog from "./pages/AstroDog";
+import Recompenses from "./pages/Recompenses";
 import ProfileOnboarding from "./pages/onboarding/Profile";
 import DogOnboarding from "./pages/onboarding/Dog";
 import DebugHealth from "./pages/DebugHealth";
@@ -62,6 +63,7 @@ const App = () => (
           <Route path="/premium/pricing" element={<PremiumPricing />} />
           <Route path="/premium" element={<Premium />} />
           <Route path="/parrainage" element={<Parrainage />} />
+          <Route path="/recompenses" element={<Recompenses />} />
           <Route path="/astro-dog" element={<AstroDog />} />
           <Route path="/onboarding/profile" element={<ProfileOnboarding />} />
           <Route path="/onboarding/dog" element={<DogOnboarding />} />
