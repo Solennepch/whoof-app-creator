@@ -11,12 +11,13 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
-// Initialize Mapbox token with fallback and error handling
-const mapboxToken = (import.meta?.env?.VITE_MAPBOX_TOKEN || (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_MAPBOX_TOKEN)) as string;
+// Initialize Mapbox token
+const mapboxToken = import.meta.env.VITE_MAPBOX_TOKEN as string;
 
 if (!mapboxToken) {
   console.error('❌ MAPBOX TOKEN ERROR: No Mapbox token found. Please set VITE_MAPBOX_TOKEN in your environment variables.');
 } else {
+  console.log('✅ Mapbox token loaded successfully');
   mapboxgl.accessToken = mapboxToken;
 }
 
@@ -394,56 +395,107 @@ export default function Map() {
   useEffect(() => {
     if (!mapContainer.current || map.current) return;
 
-    const initMap = async (coords: [number, number]) => {
-      // Initialize map centered on user
-      map.current = new mapboxgl.Map({
-        container: mapContainer.current!,
-        style: 'mapbox://styles/mapbox/streets-v12',
-        center: coords,
-        zoom: 13,
-      });
-
-      // Add navigation controls
-      map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
-
-      // User marker (violet)
-      const userEl = document.createElement('div');
-      userEl.style.width = '40px';
-      userEl.style.height = '40px';
-      userEl.style.borderRadius = '50%';
-      userEl.style.background = 'linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%)';
-      userEl.style.border = '3px solid white';
-      userEl.style.boxShadow = '0 4px 12px rgba(139, 92, 246, 0.4)';
-      userEl.style.cursor = 'pointer';
-
-      new mapboxgl.Marker(userEl)
-        .setLngLat(coords)
-        .setPopup(new mapboxgl.Popup().setHTML('<div style="padding: 4px; font-weight: 600;">Vous êtes ici</div>'))
-        .addTo(map.current);
-
-      // Fetch and display nearby profiles
-      setIsLoading(true);
-      const profiles = await fetchNearbyProfiles(coords[0], coords[1]);
-      setNearbyProfiles(profiles);
-      addMarkersToMap(profiles, coords);
+    // Check if token is available
+    if (!mapboxToken) {
+      console.error('Cannot initialize map: Mapbox token is missing');
       setIsLoading(false);
+      toast({
+        title: "Erreur de configuration",
+        description: "Le token Mapbox n'est pas configuré. Contactez l'administrateur.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const initMap = async (coords: [number, number]) => {
+      try {
+        console.log('🗺️ Initializing map at coordinates:', coords);
+        
+        // Initialize map centered on user
+        map.current = new mapboxgl.Map({
+          container: mapContainer.current!,
+          style: 'mapbox://styles/mapbox/streets-v12',
+          center: coords,
+          zoom: 13,
+        });
+
+        // Wait for map to load
+        map.current.on('load', () => {
+          console.log('✅ Map loaded successfully');
+        });
+
+        map.current.on('error', (e) => {
+          console.error('❌ Map error:', e);
+        });
+
+        // Add navigation controls
+        map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
+
+        // User marker (violet) - position actuelle
+        const userEl = document.createElement('div');
+        userEl.style.width = '40px';
+        userEl.style.height = '40px';
+        userEl.style.borderRadius = '50%';
+        userEl.style.background = 'linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%)';
+        userEl.style.border = '3px solid white';
+        userEl.style.boxShadow = '0 4px 12px rgba(139, 92, 246, 0.4)';
+        userEl.style.cursor = 'pointer';
+
+        new mapboxgl.Marker(userEl)
+          .setLngLat(coords)
+          .setPopup(new mapboxgl.Popup().setHTML('<div style="padding: 4px; font-weight: 600;">Vous êtes ici 📍</div>'))
+          .addTo(map.current);
+
+        console.log('✅ User marker added at', coords);
+
+        // Fetch and display nearby profiles
+        setIsLoading(true);
+        const profiles = await fetchNearbyProfiles(coords[0], coords[1]);
+        setNearbyProfiles(profiles);
+        addMarkersToMap(profiles, coords);
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Error initializing map:', error);
+        setIsLoading(false);
+        toast({
+          title: "Erreur",
+          description: "Impossible de charger la carte. Vérifiez votre connexion.",
+          variant: "destructive",
+        });
+      }
     };
 
     // Get user location
     if (navigator.geolocation) {
+      console.log('🌍 Requesting geolocation...');
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const coords: [number, number] = [position.coords.longitude, position.coords.latitude];
+          console.log('✅ Geolocation obtained:', coords);
           setUserLocation(coords);
           initMap(coords);
         },
-        () => {
+        (error) => {
           // Fallback to Paris if geolocation fails
-          console.log('Geolocation failed, using default location');
+          console.log('⚠️ Geolocation failed, using default location (Paris):', error.message);
+          toast({
+            title: "Localisation désactivée",
+            description: "Affichage de Paris par défaut. Activez la géolocalisation pour voir votre position.",
+          });
           initMap(userLocation);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 0
         }
       );
     } else {
+      console.log('⚠️ Geolocation not supported, using default location (Paris)');
+      toast({
+        title: "Géolocalisation non disponible",
+        description: "Affichage de Paris par défaut.",
+      });
       initMap(userLocation);
     }
 
