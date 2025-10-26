@@ -65,6 +65,50 @@ export default function DebugHealth() {
         });
       }
 
+      // 2b) /dog avec params ownerId=me (variante)
+      try {
+        const response = await api.get("/dog", { params: { ownerId: "me" } });
+        const data = response.data;
+        const count = Array.isArray(data) ? data.length : Array.isArray(data?.data) ? data.data.length : 0;
+        list.push({
+          name: "GET /dog?ownerId=me",
+          status: "success",
+          statusCode: response.status,
+          message: `${count} dog(s)`,
+          data: data,
+        });
+      } catch (e: any) {
+        list.push({
+          name: "GET /dog?ownerId=me",
+          status: "error",
+          statusCode: e.response?.status || 0,
+          message: e.response?.statusText || e.message || "Network error",
+          data: e.response?.data || { error: String(e) },
+        });
+      }
+
+      // 2c) /dogs (pluriel) avec params owner=me (variante)
+      try {
+        const response = await api.get("/dogs", { params: { owner: "me" } });
+        const data = response.data;
+        const count = Array.isArray(data) ? data.length : Array.isArray(data?.data) ? data.data.length : 0;
+        list.push({
+          name: "GET /dogs?owner=me",
+          status: "success",
+          statusCode: response.status,
+          message: `${count} dog(s)`,
+          data: data,
+        });
+      } catch (e: any) {
+        list.push({
+          name: "GET /dogs?owner=me",
+          status: "error",
+          statusCode: e.response?.status || 0,
+          message: e.response?.statusText || e.message || "Network error",
+          data: e.response?.data || { error: String(e) },
+        });
+      }
+
       // 3) /check-subscription
       try {
         const response = await api.get("/check-subscription");
