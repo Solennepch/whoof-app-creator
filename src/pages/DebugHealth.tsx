@@ -1,233 +1,168 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { CheckCircle, XCircle, Loader2, ArrowRight } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
-import ErrorBoundary from "@/components/ErrorBoundary";
 
-interface HealthCheck {
+type Check = {
   name: string;
-  status: 'pending' | 'success' | 'error';
-  statusCode?: number;
-  message?: string;
+  status: "success" | "error";
+  statusCode: number;
+  message: string;
+};
+
+async function getToken(): Promise<string | null> {
+  try {
+    // @ts-ignore - supabase attachée globalement dans Lovable
+    const session = await window?.supabase?.auth?.getSession?.();
+    return session?.data?.session?.access_token ?? null;
+  } catch {
+    return null;
+  }
 }
 
-function DebugHealthContent() {
-  const [checks, setChecks] = useState<HealthCheck[]>([
-    { name: 'GET /profile', status: 'pending' },
-    { name: 'GET /dog?owner=:me', status: 'pending' },
-    { name: 'GET /check-subscription', status: 'pending' },
-  ]);
-
-  useEffect(() => {
-    async function runHealthChecks() {
-      const { data: { session } } = await supabase.auth.getSession();
-      const token = session?.access_token;
-      const baseUrl = import.meta.env.VITE_SUPABASE_URL;
-
-      // Check 1: GET /profile
-      try {
-        const response = await fetch(`${baseUrl}/functions/v1/profile`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        });
-
-        const errorText = response.ok ? 'OK' : await response.text();
-
-        setChecks((prev) => prev.map((check, idx) => 
-          idx === 0 
-            ? { 
-                ...check, 
-                status: response.ok ? 'success' : 'error',
-                statusCode: response.status,
-                message: errorText
-              }
-            : check
-        ));
-      } catch (error) {
-        setChecks((prev) => prev.map((check, idx) => 
-          idx === 0 
-            ? { 
-                ...check, 
-                status: 'error',
-                message: error instanceof Error ? error.message : 'Network error'
-              }
-            : check
-        ));
-      }
-
-      // Check 2: GET /dog?owner=:me
-      if (session?.user?.id) {
-        try {
-          const response = await fetch(`${baseUrl}/functions/v1/dog?owner=${session.user.id}`, {
-            headers: {
-              'Authorization': `Bearer ${token}`,
-              'Content-Type': 'application/json',
-            },
-          });
-
-          let resultMessage = 'Empty';
-          if (response.ok) {
-            const data = await response.json();
-            const dogsCount = data?.data?.length || 0;
-            resultMessage = `${dogsCount} dog(s) found`;
-          } else {
-            resultMessage = await response.text();
-          }
-
-          setChecks((prev) => prev.map((check, idx) => 
-            idx === 1 
-              ? { 
-                  ...check, 
-                  status: response.ok ? 'success' : 'error',
-                  statusCode: response.status,
-                  message: resultMessage
-                }
-              : check
-          ));
-        } catch (error) {
-          setChecks((prev) => prev.map((check, idx) => 
-            idx === 1 
-              ? { 
-                  ...check, 
-                  status: 'error',
-                  message: error instanceof Error ? error.message : 'Network error'
-                }
-              : check
-          ));
-        }
-      }
-
-      // Check 3: GET /check-subscription
-      try {
-        const response = await fetch(`${baseUrl}/functions/v1/check-subscription`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        });
-
-        let resultMessage = 'Error';
-        if (response.ok) {
-          const data = await response.json();
-          resultMessage = `isPremium: ${data?.isPremium || false}, proPlan: ${data?.proPlan || 'none'}`;
-        } else {
-          resultMessage = await response.text();
-        }
-
-        setChecks((prev) => prev.map((check, idx) => 
-          idx === 2 
-            ? { 
-                ...check, 
-                status: response.ok ? 'success' : 'error',
-                statusCode: response.status,
-                message: resultMessage
-              }
-            : check
-        ));
-      } catch (error) {
-        setChecks((prev) => prev.map((check, idx) => 
-          idx === 2 
-            ? { 
-                ...check, 
-                status: 'error',
-                message: error instanceof Error ? error.message : 'Network error'
-              }
-            : check
-        ));
-      }
-    }
-
-    runHealthChecks();
-  }, []);
-
-  return (
-    <div className="min-h-screen py-12 px-4" style={{ backgroundColor: "var(--paper)" }}>
-      <div className="mx-auto max-w-2xl">
-        <Card className="p-8 rounded-3xl shadow-soft">
-          <h1 
-            className="text-3xl font-bold mb-6" 
-            style={{ fontFamily: "Fredoka", color: "var(--ink)" }}
-          >
-            Health Check
-          </h1>
-
-          <div className="space-y-4 mb-8">
-            {checks.map((check, idx) => (
-              <div 
-                key={idx}
-                className="flex items-start gap-4 p-4 rounded-2xl border"
-                style={{ 
-                  borderColor: check.status === 'error' 
-                    ? 'var(--brand-raspberry)' 
-                    : check.status === 'success' 
-                    ? 'var(--brand-plum)' 
-                    : '#e5e7eb'
-                }}
-              >
-                {/* Icon */}
-                <div className="flex-shrink-0 mt-1">
-                  {check.status === 'pending' && (
-                    <Loader2 className="w-5 h-5 animate-spin" style={{ color: "var(--brand-yellow)" }} />
-                  )}
-                  {check.status === 'success' && (
-                    <CheckCircle className="w-5 h-5" style={{ color: "var(--brand-plum)" }} />
-                  )}
-                  {check.status === 'error' && (
-                    <XCircle className="w-5 h-5" style={{ color: "var(--brand-raspberry)" }} />
-                  )}
-                </div>
-
-                {/* Details */}
-                <div className="flex-1 min-w-0">
-                  <p className="font-semibold mb-1" style={{ color: "var(--ink)" }}>
-                    {check.name}
-                  </p>
-                  
-                  {check.statusCode && (
-                    <p className="text-sm mb-1" style={{ 
-                      color: check.status === 'error' ? 'var(--brand-raspberry)' : 'var(--brand-plum)' 
-                    }}>
-                      Status: {check.statusCode}
-                    </p>
-                  )}
-                  
-                  {check.message && (
-                    <p className="text-sm text-muted-foreground break-words">
-                      {check.message}
-                    </p>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Navigation */}
-          <div className="flex gap-3">
-            <Button
-              asChild
-              className="rounded-2xl font-semibold"
-              style={{ backgroundColor: "var(--brand-plum)" }}
-            >
-              <Link to="/profile/me">
-                Go to Profile
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Link>
-            </Button>
-          </div>
-        </Card>
-      </div>
-    </div>
-  );
+async function kfetch(path: string, init: RequestInit = {}) {
+  const token = await getToken();
+  const baseUrl = import.meta.env.VITE_SUPABASE_URL;
+  const fullPath = path.startsWith('http') ? path : `${baseUrl}/functions/v1${path}`;
+  
+  const headers = new Headers(init.headers || {});
+  headers.set("Content-Type", "application/json");
+  if (token) headers.set("Authorization", `Bearer ${token}`);
+  const res = await fetch(fullPath, { ...init, headers });
+  return res;
 }
 
 export default function DebugHealth() {
+  const [rows, setRows] = useState<Check[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+
+    async function run() {
+      setLoading(true);
+      setError(null);
+      const list: Check[] = [];
+
+      // 1) /profile (profil courant)
+      try {
+        const r = await kfetch("/profile");
+        const msg = r.ok ? "OK" : await r.text().catch(() => "");
+        list.push({
+          name: "GET /profile",
+          status: r.ok ? "success" : "error",
+          statusCode: r.status,
+          message: msg || r.statusText,
+        });
+      } catch (e: any) {
+        list.push({
+          name: "GET /profile",
+          status: "error",
+          statusCode: 0,
+          message: String(e?.message || e),
+        });
+      }
+
+      // 2) /dog?owner=:me (ou fallback /dog simple)
+      try {
+        const r = await kfetch("/dog?owner=me");
+        let info = "";
+        if (r.ok) {
+          const js = await r.json().catch(() => null);
+          const count = Array.isArray(js) ? js.length : Array.isArray(js?.data) ? js.data.length : 0;
+          info = `${count} dog(s)`;
+        } else {
+          info = await r.text().catch(() => "");
+        }
+        list.push({
+          name: "GET /dog?owner=me",
+          status: r.ok ? "success" : "error",
+          statusCode: r.status,
+          message: info || r.statusText,
+        });
+      } catch (e: any) {
+        list.push({
+          name: "GET /dog?owner=me",
+          status: "error",
+          statusCode: 0,
+          message: String(e?.message || e),
+        });
+      }
+
+      // 3) /check-subscription
+      try {
+        const r = await kfetch("/check-subscription");
+        let msg = r.statusText;
+        if (r.ok) {
+          const data = await r.json().catch(() => ({} as any));
+          msg = `isPremium: ${Boolean(data?.isPremium)}; proPlan: ${data?.proPlan ?? "none"}`;
+        } else {
+          msg = await r.text().catch(() => r.statusText);
+        }
+        list.push({
+          name: "GET /check-subscription",
+          status: r.ok ? "success" : "error",
+          statusCode: r.status,
+          message: msg,
+        });
+      } catch (e: any) {
+        list.push({
+          name: "GET /check-subscription",
+          status: "error",
+          statusCode: 0,
+          message: String(e?.message || e),
+        });
+      }
+
+      if (mounted) {
+        setRows(list);
+        setLoading(false);
+      }
+    }
+
+    run();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
   return (
-    <ErrorBoundary>
-      <DebugHealthContent />
-    </ErrorBoundary>
+    <div className="mx-auto max-w-3xl p-6">
+      <h1 className="font-display text-2xl mb-4">Debug Health</h1>
+
+      <div className="text-sm mb-4 text-gray-600">
+        <Link to="/profile/me" className="underline">Aller à mon profil</Link>
+      </div>
+
+      {loading && <div className="p-4 rounded-xl bg-white shadow">Vérification en cours…</div>}
+
+      {error && (
+        <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 mb-4">
+          {error}
+        </div>
+      )}
+
+      {!loading && !error && (
+        <div className="space-y-3">
+          {rows.map((r) => (
+            <div
+              key={r.name}
+              className={`p-4 rounded-xl shadow-soft border ${
+                r.status === "success" ? "bg-green-50 border-green-200" : "bg-amber-50 border-amber-200"
+              }`}
+            >
+              <div className="font-medium">{r.name}</div>
+              <div className="text-sm mt-1">
+                <span className={`inline-block px-2 py-0.5 rounded-full mr-2 text-xs font-semibold ${
+                  r.status === "success" ? "bg-green-600/10 text-green-800" : "bg-amber-600/10 text-amber-800"
+                }`}>
+                  {r.status} • {r.statusCode}
+                </span>
+                {r.message}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }

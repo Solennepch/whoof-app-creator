@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Dog, Home, Compass, Calendar, MapPin, User, Building, Percent, Briefcase } from "lucide-react";
+import { Dog, Home, Compass, Calendar, MapPin, User, Building, Percent, Briefcase, Bug } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { XpProgress } from "@/components/ui/XpProgress";
 import { CongratsModal } from "@/components/ui/CongratsModal";
@@ -62,7 +62,13 @@ export function Navbar() {
     ? { to: "/pro/dashboard", icon: Briefcase, label: "Espace Pro" }
     : { to: "/pro/onboarding", icon: Briefcase, label: "Devenir partenaire" };
 
-  const navItems = isLoading ? baseNavItems : [...baseNavItems, proNavItem];
+  // Debug link (visible only in dev/preview)
+  const isDev = import.meta.env.DEV || window.location.hostname.includes('lovable.app');
+  const debugNavItem = isDev ? { to: "/debug/health", icon: Bug, label: "Debug" } : null;
+
+  const navItems = isLoading 
+    ? baseNavItems 
+    : [...baseNavItems, proNavItem, ...(debugNavItem ? [debugNavItem] : [])];
 
   return (
     <>
