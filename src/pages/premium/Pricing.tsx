@@ -26,6 +26,7 @@ export default function PremiumPricing() {
         body: {
           lookupKey: 'whoof_premium_monthly',
           priceId: 'price_1SMZuHDL0qnGuzb7rPxyAqZq',
+          type: 'user',
           successUrl: `${window.location.origin}/profile/me?success=true`,
           cancelUrl: `${window.location.origin}/premium/pricing?canceled=true`,
         },

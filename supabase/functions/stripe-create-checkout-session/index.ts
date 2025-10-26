@@ -82,7 +82,7 @@ serve(async (req) => {
 
     // Parse request body
     const body = await req.json();
-    const { lookupKey, priceId, successUrl, cancelUrl } = body;
+    const { lookupKey, priceId, successUrl, cancelUrl, type } = body;
 
     if (!lookupKey && !priceId) {
       logStep("ERROR: Missing price identifier");
@@ -95,7 +95,13 @@ serve(async (req) => {
       );
     }
 
-    logStep("Request body parsed", { lookupKey, priceId, hasSuccessUrl: !!successUrl, hasCancelUrl: !!cancelUrl });
+    // Determine type based on lookupKey if not provided
+    let sessionType = type;
+    if (!sessionType && lookupKey) {
+      sessionType = lookupKey.toLowerCase().includes('pro') ? 'pro' : 'user';
+    }
+
+    logStep("Request body parsed", { lookupKey, priceId, type: sessionType, hasSuccessUrl: !!successUrl, hasCancelUrl: !!cancelUrl });
 
     // Initialize Stripe
     const stripe = new Stripe(stripeKey, { apiVersion: "2025-08-27.basil" });
@@ -163,6 +169,10 @@ serve(async (req) => {
       mode: 'subscription',
       success_url: finalSuccessUrl,
       cancel_url: finalCancelUrl,
+      metadata: {
+        user_id: user.id,
+        type: sessionType || 'user',
+      },
     });
 
     logStep("Checkout session created successfully", { sessionId: session.id });

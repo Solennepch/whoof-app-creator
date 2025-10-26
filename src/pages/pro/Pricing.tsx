@@ -46,6 +46,7 @@ export default function ProPricing() {
         body: {
           lookupKey: PLAN.lookupKey,
           priceId: PLAN.priceId,
+          type: 'pro',
           successUrl: `${window.location.origin}/pro/dashboard?success=true`,
           cancelUrl: `${window.location.origin}/pro/pricing?canceled=true`,
         },
