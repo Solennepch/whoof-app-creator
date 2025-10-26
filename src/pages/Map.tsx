@@ -1,11 +1,14 @@
 import { useEffect, useRef, useState } from "react";
-import { MapPin, Navigation, MessageCircle, X, Shield } from "lucide-react";
+import { MapPin, Navigation, MessageCircle, X, Shield, Stethoscope, Home, UtensilsCrossed, Filter } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from "@/components/ui/sheet";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { AnimatedLikeButton } from "@/components/ui/AnimatedLikeButton";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { supabase } from "@/integrations/supabase/client";
@@ -39,6 +42,19 @@ interface NearbyProfile {
   temperament?: string;
   size?: string;
   verified?: boolean;
+  isOnline?: boolean;
+  walkMood?: string;
+}
+
+interface POI {
+  id: string;
+  type: 'veterinaire' | 'pet_sitter' | 'restaurant';
+  name: string;
+  lat: number;
+  lng: number;
+  distance_km?: number;
+  address?: string;
+  rating?: number;
 }
 
 
@@ -54,6 +70,10 @@ export default function Map() {
   const [isLiking, setIsLiking] = useState(false);
   const [isInviting, setIsInviting] = useState(false);
   const [likedProfiles, setLikedProfiles] = useState<Set<string>>(new Set());
+  const [pois, setPois] = useState<POI[]>([]);
+  const [showVets, setShowVets] = useState(true);
+  const [showPetSitters, setShowPetSitters] = useState(true);
+  const [showRestaurants, setShowRestaurants] = useState(true);
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -69,6 +89,14 @@ export default function Map() {
     ];
     const sizes = ['Petit', 'Moyen', 'Grand'];
     const temperaments = ['Calme', 'Joueur', 'Énergique', 'Amical'];
+    const walkMoods = [
+      '🏃 Envie de courir',
+      '🌳 Balade au parc',
+      '☕ Promenade tranquille',
+      '🎾 Jeu de balle',
+      '🌅 Balade matinale',
+      '🐕 Socialisation'
+    ];
 
     return Array.from({ length: count }, (_, i) => {
       // Random offset within ~2km radius
@@ -90,9 +118,80 @@ export default function Map() {
         breed: breeds[i % breeds.length],
         size: sizes[i % sizes.length],
         temperament: temperaments[i % temperaments.length],
-        verified: Math.random() > 0.5
+        verified: Math.random() > 0.5,
+        isOnline: Math.random() > 0.3, // 70% en ligne
+        walkMood: Math.random() > 0.2 ? walkMoods[i % walkMoods.length] : undefined
       };
     });
+  };
+
+  // Generate mock POIs for development
+  const generateMockPOIs = (lng: number, lat: number): POI[] => {
+    const vets = [
+      { name: 'Clinique Vétérinaire du Centre', address: '12 Rue de la Paix' },
+      { name: 'Cabinet Dr. Martin', address: '45 Avenue des Champs' },
+      { name: 'Vétérinaire de Garde 24/7', address: '78 Boulevard Saint-Michel' }
+    ];
+    const petSitters = [
+      { name: 'Dog Walker Pro', address: '23 Rue du Parc' },
+      { name: 'Pet Care Services', address: '56 Avenue Voltaire' },
+      { name: 'Garderie Toutous Heureux', address: '89 Rue Lafayette' }
+    ];
+    const restaurants = [
+      { name: 'Le Bistrot des Chiens', address: '34 Place du Marché' },
+      { name: 'Café Canin', address: '67 Rue de Rivoli' },
+      { name: 'Restaurant La Patte d\'Or', address: '90 Boulevard Haussmann' }
+    ];
+
+    const allPOIs: POI[] = [];
+    let poiId = 0;
+
+    // Add vets
+    vets.forEach((vet, i) => {
+      const angle = (i / vets.length) * Math.PI * 2;
+      const radius = 0.015;
+      allPOIs.push({
+        id: `vet-${poiId++}`,
+        type: 'veterinaire',
+        name: vet.name,
+        address: vet.address,
+        lat: lat + radius * Math.sin(angle),
+        lng: lng + radius * Math.cos(angle),
+        rating: 4 + Math.random()
+      });
+    });
+
+    // Add pet sitters
+    petSitters.forEach((ps, i) => {
+      const angle = (i / petSitters.length) * Math.PI * 2 + Math.PI / 3;
+      const radius = 0.012;
+      allPOIs.push({
+        id: `ps-${poiId++}`,
+        type: 'pet_sitter',
+        name: ps.name,
+        address: ps.address,
+        lat: lat + radius * Math.sin(angle),
+        lng: lng + radius * Math.cos(angle),
+        rating: 4 + Math.random()
+      });
+    });
+
+    // Add restaurants
+    restaurants.forEach((rest, i) => {
+      const angle = (i / restaurants.length) * Math.PI * 2 + Math.PI / 6;
+      const radius = 0.018;
+      allPOIs.push({
+        id: `rest-${poiId++}`,
+        type: 'restaurant',
+        name: rest.name,
+        address: rest.address,
+        lat: lat + radius * Math.sin(angle),
+        lng: lng + radius * Math.cos(angle),
+        rating: 4 + Math.random()
+      });
+    });
+
+    return allPOIs;
   };
 
   // Fetch nearby profiles
@@ -270,7 +369,7 @@ export default function Map() {
   };
 
   // Add markers to map with clustering
-  const addMarkersToMap = (profiles: NearbyProfile[], userCoords: [number, number]) => {
+  const addMarkersToMap = (profiles: NearbyProfile[], pois: POI[], userCoords: [number, number]) => {
     if (!map.current) return;
 
     // Clear existing markers
@@ -439,6 +538,65 @@ export default function Map() {
       // Update existing source
       (map.current.getSource('profiles') as mapboxgl.GeoJSONSource).setData(geojsonData);
     }
+
+    // Add POI markers
+    const filteredPOIs = pois.filter(poi => {
+      if (poi.type === 'veterinaire') return showVets;
+      if (poi.type === 'pet_sitter') return showPetSitters;
+      if (poi.type === 'restaurant') return showRestaurants;
+      return false;
+    });
+
+    filteredPOIs.forEach(poi => {
+      const el = document.createElement('div');
+      el.className = 'poi-marker';
+      el.style.width = '36px';
+      el.style.height = '36px';
+      el.style.borderRadius = '50%';
+      el.style.border = '3px solid white';
+      el.style.boxShadow = '0 2px 8px rgba(0,0,0,0.3)';
+      el.style.display = 'flex';
+      el.style.alignItems = 'center';
+      el.style.justifyContent = 'center';
+      el.style.cursor = 'pointer';
+      el.style.transition = 'transform 0.2s';
+
+      // Style based on POI type
+      if (poi.type === 'veterinaire') {
+        el.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+        el.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 2v20"/><path d="M2 11h20"/><circle cx="11" cy="11" r="9"/></svg>';
+      } else if (poi.type === 'pet_sitter') {
+        el.style.background = 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)';
+        el.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9Z"/><path d="m3 9 2.45-4.9A2 2 0 0 1 7.24 3h9.52a2 2 0 0 1 1.8 1.1L21 9"/><path d="M12 3v6"/></svg>';
+      } else if (poi.type === 'restaurant') {
+        el.style.background = 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
+        el.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 2-2.3 2.3a3 3 0 0 0 0 4.2l1.8 1.8a3 3 0 0 0 4.2 0L22 8"/><path d="M15 15 3.3 3.3a4.2 4.2 0 0 0 0 6l7.3 7.3c.7.7 2 .7 2.8 0L15 15Zm0 0 7 7"/><path d="m2.1 21.8 6.4-6.3"/><path d="m19 5-7 7"/></svg>';
+      }
+
+      el.addEventListener('mouseenter', () => {
+        el.style.transform = 'scale(1.1)';
+      });
+      el.addEventListener('mouseleave', () => {
+        el.style.transform = 'scale(1)';
+      });
+
+      const popup = new mapboxgl.Popup({ offset: 25, closeButton: false }).setHTML(`
+        <div style="padding: 8px;">
+          <div style="font-weight: 600; font-size: 14px; margin-bottom: 4px;">${poi.name}</div>
+          <div style="font-size: 12px; color: #666; margin-bottom: 4px;">${poi.address || ''}</div>
+          <div style="font-size: 12px;">
+            ${'⭐'.repeat(Math.floor(poi.rating || 4))} ${(poi.rating || 4).toFixed(1)}
+          </div>
+        </div>
+      `);
+
+      const marker = new mapboxgl.Marker(el)
+        .setLngLat([poi.lng, poi.lat])
+        .setPopup(popup)
+        .addTo(map.current!);
+
+      markers.current.push(marker);
+    });
   };
 
   // Initialize map and fetch profiles
@@ -498,11 +656,13 @@ export default function Map() {
 
         console.log('✅ User marker added at', coords);
 
-        // Fetch and display nearby profiles
+        // Fetch and display nearby profiles and POIs
         setIsLoading(true);
         const profiles = await fetchNearbyProfiles(coords[0], coords[1]);
+        const generatedPOIs = generateMockPOIs(coords[0], coords[1]);
         setNearbyProfiles(profiles);
-        addMarkersToMap(profiles, coords);
+        setPois(generatedPOIs);
+        addMarkersToMap(profiles, generatedPOIs, coords);
         setIsLoading(false);
       } catch (error) {
         console.error('Error initializing map:', error);
@@ -555,6 +715,13 @@ export default function Map() {
     };
   }, []);
 
+  // Update markers when POI filters change
+  useEffect(() => {
+    if (map.current && nearbyProfiles.length > 0) {
+      addMarkersToMap(nearbyProfiles, pois, userLocation);
+    }
+  }, [showVets, showPetSitters, showRestaurants]);
+
   const handleGoToUser = () => {
     if (map.current) {
       map.current.flyTo({
@@ -577,15 +744,70 @@ export default function Map() {
             <p className="text-xs md:text-sm text-muted-foreground hidden sm:block">Trouve des chiens près de toi</p>
           </div>
 
-          <Button 
-            onClick={handleGoToUser} 
-            size="sm"
-            className="rounded-2xl shrink-0 shadow-glow" 
-            style={{ backgroundColor: "var(--brand-plum)" }}
-          >
-            <Navigation className="h-4 w-4 md:mr-2" />
-            <span className="hidden md:inline">Ma position</span>
-          </Button>
+          <div className="flex gap-2">
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button 
+                  size="sm"
+                  variant="outline"
+                  className="rounded-2xl shrink-0"
+                >
+                  <Filter className="h-4 w-4 md:mr-2" />
+                  <span className="hidden md:inline">Filtres</span>
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-72">
+                <div className="space-y-4">
+                  <h4 className="font-semibold text-sm">Points d'intérêt</h4>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="vets" className="flex items-center gap-2 cursor-pointer">
+                        <Stethoscope className="h-4 w-4 text-green-600" />
+                        <span>Vétérinaires</span>
+                      </Label>
+                      <Switch 
+                        id="vets" 
+                        checked={showVets} 
+                        onCheckedChange={setShowVets} 
+                      />
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="sitters" className="flex items-center gap-2 cursor-pointer">
+                        <Home className="h-4 w-4 text-amber-600" />
+                        <span>Pet Sitters</span>
+                      </Label>
+                      <Switch 
+                        id="sitters" 
+                        checked={showPetSitters} 
+                        onCheckedChange={setShowPetSitters} 
+                      />
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="restaurants" className="flex items-center gap-2 cursor-pointer">
+                        <UtensilsCrossed className="h-4 w-4 text-red-600" />
+                        <span>Restaurants</span>
+                      </Label>
+                      <Switch 
+                        id="restaurants" 
+                        checked={showRestaurants} 
+                        onCheckedChange={setShowRestaurants} 
+                      />
+                    </div>
+                  </div>
+                </div>
+              </PopoverContent>
+            </Popover>
+
+            <Button 
+              onClick={handleGoToUser} 
+              size="sm"
+              className="rounded-2xl shrink-0 shadow-glow" 
+              style={{ backgroundColor: "var(--brand-plum)" }}
+            >
+              <Navigation className="h-4 w-4 md:mr-2" />
+              <span className="hidden md:inline">Ma position</span>
+            </Button>
+          </div>
         </div>
 
         <div className="grid gap-4 md:gap-6 lg:grid-cols-3">
@@ -630,17 +852,22 @@ export default function Map() {
                       aria-label={`Voir le profil de ${profile.display_name || 'Profil'}`}
                     >
                       <div className="flex items-center gap-3">
-                        <div
-                          className="h-10 w-10 rounded-full ring-2"
-                          style={{
-                            background: profile.avatar_url 
-                              ? `url(${profile.avatar_url})` 
-                              : "linear-gradient(135deg, #EC4899 0%, #BE185D 100%)",
-                            backgroundSize: "cover",
-                            backgroundPosition: "center",
-                            borderColor: "#EC4899",
-                          }}
-                        />
+                        <div className="relative">
+                          <div
+                            className="h-10 w-10 rounded-full ring-2"
+                            style={{
+                              background: profile.avatar_url 
+                                ? `url(${profile.avatar_url})` 
+                                : "linear-gradient(135deg, #EC4899 0%, #BE185D 100%)",
+                              backgroundSize: "cover",
+                              backgroundPosition: "center",
+                              borderColor: profile.isOnline ? "#10b981" : "#EC4899",
+                            }}
+                          />
+                          {profile.isOnline && (
+                            <div className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-green-500 ring-2 ring-white" />
+                          )}
+                        </div>
                         <div>
                           <p className="font-medium flex items-center gap-2" style={{ color: "var(--ink)" }}>
                             {profile.display_name || 'Profil'}
@@ -697,17 +924,22 @@ export default function Map() {
                       onClick={() => handleSelectProfile(profile)}
                       className="shrink-0 flex flex-col items-center gap-1.5 p-2 rounded-xl hover:bg-accent/10 transition-smooth"
                     >
-                      <div
-                        className="h-12 w-12 rounded-full ring-2 shadow-sm"
-                        style={{
-                          background: profile.avatar_url 
-                            ? `url(${profile.avatar_url})` 
-                            : "linear-gradient(135deg, #EC4899 0%, #BE185D 100%)",
-                          backgroundSize: "cover",
-                          backgroundPosition: "center",
-                          borderColor: "#EC4899",
-                        }}
-                      />
+                      <div className="relative">
+                        <div
+                          className="h-12 w-12 rounded-full ring-2 shadow-sm"
+                          style={{
+                            background: profile.avatar_url 
+                              ? `url(${profile.avatar_url})` 
+                              : "linear-gradient(135deg, #EC4899 0%, #BE185D 100%)",
+                            backgroundSize: "cover",
+                            backgroundPosition: "center",
+                            borderColor: profile.isOnline ? "#10b981" : "#EC4899",
+                          }}
+                        />
+                        {profile.isOnline && (
+                          <div className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-green-500 ring-2 ring-white" />
+                        )}
+                      </div>
                       <div className="text-center max-w-[60px]">
                         <p className="text-xs font-medium truncate" style={{ color: "var(--ink)" }}>
                           {profile.display_name || 'Profil'}
@@ -752,12 +984,19 @@ export default function Map() {
             <div className="mt-4 space-y-5">
               {/* Avatar and Name - Mobile optimized */}
               <div className="flex flex-col items-center text-center space-y-3">
-                <Avatar className="h-24 w-24 md:h-32 md:w-32 ring-4 ring-primary/20 shadow-glow">
-                  <AvatarImage src={selectedProfile.avatar_url} />
-                  <AvatarFallback className="text-3xl md:text-4xl bg-gradient-to-br from-pink-500 to-rose-600 text-white">
-                    {(selectedProfile.display_name || 'P')[0].toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
+                <div className="relative">
+                  <Avatar className="h-24 w-24 md:h-32 md:w-32 ring-4 ring-primary/20 shadow-glow">
+                    <AvatarImage src={selectedProfile.avatar_url} />
+                    <AvatarFallback className="text-3xl md:text-4xl bg-gradient-to-br from-pink-500 to-rose-600 text-white">
+                      {(selectedProfile.display_name || 'P')[0].toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  {selectedProfile.isOnline && (
+                    <div className="absolute bottom-2 right-2 h-6 w-6 rounded-full bg-green-500 ring-4 ring-white shadow-lg flex items-center justify-center">
+                      <div className="h-2 w-2 rounded-full bg-white" />
+                    </div>
+                  )}
+                </div>
 
                 <div>
                   <h2 className="text-xl md:text-2xl font-bold flex items-center justify-center gap-2 flex-wrap">
@@ -774,8 +1013,25 @@ export default function Map() {
                       ? `À ${selectedProfile.distance_km.toFixed(1)} km de vous` 
                       : 'Distance inconnue'}
                   </p>
+                  {selectedProfile.isOnline && (
+                    <Badge className="mt-2 bg-green-500 hover:bg-green-600">
+                      En ligne
+                    </Badge>
+                  )}
                 </div>
               </div>
+
+              {/* Walk Mood Badge */}
+              {selectedProfile.walkMood && (
+                <div className="flex justify-center">
+                  <Badge 
+                    variant="secondary"
+                    className="px-4 py-2 text-sm"
+                  >
+                    {selectedProfile.walkMood}
+                  </Badge>
+                </div>
+              )}
 
               {/* Details - Mobile optimized */}
               {(selectedProfile.breed || selectedProfile.temperament || selectedProfile.size) && (
