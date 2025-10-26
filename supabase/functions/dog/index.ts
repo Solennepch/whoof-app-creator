@@ -1,12 +1,15 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+const SUPABASE_URL = Deno.env.get('SUPABASE_URL') ?? '';
+const SUPABASE_ANON_KEY = Deno.env.get('SUPABASE_ANON_KEY') ?? '';
+
 serve(async (req) => {
+  // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
@@ -14,71 +17,172 @@ serve(async (req) => {
   try {
     const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
-      throw new Error('No authorization header');
+      return new Response(
+        JSON.stringify({ ok: false, error: 'No authorization header' }),
+        { 
+          status: 401, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
+      );
     }
 
-    const supabase = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
-      { global: { headers: { Authorization: authHeader } } }
-    );
-
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) {
-      throw new Error('Unauthorized');
-    }
-
+    // GET /dog?owner=:id
     if (req.method === 'GET') {
-      // Get dogs by owner
       const url = new URL(req.url);
       const ownerId = url.searchParams.get('owner');
 
-      let query = supabase.from('dogs').select('*');
-      
+      let endpoint = `${SUPABASE_URL}/rest/v1/dogs?select=*`;
       if (ownerId) {
-        query = query.eq('owner_id', ownerId);
+        endpoint += `&owner_id=eq.${ownerId}`;
       }
 
-      const { data, error } = await query;
-      if (error) throw error;
-
-      return new Response(JSON.stringify(data), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      const response = await fetch(endpoint, {
+        method: 'GET',
+        headers: {
+          'Authorization': authHeader,
+          'apikey': SUPABASE_ANON_KEY,
+          'Content-Type': 'application/json',
+        },
       });
+
+      if (!response.ok) {
+        const error = await response.text();
+        return new Response(
+          JSON.stringify({ ok: false, error }),
+          { 
+            status: response.status, 
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+          }
+        );
+      }
+
+      const data = await response.json();
+      return new Response(
+        JSON.stringify({ ok: true, data }),
+        { 
+          status: 200, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
+      );
     }
 
+    // POST /dog
     if (req.method === 'POST') {
-      // Create new dog
       const body = await req.json();
-      
-      // Remove zodiac_sign from body if provided - it's calculated automatically
-      const { zodiac_sign, ...dogData } = body;
-      
-      const { data, error } = await supabase
-        .from('dogs')
-        .insert({ ...dogData, owner_id: user.id })
-        .select()
-        .single();
 
-      if (error) throw error;
+      // Validate required fields
+      if (!body.name || typeof body.name !== 'string') {
+        return new Response(
+          JSON.stringify({ ok: false, error: 'Field "name" is required and must be a string' }),
+          { 
+            status: 400, 
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+          }
+        );
+      }
 
-      return new Response(JSON.stringify(data), {
-        status: 201,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      if (!body.breed || typeof body.breed !== 'string') {
+        return new Response(
+          JSON.stringify({ ok: false, error: 'Field "breed" is required and must be a string' }),
+          { 
+            status: 400, 
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+          }
+        );
+      }
+
+      // Extract valid fields
+      const validFields = [
+        'name',
+        'breed',
+        'birthdate',
+        'temperament',
+        'size',
+        'vaccination',
+        'avatar_url',
+        'anecdote',
+      ];
+
+      const dogData: Record<string, any> = {};
+      for (const field of validFields) {
+        if (body[field] !== undefined) {
+          dogData[field] = body[field];
+        }
+      }
+
+      // Get user ID from auth token
+      const authResponse = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+        method: 'GET',
+        headers: {
+          'Authorization': authHeader,
+          'apikey': SUPABASE_ANON_KEY,
+        },
       });
+
+      if (!authResponse.ok) {
+        return new Response(
+          JSON.stringify({ ok: false, error: 'Unauthorized' }),
+          { 
+            status: 401, 
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+          }
+        );
+      }
+
+      const userData = await authResponse.json();
+      dogData.owner_id = userData.id;
+
+      // Insert dog
+      const insertResponse = await fetch(`${SUPABASE_URL}/rest/v1/dogs`, {
+        method: 'POST',
+        headers: {
+          'Authorization': authHeader,
+          'apikey': SUPABASE_ANON_KEY,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=representation',
+        },
+        body: JSON.stringify(dogData),
+      });
+
+      if (!insertResponse.ok) {
+        const error = await insertResponse.text();
+        return new Response(
+          JSON.stringify({ ok: false, error }),
+          { 
+            status: insertResponse.status, 
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+          }
+        );
+      }
+
+      const data = await insertResponse.json();
+      return new Response(
+        JSON.stringify({ ok: true, data: data[0] || data }),
+        { 
+          status: 201, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
+      );
     }
 
-    return new Response('Method not allowed', {
-      status: 405,
-      headers: corsHeaders,
-    });
+    // Method not allowed
+    return new Response(
+      JSON.stringify({ ok: false, error: 'Method not allowed' }),
+      { 
+        status: 405, 
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+      }
+    );
 
   } catch (error) {
     console.error('Error:', error);
-    const message = error instanceof Error ? error.message : 'An error occurred';
-    return new Response(JSON.stringify({ error: message }), {
-      status: 400,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    const message = error instanceof Error ? error.message : 'Internal server error';
+    return new Response(
+      JSON.stringify({ ok: false, error: message }),
+      { 
+        status: 500, 
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+      }
+    );
   }
 });
