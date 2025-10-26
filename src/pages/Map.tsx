@@ -10,16 +10,17 @@ import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { getMapboxToken } from "@/lib/mapbox-config";
 
 // Initialize Mapbox token
-const mapboxToken = import.meta.env.VITE_MAPBOX_TOKEN as string;
+const mapboxToken = getMapboxToken();
 
 console.log('🔑 Checking Mapbox token...');
 console.log('Token exists:', !!mapboxToken);
 console.log('Token prefix:', mapboxToken ? mapboxToken.substring(0, 8) + '...' : 'NO TOKEN');
 
 if (!mapboxToken) {
-  console.error('❌ MAPBOX TOKEN ERROR: No Mapbox token found. Please set VITE_MAPBOX_TOKEN in your environment variables.');
+  console.error('❌ MAPBOX TOKEN ERROR: No Mapbox token found.');
 } else {
   console.log('✅ Mapbox token loaded successfully');
   mapboxgl.accessToken = mapboxToken;
