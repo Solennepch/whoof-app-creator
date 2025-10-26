@@ -18,6 +18,7 @@ export type Database = {
         Row: {
           age_years: number | null
           avatar_url: string | null
+          birthdate: string | null
           breed: string | null
           created_at: string | null
           id: string
@@ -27,10 +28,12 @@ export type Database = {
           temperament: string | null
           updated_at: string | null
           vaccination: Json | null
+          zodiac_sign: string | null
         }
         Insert: {
           age_years?: number | null
           avatar_url?: string | null
+          birthdate?: string | null
           breed?: string | null
           created_at?: string | null
           id?: string
@@ -40,10 +43,12 @@ export type Database = {
           temperament?: string | null
           updated_at?: string | null
           vaccination?: Json | null
+          zodiac_sign?: string | null
         }
         Update: {
           age_years?: number | null
           avatar_url?: string | null
+          birthdate?: string | null
           breed?: string | null
           created_at?: string | null
           id?: string
@@ -53,6 +58,7 @@ export type Database = {
           temperament?: string | null
           updated_at?: string | null
           vaccination?: Json | null
+          zodiac_sign?: string | null
         }
         Relationships: [
           {
@@ -1262,6 +1268,7 @@ export type Database = {
         }
         Returns: string
       }
+      zodiac_from_date: { Args: { d: string }; Returns: string }
     }
     Enums: {
       [_ in never]: never
