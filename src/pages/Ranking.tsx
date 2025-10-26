@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Trophy, Dog, User } from "lucide-react";
+import { Trophy, Dog, User, Star, Sparkles } from "lucide-react";
 
 const weeklyRankings = [
   { rank: 1, name: "Luna", walks: 28, distance: "42 km", avatar: "Dog" },
@@ -30,12 +30,26 @@ export default function Ranking() {
   const myRanking = rankings.find(r => r.isMe);
 
   return (
-    <div className="min-h-screen pb-24" style={{ backgroundColor: "hsl(var(--paper))" }}>
-      <main className="pt-20 px-3 sm:px-4 max-w-7xl mx-auto">
+    <div className="min-h-screen pb-24 relative overflow-hidden" style={{ 
+      background: "linear-gradient(135deg, #7B61FF 0%, #FF5DA2 50%, #FFC14D 100%)"
+    }}>
+      {/* Animated Stars Background */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <Star className="absolute top-20 left-10 w-6 h-6 text-white/30 animate-pulse" style={{ animationDelay: "0s" }} />
+        <Sparkles className="absolute top-40 right-20 w-5 h-5 text-white/40 animate-pulse" style={{ animationDelay: "0.5s" }} />
+        <Star className="absolute top-60 left-1/4 w-4 h-4 text-white/20 animate-pulse" style={{ animationDelay: "1s" }} />
+        <Star className="absolute top-32 right-10 w-7 h-7 text-white/25 animate-pulse" style={{ animationDelay: "1.5s" }} />
+        <Sparkles className="absolute top-80 left-1/3 w-6 h-6 text-white/30 animate-pulse" style={{ animationDelay: "2s" }} />
+        <Star className="absolute top-96 right-1/4 w-5 h-5 text-white/35 animate-pulse" style={{ animationDelay: "2.5s" }} />
+        <Sparkles className="absolute bottom-40 left-20 w-4 h-4 text-white/25 animate-pulse" style={{ animationDelay: "3s" }} />
+        <Star className="absolute bottom-60 right-16 w-6 h-6 text-white/30 animate-pulse" style={{ animationDelay: "3.5s" }} />
+      </div>
+
+      <main className="pt-20 px-3 sm:px-4 max-w-7xl mx-auto relative z-10">
         <div className="flex items-center justify-end mb-4">
           <h1 
-            className="text-2xl sm:text-3xl font-bold" 
-            style={{ color: "hsl(var(--ink))", fontFamily: "Fredoka" }}
+            className="text-2xl sm:text-3xl font-bold text-white" 
+            style={{ fontFamily: "Fredoka" }}
           >
             Classement
           </h1>
@@ -153,7 +167,11 @@ export default function Ranking() {
                                          user.rank === 2 ? "hsl(var(--muted))" : 
                                          "hsl(var(--border))"
                         }}>
-                          <span className="text-xl sm:text-2xl">{user.rank === 1 ? "🥇" : user.rank === 2 ? "🥈" : "🥉"}</span>
+                          <Trophy className={`w-5 h-5 sm:w-6 sm:h-6 ${
+                            user.rank === 1 ? "text-white" : 
+                            user.rank === 2 ? "text-muted-foreground" :
+                            "text-accent"
+                          }`} />
                         </div>
                       ) : (
                         <div className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full" style={{ backgroundColor: "hsl(var(--muted))" }}>
