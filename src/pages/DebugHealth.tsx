@@ -37,7 +37,7 @@ function DebugHealthContent() {
 
         const errorText = response.ok ? 'OK' : await response.text();
 
-        setChecks(prev => prev.map((check, idx) => 
+        setChecks((prev) => prev.map((check, idx) => 
           idx === 0 
             ? { 
                 ...check, 
@@ -48,7 +48,7 @@ function DebugHealthContent() {
             : check
         ));
       } catch (error) {
-        setChecks(prev => prev.map((check, idx) => 
+        setChecks((prev) => prev.map((check, idx) => 
           idx === 0 
             ? { 
                 ...check, 
@@ -78,7 +78,7 @@ function DebugHealthContent() {
             resultMessage = await response.text();
           }
 
-          setChecks(prev => prev.map((check, idx) => 
+          setChecks((prev) => prev.map((check, idx) => 
             idx === 1 
               ? { 
                   ...check, 
@@ -89,7 +89,7 @@ function DebugHealthContent() {
               : check
           ));
         } catch (error) {
-          setChecks(prev => prev.map((check, idx) => 
+          setChecks((prev) => prev.map((check, idx) => 
             idx === 1 
               ? { 
                   ...check, 
@@ -118,7 +118,7 @@ function DebugHealthContent() {
           resultMessage = await response.text();
         }
 
-        setChecks(prev => prev.map((check, idx) => 
+        setChecks((prev) => prev.map((check, idx) => 
           idx === 2 
             ? { 
                 ...check, 
@@ -129,7 +129,7 @@ function DebugHealthContent() {
             : check
         ));
       } catch (error) {
-        setChecks(prev => prev.map((check, idx) => 
+        setChecks((prev) => prev.map((check, idx) => 
           idx === 2 
             ? { 
                 ...check, 
