@@ -13,7 +13,7 @@ export function XpProgress({ current, min, max, t = (k:string)=>({level:"Niveau"
   { current:number; min:number; max:number; t?: (k:string)=>string }) {
   const pct = Math.max(0, Math.min(1, (current - min) / (max - min)));
   const spring = useSpring(0, { stiffness: 120, damping: 20 });
-  React.useEffect(() => { spring.set(pct); }, [pct]);
+  React.useEffect(() => { spring.set(pct); }, [pct, spring]);
   const width = useTransform(spring, (v) => `${Math.round(v * 100)}%`);
   return (
     <div className="rounded-2xl bg-white p-4 shadow-soft ring-1 ring-black/5">

@@ -8,12 +8,12 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Whoof Brand Colors */
-    --brand-yellow: 41 100% 65%;
-    --brand-raspberry: 336 100% 68%;
-    --brand-plum: 255 100% 69%;
-    --ink: 220 26% 14%;
-    --paper: 220 20% 98%;
+    /* Whoof Brand Colors (Hex) */
+    --brand-yellow: #FFC14D;
+    --brand-raspberry: #FF5DA2;
+    --brand-plum: #7B61FF;
+    --ink: #111827;
+    --paper: #F9FAFB;
     
     /* Design System */
     --background: 220 20% 98%;
