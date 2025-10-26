@@ -1,6 +1,11 @@
+import { useState } from "react";
 import { MapPin, Navigation } from "lucide-react";
 import { IconContainer } from "@/components/ui/IconContainer";
 import { Button } from "@/components/ui/button";
+import MapGL, { Marker } from "react-map-gl";
+import "mapbox-gl/dist/mapbox-gl.css";
+
+const MAPBOX_TOKEN = "pk.eyJ1Ijoic29sZW5uZXBjaCIsImEiOiJjbWg3d29nNHMwd2VmMm1zN2h6OXdmZ215In0.RmXuQ4eqOhvYXaybbiAbEg";
 
 const nearbyDogs = [
   { name: "Luna", distance: "1.2 km", lat: 48.8566, lng: 2.3522 },
@@ -9,6 +14,12 @@ const nearbyDogs = [
 ];
 
 export default function Map() {
+  const [viewState, setViewState] = useState({
+    latitude: 48.8566,
+    longitude: 2.3522,
+    zoom: 13
+  });
+
   return (
     <div className="min-h-screen" style={{ backgroundColor: "var(--paper)" }}>
       <div className="mx-auto max-w-6xl px-4 py-6">
@@ -27,27 +38,32 @@ export default function Map() {
         </div>
 
         <div className="grid gap-6 lg:grid-cols-3">
-          {/* Map Placeholder */}
+          {/* Interactive Map */}
           <div className="lg:col-span-2">
-            <div className="flex h-[500px] items-center justify-center rounded-3xl bg-white shadow-soft ring-1 ring-black/5">
-              <div className="text-center">
-                <div className="mb-4 inline-flex">
-                  <IconContainer>
-                    <MapPin className="h-5 w-5" />
-                  </IconContainer>
-                </div>
-                <h3 className="mb-2 text-xl font-semibold" style={{ color: "var(--ink)" }}>
-                  Carte interactive
-                </h3>
-                <p className="text-muted-foreground">
-                  L'intégration de la carte sera ajoutée prochainement
-                </p>
-                <div className="mt-6 flex justify-center gap-2">
-                  <div className="h-3 w-3 animate-pulse rounded-full" style={{ backgroundColor: "var(--brand-plum)" }} />
-                  <div className="h-3 w-3 animate-pulse rounded-full delay-100" style={{ backgroundColor: "var(--brand-raspberry)" }} />
-                  <div className="h-3 w-3 animate-pulse rounded-full delay-200" style={{ backgroundColor: "var(--brand-yellow)" }} />
-                </div>
-              </div>
+            <div className="h-[500px] overflow-hidden rounded-3xl shadow-soft ring-1 ring-black/5">
+              <MapGL
+                {...viewState}
+                onMove={evt => setViewState(evt.viewState)}
+                mapboxAccessToken={MAPBOX_TOKEN}
+                mapStyle="mapbox://styles/mapbox/streets-v12"
+                style={{ width: "100%", height: "100%" }}
+              >
+                {nearbyDogs.map((dog, i) => (
+                  <Marker key={i} latitude={dog.lat} longitude={dog.lng}>
+                    <div className="relative">
+                      <div
+                        className="h-10 w-10 rounded-full ring-2 ring-white shadow-lg cursor-pointer transition hover:scale-110"
+                        style={{
+                          background: "linear-gradient(135deg, var(--brand-plum) 0%, var(--brand-raspberry) 100%)",
+                        }}
+                      />
+                      <div className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-lg bg-white px-2 py-1 text-xs font-medium shadow-lg">
+                        {dog.name}
+                      </div>
+                    </div>
+                  </Marker>
+                ))}
+              </MapGL>
             </div>
           </div>
 
