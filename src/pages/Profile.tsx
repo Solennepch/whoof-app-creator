@@ -443,22 +443,6 @@ function ProfileContent() {
             </div>
           </Card>
         )}
-        {/* Section 1: Dog Section */}
-        <div>
-          <h2 
-            className="text-2xl font-bold mb-4" 
-            style={{ color: "var(--ink)", fontFamily: "Fredoka" }}
-          >
-            {dogs.length > 1 ? 'Mes chiens' : 'Mon chien'}
-          </h2>
-          <DogCarousel 
-            dogs={dogs}
-            isOwner={false}
-            onLike={() => {}}
-            onMessage={() => {}}
-          />
-        </div>
-
         {/* Gamification & Communauté Section */}
         {isOwnProfile && (
           <GamificationSection 
