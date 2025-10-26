@@ -8,15 +8,27 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Whoof Brand Colors (Hex) */
-    --brand-yellow: #FFC14D;
-    --brand-raspberry: #FF5DA2;
-    --brand-plum: #7B61FF;
-    --ink: #111827;
-    --paper: #F9FAFB;
+    /* Whoof Brand Colors - All HSL */
+    --brand-yellow: 41 100% 65%;
+    --brand-yellow-light: 41 100% 75%;
+    --brand-yellow-dark: 41 100% 55%;
     
-    /* Design System */
-    --background: 220 20% 98%;
+    --brand-raspberry: 336 100% 68%;
+    --brand-raspberry-light: 336 100% 78%;
+    --brand-raspberry-dark: 336 100% 58%;
+    
+    --brand-plum: 255 100% 69%;
+    --brand-plum-light: 255 100% 79%;
+    --brand-plum-dark: 255 100% 59%;
+    
+    --brand-sky: 200 100% 70%;
+    --brand-mint: 160 60% 65%;
+    
+    --ink: 220 26% 14%;
+    --paper: 220 20% 98%;
+    
+    /* Design System - Fun & Colorful */
+    --background: 45 100% 97%;
     --foreground: 220 26% 14%;
 
     --card: 0 0% 100%;
@@ -25,59 +37,75 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 220 26% 14%;
 
-    --primary: 255 100% 69%;
+    --primary: 336 100% 68%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 41 100% 65%;
     --secondary-foreground: 220 26% 14%;
 
-    --muted: 220 15% 95%;
-    --muted-foreground: 220 10% 50%;
+    --muted: 45 60% 95%;
+    --muted-foreground: 220 10% 45%;
 
-    --accent: 336 100% 68%;
+    --accent: 255 100% 69%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 15% 90%;
-    --input: 220 15% 90%;
-    --ring: 255 100% 69%;
+    --border: 45 40% 90%;
+    --input: 45 40% 92%;
+    --ring: 336 100% 68%;
 
-    --radius: 1rem;
+    --radius: 1.25rem;
 
-    --shadow-soft: 0 4px 12px -2px rgba(0, 0, 0, 0.08);
+    /* Colorful Shadows & Effects */
+    --shadow-soft: 0 4px 16px -4px rgba(123, 97, 255, 0.12);
+    --shadow-glow: 0 0 24px rgba(255, 93, 162, 0.2);
+    --shadow-vibrant: 0 8px 32px -8px rgba(255, 193, 77, 0.3);
+    
+    /* Gradients */
     --gradient-hero: linear-gradient(135deg, hsl(var(--brand-plum)) 0%, hsl(var(--brand-raspberry)) 100%);
+    --gradient-warm: linear-gradient(135deg, hsl(var(--brand-yellow)) 0%, hsl(var(--brand-raspberry)) 100%);
+    --gradient-cool: linear-gradient(135deg, hsl(var(--brand-plum)) 0%, hsl(var(--brand-sky)) 100%);
+    --gradient-playful: linear-gradient(135deg, hsl(var(--brand-yellow)) 0%, hsl(var(--brand-raspberry)) 50%, hsl(var(--brand-plum)) 100%);
+    
+    /* Transitions */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   }
 
   .dark {
-    --background: 220 26% 14%;
+    --background: 220 26% 12%;
     --foreground: 220 20% 98%;
 
-    --card: 220 24% 18%;
+    --card: 220 24% 16%;
     --card-foreground: 220 20% 98%;
 
-    --popover: 220 24% 18%;
+    --popover: 220 24% 16%;
     --popover-foreground: 220 20% 98%;
 
-    --primary: 255 100% 69%;
+    --primary: 336 100% 70%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 41 100% 65%;
+    --secondary: 41 100% 68%;
     --secondary-foreground: 220 26% 14%;
 
-    --muted: 220 20% 25%;
-    --muted-foreground: 220 10% 60%;
+    --muted: 220 20% 22%;
+    --muted-foreground: 220 10% 65%;
 
-    --accent: 336 100% 68%;
+    --accent: 255 100% 72%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 62.8% 30.6%;
+    --destructive: 0 62.8% 50%;
     --destructive-foreground: 220 20% 98%;
 
-    --border: 220 20% 25%;
-    --input: 220 20% 25%;
-    --ring: 255 100% 69%;
+    --border: 220 20% 24%;
+    --input: 220 20% 22%;
+    --ring: 336 100% 70%;
+    
+    --shadow-soft: 0 4px 16px -4px rgba(123, 97, 255, 0.3);
+    --shadow-glow: 0 0 32px rgba(255, 93, 162, 0.25);
+    --shadow-vibrant: 0 8px 32px -8px rgba(255, 193, 77, 0.2);
   }
 }
 
@@ -94,5 +122,59 @@ All colors MUST be HSL.
 @layer utilities {
   .shadow-soft {
     box-shadow: var(--shadow-soft);
+  }
+  
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+  
+  .shadow-vibrant {
+    box-shadow: var(--shadow-vibrant);
+  }
+  
+  .gradient-hero {
+    background: var(--gradient-hero);
+  }
+  
+  .gradient-warm {
+    background: var(--gradient-warm);
+  }
+  
+  .gradient-cool {
+    background: var(--gradient-cool);
+  }
+  
+  .gradient-playful {
+    background: var(--gradient-playful);
+  }
+  
+  .transition-smooth {
+    transition: var(--transition-smooth);
+  }
+  
+  .transition-bounce {
+    transition: var(--transition-bounce);
+  }
+  
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+  
+  .hover-lift {
+    transition: var(--transition-bounce);
+  }
+  
+  .hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-vibrant);
   }
 }
