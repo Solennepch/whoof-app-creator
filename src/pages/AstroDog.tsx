@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Link } from "react-router-dom";
-import { ChevronLeft, Star } from "lucide-react";
+import { ChevronLeft, Star, Sparkles } from "lucide-react";
 
 const dogHoroscopes = [
   {
@@ -16,13 +16,26 @@ export default function AstroDog() {
   const currentHoroscope = dogHoroscopes[0];
 
   return (
-    <div className="min-h-screen pb-24" style={{ backgroundColor: "hsl(var(--paper))" }}>
-      <div className="mx-auto max-w-[720px] px-4 pt-20 space-y-6">
+    <div className="min-h-screen pb-24 relative overflow-hidden" style={{ 
+      background: "linear-gradient(135deg, #7B61FF 0%, #FF5DA2 50%, #FFC14D 100%)"
+    }}>
+      {/* Animated Stars Background */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <Star className="absolute top-20 left-10 w-6 h-6 text-white/30 animate-pulse" style={{ animationDelay: "0s" }} />
+        <Sparkles className="absolute top-40 right-20 w-5 h-5 text-white/40 animate-pulse" style={{ animationDelay: "0.5s" }} />
+        <Star className="absolute top-60 left-1/4 w-4 h-4 text-white/20 animate-pulse" style={{ animationDelay: "1s" }} />
+        <Star className="absolute top-32 right-10 w-7 h-7 text-white/25 animate-pulse" style={{ animationDelay: "1.5s" }} />
+        <Sparkles className="absolute top-80 left-1/3 w-6 h-6 text-white/30 animate-pulse" style={{ animationDelay: "2s" }} />
+        <Star className="absolute top-96 right-1/4 w-5 h-5 text-white/35 animate-pulse" style={{ animationDelay: "2.5s" }} />
+        <Sparkles className="absolute bottom-40 left-20 w-4 h-4 text-white/25 animate-pulse" style={{ animationDelay: "3s" }} />
+        <Star className="absolute bottom-60 right-16 w-6 h-6 text-white/30 animate-pulse" style={{ animationDelay: "3.5s" }} />
+      </div>
+
+      <div className="mx-auto max-w-[720px] px-4 pt-20 space-y-6 relative z-10">
         {/* Back Button */}
         <Link 
           to="/profile/me" 
-          className="inline-flex items-center gap-2 text-sm font-medium hover:opacity-70 transition"
-          style={{ color: "hsl(var(--brand-plum))" }}
+          className="inline-flex items-center gap-2 text-sm font-medium hover:opacity-70 transition text-white"
         >
           <ChevronLeft className="h-4 w-4" />
           Retour au profil
@@ -30,11 +43,11 @@ export default function AstroDog() {
 
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold flex items-center gap-2" style={{ color: "hsl(var(--ink))" }}>
-            <Star className="w-8 h-8 text-accent" />
+          <h1 className="text-3xl font-bold flex items-center gap-2 text-white">
+            <Star className="w-8 h-8 text-white" fill="white" />
             Mon Astro Dog
           </h1>
-          <p className="text-sm mt-2" style={{ color: "hsl(var(--ink) / 0.6)" }}>
+          <p className="text-sm mt-2 text-white/90">
             Découvre l'horoscope de ton chien chaque semaine
           </p>
         </div>
@@ -76,8 +89,9 @@ export default function AstroDog() {
 
         {/* Historical Horoscopes (Optional) */}
         <Card className="rounded-2xl shadow-sm p-6">
-          <h3 className="text-lg font-semibold mb-4" style={{ color: "hsl(var(--ink))" }}>
-            📅 Horoscopes précédents
+          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2" style={{ color: "hsl(var(--ink))" }}>
+            <Star className="w-5 h-5 text-accent" />
+            Horoscopes précédents
           </h3>
           <p className="text-sm" style={{ color: "hsl(var(--ink) / 0.6)" }}>
             L'historique de tes horoscopes sera bientôt disponible !
