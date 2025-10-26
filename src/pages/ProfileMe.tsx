@@ -9,19 +9,43 @@ export default function ProfileMe() {
   useEffect(() => {
     async function redirectToUserProfile() {
       try {
-        // Check if user is authenticated
-        const { data: { user }, error: userError } = await supabase.auth.getUser();
+        // Get current session to extract auth token
+        const { data: { session } } = await supabase.auth.getSession();
         
-        if (userError || !user) {
+        if (!session) {
           // Not authenticated, redirect to login
           navigate('/login', { replace: true });
           return;
         }
 
-        // Authenticated, redirect to their profile
-        navigate(`/profile/${user.id}`, { replace: true });
+        // Call GET /profile edge function
+        const response = await fetch(
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/profile`,
+          {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${session.access_token}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+
+        if (response.status === 401 || response.status === 400) {
+          // Unauthorized or error, redirect to login
+          navigate('/login', { replace: true });
+          return;
+        }
+
+        if (response.ok) {
+          const profile = await response.json();
+          // Redirect to user's profile page
+          navigate(`/profile/${profile.id}`, { replace: true });
+        } else {
+          // Other errors, redirect to login
+          navigate('/login', { replace: true });
+        }
       } catch (error) {
-        console.error('Error checking authentication:', error);
+        console.error('Error loading profile:', error);
         navigate('/login', { replace: true });
       }
     }
