@@ -13,32 +13,19 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [isSignUp, setIsSignUp] = useState(false);
 
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      if (isSignUp) {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            emailRedirectTo: `${window.location.origin}/profile/me`,
-          },
-        });
-        if (error) throw error;
-        toast.success("Compte créé ! Vérifiez votre e-mail.");
-      } else {
-        const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-        if (error) throw error;
-        toast.success("Connexion réussie !");
-        navigate("/profile/me");
-      }
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (error) throw error;
+      toast.success("Connexion réussie !");
+      navigate("/profile/me");
     } catch (error: any) {
       toast.error(error.message || "Une erreur est survenue");
     } finally {
@@ -115,11 +102,7 @@ export default function Login() {
               disabled={isLoading}
             >
               <Mail className="mr-2 h-4 w-4" />
-              {isLoading 
-                ? "Connexion..." 
-                : isSignUp 
-                  ? "Créer un compte" 
-                  : "Se connecter par e-mail"}
+              {isLoading ? "Connexion..." : "Se connecter par e-mail"}
             </Button>
           </form>
 
@@ -127,12 +110,10 @@ export default function Login() {
           <div className="text-center mb-6">
             <button
               type="button"
-              onClick={() => setIsSignUp(!isSignUp)}
+              onClick={() => navigate("/signup")}
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
-              {isSignUp 
-                ? "Déjà un compte ? Se connecter" 
-                : "Pas encore de compte ? S'inscrire"}
+              Pas encore de compte ? S'inscrire
             </button>
           </div>
 

@@ -66,12 +66,12 @@ export function SidebarMenu({ open, onOpenChange }: SidebarMenuProps) {
     { to: "/premium", icon: Crown, label: "Passer Premium" },
     { to: "/annuaire", icon: Building, label: "Annuaire" },
     { to: "/partenariats", icon: Percent, label: "Bons plans" },
-    { 
-      to: isPro ? "/pro/dashboard" : "/pro/onboarding", 
-      icon: Briefcase, 
-      label: isPro ? "Espace Pro" : "Devenir partenaire" 
-    },
   ];
+
+  // Add Pro Dashboard only if user is pro
+  if (isPro) {
+    menuItems.push({ to: "/pro/dashboard", icon: Briefcase, label: "Espace Pro" });
+  }
 
   // Add Debug link only for admins
   if (isAdmin) {

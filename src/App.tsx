@@ -13,6 +13,7 @@ import Messages from "./pages/Messages";
 import Profile from "./pages/Profile";
 import ProfileMe from "./pages/ProfileMe";
 import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 import Ranking from "./pages/Ranking";
 import Annuaire from "./pages/Annuaire";
 import AnnuaireMap from "./pages/AnnuaireMap";
@@ -49,6 +50,7 @@ const App = () => (
           <Route path="/map" element={<Map />} />
           <Route path="/ranking" element={<Ranking />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
           <Route path="/annuaire" element={<Annuaire />} />
           <Route path="/annuaire/carte" element={<AnnuaireMap />} />
           <Route path="/annuaire/:id" element={<AnnuaireDetail />} />
