@@ -25,26 +25,60 @@ serve(async (req) => {
 
     const { data: { user }, error: userError } = await supabase.auth.getUser();
     if (userError || !user) {
-      throw new Error('Unauthorized');
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     }
 
     if (req.method === 'GET') {
-      // Get current user's profile
-      const { data, error } = await supabase
+      // Extract profile ID from URL path (e.g., /profile/uuid)
+      const url = new URL(req.url);
+      const pathParts = url.pathname.split('/').filter(Boolean);
+      const profileId = pathParts.length > 1 ? pathParts[pathParts.length - 1] : null;
+
+      // Determine which profile to fetch: specific ID or current user
+      const targetId = profileId && profileId !== 'profile' ? profileId : user.id;
+      
+      console.log('Fetching profile for:', targetId, 'requested by:', user.id);
+
+      // Fetch profile
+      const { data: profileData, error: profileError } = await supabase
         .from('profiles')
-        .select('*')
-        .eq('id', user.id)
+        .select('id, display_name, bio, avatar_url, gender, birth_date, relationship_status, interests, human_verified')
+        .eq('id', targetId)
         .single();
 
-      if (error) throw error;
+      if (profileError) {
+        if (profileError.code === 'PGRST116') {
+          return new Response(JSON.stringify({ error: 'not_found' }), {
+            status: 404,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          });
+        }
+        throw profileError;
+      }
 
-      return new Response(JSON.stringify(data), {
+      // Fetch dogs for this profile
+      const { data: dogsData, error: dogsError } = await supabase
+        .from('dogs')
+        .select('id, name, breed, age_years, birthdate, temperament, size, avatar_url, vaccination, anecdote, zodiac_sign')
+        .eq('owner_id', targetId);
+
+      if (dogsError) {
+        console.error('Error fetching dogs:', dogsError);
+      }
+
+      return new Response(JSON.stringify({
+        profile: profileData,
+        dogs: dogsData || []
+      }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
     if (req.method === 'PUT') {
-      // Update current user's profile
+      // Update current user's profile only
       const body = await req.json();
       
       const { data, error } = await supabase
@@ -67,7 +101,7 @@ serve(async (req) => {
     });
 
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error in profile function:', error);
     const message = error instanceof Error ? error.message : 'An error occurred';
     return new Response(JSON.stringify({ error: message }), {
       status: 400,

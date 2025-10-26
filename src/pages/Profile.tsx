@@ -73,29 +73,28 @@ function ProfileContent() {
     setError(null);
 
     try {
-      // Fetch profile and dogs in parallel
-      const [profileData, dogsData] = await Promise.all([
-        safeFetch(`${import.meta.env.VITE_SUPABASE_URL}/rest/v1/profiles?id=eq.${id}&select=*`),
-        safeFetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/dog?owner=${id}`)
-      ]);
+      // Fetch profile and dogs from unified endpoint
+      const data = await safeFetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/profile/${id}`);
 
-      // Handle profile response
-      if (!profileData || profileData.length === 0) {
+      // Handle response with new structure { profile: {...}, dogs: [...] }
+      if (!data?.profile) {
         setError(new Error('Profil non trouvé'));
         setIsLoading(false);
         return;
       }
 
-      setProfile(profileData[0]);
-
-      // Handle dogs response
-      if (dogsData && dogsData.ok !== false) {
-        setDogs(dogsData.data || dogsData || []);
-      }
+      setProfile(data.profile);
+      setDogs(data.dogs || []);
 
     } catch (err) {
       console.error('Error fetching profile:', err);
-      setError(err instanceof Error ? err : new Error('Une erreur est survenue'));
+      
+      // Handle 404 specifically
+      if (err instanceof Error && err.message.includes('404')) {
+        setError(new Error('Profil non trouvé'));
+      } else {
+        setError(err instanceof Error ? err : new Error('Une erreur est survenue'));
+      }
     } finally {
       setIsLoading(false);
     }

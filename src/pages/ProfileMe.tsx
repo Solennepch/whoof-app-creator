@@ -90,7 +90,8 @@ function ProfileMeContent() {
         // Handle 200 - Success
         if (response.ok) {
           const data = await response.json();
-          const profileId = data.id || data.profile?.id;
+          // Extract profile ID from new structure { profile: {...}, dogs: [...] }
+          const profileId = data?.profile?.id;
           
           if (!profileId) {
             setNotFound(true);
