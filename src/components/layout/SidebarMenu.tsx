@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Building, Briefcase, Bug, Percent } from "lucide-react";
+import { Building, Briefcase, Bug, Percent, User } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
@@ -60,6 +60,7 @@ export function SidebarMenu({ open, onOpenChange }: SidebarMenuProps) {
   }, [open]);
 
   const menuItems = [
+    { to: "/profile/me", icon: User, label: "Profil" },
     { to: "/annuaire", icon: Building, label: "Annuaire" },
     { to: "/partenariats", icon: Percent, label: "Partenariats" },
     { 
