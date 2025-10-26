@@ -10,6 +10,7 @@ import Events from "./pages/Events";
 import Map from "./pages/Map";
 import Profile from "./pages/Profile";
 import ProfileMe from "./pages/ProfileMe";
+import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/discover" element={<Discover />} />
           <Route path="/events" element={<Events />} />
           <Route path="/map" element={<Map />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/profile/me" element={<ProfileMe />} />
           <Route path="/profile/:id" element={<Profile />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
