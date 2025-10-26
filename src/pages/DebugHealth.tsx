@@ -40,16 +40,16 @@ export default function DebugHealth() {
         });
       }
 
-      // 2) /dog?owner=me (ou fallback /dog simple)
+      // 2) /dog avec params owner=me
       try {
-        const response = await api.get("/dog?owner=me");
+        const response = await api.get("/dog", { params: { owner: "me" } });
         const data = response.data;
         const count = Array.isArray(data) ? data.length : Array.isArray(data?.data) ? data.data.length : 0;
         list.push({
           name: "GET /dog?owner=me",
           status: "success",
           statusCode: response.status,
-          message: `${count} dog(s)`,
+          message: `${count} dog(s) - ${JSON.stringify(data).substring(0, 100)}...`,
         });
       } catch (e: any) {
         list.push({
