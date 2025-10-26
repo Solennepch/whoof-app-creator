@@ -28,15 +28,33 @@ export default function ProfileMe() {
           
           // Call check-subscription endpoint
           try {
-            const { data, error } = await supabase.functions.invoke('check-subscription');
-            
-            if (error) {
-              console.error('Error checking subscription:', error);
-            } else if (data?.isPremium) {
-              toast.success('Abonnement Premium activé ! 🎉');
+            const checkResponse = await fetch(
+              `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/check-subscription`,
+              {
+                method: 'GET',
+                headers: {
+                  'Authorization': `Bearer ${session.access_token}`,
+                  'Content-Type': 'application/json',
+                },
+              }
+            );
+
+            if (checkResponse.ok) {
+              const { isPremium, proPlan } = await checkResponse.json();
+              
+              if (isPremium) {
+                toast.success('Abonnement Premium activé ! 🎉');
+                // UI updates handled by profile data refresh
+              }
+              
+              console.log('Subscription status:', { isPremium, proPlan });
+            } else {
+              console.error('Error checking subscription:', await checkResponse.text());
+              toast.info('Impossible de vérifier l\'abonnement, mais vous êtes bien connecté.');
             }
           } catch (error) {
             console.error('Error checking subscription:', error);
+            toast.info('Impossible de vérifier l\'abonnement, mais vous êtes bien connecté.');
           }
 
           // Wait a bit before redirecting to show the success message

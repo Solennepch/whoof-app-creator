@@ -44,15 +44,34 @@ export default function ProDashboard() {
           
           // Call check-subscription endpoint
           try {
-            const { data, error } = await supabase.functions.invoke('check-subscription');
-            
-            if (error) {
-              console.error('Error checking subscription:', error);
-            } else if (data?.proPlan) {
-              toast.success('Abonnement Pro Premium activé ! 🎉');
+            const checkResponse = await fetch(
+              `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/check-subscription`,
+              {
+                method: 'GET',
+                headers: {
+                  'Authorization': `Bearer ${session.access_token}`,
+                  'Content-Type': 'application/json',
+                },
+              }
+            );
+
+            if (checkResponse.ok) {
+              const { isPremium, proPlan } = await checkResponse.json();
+              
+              if (proPlan === 'pro_premium' || proPlan === 'pro_plus') {
+                toast.success('Abonnement Pro activé ! 🎉');
+                // Reload pro account to get updated plan
+                setTimeout(() => window.location.reload(), 1000);
+              }
+              
+              console.log('Subscription status:', { isPremium, proPlan });
+            } else {
+              console.error('Error checking subscription:', await checkResponse.text());
+              toast.info('Impossible de vérifier l\'abonnement, mais vous êtes bien connecté.');
             }
           } catch (error) {
             console.error('Error checking subscription:', error);
+            toast.info('Impossible de vérifier l\'abonnement, mais vous êtes bien connecté.');
           }
 
           // Remove success param from URL
