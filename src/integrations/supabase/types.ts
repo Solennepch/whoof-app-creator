@@ -14,6 +14,24 @@ export type Database = {
   }
   public: {
     Tables: {
+      categories_pro: {
+        Row: {
+          id: number
+          label: string
+          slug: string
+        }
+        Insert: {
+          id?: number
+          label: string
+          slug: string
+        }
+        Update: {
+          id?: number
+          label?: string
+          slug?: string
+        }
+        Relationships: []
+      }
       dogs: {
         Row: {
           age_years: number | null
@@ -133,6 +151,107 @@ export type Database = {
           },
         ]
       }
+      partnerships: {
+        Row: {
+          created_at: string | null
+          end_date: string | null
+          id: string
+          is_active: boolean | null
+          offer: string
+          pro_id: string
+          start_date: string | null
+          title: string
+        }
+        Insert: {
+          created_at?: string | null
+          end_date?: string | null
+          id?: string
+          is_active?: boolean | null
+          offer: string
+          pro_id: string
+          start_date?: string | null
+          title: string
+        }
+        Update: {
+          created_at?: string | null
+          end_date?: string | null
+          id?: string
+          is_active?: boolean | null
+          offer?: string
+          pro_id?: string
+          start_date?: string | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partnerships_pro_id_fkey"
+            columns: ["pro_id"]
+            isOneToOne: false
+            referencedRelation: "pro_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pro_accounts: {
+        Row: {
+          address: string | null
+          business_name: string
+          category: string
+          contact_public: boolean | null
+          created_at: string | null
+          description: string | null
+          email: string | null
+          gallery_urls: string[] | null
+          geo: unknown
+          id: string
+          logo_url: string | null
+          phone: string | null
+          plan: string | null
+          status: string | null
+          updated_at: string | null
+          user_id: string
+          website: string | null
+        }
+        Insert: {
+          address?: string | null
+          business_name: string
+          category: string
+          contact_public?: boolean | null
+          created_at?: string | null
+          description?: string | null
+          email?: string | null
+          gallery_urls?: string[] | null
+          geo?: unknown
+          id?: string
+          logo_url?: string | null
+          phone?: string | null
+          plan?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id: string
+          website?: string | null
+        }
+        Update: {
+          address?: string | null
+          business_name?: string
+          category?: string
+          contact_public?: boolean | null
+          created_at?: string | null
+          description?: string | null
+          email?: string | null
+          gallery_urls?: string[] | null
+          geo?: unknown
+          id?: string
+          logo_url?: string | null
+          phone?: string | null
+          plan?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string
+          website?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -235,6 +354,27 @@ export type Database = {
           proj4text?: string | null
           srid?: number
           srtext?: string | null
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
         }
         Relationships: []
       }
@@ -627,6 +767,13 @@ export type Database = {
       }
       geomfromewkt: { Args: { "": string }; Returns: unknown }
       gettransactionid: { Args: never; Returns: unknown }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
       longtransactionsenabled: { Args: never; Returns: boolean }
       nearby_profiles: {
         Args: { lat: number; lng: number; meters: number }
@@ -1271,7 +1418,7 @@ export type Database = {
       zodiac_from_date: { Args: { d: string }; Returns: string }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "pro" | "user"
     }
     CompositeTypes: {
       geometry_dump: {
@@ -1406,6 +1553,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "pro", "user"],
+    },
   },
 } as const
