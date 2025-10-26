@@ -8,60 +8,60 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Whoof Brand Colors - All HSL */
-    --brand-yellow: 41 100% 65%;
-    --brand-yellow-light: 41 100% 75%;
-    --brand-yellow-dark: 41 100% 55%;
+    /* Whoof Brand Colors - New Design System (All HSL) */
+    --brand-raspberry: 334 100% 68%; /* #FF5DA2 - Rose framboise */
+    --brand-raspberry-light: 334 100% 78%;
+    --brand-raspberry-dark: 334 100% 58%;
     
-    --brand-raspberry: 336 100% 68%;
-    --brand-raspberry-light: 336 100% 78%;
-    --brand-raspberry-dark: 336 100% 58%;
+    --brand-yellow: 39 100% 65%; /* #FFC14D - Jaune orangé */
+    --brand-yellow-light: 39 100% 75%;
+    --brand-yellow-dark: 39 100% 55%;
     
-    --brand-plum: 255 100% 69%;
-    --brand-plum-light: 255 100% 79%;
-    --brand-plum-dark: 255 100% 59%;
+    --brand-plum: 250 100% 69%; /* #7B61FF - Violet prune */
+    --brand-plum-light: 250 100% 79%;
+    --brand-plum-dark: 250 100% 59%;
     
     --brand-sky: 200 100% 70%;
     --brand-mint: 160 60% 65%;
     
-    --ink: 220 26% 14%;
-    --paper: 220 20% 98%;
+    --ink: 220 39% 11%; /* #111827 - Texte principal */
+    --paper: 210 20% 98%; /* #F9FAFB - Fond clair */
     
     /* Design System - Fun & Colorful */
-    --background: 45 100% 97%;
-    --foreground: 220 26% 14%;
+    --background: 210 20% 98%; /* #F9FAFB */
+    --foreground: 220 39% 11%; /* #111827 */
 
     --card: 0 0% 100%;
-    --card-foreground: 220 26% 14%;
+    --card-foreground: 220 39% 11%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 26% 14%;
+    --popover-foreground: 220 39% 11%;
 
-    --primary: 336 100% 68%;
+    --primary: 334 100% 68%; /* #FF5DA2 - Rose framboise */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 41 100% 65%;
-    --secondary-foreground: 220 26% 14%;
+    --secondary: 39 100% 65%; /* #FFC14D - Jaune orangé */
+    --secondary-foreground: 220 39% 11%;
 
-    --muted: 45 60% 95%;
+    --muted: 210 20% 95%;
     --muted-foreground: 220 10% 45%;
 
-    --accent: 255 100% 69%;
+    --accent: 250 100% 69%; /* #7B61FF - Violet prune */
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 45 40% 90%;
-    --input: 45 40% 92%;
-    --ring: 336 100% 68%;
+    --border: 210 20% 90%;
+    --input: 210 20% 92%;
+    --ring: 334 100% 68%;
 
     --radius: 1.25rem;
 
     /* Colorful Shadows & Effects */
-    --shadow-soft: 0 4px 16px -4px rgba(123, 97, 255, 0.12);
-    --shadow-glow: 0 0 24px rgba(255, 93, 162, 0.2);
-    --shadow-vibrant: 0 8px 32px -8px rgba(255, 193, 77, 0.3);
+    --shadow-soft: 0 2px 8px -2px rgba(0, 0, 0, 0.1);
+    --shadow-glow: 0 0 24px rgba(255, 93, 162, 0.15);
+    --shadow-vibrant: 0 8px 32px -8px rgba(255, 193, 77, 0.2);
     
     /* Gradients */
     --gradient-hero: linear-gradient(135deg, hsl(var(--brand-plum)) 0%, hsl(var(--brand-raspberry)) 100%);
@@ -170,11 +170,10 @@ All colors MUST be HSL.
   }
   
   .hover-lift {
-    transition: var(--transition-bounce);
+    transition: var(--transition-smooth);
   }
   
   .hover-lift:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-vibrant);
+    transform: translateY(-2px);
   }
 }
