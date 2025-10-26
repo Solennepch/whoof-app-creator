@@ -668,6 +668,34 @@ export type Database = {
           }
       enablelongtransactions: { Args: never; Returns: string }
       equals: { Args: { geom1: unknown; geom2: unknown }; Returns: boolean }
+      find_nearby_pros: {
+        Args: {
+          filter_category?: string
+          radius_km?: number
+          user_lat: number
+          user_lng: number
+        }
+        Returns: {
+          address: string
+          business_name: string
+          category: string
+          contact_public: boolean
+          created_at: string
+          description: string
+          distance_km: number
+          email: string
+          gallery_urls: string[]
+          geo: unknown
+          id: string
+          logo_url: string
+          phone: string
+          plan: string
+          status: string
+          updated_at: string
+          user_id: string
+          website: string
+        }[]
+      }
       geometry: { Args: { "": string }; Returns: unknown }
       geometry_above: {
         Args: { geom1: unknown; geom2: unknown }
