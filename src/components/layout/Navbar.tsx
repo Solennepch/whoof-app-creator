@@ -145,26 +145,6 @@ export function Navbar() {
           </div>
         </div>
 
-        {/* Mobile Navigation */}
-        <div className="md:hidden border-t bg-white">
-          <div className="flex items-center justify-around px-2 py-2">
-            {navItems.map((item) => (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                end
-                className={({ isActive }) =>
-                  `flex flex-col items-center gap-1 rounded-2xl px-3 py-2 text-xs transition ${
-                    isActive ? "text-primary" : "text-muted-foreground"
-                  }`
-                }
-              >
-                <item.icon className="h-5 w-5" />
-                <span>{item.label}</span>
-              </NavLink>
-            ))}
-          </div>
-        </div>
       </nav>
 
       <CongratsModal open={showCongrats} level={2} onClose={() => setShowCongrats(false)} />
