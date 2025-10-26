@@ -40,35 +40,22 @@ export function RecommendationSection({
   };
 
   return (
-    <Card className="p-6 rounded-3xl shadow-soft" style={{ background: "linear-gradient(135deg, hsl(var(--brand-raspberry) / 0.05) 0%, hsl(var(--brand-yellow) / 0.05) 100%)" }}>
-      <div className="flex items-center gap-2 mb-4">
-        <div className="text-2xl">🐾</div>
-        <h3 className="text-xl font-bold" style={{ color: "hsl(var(--ink))", fontFamily: "Fredoka" }}>
+    <Card className="rounded-2xl shadow-sm p-4 space-y-4" style={{ backgroundColor: "hsl(var(--paper))" }}>
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-semibold tracking-tight" style={{ color: "hsl(var(--ink))" }}>
           Recommandations
-        </h3>
-      </div>
-
-      <div className="flex items-center justify-between mb-4">
-        <div>
-          <p className="text-3xl font-bold" style={{ color: "hsl(var(--brand-raspberry))" }}>
-            {totalRecommendations}
-          </p>
-          <p className="text-sm" style={{ color: "hsl(var(--ink) / 0.6)" }}>
-            Pattes reçues 🐾
-          </p>
-        </div>
-        
-        <div className="text-6xl animate-pulse">
-          🐾
-        </div>
+        </h2>
+        <span className="text-sm" style={{ color: "hsl(var(--ink) / 0.6)" }}>
+          {totalRecommendations} pattes 🐾
+        </span>
       </div>
 
       {canRecommend && (
         <Dialog open={showRecommendModal} onOpenChange={setShowRecommendModal}>
           <DialogTrigger asChild>
             <Button
-              className="w-full rounded-2xl font-semibold text-white"
-              style={{ background: "linear-gradient(135deg, hsl(var(--brand-raspberry)) 0%, hsl(var(--brand-plum)) 100%)" }}
+              className="w-full h-12 rounded-xl font-semibold text-white"
+              style={{ background: "linear-gradient(to right, hsl(var(--brand-raspberry)), hsl(var(--brand-plum)))" }}
             >
               <Heart className="h-4 w-4 mr-2" />
               Mettre une 🐾 à un membre

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Trophy, Star, Award, Medal, Target, Sparkles } from "lucide-react";
+import { Trophy } from "lucide-react";
 import { XpProgress } from "@/components/ui/XpProgress";
 
 interface Badge {
@@ -43,68 +43,63 @@ export function GamificationSection({
   const unlockedBadges = allBadges.filter(b => b.unlocked);
 
   return (
-    <Card className="p-6 rounded-3xl shadow-soft" style={{ background: "linear-gradient(135deg, hsl(var(--brand-plum) / 0.05) 0%, hsl(var(--brand-raspberry) / 0.05) 100%)" }}>
-      <div className="flex items-center gap-2 mb-4">
-        <Sparkles className="h-5 w-5" style={{ color: "hsl(var(--brand-yellow))" }} />
-        <h3 className="text-xl font-bold" style={{ color: "hsl(var(--ink))", fontFamily: "Fredoka" }}>
-          Gamification & Communauté
-        </h3>
-      </div>
+    <Card className="rounded-2xl shadow-sm p-4 space-y-3" style={{ backgroundColor: "hsl(var(--paper))" }}>
+      <h2 className="text-xl font-semibold tracking-tight" style={{ color: "hsl(var(--ink))" }}>
+        Gamification & Communauté
+      </h2>
 
-      {/* XP Progress */}
-      <div className="mb-6">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-medium" style={{ color: "hsl(var(--ink))" }}>
-            Niveau {level}
-          </span>
-          <span className="text-xs" style={{ color: "hsl(var(--ink) / 0.6)" }}>
-            {currentXP} / {maxXP} XP
-          </span>
+      {/* XP Progress Compact */}
+      <div>
+        <div className="flex items-center justify-between text-sm mb-2" style={{ color: "hsl(var(--ink) / 0.6)" }}>
+          <span>Niveau {level}</span>
+          <span>{currentXP} / {maxXP} XP</span>
         </div>
-        <XpProgress current={currentXP} min={0} max={maxXP} />
+        <div className="h-2 w-full rounded-full overflow-hidden" style={{ backgroundColor: "hsl(var(--muted))" }}>
+          <div 
+            className="h-full transition-all duration-300"
+            style={{ 
+              width: `${(currentXP / maxXP) * 100}%`,
+              background: "linear-gradient(90deg, hsl(var(--brand-plum)), hsl(var(--brand-raspberry)))"
+            }}
+          />
+        </div>
       </div>
 
-      {/* Quick Stats */}
-      <div className="grid grid-cols-3 gap-3 mb-6">
-        <div className="text-center p-3 rounded-2xl" style={{ backgroundColor: "hsl(var(--paper))" }}>
-          <div className="text-2xl mb-1">🏆</div>
+      {/* Quick Stats - Compact */}
+      <div className="grid grid-cols-3 gap-3">
+        <div className="text-center py-2 px-3 rounded-xl" style={{ backgroundColor: "hsl(var(--muted) / 0.5)" }}>
+          <div className="text-xl mb-1">🏆</div>
           <p className="text-lg font-bold" style={{ color: "hsl(var(--brand-plum))" }}>
             {unlockedBadges.length}
           </p>
           <p className="text-xs" style={{ color: "hsl(var(--ink) / 0.6)" }}>Badges</p>
         </div>
         
-        <div className="text-center p-3 rounded-2xl" style={{ backgroundColor: "hsl(var(--paper))" }}>
-          <div className="text-2xl mb-1">🐾</div>
+        <div className="text-center py-2 px-3 rounded-xl" style={{ backgroundColor: "hsl(var(--muted) / 0.5)" }}>
+          <div className="text-xl mb-1">🐾</div>
           <p className="text-lg font-bold" style={{ color: "hsl(var(--brand-raspberry))" }}>
             {totalRecommendations}
           </p>
-          <p className="text-xs" style={{ color: "hsl(var(--ink) / 0.6)" }}>Pattes reçues</p>
+          <p className="text-xs" style={{ color: "hsl(var(--ink) / 0.6)" }}>Pattes</p>
         </div>
         
-        <div className="text-center p-3 rounded-2xl" style={{ backgroundColor: "hsl(var(--paper))" }}>
-          <div className="text-2xl mb-1">🌟</div>
+        <div className="text-center py-2 px-3 rounded-xl" style={{ backgroundColor: "hsl(var(--muted) / 0.5)" }}>
+          <div className="text-xl mb-1">🌟</div>
           <p className="text-lg font-bold" style={{ color: "hsl(var(--brand-yellow))" }}>
             #{level * 100}
           </p>
-          <p className="text-xs" style={{ color: "hsl(var(--ink) / 0.6)" }}>Classement</p>
+          <p className="text-xs" style={{ color: "hsl(var(--ink) / 0.6)" }}>Rang</p>
         </div>
       </div>
 
-      {/* Badges Preview */}
-      <div className="mb-4">
-        <h4 className="text-sm font-semibold mb-3" style={{ color: "hsl(var(--ink))" }}>
-          Badges récemment débloqués
-        </h4>
-        <div className="flex gap-2 overflow-x-auto pb-2">
+      {/* Badges Preview - Scrollable without scrollbar */}
+      <div className="overflow-x-auto -mx-2 px-2 no-scrollbar">
+        <div className="flex gap-2">
           {unlockedBadges.slice(0, 6).map((badge, i) => (
             <div
               key={i}
-              className="flex-shrink-0 w-16 h-16 rounded-2xl flex items-center justify-center text-3xl transition-transform hover:scale-110 animate-scale-in"
-              style={{ 
-                backgroundColor: "hsl(var(--paper))",
-                animationDelay: `${i * 50}ms`
-              }}
+              className="flex-shrink-0 w-14 h-14 rounded-xl flex items-center justify-center text-2xl transition-transform hover:scale-110"
+              style={{ backgroundColor: "hsl(var(--muted) / 0.5)" }}
               title={`${badge.name}: ${badge.desc}`}
             >
               {badge.icon}
@@ -113,12 +108,12 @@ export function GamificationSection({
         </div>
       </div>
 
-      {/* CTA Button */}
+      {/* CTA Button - Compact */}
       <Dialog open={showAllBadges} onOpenChange={setShowAllBadges}>
         <DialogTrigger asChild>
           <Button
             variant="outline"
-            className="w-full rounded-2xl font-semibold"
+            className="w-full h-12 rounded-xl font-medium"
             style={{ borderColor: "hsl(var(--brand-plum))", color: "hsl(var(--brand-plum))" }}
           >
             <Trophy className="h-4 w-4 mr-2" />
