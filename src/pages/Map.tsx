@@ -416,84 +416,21 @@ export default function Map() {
       try {
         console.log('🗺️ Initializing map at coordinates:', coords);
         
-        // Try Mapbox first, fallback to OSM if it fails
-        let mapStyle = 'mapbox://styles/mapbox/streets-v12';
-        let useMapboxGL = true;
-        
         // Initialize map centered on user
         map.current = new mapboxgl.Map({
           container: mapContainer.current!,
-          style: mapStyle,
+          style: 'mapbox://styles/mapbox/streets-v12',
           center: coords,
           zoom: 13,
         });
 
-        // Wait for map to load or error
+        // Wait for map to load
         map.current.on('load', () => {
           console.log('✅ Map loaded successfully with Mapbox');
         });
 
         map.current.on('error', (e: any) => {
           console.error('❌ Map error:', e);
-          
-          // If authentication error, switch to OpenStreetMap
-          if (e.error?.message?.includes('Unauthorized') || e.error?.status === 401) {
-            console.warn('⚠️ Mapbox token unauthorized, falling back to OpenStreetMap');
-            
-            toast({
-              title: "Mapbox non disponible",
-              description: "Utilisation d'OpenStreetMap. Pour Mapbox, ajoutez *.lovableproject.com aux URL autorisées.",
-              variant: "default",
-            });
-            
-            // Reload map with OSM style
-            if (map.current) {
-              map.current.remove();
-            }
-            
-            // Use a basic style without Mapbox
-            map.current = new mapboxgl.Map({
-              container: mapContainer.current!,
-              style: {
-                version: 8,
-                sources: {
-                  'osm': {
-                    type: 'raster',
-                    tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
-                    tileSize: 256,
-                    attribution: '© OpenStreetMap contributors'
-                  }
-                },
-                layers: [{
-                  id: 'osm',
-                  type: 'raster',
-                  source: 'osm',
-                  minzoom: 0,
-                  maxzoom: 19
-                }]
-              },
-              center: coords,
-              zoom: 13,
-            });
-            
-            // Add controls to OSM map
-            map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
-            
-            // Add user marker to OSM map
-            const userEl = document.createElement('div');
-            userEl.style.width = '40px';
-            userEl.style.height = '40px';
-            userEl.style.borderRadius = '50%';
-            userEl.style.background = 'linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%)';
-            userEl.style.border = '3px solid white';
-            userEl.style.boxShadow = '0 4px 12px rgba(139, 92, 246, 0.4)';
-            userEl.style.cursor = 'pointer';
-
-            new mapboxgl.Marker(userEl)
-              .setLngLat(coords)
-              .setPopup(new mapboxgl.Popup().setHTML('<div style="padding: 4px; font-weight: 600;">Vous êtes ici 📍</div>'))
-              .addTo(map.current);
-          }
         });
 
         // Add navigation controls

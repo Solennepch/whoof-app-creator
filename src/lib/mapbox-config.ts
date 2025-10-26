@@ -2,7 +2,7 @@
 // Get your public token from: https://account.mapbox.com/access-tokens/
 // Public tokens (pk.*) are safe to use in client-side code
 
-export const MAPBOX_PUBLIC_TOKEN = "pk.eyJ1Ijoic29sYXJvY2siLCJhIjoiY20yNmxkZHY1MDZzajJscXhhdXBvZ2Z5OSJ9.oCLQWZOtq4fwUvWDQ-yS9Q";
+export const MAPBOX_PUBLIC_TOKEN = "pk.eyJ1Ijoic29sZW5uZXBjaCIsImEiOiJjbWg4OW81cDUxMGxrMmpzZDJuZjE2bHo5In0.q3iELgWbCe0OlDtEL4EztQ";
 
 // You can also store it in localStorage for easy updates
 export function getMapboxToken(): string {
