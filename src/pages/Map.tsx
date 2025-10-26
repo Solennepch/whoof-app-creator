@@ -57,9 +57,53 @@ export default function Map() {
   const { toast } = useToast();
   const navigate = useNavigate();
 
+  // Generate mock profiles for development
+  const generateMockProfiles = (lng: number, lat: number, count: number = 8): NearbyProfile[] => {
+    const dogNames = [
+      'Max', 'Luna', 'Charlie', 'Bella', 'Rocky', 'Daisy', 
+      'Cooper', 'Milo', 'Lola', 'Zeus', 'Nala', 'Oscar'
+    ];
+    const breeds = [
+      'Golden Retriever', 'Labrador', 'Berger Allemand', 'Bouledogue Français',
+      'Beagle', 'Husky', 'Border Collie', 'Caniche'
+    ];
+    const sizes = ['Petit', 'Moyen', 'Grand'];
+    const temperaments = ['Calme', 'Joueur', 'Énergique', 'Amical'];
+
+    return Array.from({ length: count }, (_, i) => {
+      // Random offset within ~2km radius
+      const angle = Math.random() * Math.PI * 2;
+      const radius = (Math.random() * 0.02) + 0.005; // 0.5-2km roughly
+      const randomLng = lng + radius * Math.cos(angle);
+      const randomLat = lat + radius * Math.sin(angle);
+      const distance_m = radius * 111000; // rough conversion to meters
+
+      return {
+        id: `mock-${i}`,
+        user_id: `user-mock-${i}`,
+        display_name: dogNames[i % dogNames.length],
+        avatar_url: `https://api.dicebear.com/7.x/adventurer/svg?seed=${dogNames[i % dogNames.length]}`,
+        distance_km: distance_m / 1000,
+        distance_m: distance_m,
+        lat: randomLat,
+        lng: randomLng,
+        breed: breeds[i % breeds.length],
+        size: sizes[i % sizes.length],
+        temperament: temperaments[i % temperaments.length],
+        verified: Math.random() > 0.5
+      };
+    });
+  };
+
   // Fetch nearby profiles
   const fetchNearbyProfiles = async (lng: number, lat: number) => {
     try {
+      // For development: use mock data
+      // Comment out this line and uncomment the API call below for production
+      console.log('🧪 Using mock profiles for development');
+      return generateMockProfiles(lng, lat);
+
+      /* Uncomment for production API call:
       const { data: { session } } = await supabase.auth.getSession();
       
       const { data, error } = await supabase.functions.invoke('suggested', {
@@ -82,6 +126,7 @@ export default function Map() {
       }));
 
       return profiles;
+      */
     } catch (err) {
       console.error('Failed to fetch nearby profiles:', err);
       return [];
