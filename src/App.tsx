@@ -15,6 +15,7 @@ import ProfileMe from "./pages/ProfileMe";
 import Login from "./pages/Login";
 import Ranking from "./pages/Ranking";
 import Annuaire from "./pages/Annuaire";
+import AnnuaireMap from "./pages/AnnuaireMap";
 import AnnuaireDetail from "./pages/AnnuaireDetail";
 import Partenariats from "./pages/Partenariats";
 import PartenariatDetail from "./pages/PartenariatDetail";
@@ -46,6 +47,7 @@ const App = () => (
           <Route path="/ranking" element={<Ranking />} />
           <Route path="/login" element={<Login />} />
           <Route path="/annuaire" element={<Annuaire />} />
+          <Route path="/annuaire/carte" element={<AnnuaireMap />} />
           <Route path="/annuaire/:id" element={<AnnuaireDetail />} />
           <Route path="/partenariats" element={<Partenariats />} />
           <Route path="/partenariats/:id" element={<PartenariatDetail />} />
