@@ -22,7 +22,7 @@ export function Navbar() {
     { to: "/discover", icon: Compass, label: "Découvrir" },
     { to: "/events", icon: Calendar, label: "Événements" },
     { to: "/map", icon: MapPin, label: "Carte" },
-    { to: "/profile/1", icon: User, label: "Profil" },
+    { to: "/profile/me", icon: User, label: "Profil" },
   ];
 
   return (
