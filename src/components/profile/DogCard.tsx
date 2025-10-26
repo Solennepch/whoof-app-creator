@@ -12,7 +12,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { formatDogAge } from "@/utils/age";
-import { getZodiacSign, getZodiacEmoji } from "@/utils/zodiac";
 
 interface DogCardProps {
   dog: {
@@ -43,9 +42,26 @@ export function DogCard({ dog, isOwner, onLike, onMessage }: DogCardProps) {
     ? `${dog.age_years} an${dog.age_years > 1 ? 's' : ''}`
     : "Âge inconnu";
 
-  // Get zodiac sign from API or calculate if birthdate exists
-  const zodiacSign = dog.zodiac_sign || (dog.birthdate ? getZodiacSign(dog.birthdate) : null);
-  const zodiacEmoji = zodiacSign ? getZodiacEmoji(zodiacSign as any) : null;
+  // Use zodiac_sign from backend (server-calculated)
+  const zodiacSign = dog.zodiac_sign;
+
+  // Emoji mapping for zodiac signs
+  const zodiacEmojiMap: Record<string, string> = {
+    'Aries': '♈',
+    'Taurus': '♉',
+    'Gemini': '♊',
+    'Cancer': '♋',
+    'Leo': '♌',
+    'Virgo': '♍',
+    'Libra': '♎',
+    'Scorpio': '♏',
+    'Sagittarius': '♐',
+    'Capricorn': '♑',
+    'Aquarius': '♒',
+    'Pisces': '♓',
+  };
+
+  const zodiacEmoji = zodiacSign ? zodiacEmojiMap[zodiacSign] : null;
 
   // Map English zodiac signs from API to French
   const zodiacDisplayMap: Record<string, string> = {
