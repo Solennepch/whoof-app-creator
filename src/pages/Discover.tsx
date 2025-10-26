@@ -117,11 +117,10 @@ export default function Discover() {
 
           <Button
             size="lg"
-            className="h-20 w-20 rounded-full shadow-soft"
-            style={{ backgroundColor: "var(--brand-raspberry)" }}
+            className="h-20 w-20 rounded-full shadow-soft bg-[#FF5DA2] hover:bg-[#FF5DA2]/90"
             onClick={() => handleSwipe(true)}
           >
-            <Heart className="h-7 w-7 text-white" />
+            <Heart className="h-8 w-8 text-white fill-white" />
           </Button>
         </div>
 
