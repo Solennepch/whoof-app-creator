@@ -51,9 +51,12 @@ serve(async (req) => {
       // Create new dog
       const body = await req.json();
       
+      // Remove zodiac_sign from body if provided - it's calculated automatically
+      const { zodiac_sign, ...dogData } = body;
+      
       const { data, error } = await supabase
         .from('dogs')
-        .insert({ ...body, owner_id: user.id })
+        .insert({ ...dogData, owner_id: user.id })
         .select()
         .single();
 

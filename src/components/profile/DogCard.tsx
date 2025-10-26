@@ -20,12 +20,13 @@ interface DogCardProps {
     name: string;
     breed?: string;
     age_years?: number;
-    birth_date?: string;
+    birthdate?: string;
     temperament?: string;
     size?: string;
     avatar_url?: string;
     vaccination?: any;
     anecdote?: string;
+    zodiac_sign?: string;
   };
   isOwner?: boolean;
   onLike?: () => void;
@@ -35,16 +36,34 @@ interface DogCardProps {
 export function DogCard({ dog, isOwner, onLike, onMessage }: DogCardProps) {
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 
-  // Calculate age from birth_date or use age_years
-  const ageDisplay = dog.birth_date 
-    ? formatDogAge(dog.birth_date)
+  // Calculate age from birthdate or use age_years
+  const ageDisplay = dog.birthdate 
+    ? formatDogAge(dog.birthdate)
     : dog.age_years 
     ? `${dog.age_years} an${dog.age_years > 1 ? 's' : ''}`
     : "Âge inconnu";
 
-  // Get zodiac sign if birth date is available
-  const zodiacSign = dog.birth_date ? getZodiacSign(dog.birth_date) : null;
-  const zodiacEmoji = zodiacSign ? getZodiacEmoji(zodiacSign) : null;
+  // Get zodiac sign from API or calculate if birthdate exists
+  const zodiacSign = dog.zodiac_sign || (dog.birthdate ? getZodiacSign(dog.birthdate) : null);
+  const zodiacEmoji = zodiacSign ? getZodiacEmoji(zodiacSign as any) : null;
+
+  // Map English zodiac signs from API to French
+  const zodiacDisplayMap: Record<string, string> = {
+    'Aries': 'Bélier',
+    'Taurus': 'Taureau',
+    'Gemini': 'Gémeaux',
+    'Cancer': 'Cancer',
+    'Leo': 'Lion',
+    'Virgo': 'Vierge',
+    'Libra': 'Balance',
+    'Scorpio': 'Scorpion',
+    'Sagittarius': 'Sagittaire',
+    'Capricorn': 'Capricorne',
+    'Aquarius': 'Verseau',
+    'Pisces': 'Poissons',
+  };
+
+  const zodiacDisplay = zodiacSign ? zodiacDisplayMap[zodiacSign] || zodiacSign : null;
 
   // Check vaccination status
   const isVaccinated = dog.vaccination && 
@@ -93,9 +112,9 @@ export function DogCard({ dog, isOwner, onLike, onMessage }: DogCardProps) {
                 <p className="text-lg text-muted-foreground mt-1">{dog.breed}</p>
               )}
             </div>
-            {zodiacSign && zodiacEmoji && (
+            {zodiacDisplay && zodiacEmoji && (
               <Badge variant="outline" className="text-lg gap-1">
-                {zodiacEmoji} {zodiacSign}
+                {zodiacEmoji} {zodiacDisplay}
               </Badge>
             )}
           </div>
@@ -190,10 +209,10 @@ export function DogCard({ dog, isOwner, onLike, onMessage }: DogCardProps) {
                       </div>
                     )}
 
-                    {zodiacSign && (
+                    {zodiacDisplay && (
                       <div>
                         <p className="text-sm text-muted-foreground">Signe astrologique</p>
-                        <p className="font-medium">{zodiacEmoji} {zodiacSign}</p>
+                        <p className="font-medium">{zodiacEmoji} {zodiacDisplay}</p>
                       </div>
                     )}
 

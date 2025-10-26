@@ -19,12 +19,13 @@ interface Dog {
   name: string;
   breed?: string;
   age_years?: number;
-  birth_date?: string;
+  birthdate?: string;
   temperament?: string;
   size?: string;
   avatar_url?: string;
   vaccination?: any;
   anecdote?: string;
+  zodiac_sign?: string;
 }
 
 interface Profile {
