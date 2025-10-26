@@ -31,7 +31,7 @@ export function Navbar() {
                 variant="ghost"
                 size="icon"
                 onClick={() => setSidebarOpen(true)}
-                className="md:hidden"
+                className="rounded-2xl"
               >
                 <Menu className="h-5 w-5" />
               </Button>

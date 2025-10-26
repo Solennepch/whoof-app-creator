@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
+import { Building, Briefcase, Bug, Percent } from "lucide-react";
 import { NavLink } from "react-router-dom";
-import { Building, Briefcase, Bug, X } from "lucide-react";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 
 interface SidebarMenuProps {
   open: boolean;
@@ -49,17 +48,20 @@ export function SidebarMenu({ open, onOpenChange }: SidebarMenuProps) {
       }
     };
 
-    checkUserRoles();
+    if (open) {
+      checkUserRoles();
+    }
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
       checkUserRoles();
     });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [open]);
 
   const menuItems = [
     { to: "/annuaire", icon: Building, label: "Annuaire" },
+    { to: "/partenariats", icon: Percent, label: "Partenariats" },
     { 
       to: isPro ? "/pro/dashboard" : "/pro/onboarding", 
       icon: Briefcase, 
@@ -67,24 +69,16 @@ export function SidebarMenu({ open, onOpenChange }: SidebarMenuProps) {
     },
   ];
 
-  // Add debug item only for admins
-  const isDev = import.meta.env.DEV || window.location.hostname.includes('lovable.app');
-  if (isDev && isAdmin) {
+  // Add Debug link only for admins
+  if (isAdmin) {
     menuItems.push({ to: "/debug/health", icon: Bug, label: "Debug" });
   }
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="left" className="w-[280px]">
+      <SheetContent side="left" className="w-[280px] sm:w-[320px]">
         <SheetHeader>
-          <div className="flex items-center justify-between">
-            <SheetTitle>Menu</SheetTitle>
-            <SheetClose asChild>
-              <Button variant="ghost" size="icon" className="h-8 w-8">
-                <X className="h-4 w-4" />
-              </Button>
-            </SheetClose>
-          </div>
+          <SheetTitle>Menu</SheetTitle>
         </SheetHeader>
 
         <div className="mt-6 flex flex-col gap-2">
@@ -97,7 +91,7 @@ export function SidebarMenu({ open, onOpenChange }: SidebarMenuProps) {
                 to={item.to}
                 onClick={() => onOpenChange(false)}
                 className={({ isActive }) =>
-                  `flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition ${
+                  `flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium transition ${
                     isActive
                       ? "bg-primary/10 text-primary"
                       : "text-muted-foreground hover:bg-muted"
