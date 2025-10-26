@@ -11,9 +11,14 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
-const MAPBOX_TOKEN = "pk.eyJ1Ijoic29sZW5uZXBjaCIsImEiOiJjbWg3d29nNHMwd2VmMm1zN2h6OXdmZ215In0.RmXuQ4eqOhvYXaybbiAbEg";
+// Initialize Mapbox token with fallback and error handling
+const mapboxToken = (import.meta?.env?.VITE_MAPBOX_TOKEN || (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_MAPBOX_TOKEN)) as string;
 
-mapboxgl.accessToken = MAPBOX_TOKEN;
+if (!mapboxToken) {
+  console.error('❌ MAPBOX TOKEN ERROR: No Mapbox token found. Please set VITE_MAPBOX_TOKEN in your environment variables.');
+} else {
+  mapboxgl.accessToken = mapboxToken;
+}
 
 interface NearbyProfile {
   id: string;

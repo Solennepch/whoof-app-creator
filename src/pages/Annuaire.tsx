@@ -10,7 +10,14 @@ import { Search, MapPin, Building, ExternalLink } from "lucide-react";
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
-mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
+// Initialize Mapbox token with fallback and error handling
+const mapboxToken = (import.meta?.env?.VITE_MAPBOX_TOKEN || (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_MAPBOX_TOKEN)) as string;
+
+if (!mapboxToken) {
+  console.error('❌ MAPBOX TOKEN ERROR: No Mapbox token found. Please set VITE_MAPBOX_TOKEN in your environment variables.');
+} else {
+  mapboxgl.accessToken = mapboxToken;
+}
 
 const CATEGORIES = [
   { value: 'veterinaire', label: 'Vétérinaire' },
