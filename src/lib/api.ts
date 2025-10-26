@@ -1,26 +1,30 @@
 import axios from "axios";
-import { supabase } from "@/integrations/supabase/client";
+
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "https://ozdaxhiqnfapfevdropz.supabase.co";
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZGF4aGlxbmZhcGZldmRyb3B6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE0ODc2NjcsImV4cCI6MjA3NzA2MzY2N30.2NFz6vswkGWSJYIsI4pqc6Y1QgpgTjxtyDT2aPcRqTs";
 
 // Utilise l'URL personnalisée si définie, sinon les edge functions Supabase
-const baseURL = import.meta.env.VITE_API_URL 
-  || (import.meta.env.VITE_SUPABASE_URL 
-    ? `${import.meta.env.VITE_SUPABASE_URL}/functions/v1`
-    : "https://ozdaxhiqnfapfevdropz.supabase.co/functions/v1");
+const baseURL = import.meta.env.VITE_API_URL || `${supabaseUrl}/functions/v1`;
 
 export const api = axios.create({
   baseURL,
+  withCredentials: false,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// Ajoute automatiquement le JWT si présent
-api.interceptors.request.use(async (config) => {
-  const { data: { session } } = await supabase.auth.getSession();
-  const token = session?.access_token;
+// Intercepteur: ajoute automatiquement le JWT et l'apikey
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("access_token");
   
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
+  }
+  
+  // Ajoute l'apikey Supabase (requis pour les edge functions)
+  if (supabaseAnonKey) {
+    config.headers.apikey = supabaseAnonKey;
   }
   
   return config;
