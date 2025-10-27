@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Header } from "./components/layout/Header";
 import { BottomNavigation } from "./components/layout/BottomNavigation";
 import Home from "./pages/Home";
+import Index from "./pages/Index";
 import Discover from "./pages/Discover";
 import Events from "./pages/Events";
 import Map from "./pages/Map";
@@ -50,7 +51,7 @@ const App = () => (
           <Route path="/onboarding/dog" element={<DogOnboarding />} />
           
           {/* Main App Pages */}
-          <Route path="/" element={<Navigate to="/map" replace />} />
+          <Route path="/" element={<Index />} />
           <Route path="/map" element={<Map />} />
           <Route path="/discover" element={<Discover />} />
           <Route path="/messages" element={<Messages />} />
