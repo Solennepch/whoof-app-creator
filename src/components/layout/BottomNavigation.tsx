@@ -12,8 +12,9 @@ export function BottomNavigation() {
 
   return (
     <nav 
-      className="fixed bottom-0 left-0 right-0 z-50 bg-paper shadow-soft md:hidden w-full overflow-hidden" 
+      className="fixed bottom-0 left-0 right-0 z-50 shadow-soft md:hidden w-full overflow-hidden backdrop-blur-sm" 
       style={{ 
+        backgroundColor: "hsl(var(--paper))",
         borderTop: "1px solid hsl(var(--border))",
         paddingLeft: "env(safe-area-inset-left)",
         paddingRight: "env(safe-area-inset-right)",

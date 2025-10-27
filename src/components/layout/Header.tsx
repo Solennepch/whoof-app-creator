@@ -9,7 +9,13 @@ export function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 bg-paper shadow-soft" style={{ borderBottom: "1px solid hsl(var(--border))" }}>
+      <header 
+        className="sticky top-0 z-50 shadow-soft backdrop-blur-sm" 
+        style={{ 
+          backgroundColor: "hsl(var(--paper))",
+          borderBottom: "1px solid hsl(var(--border))"
+        }}
+      >
         <div className="mx-auto max-w-7xl px-4">
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center gap-3">
