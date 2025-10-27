@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
-import { Building2, User, ArrowLeft } from "lucide-react";
+import { Building2, User, ArrowLeft, Dog, Footprints } from "lucide-react";
 import logoWhoof from "@/assets/logo-whoof.png";
 
 type AccountType = "user" | "pro";
@@ -168,28 +168,31 @@ export default function Signup() {
           <div className="space-y-4">
             {/* User Card */}
             <Card
-              className={`p-6 cursor-pointer transition-all ${
+              className={`p-6 cursor-pointer transition-all rounded-3xl ${
                 accountType === "user"
-                  ? "ring-2 shadow-lg"
+                  ? "ring-2 shadow-lg scale-[1.02]"
                   : "hover:shadow-md"
               }`}
               style={{
-                borderColor: accountType === "user" ? "hsl(var(--brand-plum))" : "hsl(var(--border))",
+                borderColor: accountType === "user" ? "#7B61FF" : "hsl(var(--border))",
+                background: accountType === "user" 
+                  ? "linear-gradient(135deg, rgba(123, 97, 255, 0.1) 0%, rgba(255, 93, 162, 0.1) 100%)"
+                  : "white"
               }}
               onClick={() => handleTypeSelection("user")}
             >
               <div className="flex items-start gap-4">
                 <div
-                  className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0"
-                  style={{ backgroundColor: "hsl(var(--brand-plum) / 0.1)" }}
+                  className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0"
+                  style={{ backgroundColor: "#7B61FF" }}
                 >
-                  <User className="h-6 w-6" style={{ color: "hsl(var(--brand-plum))" }} />
+                  <Dog className="h-7 w-7 text-white" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-lg font-semibold mb-1" style={{ color: "hsl(var(--ink))" }}>
-                    🐶 Particulier
+                  <h3 className="text-xl font-semibold mb-2" style={{ color: "#111827", fontFamily: "Fredoka" }}>
+                    Particulier
                   </h3>
-                  <p className="text-sm" style={{ color: "hsl(var(--ink) / 0.7)" }}>
+                  <p className="text-sm leading-relaxed" style={{ color: "#6B7280" }}>
                     Pour les propriétaires de chiens qui veulent rencontrer d'autres passionnés et profiter des services
                   </p>
                 </div>
@@ -198,28 +201,31 @@ export default function Signup() {
 
             {/* Pro Card */}
             <Card
-              className={`p-6 cursor-pointer transition-all ${
+              className={`p-6 cursor-pointer transition-all rounded-3xl ${
                 accountType === "pro"
-                  ? "ring-2 shadow-lg"
+                  ? "ring-2 shadow-lg scale-[1.02]"
                   : "hover:shadow-md"
               }`}
               style={{
-                borderColor: accountType === "pro" ? "hsl(var(--brand-plum))" : "hsl(var(--border))",
+                borderColor: accountType === "pro" ? "#FFC14D" : "hsl(var(--border))",
+                background: accountType === "pro"
+                  ? "linear-gradient(135deg, rgba(255, 193, 77, 0.1) 0%, rgba(255, 93, 162, 0.1) 100%)"
+                  : "white"
               }}
               onClick={() => handleTypeSelection("pro")}
             >
               <div className="flex items-start gap-4">
                 <div
-                  className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0"
-                  style={{ backgroundColor: "hsl(var(--brand-yellow) / 0.1)" }}
+                  className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0"
+                  style={{ backgroundColor: "#FFC14D" }}
                 >
-                  <Building2 className="h-6 w-6" style={{ color: "hsl(var(--brand-yellow))" }} />
+                  <Footprints className="h-7 w-7 text-white" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-lg font-semibold mb-1" style={{ color: "hsl(var(--ink))" }}>
-                    🏪 Professionnel
+                  <h3 className="text-xl font-semibold mb-2" style={{ color: "#111827", fontFamily: "Fredoka" }}>
+                    Professionnel
                   </h3>
-                  <p className="text-sm" style={{ color: "hsl(var(--ink) / 0.7)" }}>
+                  <p className="text-sm leading-relaxed" style={{ color: "#6B7280" }}>
                     Pour les vétérinaires, toiletteurs, éducateurs et autres pros qui veulent être visibles dans l'annuaire
                   </p>
                 </div>
