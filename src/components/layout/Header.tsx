@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SidebarMenu } from "./SidebarMenu";
-import logoWhoofApp from "@/assets/logo-whoof-app-new.png";
+import logoWhoof from "@/assets/logo-whoof-v2.png";
 
 export function Header() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -30,9 +30,9 @@ export function Header() {
               
               <div className="flex items-center gap-2">
                 <img 
-                  src={logoWhoofApp} 
+                  src={logoWhoof} 
                   alt="Whoof Apps Logo" 
-                  className="h-10 w-10 rounded-full shadow-sm"
+                  className="h-10 w-10"
                 />
                 <span className="text-xl font-bold" style={{ color: "hsl(var(--ink))" }}>
                   Whoof Apps

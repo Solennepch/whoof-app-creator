@@ -6,6 +6,7 @@ import { ReasonChip } from "@/components/ui/ReasonChip";
 import { XpProgress } from "@/components/ui/XpProgress";
 import { CongratsModal } from "@/components/ui/CongratsModal";
 import { Button } from "@/components/ui/button";
+import logoWhoof from "@/assets/logo-whoof-v2.png";
 
 const Index = () => {
   const [showCongrats, setShowCongrats] = useState(false);
@@ -30,9 +31,11 @@ const Index = () => {
         <div className="relative mx-auto max-w-6xl">
           <div className="text-center">
             <div className="mb-6 inline-flex">
-              <IconContainer>
-                <Dog className="h-5 w-5" />
-              </IconContainer>
+              <img 
+                src={logoWhoof} 
+                alt="Whoof Logo" 
+                className="h-24 w-24 sm:h-32 sm:w-32"
+              />
             </div>
             <h1 className="mb-4 text-5xl font-bold tracking-tight sm:text-6xl md:text-7xl">
               Bienvenue sur{" "}
