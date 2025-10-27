@@ -152,23 +152,23 @@ export default function Signup() {
 
   if (step === "type") {
     return (
-      <div className="min-h-screen flex items-center justify-center px-4 py-8" style={{ backgroundColor: "hsl(var(--paper))" }}>
+      <div className="min-h-screen flex items-center justify-center px-4 py-4" style={{ backgroundColor: "hsl(var(--paper))" }}>
         <div className="w-full max-w-md">
           {/* Logo */}
-          <div className="text-center mb-6">
-            <img src={logoWhoof} alt="Whoof Logo" className="w-32 h-32 mx-auto mb-3" />
+          <div className="text-center mb-4">
+            <img src={logoWhoof} alt="Whoof Logo" className="w-28 h-28 mx-auto mb-2" />
             <h1 className="text-2xl md:text-3xl font-bold" style={{ color: "hsl(var(--ink))" }}>
               Inscription
             </h1>
-            <p className="text-sm mt-1.5" style={{ color: "hsl(var(--ink) / 0.6)" }}>
+            <p className="text-sm mt-1" style={{ color: "hsl(var(--ink) / 0.6)" }}>
               Choisis ton type de compte
             </p>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             {/* User Card */}
             <Card
-              className={`p-5 cursor-pointer transition-all duration-300 rounded-3xl ${
+              className={`p-4 cursor-pointer transition-all duration-300 rounded-3xl ${
                 accountType === "user"
                   ? "ring-2 shadow-xl scale-[1.02]"
                   : "hover:shadow-md hover:scale-[1.01]"
@@ -201,7 +201,7 @@ export default function Signup() {
 
             {/* Pro Card */}
             <Card
-              className={`p-5 cursor-pointer transition-all duration-300 rounded-3xl ${
+              className={`p-4 cursor-pointer transition-all duration-300 rounded-3xl ${
                 accountType === "pro"
                   ? "ring-2 shadow-xl scale-[1.02]"
                   : "hover:shadow-md hover:scale-[1.01]"
@@ -236,12 +236,12 @@ export default function Signup() {
               onClick={handleContinue}
               disabled={!accountType}
               variant="gradient"
-              className="w-full h-12 rounded-xl font-semibold mt-2"
+              className="w-full h-11 rounded-xl font-semibold mt-1.5"
             >
               Continuer
             </Button>
 
-            <div className="border-t mt-6 pt-4" style={{ borderColor: "hsl(var(--border))" }}>
+            <div className="border-t mt-4 pt-3" style={{ borderColor: "hsl(var(--border))" }}>
               <div className="text-center">
                 <button
                   onClick={() => navigate("/login")}
