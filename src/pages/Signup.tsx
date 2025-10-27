@@ -238,7 +238,7 @@ export default function Signup() {
               variant="gradient"
               className="w-full h-11 rounded-xl font-semibold mt-4"
             >
-              Continuer
+              Bienvenue
             </Button>
 
             <div className="border-t mt-4 pt-3" style={{ borderColor: "hsl(var(--border))" }}>
