@@ -236,7 +236,7 @@ export default function Signup() {
               onClick={handleContinue}
               disabled={!accountType}
               variant="gradient"
-              className="w-full h-11 rounded-xl font-semibold mt-1.5"
+              className="w-full h-11 rounded-xl font-semibold mt-4"
             >
               Continuer
             </Button>
