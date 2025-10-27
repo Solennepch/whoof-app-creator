@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SidebarMenu } from "./SidebarMenu";
-import logoWhoofApp from "@/assets/logo-whoof-app.png";
+import logoWhoofApp from "@/assets/logo-whoof-app-new.png";
 
 export function Header() {
   const [sidebarOpen, setSidebarOpen] = useState(false);

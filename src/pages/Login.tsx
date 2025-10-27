@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Mail, Chrome, Apple } from "lucide-react";
 import { toast } from "sonner";
-import logoWhoof from "@/assets/logo-whoof.png";
+import logoWhoof from "@/assets/logo-whoof-app-new.png";
 
 export default function Login() {
   const navigate = useNavigate();
