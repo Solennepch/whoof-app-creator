@@ -156,7 +156,7 @@ export default function Signup() {
         <div className="w-full max-w-md">
           {/* Logo */}
           <div className="text-center mb-6">
-            <img src={logoWhoof} alt="Whoof Logo" className="w-20 h-20 mx-auto mb-3" />
+            <img src={logoWhoof} alt="Whoof Logo" className="w-32 h-32 mx-auto mb-3" />
             <h1 className="text-2xl md:text-3xl font-bold" style={{ color: "hsl(var(--ink))" }}>
               Inscription
             </h1>
@@ -272,7 +272,7 @@ export default function Signup() {
         </button>
 
         <div className="text-center mb-8">
-          <img src={logoWhoof} alt="Whoof Logo" className="w-20 h-20 mx-auto mb-4" />
+          <img src={logoWhoof} alt="Whoof Logo" className="w-32 h-32 mx-auto mb-4" />
           <h1 className="text-2xl font-bold" style={{ color: "hsl(var(--ink))" }}>
             {accountType === "pro" ? "Inscription Professionnel" : "Inscription"}
           </h1>
