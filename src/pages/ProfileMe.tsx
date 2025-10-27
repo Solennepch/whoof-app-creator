@@ -7,7 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, AlertTriangle, Sparkles } from "lucide-react";
 import ErrorBoundary from "@/components/ErrorBoundary";
-import logoWhoof from "@/assets/logo-whoof-app-new.png";
+import logoWhoof from "@/assets/logo-whoof-v2.png";
 
 function ProfileMeContent() {
   const navigate = useNavigate();
