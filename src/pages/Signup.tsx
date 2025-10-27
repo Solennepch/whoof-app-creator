@@ -152,48 +152,48 @@ export default function Signup() {
 
   if (step === "type") {
     return (
-      <div className="min-h-screen flex items-center justify-center px-4" style={{ backgroundColor: "hsl(var(--paper))" }}>
+      <div className="min-h-screen flex items-center justify-center px-4 py-8" style={{ backgroundColor: "hsl(var(--paper))" }}>
         <div className="w-full max-w-md">
           {/* Logo */}
-          <div className="text-center mb-8">
-            <img src={logoWhoof} alt="Whoof Logo" className="w-24 h-24 mx-auto mb-4" />
-            <h1 className="text-3xl font-bold" style={{ color: "hsl(var(--ink))" }}>
+          <div className="text-center mb-6">
+            <img src={logoWhoof} alt="Whoof Logo" className="w-20 h-20 mx-auto mb-3" />
+            <h1 className="text-2xl md:text-3xl font-bold" style={{ color: "hsl(var(--ink))" }}>
               Inscription
             </h1>
-            <p className="text-sm mt-2" style={{ color: "hsl(var(--ink) / 0.6)" }}>
+            <p className="text-sm mt-1.5" style={{ color: "hsl(var(--ink) / 0.6)" }}>
               Choisis ton type de compte
             </p>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-3">
             {/* User Card */}
             <Card
-              className={`p-6 cursor-pointer transition-all rounded-3xl ${
+              className={`p-5 cursor-pointer transition-all duration-300 rounded-3xl ${
                 accountType === "user"
-                  ? "ring-2 shadow-lg scale-[1.02]"
-                  : "hover:shadow-md"
+                  ? "ring-2 shadow-xl scale-[1.02]"
+                  : "hover:shadow-md hover:scale-[1.01]"
               }`}
               style={{
-                borderColor: accountType === "user" ? "#7B61FF" : "hsl(var(--border))",
+                borderColor: accountType === "user" ? "#FF5DA2" : "hsl(var(--border))",
                 background: accountType === "user" 
-                  ? "linear-gradient(135deg, rgba(123, 97, 255, 0.1) 0%, rgba(255, 93, 162, 0.1) 100%)"
+                  ? "linear-gradient(135deg, rgba(123, 97, 255, 0.15) 0%, rgba(255, 93, 162, 0.15) 100%)"
                   : "white"
               }}
               onClick={() => handleTypeSelection("user")}
             >
-              <div className="flex items-start gap-4">
+              <div className="flex items-center gap-4">
                 <div
-                  className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0"
+                  className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 transition-transform"
                   style={{ backgroundColor: "#7B61FF" }}
                 >
-                  <Dog className="h-7 w-7 text-white" />
+                  <Dog className="h-6 w-6 text-white" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-xl font-semibold mb-2" style={{ color: "#111827", fontFamily: "Fredoka" }}>
+                  <h3 className="text-lg font-semibold mb-1" style={{ color: "#111827", fontFamily: "Fredoka" }}>
                     Particulier
                   </h3>
-                  <p className="text-sm leading-relaxed" style={{ color: "#6B7280" }}>
-                    Pour les propriétaires de chiens qui veulent rencontrer d'autres passionnés et profiter des services
+                  <p className="text-xs leading-relaxed" style={{ color: "#6B7280" }}>
+                    Pour les propriétaires de chiens qui veulent rencontrer d'autres passionnés
                   </p>
                 </div>
               </div>
@@ -201,32 +201,32 @@ export default function Signup() {
 
             {/* Pro Card */}
             <Card
-              className={`p-6 cursor-pointer transition-all rounded-3xl ${
+              className={`p-5 cursor-pointer transition-all duration-300 rounded-3xl ${
                 accountType === "pro"
-                  ? "ring-2 shadow-lg scale-[1.02]"
-                  : "hover:shadow-md"
+                  ? "ring-2 shadow-xl scale-[1.02]"
+                  : "hover:shadow-md hover:scale-[1.01]"
               }`}
               style={{
-                borderColor: accountType === "pro" ? "#FFC14D" : "hsl(var(--border))",
+                borderColor: accountType === "pro" ? "#FF5DA2" : "hsl(var(--border))",
                 background: accountType === "pro"
-                  ? "linear-gradient(135deg, rgba(255, 193, 77, 0.1) 0%, rgba(255, 93, 162, 0.1) 100%)"
+                  ? "linear-gradient(135deg, rgba(255, 193, 77, 0.15) 0%, rgba(255, 93, 162, 0.15) 100%)"
                   : "white"
               }}
               onClick={() => handleTypeSelection("pro")}
             >
-              <div className="flex items-start gap-4">
+              <div className="flex items-center gap-4">
                 <div
-                  className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0"
+                  className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 transition-transform"
                   style={{ backgroundColor: "#FFC14D" }}
                 >
-                  <Footprints className="h-7 w-7 text-white" />
+                  <Footprints className="h-6 w-6 text-white" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-xl font-semibold mb-2" style={{ color: "#111827", fontFamily: "Fredoka" }}>
+                  <h3 className="text-lg font-semibold mb-1" style={{ color: "#111827", fontFamily: "Fredoka" }}>
                     Professionnel
                   </h3>
-                  <p className="text-sm leading-relaxed" style={{ color: "#6B7280" }}>
-                    Pour les vétérinaires, toiletteurs, éducateurs et autres pros qui veulent être visibles dans l'annuaire
+                  <p className="text-xs leading-relaxed" style={{ color: "#6B7280" }}>
+                    Pour les pros qui veulent être visibles dans l'annuaire
                   </p>
                 </div>
               </div>
@@ -235,20 +235,22 @@ export default function Signup() {
             <Button
               onClick={handleContinue}
               disabled={!accountType}
-              className="w-full h-12 rounded-xl text-white font-medium"
-              style={{ backgroundColor: "hsl(var(--brand-plum))" }}
+              variant="gradient"
+              className="w-full h-12 rounded-xl font-semibold mt-2"
             >
               Continuer
             </Button>
 
-            <div className="text-center">
-              <button
-                onClick={() => navigate("/login")}
-                className="text-sm hover:underline"
-                style={{ color: "hsl(var(--ink) / 0.6)" }}
-              >
-                Déjà un compte ? Se connecter
-              </button>
+            <div className="border-t mt-6 pt-4" style={{ borderColor: "hsl(var(--border))" }}>
+              <div className="text-center">
+                <button
+                  onClick={() => navigate("/login")}
+                  className="text-sm hover:underline transition-colors"
+                  style={{ color: "hsl(var(--ink) / 0.6)" }}
+                >
+                  Déjà un compte ? Se connecter
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -438,8 +440,8 @@ export default function Signup() {
             <Button
               type="submit"
               disabled={isLoading}
-              className="w-full h-12 rounded-xl text-white font-medium"
-              style={{ backgroundColor: "hsl(var(--brand-plum))" }}
+              variant="gradient"
+              className="w-full h-12 rounded-xl font-semibold"
             >
               {isLoading ? "Création du compte..." : "Créer mon compte"}
             </Button>
