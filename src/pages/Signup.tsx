@@ -152,7 +152,7 @@ export default function Signup() {
 
   if (step === "type") {
     return (
-      <div className="min-h-screen flex items-center justify-center px-4 py-4" style={{ backgroundColor: "hsl(var(--paper))" }}>
+      <div className="min-h-screen flex items-start justify-center px-4 pt-6 pb-4" style={{ backgroundColor: "hsl(var(--paper))" }}>
         <div className="w-full max-w-md">
           {/* Logo */}
           <div className="text-center mb-4">
