@@ -6,7 +6,7 @@ import { ReasonChip } from "@/components/ui/ReasonChip";
 import { XpProgress } from "@/components/ui/XpProgress";
 import { CongratsModal } from "@/components/ui/CongratsModal";
 import { Button } from "@/components/ui/button";
-import logoWhoof from "@/assets/logo-whoof-v2.png";
+import logoWhoof from "@/assets/logo-whoof-v3.png";
 
 const Index = () => {
   const [showCongrats, setShowCongrats] = useState(false);

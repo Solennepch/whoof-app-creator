@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Building2, User, ArrowLeft, Dog, Footprints } from "lucide-react";
-import logoWhoof from "@/assets/logo-whoof-v2.png";
+import logoWhoof from "@/assets/logo-whoof-v3.png";
 
 type AccountType = "user" | "pro";
 
