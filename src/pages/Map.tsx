@@ -801,8 +801,8 @@ export default function Map() {
                 <div className="space-y-4">
                   <h4 className="font-semibold text-sm mb-3">Catégories</h4>
                   
-                  {/* Categories */}
-                  <div className="flex gap-2 flex-wrap">
+                  {/* Categories - Grid layout for 3 rows */}
+                  <div className="grid grid-cols-3 gap-2">
                     <Button
                       variant={selectedCategory === null ? "default" : "outline"}
                       size="sm"
