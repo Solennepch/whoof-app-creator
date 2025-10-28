@@ -47,20 +47,20 @@ export default function Discover() {
   if (!current) return null;
 
   return (
-    <div className="flex flex-col min-h-screen pb-24" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
+    <div className="flex flex-col h-screen pb-20 overflow-hidden" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
       {/* Header spacing to avoid overlap with sticky header */}
-      <div className="h-20" />
+      <div className="h-16" />
       
-      <div className="mx-auto max-w-2xl px-4 pt-4">
-        <div className="mb-8 text-center">
-          <h1 className="mb-2 text-3xl font-bold" style={{ color: "var(--ink)" }}>
+      <div className="mx-auto max-w-2xl px-4 flex flex-col h-full">
+        <div className="mb-3 text-center">
+          <h1 className="mb-1 text-2xl font-bold" style={{ color: "var(--ink)" }}>
             Découvrir
           </h1>
-          <p className="text-muted-foreground">Swipe pour matcher avec de nouveaux amis</p>
+          <p className="text-sm text-muted-foreground">Swipe pour matcher avec de nouveaux amis</p>
         </div>
 
         {/* Card Stack */}
-        <div className="relative aspect-[3/4] max-h-[600px]">
+        <div className="relative flex-1 max-h-[380px]">
           <div
             className={`absolute inset-0 rounded-3xl bg-white shadow-soft ring-1 ring-black/5 transition-transform duration-300 ${
               direction === "left" ? "-translate-x-full rotate-[-20deg] opacity-0" : ""
@@ -71,61 +71,61 @@ export default function Discover() {
               style={{ backgroundImage: `url(${current.image})` }}
             />
 
-            <div className="p-6">
-              <div className="mb-3 flex items-start justify-between">
+            <div className="p-4">
+              <div className="mb-2 flex items-start justify-between">
                 <div>
-                  <h2 className="text-2xl font-bold" style={{ color: "var(--ink)" }}>
+                  <h2 className="text-xl font-bold" style={{ color: "var(--ink)" }}>
                     {current.name}
                   </h2>
-                  <p className="text-muted-foreground">
+                  <p className="text-sm text-muted-foreground">
                     {current.breed} • {current.age}
                   </p>
                 </div>
                 <Button
                   size="icon"
                   variant="outline"
-                  className="rounded-full"
+                  className="rounded-full h-8 w-8"
                 >
-                  <Info className="h-4 w-4" />
+                  <Info className="h-3 w-3" />
                 </Button>
               </div>
 
-              <p className="text-sm" style={{ color: "var(--ink)", opacity: 0.8 }}>
+              <p className="text-xs line-clamp-2" style={{ color: "var(--ink)", opacity: 0.8 }}>
                 {current.bio}
               </p>
             </div>
           </div>
         </div>
 
-        {/* Tags with more spacing */}
-        <div className="mt-6 mb-8 flex flex-wrap justify-center gap-2">
+        {/* Tags */}
+        <div className="mt-3 mb-3 flex flex-wrap justify-center gap-1.5">
           {current.reasons.map((reason, i) => (
             <ReasonChip key={i} label={reason} />
           ))}
         </div>
 
-        {/* Actions with better spacing */}
-        <div className="flex justify-center gap-6 mb-6">
+        {/* Actions */}
+        <div className="flex justify-center items-center gap-4 mb-2">
           <Button
             size="lg"
             variant="outline"
-            className="h-16 w-16 rounded-full shadow-soft"
+            className="h-14 w-14 rounded-full shadow-soft"
             onClick={() => handleSwipe(false)}
           >
-            <X className="h-8 w-8" style={{ color: "var(--ink)", opacity: 0.6 }} />
+            <X className="h-7 w-7" style={{ color: "var(--ink)", opacity: 0.6 }} />
           </Button>
 
           <Button
             size="lg"
-            className="h-20 w-20 rounded-full shadow-soft bg-[#FF5DA2] hover:bg-[#FF5DA2]/90"
+            className="h-16 w-16 rounded-full shadow-soft bg-[#FF5DA2] hover:bg-[#FF5DA2]/90"
             onClick={() => handleSwipe(true)}
           >
-            <Heart className="h-10 w-10 text-white fill-white" />
+            <Heart className="h-8 w-8 text-white fill-white" />
           </Button>
         </div>
 
         {/* Progress */}
-        <div className="text-center text-sm text-muted-foreground">
+        <div className="text-center text-xs text-muted-foreground pb-2">
           {currentIndex + 1} / {profiles.length}
         </div>
       </div>
