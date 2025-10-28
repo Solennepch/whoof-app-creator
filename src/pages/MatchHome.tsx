@@ -19,19 +19,19 @@ export default function MatchHome() {
 
         <Button
           onClick={() => navigate('/discover/region')}
-          className="w-full h-20 text-lg rounded-2xl shadow-soft"
-          style={{ backgroundColor: "var(--brand-plum)" }}
+          className="w-full h-20 text-lg rounded-2xl shadow-lg hover:shadow-xl transition-all bg-white text-foreground border-2"
+          style={{ borderColor: "var(--brand-plum)" }}
         >
-          <Heart className="mr-2 h-6 w-6" />
+          <Heart className="mr-2 h-6 w-6" style={{ color: "var(--brand-plum)" }} />
           Matche les chiens de ta région
         </Button>
 
         <Button
           onClick={() => navigate('/discover/adoption')}
-          className="w-full h-20 text-lg rounded-2xl shadow-soft"
-          style={{ backgroundColor: "var(--brand-raspberry)" }}
+          className="w-full h-20 text-lg rounded-2xl shadow-lg hover:shadow-xl transition-all bg-white text-foreground border-2"
+          style={{ borderColor: "var(--brand-raspberry)" }}
         >
-          <Home className="mr-2 h-6 w-6" />
+          <Home className="mr-2 h-6 w-6" style={{ color: "var(--brand-raspberry)" }} />
           Adopte ton compagnon (SPA)
         </Button>
       </div>
