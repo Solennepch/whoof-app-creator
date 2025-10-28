@@ -76,12 +76,12 @@ export default function Discover() {
         matchedName={matchedProfile}
       />
       
-      <div className="flex flex-col h-screen pb-20 overflow-hidden" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
+      <div className="flex flex-col h-screen overflow-hidden" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
       {/* Header spacing to avoid overlap with sticky header */}
-      <div className="h-16" />
+      <div className="h-16 shrink-0" />
       
-      <div className="mx-auto max-w-2xl px-4 flex flex-col h-full">
-        <div className="mb-3 text-center">
+      <div className="mx-auto max-w-2xl px-4 flex flex-col flex-1 pb-20">
+        <div className="mb-3 text-center shrink-0">
           <h1 className="mb-1 text-2xl font-bold" style={{ color: "var(--ink)" }}>
             Découvrir
           </h1>
@@ -89,7 +89,7 @@ export default function Discover() {
         </div>
 
         {/* Card Stack */}
-        <div className="relative flex-1 max-h-[380px]">
+        <div className="relative flex-1 min-h-0">
           <div
             className={`absolute inset-0 rounded-3xl bg-white shadow-soft ring-1 ring-black/5 transition-transform duration-300 ${
               direction === "left" ? "-translate-x-full rotate-[-20deg] opacity-0" : ""
@@ -127,14 +127,14 @@ export default function Discover() {
         </div>
 
         {/* Tags */}
-        <div className="mt-3 mb-3 flex flex-wrap justify-center gap-1.5">
+        <div className="mt-3 mb-3 flex flex-wrap justify-center gap-1.5 shrink-0">
           {current.reasons.map((reason, i) => (
             <ReasonChip key={i} label={reason} />
           ))}
         </div>
 
         {/* Actions */}
-        <div className="flex justify-center items-center gap-4 mb-2">
+        <div className="flex justify-center items-center gap-4 mb-2 shrink-0">
           <Button
             size="lg"
             variant="outline"
@@ -154,7 +154,7 @@ export default function Discover() {
         </div>
 
         {/* Progress */}
-        <div className="text-center text-xs text-muted-foreground pb-2">
+        <div className="text-center text-xs text-muted-foreground pb-2 shrink-0">
           {currentIndex + 1} / {profiles.length}
         </div>
       </div>
