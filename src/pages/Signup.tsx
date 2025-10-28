@@ -152,7 +152,7 @@ export default function Signup() {
 
   if (step === "type") {
     return (
-      <div className="min-h-screen flex items-start justify-center px-4 pt-6 pb-4" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
+      <div className="h-screen overflow-hidden flex items-center justify-center px-4" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
         <div className="w-full max-w-md">
           {/* Logo */}
           <div className="text-center mb-4">
@@ -260,8 +260,8 @@ export default function Signup() {
 
   // Form Step
   return (
-    <div className="min-h-screen pb-24" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
-      <div className="mx-auto max-w-[600px] px-4 pt-8">
+    <div className="h-screen overflow-hidden flex flex-col" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
+      <div className="mx-auto max-w-[600px] px-4 pt-8 pb-20 flex-1 overflow-y-auto">
         <button
           onClick={() => setStep("type")}
           className="flex items-center gap-2 mb-6 text-sm font-medium hover:opacity-70 transition"

@@ -48,15 +48,10 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
+    <div className="h-screen overflow-hidden flex items-center justify-center px-4" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
       <div className="w-full max-w-md">
-        {/* Logo */}
-        <div className="text-center mb-8">
-          <img 
-            src={logoWhoof} 
-            alt="Whoof Logo" 
-            className="w-24 h-24 mx-auto mb-4"
-          />
+        {/* Header */}
+        <div className="text-center mb-6">
           <h1 className="text-3xl font-bold text-foreground">Connexion</h1>
           <p className="text-muted-foreground mt-2">
             Bienvenue sur Whoof
