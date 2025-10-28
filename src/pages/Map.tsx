@@ -779,7 +779,7 @@ export default function Map() {
         {/* Header */}
         <div className="mb-2 md:mb-6 flex items-center justify-between gap-2">
           <div className="min-w-0">
-            <h1 className="mb-1 text-2xl md:text-3xl font-bold truncate" style={{ color: "var(--ink)" }}>
+            <h1 className="mb-1 text-2xl md:text-3xl font-bold truncate text-foreground">
               Carte
             </h1>
             <p className="text-xs md:text-sm text-muted-foreground hidden sm:block">Trouve des professionnels près de toi</p>

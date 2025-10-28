@@ -121,7 +121,7 @@ export default function PartenariatDetail() {
                 />
               )}
               <div className="flex-1">
-                <h1 className="text-3xl font-bold mb-2" style={{ fontFamily: "Fredoka" }}>
+                <h1 className="text-3xl font-bold mb-2">
                   {partnership.title}
                 </h1>
                 {pro && (

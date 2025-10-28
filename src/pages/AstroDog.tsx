@@ -43,7 +43,7 @@ export default function AstroDog() {
 
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold flex items-center gap-2" style={{ color: "#111827" }}>
+          <h1 className="text-3xl font-bold flex items-center gap-2 text-foreground">
             <Star className="w-8 h-8" style={{ color: "#7B61FF" }} fill="#7B61FF" />
             Mon Astro Dog
           </h1>

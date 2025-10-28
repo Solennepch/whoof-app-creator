@@ -165,7 +165,7 @@ export default function ProDashboard() {
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
-            <h1 className="text-4xl font-bold" style={{ color: "var(--ink)", fontFamily: "Fredoka" }}>
+            <h1 className="text-4xl font-bold text-foreground">
               Tableau de bord Pro
             </h1>
             {getStatusBadge(proAccount.status)}

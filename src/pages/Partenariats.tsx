@@ -62,7 +62,7 @@ export default function Partenariats() {
               <Percent className="h-8 w-8 text-white" />
             </div>
           </div>
-          <h1 className="text-4xl font-bold mb-2" style={{ color: "var(--ink)", fontFamily: "Fredoka" }}>
+          <h1 className="text-4xl font-bold mb-2 text-foreground">
             Offres Partenaires
           </h1>
           <p className="text-lg text-muted-foreground">

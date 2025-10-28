@@ -92,7 +92,7 @@ export default function ProOnboarding() {
       <div className="mx-auto max-w-3xl px-4 py-8">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold mb-2" style={{ color: "var(--ink)", fontFamily: "Fredoka" }}>
+          <h1 className="text-4xl font-bold mb-2 text-foreground">
             Devenir Partenaire Certifié
           </h1>
           <p className="text-muted-foreground">

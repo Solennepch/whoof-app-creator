@@ -133,7 +133,7 @@ export default function AnnuaireMap() {
         {/* Header */}
         <div className="mb-4 flex items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold" style={{ color: "var(--ink)", fontFamily: "Fredoka" }}>
+            <h1 className="text-2xl font-bold text-foreground">
               Carte des professionnels
             </h1>
             <p className="text-sm text-muted-foreground">

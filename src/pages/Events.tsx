@@ -39,7 +39,7 @@ export default function Events() {
       <div className="mx-auto max-w-4xl px-4 pt-20">
         <div className="mb-6 flex items-center justify-between">
           <div>
-            <h1 className="mb-2 text-3xl font-bold" style={{ color: "var(--ink)" }}>
+            <h1 className="mb-2 text-3xl font-bold text-foreground">
               Événements
             </h1>
             <p className="text-muted-foreground">Rejoins des rencontres près de chez toi</p>

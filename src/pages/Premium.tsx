@@ -38,7 +38,7 @@ export default function Premium() {
       <div className="min-h-screen pb-24" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
         <div className="mx-auto max-w-[720px] px-4 pt-20 space-y-6">
           <div>
-            <h1 className="text-3xl font-bold flex items-center gap-3" style={{ color: "hsl(var(--ink))" }}>
+            <h1 className="text-3xl font-bold flex items-center gap-3 text-foreground">
               <Crown className="h-8 w-8" style={{ color: "hsl(var(--brand-yellow))" }} />
               Premium
             </h1>
@@ -106,7 +106,7 @@ export default function Premium() {
       <div className="mx-auto max-w-[720px] px-4 pt-20 space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold flex items-center gap-3" style={{ color: "hsl(var(--ink))" }}>
+          <h1 className="text-3xl font-bold flex items-center gap-3 text-foreground">
             <Crown className="h-8 w-8" style={{ color: "hsl(var(--brand-yellow))" }} />
             Passer Premium
           </h1>

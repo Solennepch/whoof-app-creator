@@ -118,7 +118,7 @@ export default function Annuaire() {
       <div className="mx-auto max-w-[720px] px-4 pt-20 space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold mb-2" style={{ color: "var(--ink)", fontFamily: "Fredoka" }}>
+          <h1 className="text-3xl font-bold mb-2 text-foreground">
             Annuaire des professionnels
           </h1>
           <p className="text-muted-foreground">

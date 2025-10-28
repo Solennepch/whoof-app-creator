@@ -43,7 +43,7 @@ export default function Messages() {
       <div className="mx-auto max-w-4xl pt-20">
         {/* Header */}
         <div className="border-b p-4" style={{ borderColor: "hsl(var(--border))" }}>
-          <h1 className="mb-4 text-2xl font-bold" style={{ color: "hsl(var(--ink))" }}>
+          <h1 className="mb-4 text-2xl font-bold text-foreground">
             Messages
           </h1>
           

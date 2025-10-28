@@ -58,7 +58,7 @@ export default function PremiumPricing() {
       <div className="mx-auto max-w-4xl px-4 py-12">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold mb-4" style={{ color: "var(--ink)", fontFamily: "Fredoka" }}>
+          <h1 className="text-5xl font-bold mb-4 text-foreground">
             Whoof Premium
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">

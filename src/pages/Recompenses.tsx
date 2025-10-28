@@ -26,7 +26,7 @@ export default function Recompenses() {
       <main className="mx-auto max-w-[720px] px-4 pt-20 pb-6 space-y-6 relative z-10">
         {/* Header */}
         <div className="text-center mb-6">
-          <h1 className="text-3xl font-bold mb-2" style={{ fontFamily: "Fredoka", color: "#111827" }}>
+          <h1 className="text-3xl font-bold mb-2 text-foreground">
             Récompenses
           </h1>
           <p className="text-sm text-muted-foreground">

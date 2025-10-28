@@ -51,7 +51,7 @@ export default function Home() {
       <div className="mx-auto max-w-4xl px-4 pt-20 pb-20 flex-1 overflow-y-auto">
         {/* Header */}
         <div className="mb-6">
-          <h1 className="mb-2 text-3xl font-bold" style={{ color: "var(--ink)" }}>
+          <h1 className="mb-2 text-3xl font-bold text-foreground">
             Fil d'actualité
           </h1>
           <p className="text-muted-foreground">Découvre les toutous près de chez toi</p>

@@ -48,7 +48,7 @@ export default function Parrainage() {
       <div className="mx-auto max-w-[720px] px-4 pt-20 space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold" style={{ color: "hsl(var(--ink))" }}>
+          <h1 className="text-3xl font-bold text-foreground">
             🎁 Parrainer
           </h1>
           <p className="text-sm mt-2" style={{ color: "hsl(var(--ink) / 0.6)" }}>

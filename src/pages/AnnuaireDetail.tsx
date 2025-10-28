@@ -94,7 +94,7 @@ export default function AnnuaireDetail() {
               />
             )}
             <div className="flex-1">
-              <h1 className="text-3xl font-bold mb-2" style={{ fontFamily: "Fredoka" }}>
+              <h1 className="text-3xl font-bold mb-2">
                 {pro.business_name}
               </h1>
               <Badge className="mb-3">{pro.category}</Badge>

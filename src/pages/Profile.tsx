@@ -350,7 +350,7 @@ function ProfileContent() {
             {/* Dog Name & Edit Button */}
             <div className="flex-1 ml-4">
               <div className="flex items-center gap-2 mb-1">
-                <h1 className="text-2xl font-bold" style={{ color: "#111827", fontFamily: "Fredoka" }}>
+                <h1 className="text-2xl font-bold text-foreground">
                   {primaryDog?.name || "Mon chien"}
                 </h1>
                 {profile.human_verified && (

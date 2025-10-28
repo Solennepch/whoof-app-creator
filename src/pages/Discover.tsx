@@ -82,7 +82,7 @@ export default function Discover() {
       
       <div className="mx-auto max-w-2xl px-4 flex flex-col flex-1 pb-20">
         <div className="mb-3 text-center shrink-0">
-          <h1 className="mb-1 text-2xl font-bold" style={{ color: "var(--ink)" }}>
+          <h1 className="mb-1 text-2xl font-bold text-foreground">
             Découvrir
           </h1>
           <p className="text-sm text-muted-foreground">Swipe pour matcher avec de nouveaux amis</p>
