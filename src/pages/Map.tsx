@@ -9,6 +9,7 @@ import { AnimatedLikeButton } from "@/components/ui/AnimatedLikeButton";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { supabase } from "@/integrations/supabase/client";
@@ -805,15 +806,24 @@ export default function Map() {
               </PopoverContent>
             </Popover>
 
-            <Button 
-              onClick={handleGoToUser} 
-              size="sm"
-              className="rounded-2xl shrink-0 shadow-glow" 
-              style={{ backgroundColor: "var(--brand-plum)" }}
-            >
-              <Navigation className="h-4 w-4 md:mr-2" />
-              <span className="hidden md:inline">Ma position</span>
-            </Button>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button 
+                    onClick={handleGoToUser} 
+                    size="sm"
+                    className="rounded-2xl shrink-0 shadow-glow" 
+                    style={{ backgroundColor: "var(--brand-plum)" }}
+                  >
+                    <Navigation className="h-4 w-4 md:mr-2" />
+                    <span className="hidden md:inline">Ma position</span>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Recentrer sur ma position</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
         </div>
 
