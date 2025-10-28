@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { MapPin, Navigation, MessageCircle, X, Shield, Stethoscope, Home, UtensilsCrossed, Filter } from "lucide-react";
+import { MapPin, Locate, MessageCircle, X, Shield, Stethoscope, Home, UtensilsCrossed, Filter } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from "@/components/ui/sheet";
@@ -815,7 +815,7 @@ export default function Map() {
                     className="rounded-2xl shrink-0 shadow-glow" 
                     style={{ backgroundColor: "var(--brand-plum)" }}
                   >
-                    <Navigation className="h-4 w-4 md:mr-2" />
+                    <Locate className="h-4 w-4 md:mr-2" />
                     <span className="hidden md:inline">Ma position</span>
                   </Button>
                 </TooltipTrigger>
@@ -898,7 +898,7 @@ export default function Map() {
                         </div>
                       </div>
                       <Button size="sm" variant="ghost" className="rounded-full">
-                        <Navigation className="h-4 w-4" />
+                        <MapPin className="h-4 w-4" />
                       </Button>
                     </div>
                   ))
