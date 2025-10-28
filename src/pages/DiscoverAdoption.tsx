@@ -177,7 +177,7 @@ export default function DiscoverAdoption() {
         <div className="flex items-center gap-2">
           <Users className="h-4 w-4 text-[#FF5DA2]" />
           <span className="text-sm font-semibold" style={{ color: "var(--ink)" }}>
-            {totalMatches.toLocaleString()} matches
+            Nos mises en contact : {totalMatches.toLocaleString()}
           </span>
         </div>
       </div>
