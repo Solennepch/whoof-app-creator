@@ -171,16 +171,6 @@ export default function DiscoverAdoption() {
           matchId={pendingFollowUp.id}
         />
       )}
-
-      {/* Global counter - fixed position */}
-      <div className="fixed top-20 right-4 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg z-50">
-        <div className="flex items-center gap-2">
-          <Users className="h-4 w-4 text-[#FF5DA2]" />
-          <span className="text-sm font-semibold" style={{ color: "var(--ink)" }}>
-            Nos mises en contact : {totalMatches.toLocaleString()}
-          </span>
-        </div>
-      </div>
       
       <div className="flex flex-col h-screen overflow-hidden" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
         {/* Header spacing to avoid overlap with sticky header */}
@@ -188,9 +178,20 @@ export default function DiscoverAdoption() {
         
         <div className="mx-auto max-w-2xl px-4 flex flex-col flex-1 pb-20">
           <div className="mb-3 shrink-0">
-            <h1 className="mb-1 text-2xl font-bold text-foreground">
-              Adoption SPA
-            </h1>
+            <div className="flex items-start justify-between gap-2 mb-1">
+              <h1 className="text-2xl font-bold text-foreground">
+                Adoption SPA
+              </h1>
+              {/* Global counter */}
+              <div className="bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full shadow-lg">
+                <div className="flex items-center gap-1.5">
+                  <Users className="h-3.5 w-3.5 text-[#FF5DA2]" />
+                  <span className="text-xs font-semibold whitespace-nowrap" style={{ color: "var(--ink)" }}>
+                    Nos mises en contact : {totalMatches.toLocaleString()}
+                  </span>
+                </div>
+              </div>
+            </div>
             <p className="text-sm text-muted-foreground">Swipe pour découvrir ton futur compagnon</p>
           </div>
 
