@@ -7,6 +7,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { AnimatedLikeButton } from "@/components/ui/AnimatedLikeButton";
 import { Slider } from "@/components/ui/slider";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
@@ -776,15 +777,83 @@ export default function Map() {
     <div className="min-h-screen pb-24 md:pb-6" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
       <div className="mx-auto max-w-6xl px-4 pt-20 md:pt-6">
         {/* Header */}
-        <div className="mb-4 md:mb-6">
-          <div className="flex items-center justify-between mb-4">
-            <div className="min-w-0">
-              <h1 className="mb-1 text-2xl md:text-3xl font-bold truncate" style={{ color: "var(--ink)", fontFamily: "Fredoka" }}>
-                Carte
-              </h1>
-              <p className="text-xs md:text-sm text-muted-foreground hidden sm:block">Trouve des professionnels près de toi</p>
-            </div>
-            
+        <div className="mb-4 md:mb-6 flex items-center justify-between gap-2">
+          <div className="min-w-0">
+            <h1 className="mb-1 text-2xl md:text-3xl font-bold truncate" style={{ color: "var(--ink)", fontFamily: "Fredoka" }}>
+              Carte
+            </h1>
+            <p className="text-xs md:text-sm text-muted-foreground hidden sm:block">Trouve des professionnels près de toi</p>
+          </div>
+          
+          <div className="flex gap-2">
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button 
+                  size="sm"
+                  variant="outline"
+                  className="rounded-2xl shrink-0"
+                >
+                  <Filter className="h-4 w-4 md:mr-2" />
+                  <span className="hidden md:inline">Filtres</span>
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80 bg-white z-50" align="end">
+                <div className="space-y-4">
+                  <h4 className="font-semibold text-sm mb-3">Catégories</h4>
+                  
+                  {/* Categories */}
+                  <div className="flex gap-2 flex-wrap">
+                    <Button
+                      variant={selectedCategory === null ? "default" : "outline"}
+                      size="sm"
+                      className="rounded-xl h-9 text-xs"
+                      onClick={() => setSelectedCategory(null)}
+                    >
+                      Tous
+                    </Button>
+                    {CATEGORIES.map((cat) => (
+                      <Button
+                        key={cat.value}
+                        variant={selectedCategory === cat.value ? "default" : "outline"}
+                        size="sm"
+                        className="rounded-xl h-9 text-xs"
+                        onClick={() => setSelectedCategory(cat.value)}
+                      >
+                        {cat.label}
+                      </Button>
+                    ))}
+                  </div>
+
+                  <div className="border-t pt-4">
+                    <h4 className="font-semibold text-sm mb-3">Localisation</h4>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="rounded-xl h-10 w-full mb-3"
+                      onClick={getUserLocation}
+                    >
+                      <MapPin className="w-4 h-4 mr-2" />
+                      Autour de moi
+                    </Button>
+                    
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">
+                        Rayon: {radius} km
+                      </label>
+                      <Slider
+                        value={[radius]}
+                        onValueChange={(val) => setRadius(val[0])}
+                        min={1}
+                        max={50}
+                        step={1}
+                        className="w-full"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </PopoverContent>
+            </Popover>
+
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -807,59 +876,6 @@ export default function Map() {
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
-          </div>
-
-          {/* Filters */}
-          <div className="space-y-4">
-            <div className="flex gap-2 flex-wrap">
-              <Button
-                variant={selectedCategory === null ? "default" : "outline"}
-                size="sm"
-                className="rounded-xl h-10"
-                onClick={() => setSelectedCategory(null)}
-              >
-                Tous
-              </Button>
-              {CATEGORIES.map((cat) => (
-                <Button
-                  key={cat.value}
-                  variant={selectedCategory === cat.value ? "default" : "outline"}
-                  size="sm"
-                  className="rounded-xl h-10"
-                  onClick={() => setSelectedCategory(cat.value)}
-                >
-                  {cat.label}
-                </Button>
-              ))}
-            </div>
-
-            <div className="flex gap-3 items-center flex-wrap">
-              <Button
-                variant="outline"
-                size="sm"
-                className="rounded-xl h-11"
-                onClick={getUserLocation}
-              >
-                <MapPin className="w-4 h-4 mr-2" />
-                Autour de moi
-              </Button>
-              
-              <div className="flex-1 min-w-[200px] max-w-xs">
-                <div className="flex items-center gap-3">
-                  <span className="text-sm text-muted-foreground whitespace-nowrap">
-                    Rayon: {radius} km
-                  </span>
-                  <Slider
-                    value={[radius]}
-                    onValueChange={(val) => setRadius(val[0])}
-                    min={1}
-                    max={50}
-                    step={1}
-                    className="flex-1"
-                  />
-                </div>
-              </div>
-            </div>
           </div>
         </div>
 
