@@ -17,23 +17,21 @@ export default function MatchHome() {
           </p>
         </div>
 
-        <Button
+        <button
           onClick={() => navigate('/discover/region')}
-          className="w-full h-20 text-lg rounded-2xl shadow-lg hover:shadow-xl transition-all bg-white text-foreground border-2"
-          style={{ borderColor: "var(--brand-plum)" }}
+          className="w-full flex items-center justify-center gap-3 p-6 text-lg font-semibold rounded-2xl shadow-sm hover:shadow-md transition-all bg-white/90"
         >
-          <Heart className="mr-2 h-6 w-6" style={{ color: "var(--brand-plum)" }} />
-          Matche les chiens de ta région
-        </Button>
+          <Heart className="h-6 w-6" style={{ color: "var(--brand-plum)" }} />
+          <span style={{ color: "hsl(var(--ink))" }}>Matche les chiens de ta région</span>
+        </button>
 
-        <Button
+        <button
           onClick={() => navigate('/discover/adoption')}
-          className="w-full h-20 text-lg rounded-2xl shadow-lg hover:shadow-xl transition-all bg-white text-foreground border-2"
-          style={{ borderColor: "var(--brand-raspberry)" }}
+          className="w-full flex items-center justify-center gap-3 p-6 text-lg font-semibold rounded-2xl shadow-sm hover:shadow-md transition-all bg-white/90"
         >
-          <Home className="mr-2 h-6 w-6" style={{ color: "var(--brand-raspberry)" }} />
-          Adopte ton compagnon (SPA)
-        </Button>
+          <Home className="h-6 w-6" style={{ color: "var(--brand-raspberry)" }} />
+          <span style={{ color: "hsl(var(--ink))" }}>Adopte ton compagnon (SPA)</span>
+        </button>
       </div>
     </div>
   );
