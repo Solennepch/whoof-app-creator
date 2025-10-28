@@ -775,9 +775,9 @@ export default function Map() {
 
   return (
     <div className="min-h-screen pb-24 md:pb-6" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
-      <div className="mx-auto max-w-6xl px-4 pt-20 md:pt-6">
+      <div className="mx-auto max-w-6xl px-4 pt-16 md:pt-6">
         {/* Header */}
-        <div className="mb-4 md:mb-6 flex items-center justify-between gap-2">
+        <div className="mb-2 md:mb-6 flex items-center justify-between gap-2">
           <div className="min-w-0">
             <h1 className="mb-1 text-2xl md:text-3xl font-bold truncate" style={{ color: "var(--ink)" }}>
               Carte
