@@ -14,6 +14,12 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { getMapboxToken } from "@/lib/mapbox-config";
+import dog1 from "@/assets/dogs/dog-1.jpg";
+import dog2 from "@/assets/dogs/dog-2.jpg";
+import dog3 from "@/assets/dogs/dog-3.jpg";
+import dog4 from "@/assets/dogs/dog-4.jpg";
+import dog5 from "@/assets/dogs/dog-5.jpg";
+import dog6 from "@/assets/dogs/dog-6.jpg";
 
 // Initialize Mapbox token
 const mapboxToken = getMapboxToken();
@@ -97,6 +103,7 @@ export default function Map() {
       '🌅 Balade matinale',
       '🐕 Socialisation'
     ];
+    const dogImages = [dog1, dog2, dog3, dog4, dog5, dog6];
 
     return Array.from({ length: count }, (_, i) => {
       // Random offset within ~2km radius
@@ -110,7 +117,7 @@ export default function Map() {
         id: `mock-${i}`,
         user_id: `user-mock-${i}`,
         display_name: dogNames[i % dogNames.length],
-        avatar_url: `https://api.dicebear.com/7.x/adventurer/svg?seed=${dogNames[i % dogNames.length]}`,
+        avatar_url: dogImages[i % dogImages.length],
         distance_km: distance_m / 1000,
         distance_m: distance_m,
         lat: randomLat,
