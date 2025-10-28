@@ -14,6 +14,54 @@ export type Database = {
   }
   public: {
     Tables: {
+      adoption_matches: {
+        Row: {
+          adopted: boolean | null
+          created_at: string
+          dog_name: string
+          follow_up_completed: boolean
+          id: string
+          matched_at: string
+          user_id: string
+        }
+        Insert: {
+          adopted?: boolean | null
+          created_at?: string
+          dog_name: string
+          follow_up_completed?: boolean
+          id?: string
+          matched_at?: string
+          user_id: string
+        }
+        Update: {
+          adopted?: boolean | null
+          created_at?: string
+          dog_name?: string
+          follow_up_completed?: boolean
+          id?: string
+          matched_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      adoption_stats: {
+        Row: {
+          id: string
+          total_matches: number
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          total_matches?: number
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          total_matches?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       categories_pro: {
         Row: {
           id: number
