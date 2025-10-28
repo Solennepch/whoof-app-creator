@@ -1,14 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { MapPin, Locate, MessageCircle, X, Shield, Stethoscope, Home, UtensilsCrossed, Filter } from "lucide-react";
+import { MapPin, Locate, MessageCircle, X, Shield, Filter } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from "@/components/ui/sheet";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { AnimatedLikeButton } from "@/components/ui/AnimatedLikeButton";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
@@ -24,6 +22,17 @@ import dog6 from "@/assets/dogs/dog-6.jpg";
 
 // Initialize Mapbox token
 const mapboxToken = getMapboxToken();
+
+const CATEGORIES = [
+  { value: 'veterinaire', label: 'Vétérinaire' },
+  { value: 'toiletteur', label: 'Toiletteur' },
+  { value: 'educateur', label: 'Éducateur' },
+  { value: 'pet-sitter', label: 'Pet-sitter' },
+  { value: 'refuge', label: 'Refuge' },
+  { value: 'boutique', label: 'Boutique' },
+  { value: 'pension', label: 'Pension' },
+  { value: 'photographe', label: 'Photographe' },
+];
 
 console.log('🔑 Checking Mapbox token...');
 console.log('Token exists:', !!mapboxToken);
@@ -78,9 +87,8 @@ export default function Map() {
   const [isInviting, setIsInviting] = useState(false);
   const [likedProfiles, setLikedProfiles] = useState<Set<string>>(new Set());
   const [pois, setPois] = useState<POI[]>([]);
-  const [showVets, setShowVets] = useState(true);
-  const [showPetSitters, setShowPetSitters] = useState(true);
-  const [showRestaurants, setShowRestaurants] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [radius, setRadius] = useState(25);
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -547,12 +555,10 @@ export default function Map() {
       (map.current.getSource('profiles') as mapboxgl.GeoJSONSource).setData(geojsonData);
     }
 
-    // Add POI markers
+    // Add POI markers - Filter by selected category
     const filteredPOIs = pois.filter(poi => {
-      if (poi.type === 'veterinaire') return showVets;
-      if (poi.type === 'pet_sitter') return showPetSitters;
-      if (poi.type === 'restaurant') return showRestaurants;
-      return false;
+      if (!selectedCategory) return true; // Show all if no filter
+      return poi.type === selectedCategory;
     });
 
     filteredPOIs.forEach(poi => {
@@ -723,12 +729,12 @@ export default function Map() {
     };
   }, []);
 
-  // Update markers when POI filters change
+  // Update markers when filters change
   useEffect(() => {
     if (map.current && nearbyProfiles.length > 0) {
       addMarkersToMap(nearbyProfiles, pois, userLocation);
     }
-  }, [showVets, showPetSitters, showRestaurants]);
+  }, [selectedCategory, radius]);
 
   const handleGoToUser = () => {
     if (map.current) {
@@ -740,72 +746,45 @@ export default function Map() {
     }
   };
 
+  const getUserLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const coords: [number, number] = [position.coords.longitude, position.coords.latitude];
+          setUserLocation(coords);
+          if (map.current) {
+            map.current.flyTo({
+              center: coords,
+              zoom: 13,
+              duration: 1500,
+            });
+          }
+        },
+        (error) => {
+          console.error('Error getting location:', error);
+          toast({
+            title: "Erreur",
+            description: "Impossible d'obtenir votre position",
+            variant: "destructive",
+          });
+        }
+      );
+    }
+  };
+
   return (
     <div className="min-h-screen pb-24 md:pb-6" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
       <div className="mx-auto max-w-6xl px-4 pt-20 md:pt-6">
-        {/* Header - Mobile optimized */}
-        <div className="mb-4 md:mb-6 flex items-center justify-between gap-2">
-          <div className="min-w-0">
-            <h1 className="mb-1 text-2xl md:text-3xl font-bold truncate" style={{ color: "var(--ink)" }}>
-              Carte
-            </h1>
-            <p className="text-xs md:text-sm text-muted-foreground hidden sm:block">Trouve des chiens près de toi</p>
-          </div>
-
-          <div className="flex gap-2">
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button 
-                  size="sm"
-                  variant="outline"
-                  className="rounded-2xl shrink-0"
-                >
-                  <Filter className="h-4 w-4 md:mr-2" />
-                  <span className="hidden md:inline">Filtres</span>
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-72">
-                <div className="space-y-4">
-                  <h4 className="font-semibold text-sm">Points d'intérêt</h4>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <Label htmlFor="vets" className="flex items-center gap-2 cursor-pointer">
-                        <Stethoscope className="h-4 w-4 text-green-600" />
-                        <span>Vétérinaires</span>
-                      </Label>
-                      <Switch 
-                        id="vets" 
-                        checked={showVets} 
-                        onCheckedChange={setShowVets} 
-                      />
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <Label htmlFor="sitters" className="flex items-center gap-2 cursor-pointer">
-                        <Home className="h-4 w-4 text-amber-600" />
-                        <span>Pet Sitters</span>
-                      </Label>
-                      <Switch 
-                        id="sitters" 
-                        checked={showPetSitters} 
-                        onCheckedChange={setShowPetSitters} 
-                      />
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <Label htmlFor="restaurants" className="flex items-center gap-2 cursor-pointer">
-                        <UtensilsCrossed className="h-4 w-4 text-red-600" />
-                        <span>Restaurants</span>
-                      </Label>
-                      <Switch 
-                        id="restaurants" 
-                        checked={showRestaurants} 
-                        onCheckedChange={setShowRestaurants} 
-                      />
-                    </div>
-                  </div>
-                </div>
-              </PopoverContent>
-            </Popover>
-
+        {/* Header */}
+        <div className="mb-4 md:mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <div className="min-w-0">
+              <h1 className="mb-1 text-2xl md:text-3xl font-bold truncate" style={{ color: "var(--ink)", fontFamily: "Fredoka" }}>
+                Carte
+              </h1>
+              <p className="text-xs md:text-sm text-muted-foreground hidden sm:block">Trouve des professionnels près de toi</p>
+            </div>
+            
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -828,6 +807,59 @@ export default function Map() {
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
+          </div>
+
+          {/* Filters */}
+          <div className="space-y-4">
+            <div className="flex gap-2 flex-wrap">
+              <Button
+                variant={selectedCategory === null ? "default" : "outline"}
+                size="sm"
+                className="rounded-xl h-10"
+                onClick={() => setSelectedCategory(null)}
+              >
+                Tous
+              </Button>
+              {CATEGORIES.map((cat) => (
+                <Button
+                  key={cat.value}
+                  variant={selectedCategory === cat.value ? "default" : "outline"}
+                  size="sm"
+                  className="rounded-xl h-10"
+                  onClick={() => setSelectedCategory(cat.value)}
+                >
+                  {cat.label}
+                </Button>
+              ))}
+            </div>
+
+            <div className="flex gap-3 items-center flex-wrap">
+              <Button
+                variant="outline"
+                size="sm"
+                className="rounded-xl h-11"
+                onClick={getUserLocation}
+              >
+                <MapPin className="w-4 h-4 mr-2" />
+                Autour de moi
+              </Button>
+              
+              <div className="flex-1 min-w-[200px] max-w-xs">
+                <div className="flex items-center gap-3">
+                  <span className="text-sm text-muted-foreground whitespace-nowrap">
+                    Rayon: {radius} km
+                  </span>
+                  <Slider
+                    value={[radius]}
+                    onValueChange={(val) => setRadius(val[0])}
+                    min={1}
+                    max={50}
+                    step={1}
+                    className="flex-1"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
