@@ -64,7 +64,7 @@ export default function Messages() {
         </div>
 
         {/* Conversations List */}
-        <div className="divide-y" style={{ borderColor: "hsl(var(--border))" }}>
+        <div className="space-y-3 px-4 pt-4">
           {filteredConversations.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12">
               <MessageCircle 
@@ -79,7 +79,7 @@ export default function Messages() {
             filteredConversations.map((conv) => (
               <button
                 key={conv.id}
-                className="flex w-full items-center gap-3 p-4 transition-colors hover:bg-black/5"
+                className="flex w-full items-center gap-3 p-4 transition-all hover:shadow-md bg-white/90 rounded-2xl shadow-sm"
               >
                 <Avatar className="h-14 w-14">
                   <AvatarImage src={conv.image} alt={conv.name} />
