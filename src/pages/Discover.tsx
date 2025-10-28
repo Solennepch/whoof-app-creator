@@ -2,6 +2,7 @@ import { useState } from "react";
 import { X, Heart, Info } from "lucide-react";
 import { ReasonChip } from "@/components/ui/ReasonChip";
 import { Button } from "@/components/ui/button";
+import { MatchAnimation } from "@/components/match/MatchAnimation";
 
 const profiles = [
   {
@@ -33,11 +34,32 @@ const profiles = [
 export default function Discover() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState<"left" | "right" | null>(null);
+  const [showMatch, setShowMatch] = useState(false);
+  const [matchedProfile, setMatchedProfile] = useState<string>("");
 
   const current = profiles[currentIndex];
 
   const handleSwipe = (liked: boolean) => {
+    if (liked) {
+      // Simulate match (30% chance)
+      const isMatch = Math.random() > 0.7;
+      if (isMatch) {
+        setMatchedProfile(current.name);
+        setShowMatch(true);
+        return;
+      }
+    }
+    
     setDirection(liked ? "right" : "left");
+    setTimeout(() => {
+      setCurrentIndex((prev) => (prev + 1) % profiles.length);
+      setDirection(null);
+    }, 300);
+  };
+
+  const handleMatchComplete = () => {
+    setShowMatch(false);
+    setDirection("right");
     setTimeout(() => {
       setCurrentIndex((prev) => (prev + 1) % profiles.length);
       setDirection(null);
@@ -47,7 +69,14 @@ export default function Discover() {
   if (!current) return null;
 
   return (
-    <div className="flex flex-col h-screen pb-20 overflow-hidden" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
+    <>
+      <MatchAnimation 
+        show={showMatch} 
+        onComplete={handleMatchComplete}
+        matchedName={matchedProfile}
+      />
+      
+      <div className="flex flex-col h-screen pb-20 overflow-hidden" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
       {/* Header spacing to avoid overlap with sticky header */}
       <div className="h-16" />
       
@@ -130,5 +159,6 @@ export default function Discover() {
         </div>
       </div>
     </div>
+    </>
   );
 }
