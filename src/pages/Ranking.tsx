@@ -29,7 +29,7 @@ export default function Ranking() {
 
   return (
     <div className="min-h-screen pb-20 relative overflow-hidden" style={{ 
-      background: "linear-gradient(135deg, #7B61FF 0%, #FF5DA2 50%, #FFC14D 100%)"
+      background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)"
     }}>
       {/* Animated Stars Background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -46,7 +46,7 @@ export default function Ranking() {
       <main className="mx-auto max-w-[720px] px-4 pb-20 space-y-5 relative z-10">
         {/* Header */}
         <div className="pt-20 pb-4">
-          <h1 className="text-3xl font-bold text-white text-center" style={{ fontFamily: "Fredoka" }}>
+          <h1 className="text-3xl font-bold text-center" style={{ fontFamily: "Fredoka", color: "#111827" }}>
             Classement
           </h1>
         </div>

@@ -17,7 +17,7 @@ export default function AstroDog() {
 
   return (
     <div className="min-h-screen pb-24 relative overflow-hidden" style={{ 
-      background: "linear-gradient(135deg, #7B61FF 0%, #FF5DA2 50%, #FFC14D 100%)"
+      background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)"
     }}>
       {/* Animated Stars Background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -35,7 +35,7 @@ export default function AstroDog() {
         {/* Back Button */}
         <Link 
           to="/profile/me" 
-          className="inline-flex items-center gap-2 text-sm font-medium hover:opacity-70 transition text-white"
+          className="inline-flex items-center gap-2 text-sm font-medium hover:opacity-70 transition text-muted-foreground"
         >
           <ChevronLeft className="h-4 w-4" />
           Retour au profil
@@ -43,11 +43,11 @@ export default function AstroDog() {
 
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold flex items-center gap-2 text-white">
-            <Star className="w-8 h-8 text-white" fill="white" />
+          <h1 className="text-3xl font-bold flex items-center gap-2" style={{ color: "#111827" }}>
+            <Star className="w-8 h-8" style={{ color: "#7B61FF" }} fill="#7B61FF" />
             Mon Astro Dog
           </h1>
-          <p className="text-sm mt-2 text-white/90">
+          <p className="text-sm mt-2 text-muted-foreground">
             Découvre l'horoscope de ton chien chaque semaine
           </p>
         </div>

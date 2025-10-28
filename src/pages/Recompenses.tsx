@@ -13,14 +13,14 @@ export default function Recompenses() {
     }}>
       {/* Animated Stars Background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <Star className="absolute top-20 left-10 w-6 h-6 text-purple-400/40 animate-pulse" style={{ animationDelay: "0s" }} />
-        <Sparkles className="absolute top-40 right-20 w-5 h-5 text-pink-400/50 animate-pulse" style={{ animationDelay: "0.5s" }} />
-        <Star className="absolute top-60 left-1/4 w-4 h-4 text-purple-300/30 animate-pulse" style={{ animationDelay: "1s" }} />
-        <Star className="absolute top-32 right-10 w-7 h-7 text-pink-300/35 animate-pulse" style={{ animationDelay: "1.5s" }} />
-        <Sparkles className="absolute top-80 left-1/3 w-6 h-6 text-purple-400/40 animate-pulse" style={{ animationDelay: "2s" }} />
-        <Star className="absolute top-96 right-1/4 w-5 h-5 text-pink-400/45 animate-pulse" style={{ animationDelay: "2.5s" }} />
-        <Sparkles className="absolute bottom-40 left-20 w-4 h-4 text-purple-300/35 animate-pulse" style={{ animationDelay: "3s" }} />
-        <Star className="absolute bottom-60 right-16 w-6 h-6 text-pink-400/40 animate-pulse" style={{ animationDelay: "3.5s" }} />
+        <Star className="absolute top-20 left-10 w-6 h-6 text-white animate-pulse" style={{ animationDelay: "0s" }} />
+        <Sparkles className="absolute top-40 right-20 w-5 h-5 text-white animate-pulse" style={{ animationDelay: "0.5s" }} />
+        <Star className="absolute top-60 left-1/4 w-4 h-4 text-white animate-pulse" style={{ animationDelay: "1s" }} />
+        <Star className="absolute top-32 right-10 w-7 h-7 text-white animate-pulse" style={{ animationDelay: "1.5s" }} />
+        <Sparkles className="absolute top-80 left-1/3 w-6 h-6 text-white animate-pulse" style={{ animationDelay: "2s" }} />
+        <Star className="absolute top-96 right-1/4 w-5 h-5 text-white animate-pulse" style={{ animationDelay: "2.5s" }} />
+        <Sparkles className="absolute bottom-40 left-20 w-4 h-4 text-white animate-pulse" style={{ animationDelay: "3s" }} />
+        <Star className="absolute bottom-60 right-16 w-6 h-6 text-white animate-pulse" style={{ animationDelay: "3.5s" }} />
       </div>
 
       <main className="mx-auto max-w-[720px] px-4 pt-20 pb-6 space-y-6 relative z-10">
