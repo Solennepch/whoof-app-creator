@@ -187,7 +187,7 @@ export default function DiscoverAdoption() {
         <div className="h-16 shrink-0" />
         
         <div className="mx-auto max-w-2xl px-4 flex flex-col flex-1 pb-20">
-          <div className="mb-3 text-center shrink-0">
+          <div className="mb-3 shrink-0">
             <h1 className="mb-1 text-2xl font-bold text-foreground">
               Adoption SPA
             </h1>
