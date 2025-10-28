@@ -1,8 +1,12 @@
-import { useState } from "react";
-import { X, Heart, Info } from "lucide-react";
+import { useState, useEffect } from "react";
+import { X, Heart, Info, Users } from "lucide-react";
 import { ReasonChip } from "@/components/ui/ReasonChip";
 import { Button } from "@/components/ui/button";
 import { MatchAnimation } from "@/components/match/MatchAnimation";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "@/hooks/use-toast";
+import { AdoptionFollowUpDialog } from "@/components/adoption/AdoptionFollowUpDialog";
+import { useAdoptionFollowUp } from "@/hooks/useAdoptionFollowUp";
 
 const adoptionProfiles = [
   {
@@ -57,14 +61,76 @@ export default function DiscoverAdoption() {
   const [direction, setDirection] = useState<"left" | "right" | null>(null);
   const [showMatch, setShowMatch] = useState(false);
   const [matchedProfile, setMatchedProfile] = useState<string>("");
+  const [totalMatches, setTotalMatches] = useState<number>(0);
+  const { pendingFollowUp, clearPendingFollowUp } = useAdoptionFollowUp();
 
   const current = adoptionProfiles[currentIndex];
 
-  const handleSwipe = (liked: boolean) => {
+  // Fetch total adoption matches counter
+  useEffect(() => {
+    fetchTotalMatches();
+    
+    // Subscribe to realtime updates
+    const channel = supabase
+      .channel('adoption-stats')
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'adoption_stats'
+        },
+        (payload) => {
+          if (payload.new && 'total_matches' in payload.new) {
+            setTotalMatches(payload.new.total_matches as number);
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  const fetchTotalMatches = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("adoption_stats")
+        .select("total_matches")
+        .single();
+
+      if (error) throw error;
+      setTotalMatches(data.total_matches);
+    } catch (error) {
+      console.error("Error fetching adoption stats:", error);
+    }
+  };
+
+  const handleSwipe = async (liked: boolean) => {
     if (liked) {
       // Simulate match (higher chance for adoption)
       const isMatch = Math.random() > 0.5;
       if (isMatch) {
+        // Save match to database
+        try {
+          const { data: { user } } = await supabase.auth.getUser();
+          if (user) {
+            const { error } = await supabase
+              .from("adoption_matches")
+              .insert({
+                user_id: user.id,
+                dog_name: current.name,
+              });
+
+            if (error) {
+              console.error("Error saving adoption match:", error);
+            }
+          }
+        } catch (error) {
+          console.error("Error in handleSwipe:", error);
+        }
+
         setMatchedProfile(current.name);
         setShowMatch(true);
         return;
@@ -96,10 +162,29 @@ export default function DiscoverAdoption() {
         onComplete={handleMatchComplete}
         matchedName={matchedProfile}
       />
+
+      {pendingFollowUp && (
+        <AdoptionFollowUpDialog
+          open={true}
+          onClose={clearPendingFollowUp}
+          dogName={pendingFollowUp.dog_name}
+          matchId={pendingFollowUp.id}
+        />
+      )}
       
       <div className="flex flex-col h-screen overflow-hidden" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
         {/* Header spacing to avoid overlap with sticky header */}
         <div className="h-16 shrink-0" />
+        
+        {/* Global counter */}
+        <div className="absolute top-20 right-4 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg z-10">
+          <div className="flex items-center gap-2">
+            <Users className="h-4 w-4 text-[#FF5DA2]" />
+            <span className="text-sm font-semibold" style={{ color: "var(--ink)" }}>
+              {totalMatches.toLocaleString()} matches
+            </span>
+          </div>
+        </div>
         
         <div className="mx-auto max-w-2xl px-4 flex flex-col flex-1 pb-20">
           <div className="mb-3 text-center shrink-0">
