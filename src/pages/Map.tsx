@@ -809,15 +809,19 @@ export default function Map() {
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button 
-                    onClick={handleGoToUser} 
-                    size="sm"
-                    className="rounded-2xl shrink-0 shadow-glow" 
-                    style={{ backgroundColor: "var(--brand-plum)" }}
+                  <button
+                    onClick={handleGoToUser}
+                    className="bg-white hover:bg-gray-50 text-black rounded-full transition-all flex items-center justify-center shrink-0"
+                    style={{
+                      width: '40px',
+                      height: '40px',
+                      border: '2px solid rgba(0,0,0,0.1)',
+                      boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
+                    }}
+                    aria-label="Recentrer sur ma position"
                   >
-                    <Locate className="h-4 w-4 md:mr-2" />
-                    <span className="hidden md:inline">Ma position</span>
-                  </Button>
+                    <span className="text-xl">📍</span>
+                  </button>
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>Recentrer sur ma position</p>
@@ -829,25 +833,11 @@ export default function Map() {
 
         <div className="grid gap-4 md:gap-6 lg:grid-cols-3">
           {/* Interactive Map - Responsive height */}
-          <div className="lg:col-span-2 relative">
+          <div className="lg:col-span-2">
             <div 
               ref={mapContainer} 
               className="h-[400px] md:h-[500px] lg:h-[600px] rounded-2xl md:rounded-3xl shadow-soft ring-1 ring-black/5" 
             />
-            
-            {/* Bouton de recentrage sur position utilisateur */}
-            <button
-              onClick={handleGoToUser}
-              className="absolute bottom-24 right-4 md:bottom-4 bg-white hover:bg-gray-50 text-black rounded-full shadow-lg hover:shadow-xl transition-all z-10 flex items-center justify-center"
-              style={{
-                width: '48px',
-                height: '48px',
-                border: '2px solid rgba(0,0,0,0.1)',
-              }}
-              aria-label="Recentrer sur ma position"
-            >
-              <span className="text-2xl">📍</span>
-            </button>
           </div>
 
           {/* Sidebar - Hidden on mobile, shows as overlay via Sheet */}
