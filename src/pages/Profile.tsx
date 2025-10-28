@@ -174,7 +174,7 @@ function ProfileContent() {
   // Loading skeleton
   if (isLoading) {
     return (
-      <div className="min-h-screen" style={{ backgroundColor: "var(--paper)" }}>
+      <div className="min-h-screen" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
         <div className="mx-auto max-w-4xl px-4 py-6 space-y-6">
           {/* Dog Section Skeleton */}
           <Card className="p-6 rounded-3xl shadow-soft">
@@ -207,7 +207,7 @@ function ProfileContent() {
     return (
       <div 
         className="min-h-screen flex items-center justify-center p-4" 
-        style={{ backgroundColor: "var(--paper)" }}
+        style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}
       >
         <Card className="max-w-md w-full p-8 rounded-3xl shadow-soft text-center">
           <div 
@@ -261,7 +261,7 @@ function ProfileContent() {
     return (
       <div 
         className="min-h-screen flex items-center justify-center p-4" 
-        style={{ backgroundColor: "var(--paper)" }}
+        style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}
       >
         <Card className="max-w-md w-full p-8 rounded-3xl shadow-soft text-center">
           <div className="text-6xl mb-6">🐾</div>
@@ -291,7 +291,7 @@ function ProfileContent() {
 
   // Main profile view
   return (
-    <main className="min-h-screen pb-24" style={{ backgroundColor: "var(--paper)" }}>
+    <main className="min-h-screen pb-24" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
       <div className="mx-auto max-w-[700px] px-4 pt-20 pb-6 space-y-5">
         {/* Tinder-style Header with Dog Avatar & Completion */}
         {isOwnProfile && (

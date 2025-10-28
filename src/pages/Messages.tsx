@@ -39,7 +39,7 @@ export default function Messages() {
   );
 
   return (
-    <div className="min-h-screen pb-24" style={{ backgroundColor: "hsl(var(--paper))" }}>
+    <div className="min-h-screen pb-24" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
       <div className="mx-auto max-w-4xl pt-20">
         {/* Header */}
         <div className="border-b p-4" style={{ borderColor: "hsl(var(--border))" }}>

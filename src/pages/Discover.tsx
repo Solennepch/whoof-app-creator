@@ -47,7 +47,7 @@ export default function Discover() {
   if (!current) return null;
 
   return (
-    <div className="flex flex-col min-h-screen pb-24" style={{ backgroundColor: "var(--paper)" }}>
+    <div className="flex flex-col min-h-screen pb-24" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
       {/* Header spacing to avoid overlap with sticky header */}
       <div className="h-20" />
       

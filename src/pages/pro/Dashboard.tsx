@@ -139,7 +139,7 @@ export default function ProDashboard() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: "var(--paper)" }}>
+      <div className="min-h-screen flex items-center justify-center" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
         <div className="animate-pulse text-muted-foreground">Chargement...</div>
       </div>
     );
@@ -150,7 +150,7 @@ export default function ProDashboard() {
   }
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "var(--paper)" }}>
+    <div className="min-h-screen" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
       <div className="mx-auto max-w-7xl px-4 py-8">
         {/* Success Message */}
         {showSuccess && (

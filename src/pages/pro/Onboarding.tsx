@@ -88,7 +88,7 @@ export default function ProOnboarding() {
   };
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "var(--paper)" }}>
+    <div className="min-h-screen" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
       <div className="mx-auto max-w-3xl px-4 py-8">
         {/* Header */}
         <div className="text-center mb-8">

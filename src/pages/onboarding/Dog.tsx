@@ -162,7 +162,7 @@ function DogOnboardingContent() {
   };
 
   return (
-    <div className="min-h-screen py-12 px-4" style={{ backgroundColor: "var(--paper)" }}>
+    <div className="min-h-screen py-12 px-4" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
       <div className="mx-auto max-w-2xl">
         {/* Progress */}
         <div className="mb-8">

@@ -741,7 +741,7 @@ export default function Map() {
   };
 
   return (
-    <div className="min-h-screen pb-24 md:pb-6" style={{ backgroundColor: "var(--paper)" }}>
+    <div className="min-h-screen pb-24 md:pb-6" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
       <div className="mx-auto max-w-6xl px-4 pt-20 md:pt-6">
         {/* Header - Mobile optimized */}
         <div className="mb-4 md:mb-6 flex items-center justify-between gap-2">

@@ -9,27 +9,27 @@ export default function Recompenses() {
 
   return (
     <div className="min-h-screen pb-24 relative overflow-hidden" style={{ 
-      background: "linear-gradient(135deg, #7B61FF 0%, #FF5DA2 50%, #FFC14D 100%)"
+      background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)"
     }}>
       {/* Animated Stars Background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <Star className="absolute top-20 left-10 w-6 h-6 text-white/30 animate-pulse" style={{ animationDelay: "0s" }} />
-        <Sparkles className="absolute top-40 right-20 w-5 h-5 text-white/40 animate-pulse" style={{ animationDelay: "0.5s" }} />
-        <Star className="absolute top-60 left-1/4 w-4 h-4 text-white/20 animate-pulse" style={{ animationDelay: "1s" }} />
-        <Star className="absolute top-32 right-10 w-7 h-7 text-white/25 animate-pulse" style={{ animationDelay: "1.5s" }} />
-        <Sparkles className="absolute top-80 left-1/3 w-6 h-6 text-white/30 animate-pulse" style={{ animationDelay: "2s" }} />
-        <Star className="absolute top-96 right-1/4 w-5 h-5 text-white/35 animate-pulse" style={{ animationDelay: "2.5s" }} />
-        <Sparkles className="absolute bottom-40 left-20 w-4 h-4 text-white/25 animate-pulse" style={{ animationDelay: "3s" }} />
-        <Star className="absolute bottom-60 right-16 w-6 h-6 text-white/30 animate-pulse" style={{ animationDelay: "3.5s" }} />
+        <Star className="absolute top-20 left-10 w-6 h-6 text-purple-400/40 animate-pulse" style={{ animationDelay: "0s" }} />
+        <Sparkles className="absolute top-40 right-20 w-5 h-5 text-pink-400/50 animate-pulse" style={{ animationDelay: "0.5s" }} />
+        <Star className="absolute top-60 left-1/4 w-4 h-4 text-purple-300/30 animate-pulse" style={{ animationDelay: "1s" }} />
+        <Star className="absolute top-32 right-10 w-7 h-7 text-pink-300/35 animate-pulse" style={{ animationDelay: "1.5s" }} />
+        <Sparkles className="absolute top-80 left-1/3 w-6 h-6 text-purple-400/40 animate-pulse" style={{ animationDelay: "2s" }} />
+        <Star className="absolute top-96 right-1/4 w-5 h-5 text-pink-400/45 animate-pulse" style={{ animationDelay: "2.5s" }} />
+        <Sparkles className="absolute bottom-40 left-20 w-4 h-4 text-purple-300/35 animate-pulse" style={{ animationDelay: "3s" }} />
+        <Star className="absolute bottom-60 right-16 w-6 h-6 text-pink-400/40 animate-pulse" style={{ animationDelay: "3.5s" }} />
       </div>
 
       <main className="mx-auto max-w-[720px] px-4 pt-20 pb-6 space-y-6 relative z-10">
         {/* Header */}
         <div className="text-center mb-6">
-          <h1 className="text-3xl font-bold text-white mb-2" style={{ fontFamily: "Fredoka" }}>
+          <h1 className="text-3xl font-bold mb-2" style={{ fontFamily: "Fredoka", color: "#111827" }}>
             Récompenses
           </h1>
-          <p className="text-sm text-white/90">
+          <p className="text-sm text-muted-foreground">
             Gagne des XP et débloque des avantages exclusifs
           </p>
         </div>
