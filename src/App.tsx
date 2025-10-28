@@ -7,7 +7,9 @@ import { Header } from "./components/layout/Header";
 import { BottomNavigation } from "./components/layout/BottomNavigation";
 import Home from "./pages/Home";
 import Index from "./pages/Index";
+import MatchHome from "./pages/MatchHome";
 import Discover from "./pages/Discover";
+import DiscoverAdoption from "./pages/DiscoverAdoption";
 import Events from "./pages/Events";
 import Map from "./pages/Map";
 import Messages from "./pages/Messages";
@@ -53,7 +55,9 @@ const App = () => (
           {/* Main App Pages */}
           <Route path="/" element={<Index />} />
           <Route path="/map" element={<Map />} />
-          <Route path="/discover" element={<Discover />} />
+          <Route path="/discover" element={<MatchHome />} />
+          <Route path="/discover/region" element={<Discover />} />
+          <Route path="/discover/adoption" element={<DiscoverAdoption />} />
           <Route path="/messages" element={<Messages />} />
           <Route path="/events" element={<Events />} />
           <Route path="/ranking" element={<Ranking />} />
