@@ -87,7 +87,7 @@ export function DonationDialog({ open, onOpenChange }: DonationDialogProps) {
             <Heart className="w-8 h-8 text-white" />
           </div>
           <DialogTitle className="text-2xl font-bold text-center" style={{ fontFamily: "Fredoka" }}>
-            Soutenir Whoof
+            Soutenir Whoof Apps
           </DialogTitle>
           <DialogDescription className="text-center">
             Votre don nous aide à maintenir l'infrastructure, l'hébergement de l'application 
