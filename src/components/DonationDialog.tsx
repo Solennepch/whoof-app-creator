@@ -95,7 +95,7 @@ export function DonationDialog({ open, onOpenChange }: DonationDialogProps) {
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-6 py-4">
+        <div className="space-y-6 py-4" data-donation-section>
           {/* Suggested Amounts */}
           <div className="space-y-3">
             <Label>Montant suggéré</Label>
@@ -105,12 +105,9 @@ export function DonationDialog({ open, onOpenChange }: DonationDialogProps) {
                   key={value}
                   type="button"
                   variant="outline"
-                  className={`rounded-xl font-semibold transition-colors
-                    ${
-                      amount === value && !customAmount
-                        ? "bg-gradient-to-r from-[#7B61FF] to-[#FF5DA2] text-white border-transparent hover:from-[#7B61FF]/90 hover:to-[#FF5DA2]/90 hover:text-white focus:text-white focus:from-[#7B61FF] focus:to-[#FF5DA2] active:text-white"
-                        : "bg-white text-gray-900 border-amber-400 hover:bg-amber-50 hover:text-gray-900 focus:bg-white focus:text-gray-900 focus:ring-2 focus:ring-amber-400 active:text-gray-900"
-                    }`}
+                  data-amount-btn
+                  data-selected={amount === value && !customAmount ? "true" : "false"}
+                  className="rounded-xl font-semibold"
                   onClick={() => handleAmountClick(value)}
                 >
                   {value}€
@@ -131,7 +128,8 @@ export function DonationDialog({ open, onOpenChange }: DonationDialogProps) {
                 placeholder="Entrez un montant"
                 value={customAmount}
                 onChange={(e) => handleCustomAmountChange(e.target.value)}
-                className="rounded-xl pr-8 bg-white text-gray-900 placeholder-gray-400 focus:bg-white focus:text-gray-900 focus:border-amber-400 focus:ring-2 focus:ring-amber-400 focus-visible:text-gray-900 [&:-webkit-autofill]:[-webkit-text-fill-color:rgb(17_24_39)]"
+                data-donation-input
+                className="rounded-xl pr-8"
               />
               <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
                 €

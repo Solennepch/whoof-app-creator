@@ -197,4 +197,69 @@ All colors MUST be HSL.
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+  
+  /* Donation Dialog - Force text visibility in all states */
+  [data-donation-section] {
+    --donation-text: 17 24 39; /* gray-900 */
+    --donation-ring: 39 100 63; /* amber */
+  }
+  
+  /* Amount buttons - default state */
+  [data-donation-section] [data-amount-btn] {
+    background: white !important;
+    color: rgb(17 24 39) !important;
+    border: 2px solid hsl(var(--donation-ring)) !important;
+  }
+  
+  /* Focus/active states - keep visible */
+  [data-donation-section] [data-amount-btn]:focus,
+  [data-donation-section] [data-amount-btn]:active,
+  [data-donation-section] [data-amount-btn]:focus-visible {
+    outline: none !important;
+    box-shadow: 0 0 0 3px hsla(var(--donation-ring) / 0.45) !important;
+    background: white !important;
+    color: rgb(17 24 39) !important;
+  }
+  
+  /* Selected state */
+  [data-donation-section] [data-amount-btn][data-selected="true"] {
+    background: linear-gradient(90deg, #7B61FF, #FF5DA2) !important;
+    color: white !important;
+    border-color: transparent !important;
+  }
+  
+  [data-donation-section] [data-amount-btn][data-selected="true"]:focus,
+  [data-donation-section] [data-amount-btn][data-selected="true"]:active {
+    background: linear-gradient(90deg, #7B61FF, #FF5DA2) !important;
+    color: white !important;
+    box-shadow: 0 0 0 3px hsla(var(--donation-ring) / 0.45) !important;
+  }
+  
+  /* Force text color inheritance on all children */
+  [data-donation-section] [data-amount-btn] *,
+  [data-donation-section] [data-amount-btn] span {
+    color: inherit !important;
+    -webkit-text-fill-color: inherit !important;
+    mix-blend-mode: normal !important;
+    opacity: 1 !important;
+  }
+  
+  /* Donation input */
+  [data-donation-section] [data-donation-input] {
+    background: white !important;
+    color: rgb(17 24 39) !important;
+  }
+  
+  [data-donation-section] [data-donation-input]:focus {
+    background: white !important;
+    color: rgb(17 24 39) !important;
+    border-color: hsl(var(--donation-ring)) !important;
+    box-shadow: 0 0 0 3px hsla(var(--donation-ring) / 0.45) !important;
+  }
+  
+  /* Chrome autofill fix */
+  [data-donation-section] [data-donation-input]:-webkit-autofill {
+    -webkit-text-fill-color: rgb(17 24 39) !important;
+    transition: background-color 9999s ease-out;
+  }
 }
