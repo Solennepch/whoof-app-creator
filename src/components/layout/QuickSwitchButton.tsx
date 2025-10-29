@@ -14,9 +14,6 @@ export function QuickSwitchButton() {
   const hasProAccount = accounts.some(a => a.type === 'pro');
   const hasBothAccounts = hasUserAccount && hasProAccount;
 
-  // Ne pas afficher le bouton si l'utilisateur n'a pas les deux types de comptes
-  if (!hasBothAccounts) return null;
-
   const handleClick = () => {
     setTapCount(prev => prev + 1);
 
@@ -61,6 +58,9 @@ export function QuickSwitchButton() {
       }
     };
   }, [tapTimer]);
+
+  // Ne pas afficher le bouton si l'utilisateur n'a pas les deux types de comptes
+  if (!hasBothAccounts) return null;
 
   return (
     <Button
