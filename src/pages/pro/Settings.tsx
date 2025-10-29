@@ -72,7 +72,7 @@ export default function ProSettings() {
               <p className="text-sm font-medium mb-1">Activité</p>
               <p className="text-muted-foreground capitalize">{profile?.activity}</p>
             </div>
-            <Button variant="outline">Modifier</Button>
+            <Button variant="outline" onClick={() => {}}>Modifier</Button>
           </CardContent>
         </Card>
 
@@ -93,7 +93,7 @@ export default function ProSettings() {
               <p className="text-sm font-medium mb-1">Horaires d'ouverture</p>
               <p className="text-muted-foreground">Lun-Ven: 9h-18h</p>
             </div>
-            <Button variant="outline">Modifier</Button>
+            <Button variant="outline" onClick={() => {}}>Modifier</Button>
           </CardContent>
         </Card>
 
@@ -120,7 +120,7 @@ export default function ProSettings() {
               </p>
               <p className="text-muted-foreground">{profile?.email || "Non renseigné"}</p>
             </div>
-            <Button variant="outline">Modifier</Button>
+            <Button variant="outline" onClick={() => {}}>Modifier</Button>
           </CardContent>
         </Card>
 
@@ -138,7 +138,7 @@ export default function ProSettings() {
               <p className="text-sm font-medium mb-1">Facebook</p>
               <p className="text-muted-foreground">Non renseigné</p>
             </div>
-            <Button variant="outline">Modifier</Button>
+            <Button variant="outline" onClick={() => {}}>Modifier</Button>
           </CardContent>
         </Card>
 
