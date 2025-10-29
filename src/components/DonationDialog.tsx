@@ -23,11 +23,13 @@ const SUGGESTED_AMOUNTS = [5, 10, 20, 50];
 export function DonationDialog({ open, onOpenChange }: DonationDialogProps) {
   const [amount, setAmount] = useState<number>(10);
   const [customAmount, setCustomAmount] = useState<string>("");
+  const [selectedSuggested, setSelectedSuggested] = useState<number | null>(10);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleAmountClick = (value: number) => {
     setAmount(value);
-    setCustomAmount("");
+    setSelectedSuggested(value);
+    setCustomAmount(value.toString());
   };
 
   const handleCustomAmountChange = (value: string) => {
@@ -35,6 +37,10 @@ export function DonationDialog({ open, onOpenChange }: DonationDialogProps) {
     const numValue = parseFloat(value);
     if (!isNaN(numValue) && numValue > 0) {
       setAmount(numValue);
+      // Check if the custom amount matches a suggested amount
+      setSelectedSuggested(SUGGESTED_AMOUNTS.includes(numValue) ? numValue : null);
+    } else {
+      setSelectedSuggested(null);
     }
   };
 
@@ -104,11 +110,11 @@ export function DonationDialog({ open, onOpenChange }: DonationDialogProps) {
                 <Button
                   key={value}
                   type="button"
-                  variant={amount === value && !customAmount ? "default" : "outline"}
+                  variant={selectedSuggested === value ? "default" : "outline"}
                   className="rounded-xl font-semibold"
                   onClick={() => handleAmountClick(value)}
                   style={
-                    amount === value && !customAmount
+                    selectedSuggested === value
                       ? { backgroundColor: "var(--brand-plum)", color: "white" }
                       : undefined
                   }
