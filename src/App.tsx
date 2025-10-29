@@ -37,6 +37,13 @@ import ProMap from "./pages/pro/ProMap";
 import ProSettings from "./pages/pro/Settings";
 import ProNotifications from "./pages/pro/Notifications";
 import ProHelp from "./pages/pro/Help";
+import ProProfile from "./pages/pro/Profile";
+import ProOffers from "./pages/pro/Offers";
+import ProReviews from "./pages/pro/Reviews";
+import ProAppointments from "./pages/pro/Appointments";
+import ProCommunity from "./pages/pro/Community";
+import ProEvents from "./pages/pro/Events";
+import ProPayments from "./pages/pro/Payments";
 import PremiumPricing from "./pages/premium/Pricing";
 import Premium from "./pages/Premium";
 import Parrainage from "./pages/Parrainage";
@@ -107,6 +114,13 @@ const App = () => (
           <Route path="/pro/more" element={<ProMore />} />
           <Route path="/pro/dashboard" element={<ProDashboard />} />
           <Route path="/pro/pricing" element={<ProPricing />} />
+          <Route path="/pro/profile" element={<ProProfile />} />
+          <Route path="/pro/offers" element={<ProOffers />} />
+          <Route path="/pro/reviews" element={<ProReviews />} />
+          <Route path="/pro/appointments" element={<ProAppointments />} />
+          <Route path="/pro/community" element={<ProCommunity />} />
+          <Route path="/pro/events" element={<ProEvents />} />
+          <Route path="/pro/payments" element={<ProPayments />} />
           <Route path="/pro/settings" element={<ProSettings />} />
           <Route path="/pro/notifications" element={<ProNotifications />} />
           <Route path="/pro/help" element={<ProHelp />} />

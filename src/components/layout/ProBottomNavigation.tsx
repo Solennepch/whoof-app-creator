@@ -14,7 +14,7 @@ export function ProBottomNavigation() {
     { to: "/pro/agenda", icon: Calendar, label: "Agenda" },
     { to: "/pro/messages", icon: MessageCircle, label: "Messages" },
     { to: "/pro/map", icon: MapPin, label: "Carte" },
-    { to: "/pro/edit", icon: User, label: "Profil Pro" },
+    { to: "/pro/profile", icon: User, label: "Profil Pro" },
   ];
 
   return (
