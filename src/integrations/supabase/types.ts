@@ -2399,7 +2399,13 @@ export type Database = {
       zodiac_from_date: { Args: { d: string }; Returns: string }
     }
     Enums: {
-      app_role: "admin" | "pro" | "user"
+      app_role:
+        | "admin"
+        | "pro"
+        | "user"
+        | "moderator"
+        | "support"
+        | "partner_manager"
       friendship_status: "pending" | "accepted" | "rejected"
       hazard_status: "open" | "resolved" | "expired"
       pro_status: "pending" | "approved" | "rejected"
@@ -2541,7 +2547,14 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "pro", "user"],
+      app_role: [
+        "admin",
+        "pro",
+        "user",
+        "moderator",
+        "support",
+        "partner_manager",
+      ],
       friendship_status: ["pending", "accepted", "rejected"],
       hazard_status: ["open", "resolved", "expired"],
       pro_status: ["pending", "approved", "rejected"],
