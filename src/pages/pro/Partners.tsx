@@ -14,14 +14,62 @@ export default function ProPartners() {
           <ArrowLeft className="h-5 w-5" />
         </Button>
         <div>
-          <h1 className="text-3xl font-bold">Partenariats</h1>
-          <p className="text-muted-foreground">
-            Développez votre activité avec Whoof Apps
-          </p>
+        <h1 className="text-3xl font-bold mb-2" style={{ fontFamily: "Fredoka" }}>
+          Offres partenaires
+        </h1>
+        <p className="text-muted-foreground">
+          Bénéficiez d'avantages exclusifs réservés aux professionnels Whoof
+        </p>
         </div>
       </div>
 
-      {/* Premium Offer */}
+      {/* Liste des offres partenaires */}
+      <div className="space-y-3">
+        {[
+          { 
+            company: "AnimoVet", 
+            offer: "10% sur les produits vétérinaires",
+            description: "Valable sur toute la gamme de produits de soin",
+            badge: "Nouveau"
+          },
+          { 
+            company: "Whoof Pro+", 
+            offer: "Formation 'Bien-être animal' gratuite",
+            description: "Formation en ligne de 3h avec certificat",
+            badge: "Populaire"
+          },
+          { 
+            company: "PetStore Pro", 
+            offer: "Livraison gratuite pour commandes pros",
+            description: "Sans minimum d'achat",
+            badge: ""
+          },
+        ].map((partner, index) => (
+          <Card key={index}>
+            <CardContent className="p-4">
+              <div className="flex items-start justify-between mb-2">
+                <div>
+                  <p className="font-semibold text-lg">{partner.company}</p>
+                  <p className="text-primary font-medium">{partner.offer}</p>
+                  <p className="text-sm text-muted-foreground mt-1">{partner.description}</p>
+                </div>
+                {partner.badge && (
+                  <Badge variant={partner.badge === "Nouveau" ? "default" : "secondary"}>
+                    {partner.badge}
+                  </Badge>
+                )}
+              </div>
+              <Button variant="outline" size="sm" className="w-full mt-3">
+                En profiter
+              </Button>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      <Button className="w-full">Découvrir toutes les offres</Button>
+
+      {/* Premium Partnership */}
       <Card className="border-primary bg-gradient-to-br from-primary/10 to-primary/5">
         <CardHeader>
           <div className="flex items-center gap-2 mb-2">
@@ -65,42 +113,6 @@ export default function ProPartners() {
           </div>
           <Button className="w-full" size="lg">
             Devenir Partenaire Premium
-          </Button>
-        </CardContent>
-      </Card>
-
-      {/* Community Partnerships */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Partenariats Communauté</CardTitle>
-          <CardDescription>
-            Collaborez avec d'autres professionnels de l'écosystème
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p className="text-muted-foreground mb-4">
-            Rejoignez un réseau de professionnels passionnés et créez des synergies pour mieux servir vos clients.
-          </p>
-          <Button variant="outline">
-            Découvrir les opportunités
-          </Button>
-        </CardContent>
-      </Card>
-
-      {/* Support */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Besoin d'aide ?</CardTitle>
-          <CardDescription>
-            Notre équipe est là pour vous accompagner
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p className="text-muted-foreground mb-4">
-            Des questions sur les partenariats ou votre compte professionnel ? Contactez-nous.
-          </p>
-          <Button variant="outline">
-            Contacter le support
           </Button>
         </CardContent>
       </Card>

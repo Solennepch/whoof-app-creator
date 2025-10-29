@@ -25,14 +25,33 @@ export default function ProSettings() {
     <div className="container mx-auto p-6 space-y-6 max-w-4xl mb-20">
       <div>
         <h1 className="text-3xl font-bold mb-2" style={{ fontFamily: "Fredoka" }}>
-          Paramètres
+          Profil professionnel
         </h1>
         <p className="text-muted-foreground">
-          Gérez votre profil et identité professionnelle
+          Gérez les informations affichées sur votre fiche publique
         </p>
       </div>
 
       <div className="space-y-4">
+        {/* Photo et logo */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <User className="h-5 w-5" />
+              Photo de profil et logo
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center gap-4">
+              <div className="h-20 w-20 rounded-full bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center">
+                <User className="h-10 w-10 text-primary" />
+              </div>
+              <Button variant="outline">Changer la photo</Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Informations de l'entreprise */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -46,6 +65,10 @@ export default function ProSettings() {
               <p className="text-muted-foreground">{profile?.business_name}</p>
             </div>
             <div>
+              <p className="text-sm font-medium mb-1">Description courte</p>
+              <p className="text-muted-foreground">{profile?.description || "Non renseigné"}</p>
+            </div>
+            <div>
               <p className="text-sm font-medium mb-1">Activité</p>
               <p className="text-muted-foreground capitalize">{profile?.activity}</p>
             </div>
@@ -53,10 +76,32 @@ export default function ProSettings() {
           </CardContent>
         </Card>
 
+        {/* Adresse & horaires */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <User className="h-5 w-5" />
+              <Building className="h-5 w-5" />
+              Adresse & horaires
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <p className="text-sm font-medium mb-1">Adresse</p>
+              <p className="text-muted-foreground">{profile?.city || "Non renseigné"}</p>
+            </div>
+            <div>
+              <p className="text-sm font-medium mb-1">Horaires d'ouverture</p>
+              <p className="text-muted-foreground">Lun-Ven: 9h-18h</p>
+            </div>
+            <Button variant="outline">Modifier</Button>
+          </CardContent>
+        </Card>
+
+        {/* Contact */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Phone className="h-5 w-5" />
               Contact
             </CardTitle>
           </CardHeader>
@@ -78,6 +123,29 @@ export default function ProSettings() {
             <Button variant="outline">Modifier</Button>
           </CardContent>
         </Card>
+
+        {/* Réseaux sociaux */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Réseaux sociaux</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <p className="text-sm font-medium mb-1">Instagram</p>
+              <p className="text-muted-foreground">Non renseigné</p>
+            </div>
+            <div>
+              <p className="text-sm font-medium mb-1">Facebook</p>
+              <p className="text-muted-foreground">Non renseigné</p>
+            </div>
+            <Button variant="outline">Modifier</Button>
+          </CardContent>
+        </Card>
+
+        {/* Aperçu du profil public */}
+        <Button className="w-full">
+          Aperçu du profil public
+        </Button>
       </div>
     </div>
   );

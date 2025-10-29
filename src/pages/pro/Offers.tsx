@@ -26,11 +26,11 @@ export default function ProOffers() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold mb-2" style={{ fontFamily: "Fredoka" }}>
-            Mes offres et promotions
-          </h1>
-          <p className="text-muted-foreground">
-            Gérez vos promotions et offres spéciales
-          </p>
+          Offres & promotions
+        </h1>
+        <p className="text-muted-foreground">
+          Attirez de nouveaux clients grâce à vos offres spéciales
+        </p>
         </div>
         <Button>
           <Plus className="h-4 w-4 mr-2" />
@@ -39,12 +39,35 @@ export default function ProOffers() {
       </div>
 
       <Card>
-        <CardContent className="flex flex-col items-center justify-center py-16">
+        <CardContent className="flex flex-col items-center justify-center py-16 space-y-4">
           <Tag className="h-16 w-16 text-muted-foreground mb-4" />
-          <h3 className="text-lg font-semibold mb-2">Aucune offre pour l'instant</h3>
-          <p className="text-muted-foreground text-center">
+          <h3 className="text-lg font-semibold mb-2">Aucune offre pour le moment</h3>
+          <p className="text-muted-foreground text-center max-w-md">
             Créez votre première offre promotionnelle pour attirer plus de clients
           </p>
+          <div className="space-y-2 text-sm text-muted-foreground">
+            <p>Exemples d'offres:</p>
+            <ul className="list-disc list-inside space-y-1">
+              <li>Soin complet à -10% jusqu'à fin du mois !</li>
+              <li>Offre découverte : 1re visite gratuite pour les nouveaux clients</li>
+            </ul>
+          </div>
+          <Button>
+            <Plus className="h-4 w-4 mr-2" />
+            Créer une offre
+          </Button>
+        </CardContent>
+      </Card>
+
+      {/* Info section */}
+      <Card className="bg-gradient-to-br from-primary/10 to-primary/5">
+        <CardContent className="p-4">
+          <div className="flex items-start gap-3">
+            <span className="text-xl">📣</span>
+            <p className="text-sm">
+              Vos offres actives apparaissent automatiquement sur votre profil public Whoof.
+            </p>
+          </div>
         </CardContent>
       </Card>
     </div>

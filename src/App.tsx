@@ -29,6 +29,7 @@ import ProDashboard from "./pages/pro/Dashboard";
 import ProPricing from "./pages/pro/Pricing";
 import ProHome from "./pages/pro/Home";
 import ProEdit from "./pages/pro/Edit";
+import ProServices from "./pages/pro/Services";
 import ProMessages from "./pages/pro/Messages";
 import ProPartners from "./pages/pro/Partners";
 import ProMore from "./pages/pro/More";
@@ -109,6 +110,7 @@ const App = () => (
           <Route path="/pro/agenda" element={<ProAgenda />} />
           <Route path="/pro/map" element={<ProMap />} />
           <Route path="/pro/edit" element={<ProEdit />} />
+          <Route path="/pro/services" element={<ProServices />} />
           <Route path="/pro/messages" element={<ProMessages />} />
           <Route path="/pro/partners" element={<ProPartners />} />
           <Route path="/pro/more" element={<ProMore />} />

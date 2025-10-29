@@ -71,7 +71,7 @@ export function ProSidebarMenu({ open, onOpenChange }: ProSidebarMenuProps) {
 
   const activitySection = [
     { to: "/pro/dashboard", icon: LayoutDashboard, label: "Tableau de bord complet" },
-    { to: "/pro/edit", icon: Settings, label: "Mes services et tarifs" },
+    { to: "/pro/services", icon: Settings, label: "Mes services et tarifs" },
     { to: "/pro/offers", icon: Tag, label: "Mes offres et promotions" },
     { to: "/pro/reviews", icon: Star, label: "Mes avis clients" },
     { to: "/pro/appointments", icon: Calendar, label: "Mes rendez-vous" },

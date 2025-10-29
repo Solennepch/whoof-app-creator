@@ -1,6 +1,8 @@
 import { Navigate } from "react-router-dom";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { useMyProProfile } from "@/hooks/usePro";
 import { CreditCard } from "lucide-react";
 
@@ -31,13 +33,53 @@ export default function ProPayments() {
         </p>
       </div>
 
+      {/* Compte Stripe */}
       <Card>
-        <CardContent className="flex flex-col items-center justify-center py-16">
-          <CreditCard className="h-16 w-16 text-muted-foreground mb-4" />
-          <h3 className="text-lg font-semibold mb-2">Configuration à venir</h3>
-          <p className="text-muted-foreground text-center">
-            Les options de paiement et facturation seront bientôt disponibles
-          </p>
+        <CardHeader>
+          <CardTitle>Compte connecté</CardTitle>
+          <CardDescription>
+            Gérez vos paiements sécurisés via Stripe
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex items-center justify-between p-4 bg-muted rounded-lg">
+            <div className="flex items-center gap-3">
+              <CreditCard className="h-5 w-5 text-primary" />
+              <div>
+                <p className="font-medium">Compte Stripe</p>
+                <p className="text-sm text-muted-foreground">Non connecté</p>
+              </div>
+            </div>
+            <Badge variant="secondary">Inactif</Badge>
+          </div>
+          <Button className="w-full">Connecter mon compte Stripe</Button>
+        </CardContent>
+      </Card>
+
+      {/* Historique des transactions */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Dernières transactions</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col items-center justify-center py-8">
+            <CreditCard className="h-12 w-12 text-muted-foreground mb-3" />
+            <p className="text-sm text-muted-foreground">
+              Aucune transaction pour le moment
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Message de sécurité */}
+      <Card className="bg-gradient-to-br from-primary/10 to-primary/5">
+        <CardContent className="p-4">
+          <div className="flex items-start gap-3">
+            <span className="text-xl">🔒</span>
+            <p className="text-sm">
+              Whoof utilise Stripe pour garantir la sécurité de vos paiements.
+            </p>
+          </div>
         </CardContent>
       </Card>
     </div>
