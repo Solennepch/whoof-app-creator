@@ -1,11 +1,28 @@
+import { useQuery } from "@tanstack/react-query";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { GamificationSection } from "@/components/profile/GamificationSection";
 import { Crown, Zap, Heart, Star, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { useUserXP } from "@/hooks/useGamification";
 
 export default function Recompenses() {
   const navigate = useNavigate();
+
+  const { data: session } = useQuery({
+    queryKey: ["session"],
+    queryFn: async () => {
+      const { data } = await supabase.auth.getSession();
+      return data.session;
+    },
+  });
+
+  const { data: xpSummary } = useUserXP(session?.user?.id);
+
+  const currentLevel = xpSummary?.level || 1;
+  const totalXP = xpSummary?.total_xp || 0;
+  const nextLevelXP = (currentLevel + 1) * 200;
 
   return (
     <div className="min-h-screen pb-24 relative overflow-hidden" style={{ 
@@ -36,10 +53,10 @@ export default function Recompenses() {
 
         {/* Gamification & Communauté Section */}
         <GamificationSection 
-          level={3}
-          currentXP={1200}
-          maxXP={1500}
-          totalRecommendations={12}
+          level={currentLevel}
+          currentXP={totalXP}
+          maxXP={nextLevelXP}
+          totalRecommendations={0}
         />
 
         {/* XP Rewards Section */}

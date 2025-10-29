@@ -1,31 +1,39 @@
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Trophy, Dog, User, Star, Sparkles } from "lucide-react";
-
-const weeklyRankings = [
-  { rank: 1, name: "Luna", walks: 28, distance: "42 km", avatar: "Dog" },
-  { rank: 2, name: "Max", walks: 25, distance: "38 km", avatar: "Dog" },
-  { rank: 3, name: "Toi", walks: 22, distance: "33 km", avatar: "User", isMe: true },
-  { rank: 4, name: "Bella", walks: 20, distance: "30 km", avatar: "Dog" },
-  { rank: 5, name: "Charlie", walks: 18, distance: "27 km", avatar: "Dog" },
-  { rank: 6, name: "Lucy", walks: 16, distance: "24 km", avatar: "Dog" },
-  { rank: 7, name: "Rocky", walks: 15, distance: "22 km", avatar: "Dog" },
-];
-
-const monthlyRankings = [
-  { rank: 1, name: "Max", walks: 98, distance: "147 km", avatar: "Dog" },
-  { rank: 2, name: "Toi", walks: 85, distance: "128 km", avatar: "User", isMe: true },
-  { rank: 3, name: "Luna", walks: 82, distance: "123 km", avatar: "Dog" },
-  { rank: 4, name: "Bella", walks: 76, distance: "114 km", avatar: "Dog" },
-  { rank: 5, name: "Charlie", walks: 70, distance: "105 km", avatar: "Dog" },
-  { rank: 6, name: "Lucy", walks: 65, distance: "98 km", avatar: "Dog" },
-  { rank: 7, name: "Rocky", walks: 60, distance: "90 km", avatar: "Dog" },
-];
+import { supabase } from "@/integrations/supabase/client";
+import { useWeeklyLeaderboard, useUserXP } from "@/hooks/useGamification";
 
 export default function Ranking() {
   const [activeTab, setActiveTab] = useState("weekly");
 
-  const rankings = activeTab === "weekly" ? weeklyRankings : monthlyRankings;
-  const myRanking = rankings.find(r => r.isMe);
+  const { data: session } = useQuery({
+    queryKey: ["session"],
+    queryFn: async () => {
+      const { data } = await supabase.auth.getSession();
+      return data.session;
+    },
+  });
+
+  const { data: profile } = useQuery({
+    queryKey: ["profile", session?.user?.id],
+    queryFn: async () => {
+      if (!session?.user?.id) return null;
+      const { data } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", session.user.id)
+        .maybeSingle();
+      return data;
+    },
+    enabled: !!session?.user?.id,
+  });
+
+  const { data: leaderboard, isLoading } = useWeeklyLeaderboard(profile?.city);
+  const { data: myXP } = useUserXP(session?.user?.id);
+
+  const myRank = leaderboard?.findIndex(entry => entry.user_id === session?.user?.id);
+  const myRanking = myRank !== undefined && myRank !== -1 ? leaderboard?.[myRank] : null;
 
   return (
     <div className="min-h-screen pb-20 relative overflow-hidden" style={{ 
@@ -52,23 +60,23 @@ export default function Ranking() {
         </div>
 
         {/* Sticky Summary Card */}
-        {myRanking && (
+        {myRanking && myRank !== undefined && (
           <section className="sticky top-[56px] z-10 rounded-2xl p-4 bg-gradient-to-r from-[#7B61FF] to-[#FF5DA2] text-white shadow-lg">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs leading-4 opacity-90">Ta position</p>
-                <p className="text-2xl font-extrabold">#{myRanking.rank}</p>
+                <p className="text-2xl font-extrabold">#{myRank + 1}</p>
               </div>
               <div className="text-right">
                 <p className="text-xs leading-4 opacity-90">{activeTab === "weekly" ? "Cette semaine" : "Ce mois"}</p>
-                <p className="text-2xl font-extrabold">{myRanking.walks} balades</p>
-                <p className="text-xs leading-4 opacity-90">{myRanking.distance}</p>
+                <p className="text-2xl font-extrabold">{myRanking.weekly_xp} XP</p>
+                <p className="text-xs leading-4 opacity-90">Niveau {myXP?.level || 1}</p>
               </div>
             </div>
             <div className="mt-3 h-2 rounded-full bg-white/30 overflow-hidden">
               <div 
                 className="h-full bg-white/90 transition-all duration-300" 
-                style={{ width: `${Math.min((myRanking.walks / (rankings[0]?.walks || 1)) * 100, 100)}%` }}
+                style={{ width: `${Math.min((myRanking.weekly_xp / (leaderboard?.[0]?.weekly_xp || 1)) * 100, 100)}%` }}
               />
             </div>
           </section>
@@ -100,69 +108,85 @@ export default function Ranking() {
 
         {/* Rankings List */}
         <ul className="space-y-3">
-          {rankings.map((user) => (
-            <li key={user.rank}>
-              <article 
-                className={`rounded-2xl p-4 shadow-sm flex items-center justify-between transition-all ${
-                  user.isMe 
-                    ? "ring-4 ring-[#7B61FF] shadow-lg scale-[1.02]" 
-                    : "bg-white"
-                }`}
-                style={user.isMe ? {
-                  background: "linear-gradient(135deg, rgba(123, 97, 255, 0.15) 0%, rgba(255, 93, 162, 0.15) 100%)",
-                  backdropFilter: "blur(10px)"
-                } : {}}
-              >
-                <div className="flex items-center gap-3 min-w-0">
-                  {/* Rank Badge */}
-                  {user.rank <= 3 ? (
-                    <div 
-                      className="w-9 h-9 rounded-full flex items-center justify-center shrink-0"
-                      style={{
-                        backgroundColor: user.rank === 1 ? "#FFC14D" : 
-                                       user.rank === 2 ? "#E5E7EB" : 
-                                       "#D1D5DB"
-                      }}
-                    >
-                      <Trophy 
-                        className="w-5 h-5"
-                        style={{
-                          color: user.rank === 1 ? "#ffffff" : 
-                                user.rank === 2 ? "#6B7280" :
-                                "#7B61FF"
-                        }}
-                      />
-                    </div>
-                  ) : (
-                    <div className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-sm font-semibold text-[#111827] shrink-0">
-                      #{user.rank}
-                    </div>
-                  )}
-
-                  {/* User Info */}
-                  <div className="min-w-0">
-                    <p className="text-base font-semibold truncate text-[#111827] flex items-center gap-1">
-                      {user.avatar === "Dog" ? (
-                        <Dog className="w-4 h-4 inline" />
+          {isLoading ? (
+            <div className="text-center py-8 text-white/60">
+              Chargement du classement...
+            </div>
+          ) : !leaderboard || leaderboard.length === 0 ? (
+            <div className="rounded-2xl p-8 bg-white text-center">
+              <p className="text-gray-600">
+                Aucun classement disponible pour le moment.
+              </p>
+              <p className="text-sm text-gray-500 mt-2">
+                Commencez à gagner des XP pour apparaître dans le classement !
+              </p>
+            </div>
+          ) : (
+            leaderboard.map((entry, index) => {
+              const isMe = entry.user_id === session?.user?.id;
+              const rankNum = index + 1;
+              
+              return (
+                <li key={entry.id}>
+                  <article 
+                    className={`rounded-2xl p-4 shadow-sm flex items-center justify-between transition-all ${
+                      isMe 
+                        ? "ring-4 ring-[#7B61FF] shadow-lg scale-[1.02]" 
+                        : "bg-white"
+                    }`}
+                    style={isMe ? {
+                      background: "linear-gradient(135deg, rgba(123, 97, 255, 0.15) 0%, rgba(255, 93, 162, 0.15) 100%)",
+                      backdropFilter: "blur(10px)"
+                    } : {}}
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      {/* Rank Badge */}
+                      {rankNum <= 3 ? (
+                        <div 
+                          className="w-9 h-9 rounded-full flex items-center justify-center shrink-0"
+                          style={{
+                            backgroundColor: rankNum === 1 ? "#FFC14D" : 
+                                           rankNum === 2 ? "#E5E7EB" : 
+                                           "#D1D5DB"
+                          }}
+                        >
+                          <Trophy 
+                            className="w-5 h-5"
+                            style={{
+                              color: rankNum === 1 ? "#ffffff" : 
+                                    rankNum === 2 ? "#6B7280" :
+                                    "#7B61FF"
+                            }}
+                          />
+                        </div>
                       ) : (
-                        <User className="w-4 h-4 inline" />
+                        <div className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-sm font-semibold text-[#111827] shrink-0">
+                          #{rankNum}
+                        </div>
                       )}
-                      {user.name}
-                    </p>
-                    <p className="text-xs text-gray-500 truncate">{user.distance}</p>
-                  </div>
-                </div>
 
-                {/* Walks Count */}
-                <div className="text-right shrink-0">
-                  <p className="text-xl font-bold leading-none" style={{ color: "#7B61FF" }}>
-                    {user.walks}
-                  </p>
-                  <p className="text-[10px] uppercase tracking-wide text-gray-400">balades</p>
-                </div>
-              </article>
-            </li>
-          ))}
+                      {/* User Info */}
+                      <div className="min-w-0">
+                        <p className="text-base font-semibold truncate text-[#111827] flex items-center gap-1">
+                          <User className="w-4 h-4 inline" />
+                          {entry.profile?.display_name || "Utilisateur"}
+                        </p>
+                        <p className="text-xs text-gray-500 truncate">{entry.city || "Ville inconnue"}</p>
+                      </div>
+                    </div>
+
+                    {/* XP Count */}
+                    <div className="text-right shrink-0">
+                      <p className="text-xl font-bold leading-none" style={{ color: "#7B61FF" }}>
+                        {entry.weekly_xp}
+                      </p>
+                      <p className="text-[10px] uppercase tracking-wide text-gray-400">XP</p>
+                    </div>
+                  </article>
+                </li>
+              );
+            })
+          )}
         </ul>
       </main>
     </div>
