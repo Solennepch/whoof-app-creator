@@ -15,6 +15,13 @@ export async function safeFetch(path: string, init?: RequestInit) {
     if (token) {
       headers.set('Authorization', `Bearer ${token}`);
     }
+    
+    // Add apikey for Supabase edge functions
+    const supabaseAnonKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+    if (supabaseAnonKey) {
+      headers.set('apikey', supabaseAnonKey);
+    }
+    
     headers.set('Content-Type', 'application/json');
     
     // Make the request
