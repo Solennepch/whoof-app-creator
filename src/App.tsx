@@ -26,6 +26,10 @@ import PartenariatDetail from "./pages/PartenariatDetail";
 import ProOnboarding from "./pages/pro/Onboarding";
 import ProDashboard from "./pages/pro/Dashboard";
 import ProPricing from "./pages/pro/Pricing";
+import ProHome from "./pages/pro/Home";
+import ProEdit from "./pages/pro/Edit";
+import ProMessages from "./pages/pro/Messages";
+import ProPartners from "./pages/pro/Partners";
 import PremiumPricing from "./pages/premium/Pricing";
 import Premium from "./pages/Premium";
 import Parrainage from "./pages/Parrainage";
@@ -83,6 +87,10 @@ const App = () => (
           <Route path="/premium" element={<Premium />} />
           <Route path="/premium/pricing" element={<PremiumPricing />} />
           <Route path="/pro/onboarding" element={<ProOnboarding />} />
+          <Route path="/pro/home" element={<ProHome />} />
+          <Route path="/pro/edit" element={<ProEdit />} />
+          <Route path="/pro/messages" element={<ProMessages />} />
+          <Route path="/pro/partners" element={<ProPartners />} />
           <Route path="/pro/dashboard" element={<ProDashboard />} />
           <Route path="/pro/pricing" element={<ProPricing />} />
           

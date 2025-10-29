@@ -392,6 +392,35 @@ export type Database = {
           },
         ]
       }
+      favorites_pro: {
+        Row: {
+          created_at: string | null
+          id: string
+          pro_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          pro_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          pro_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "favorites_pro_pro_id_fkey"
+            columns: ["pro_id"]
+            isOneToOne: false
+            referencedRelation: "pro_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       friendships: {
         Row: {
           a_user: string
@@ -477,6 +506,44 @@ export type Database = {
           weekly_xp?: number
         }
         Relationships: []
+      }
+      messages_pro: {
+        Row: {
+          body: string
+          id: string
+          pro_id: string
+          read_by: string[] | null
+          sender_role: string
+          sent_at: string | null
+          user_id: string
+        }
+        Insert: {
+          body: string
+          id?: string
+          pro_id: string
+          read_by?: string[] | null
+          sender_role: string
+          sent_at?: string | null
+          user_id: string
+        }
+        Update: {
+          body?: string
+          id?: string
+          pro_id?: string
+          read_by?: string[] | null
+          sender_role?: string
+          sent_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_pro_pro_id_fkey"
+            columns: ["pro_id"]
+            isOneToOne: false
+            referencedRelation: "pro_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       partner_campaigns: {
         Row: {
@@ -637,6 +704,81 @@ export type Database = {
           status?: string | null
           updated_at?: string | null
           user_id?: string
+          website?: string | null
+        }
+        Relationships: []
+      }
+      pro_profiles: {
+        Row: {
+          activity: string
+          business_name: string
+          city: string | null
+          clicks_count: number | null
+          created_at: string | null
+          description: string | null
+          email: string | null
+          id: string
+          is_published: boolean | null
+          lat: number | null
+          lng: number | null
+          logo_url: string | null
+          phone: string | null
+          radius_km: number | null
+          rating_avg: number | null
+          siret: string | null
+          tags: string[] | null
+          updated_at: string | null
+          user_id: string
+          verified: boolean | null
+          views_count: number | null
+          website: string | null
+        }
+        Insert: {
+          activity: string
+          business_name: string
+          city?: string | null
+          clicks_count?: number | null
+          created_at?: string | null
+          description?: string | null
+          email?: string | null
+          id?: string
+          is_published?: boolean | null
+          lat?: number | null
+          lng?: number | null
+          logo_url?: string | null
+          phone?: string | null
+          radius_km?: number | null
+          rating_avg?: number | null
+          siret?: string | null
+          tags?: string[] | null
+          updated_at?: string | null
+          user_id: string
+          verified?: boolean | null
+          views_count?: number | null
+          website?: string | null
+        }
+        Update: {
+          activity?: string
+          business_name?: string
+          city?: string | null
+          clicks_count?: number | null
+          created_at?: string | null
+          description?: string | null
+          email?: string | null
+          id?: string
+          is_published?: boolean | null
+          lat?: number | null
+          lng?: number | null
+          logo_url?: string | null
+          phone?: string | null
+          radius_km?: number | null
+          rating_avg?: number | null
+          siret?: string | null
+          tags?: string[] | null
+          updated_at?: string | null
+          user_id?: string
+          verified?: boolean | null
+          views_count?: number | null
           website?: string | null
         }
         Relationships: []
