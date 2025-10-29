@@ -147,10 +147,10 @@ export function DonationDialog({ open, onOpenChange }: DonationDialogProps) {
 
           {/* Donate Button */}
           <Button
+            id="donate-cta"
             onClick={handleDonate}
             disabled={isLoading || amount < 1}
-            className="w-full rounded-2xl text-white font-bold py-6 text-lg"
-            style={{ backgroundColor: "var(--brand-plum)" }}
+            className="w-full rounded-2xl font-bold py-6 text-lg"
           >
             {isLoading ? (
               <>
