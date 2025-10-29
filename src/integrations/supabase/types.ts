@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_notes: {
+        Row: {
+          author_id: string
+          body: string
+          created_at: string | null
+          id: string
+          user_id: string
+        }
+        Insert: {
+          author_id: string
+          body: string
+          created_at?: string | null
+          id?: string
+          user_id: string
+        }
+        Update: {
+          author_id?: string
+          body?: string
+          created_at?: string | null
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       adoption_matches: {
         Row: {
           adopted: boolean | null
@@ -59,6 +83,126 @@ export type Database = {
           id?: string
           total_matches?: number
           updated_at?: string
+        }
+        Relationships: []
+      }
+      alerts: {
+        Row: {
+          address: string | null
+          created_at: string | null
+          description: string | null
+          expires_at: string | null
+          id: string
+          location: unknown
+          photo_url: string | null
+          resolved_by: string | null
+          status: string | null
+          title: string
+          type: string
+          updated_at: string | null
+          user_id: string
+          validated_by: string | null
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string | null
+          description?: string | null
+          expires_at?: string | null
+          id?: string
+          location?: unknown
+          photo_url?: string | null
+          resolved_by?: string | null
+          status?: string | null
+          title: string
+          type: string
+          updated_at?: string | null
+          user_id: string
+          validated_by?: string | null
+        }
+        Update: {
+          address?: string | null
+          created_at?: string | null
+          description?: string | null
+          expires_at?: string | null
+          id?: string
+          location?: unknown
+          photo_url?: string | null
+          resolved_by?: string | null
+          status?: string | null
+          title?: string
+          type?: string
+          updated_at?: string | null
+          user_id?: string
+          validated_by?: string | null
+        }
+        Relationships: []
+      }
+      audit_logs: {
+        Row: {
+          action: string
+          actor_id: string | null
+          after: Json | null
+          before: Json | null
+          created_at: string | null
+          entity_id: string | null
+          entity_type: string
+          id: string
+          ip_address: unknown
+          user_agent: string | null
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          after?: Json | null
+          before?: Json | null
+          created_at?: string | null
+          entity_id?: string | null
+          entity_type: string
+          id?: string
+          ip_address?: unknown
+          user_agent?: string | null
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          after?: Json | null
+          before?: Json | null
+          created_at?: string | null
+          entity_id?: string | null
+          entity_type?: string
+          id?: string
+          ip_address?: unknown
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
+      badges: {
+        Row: {
+          code: string
+          color: string | null
+          created_at: string | null
+          criteria: Json
+          description: string | null
+          icon: string | null
+          name: string
+        }
+        Insert: {
+          code: string
+          color?: string | null
+          created_at?: string | null
+          criteria: Json
+          description?: string | null
+          icon?: string | null
+          name: string
+        }
+        Update: {
+          code?: string
+          color?: string | null
+          created_at?: string | null
+          criteria?: Json
+          description?: string | null
+          icon?: string | null
+          name?: string
         }
         Relationships: []
       }
@@ -304,6 +448,81 @@ export type Database = {
           },
         ]
       }
+      leaderboard_weekly: {
+        Row: {
+          city: string | null
+          created_at: string | null
+          id: string
+          rank: number | null
+          user_id: string
+          week_start: string
+          weekly_xp: number
+        }
+        Insert: {
+          city?: string | null
+          created_at?: string | null
+          id?: string
+          rank?: number | null
+          user_id: string
+          week_start: string
+          weekly_xp?: number
+        }
+        Update: {
+          city?: string | null
+          created_at?: string | null
+          id?: string
+          rank?: number | null
+          user_id?: string
+          week_start?: string
+          weekly_xp?: number
+        }
+        Relationships: []
+      }
+      partner_campaigns: {
+        Row: {
+          code: string
+          created_at: string | null
+          description: string | null
+          ends_at: string
+          id: string
+          is_active: boolean | null
+          partner_id: string
+          quota: number | null
+          reward: string | null
+          starts_at: string
+          title: string
+          used_count: number | null
+        }
+        Insert: {
+          code: string
+          created_at?: string | null
+          description?: string | null
+          ends_at: string
+          id?: string
+          is_active?: boolean | null
+          partner_id: string
+          quota?: number | null
+          reward?: string | null
+          starts_at: string
+          title: string
+          used_count?: number | null
+        }
+        Update: {
+          code?: string
+          created_at?: string | null
+          description?: string | null
+          ends_at?: string
+          id?: string
+          is_active?: boolean | null
+          partner_id?: string
+          quota?: number | null
+          reward?: string | null
+          starts_at?: string
+          title?: string
+          used_count?: number | null
+        }
+        Relationships: []
+      }
       partnerships: {
         Row: {
           created_at: string | null
@@ -512,38 +731,92 @@ export type Database = {
           },
         ]
       }
+      referrals: {
+        Row: {
+          created_at: string | null
+          id: string
+          premium_at: string | null
+          referral_code: string
+          referred_id: string | null
+          referrer_id: string
+          reward_granted: boolean | null
+          signed_up_at: string | null
+          status: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          premium_at?: string | null
+          referral_code: string
+          referred_id?: string | null
+          referrer_id: string
+          reward_granted?: boolean | null
+          signed_up_at?: string | null
+          status?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          premium_at?: string | null
+          referral_code?: string
+          referred_id?: string | null
+          referrer_id?: string
+          reward_granted?: boolean | null
+          signed_up_at?: string | null
+          status?: string | null
+        }
+        Relationships: []
+      }
       reports: {
         Row: {
+          admin_notes: string[] | null
           created_at: string | null
           details: string | null
           dog_id: string | null
+          entity_id: string | null
+          entity_type: string | null
+          handled_at: string | null
+          handled_by: string | null
           id: string
           kind: Database["public"]["Enums"]["report_kind"]
           point: unknown
+          reason: string | null
           reporter_id: string
           status: Database["public"]["Enums"]["hazard_status"] | null
           title: string | null
           updated_at: string | null
         }
         Insert: {
+          admin_notes?: string[] | null
           created_at?: string | null
           details?: string | null
           dog_id?: string | null
+          entity_id?: string | null
+          entity_type?: string | null
+          handled_at?: string | null
+          handled_by?: string | null
           id?: string
           kind: Database["public"]["Enums"]["report_kind"]
           point?: unknown
+          reason?: string | null
           reporter_id: string
           status?: Database["public"]["Enums"]["hazard_status"] | null
           title?: string | null
           updated_at?: string | null
         }
         Update: {
+          admin_notes?: string[] | null
           created_at?: string | null
           details?: string | null
           dog_id?: string | null
+          entity_id?: string | null
+          entity_type?: string | null
+          handled_at?: string | null
+          handled_by?: string | null
           id?: string
           kind?: Database["public"]["Enums"]["report_kind"]
           point?: unknown
+          reason?: string | null
           reporter_id?: string
           status?: Database["public"]["Enums"]["hazard_status"] | null
           title?: string | null
@@ -573,6 +846,45 @@ export type Database = {
           },
         ]
       }
+      sanctions: {
+        Row: {
+          created_at: string | null
+          created_by: string
+          end_at: string | null
+          id: string
+          is_active: boolean | null
+          notes: string | null
+          reason: string
+          start_at: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          created_by: string
+          end_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          notes?: string | null
+          reason: string
+          start_at?: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string
+          end_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          notes?: string | null
+          reason?: string
+          start_at?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       spatial_ref_sys: {
         Row: {
           auth_name: string | null
@@ -596,6 +908,35 @@ export type Database = {
           srtext?: string | null
         }
         Relationships: []
+      }
+      user_badges: {
+        Row: {
+          badge_code: string
+          earned_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          badge_code: string
+          earned_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          badge_code?: string
+          earned_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_badges_badge_code_fkey"
+            columns: ["badge_code"]
+            isOneToOne: false
+            referencedRelation: "badges"
+            referencedColumns: ["code"]
+          },
+        ]
       }
       user_roles: {
         Row: {
@@ -769,6 +1110,131 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      walks: {
+        Row: {
+          created_at: string | null
+          distance_km: number | null
+          dog_id: string | null
+          duration_minutes: number | null
+          end_at: string | null
+          friends_notified: boolean | null
+          id: string
+          mood: string | null
+          route: Json | null
+          start_at: string
+          start_location: unknown
+          status: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          distance_km?: number | null
+          dog_id?: string | null
+          duration_minutes?: number | null
+          end_at?: string | null
+          friends_notified?: boolean | null
+          id?: string
+          mood?: string | null
+          route?: Json | null
+          start_at?: string
+          start_location?: unknown
+          status?: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          distance_km?: number | null
+          dog_id?: string | null
+          duration_minutes?: number | null
+          end_at?: string | null
+          friends_notified?: boolean | null
+          id?: string
+          mood?: string | null
+          route?: Json | null
+          start_at?: string
+          start_location?: unknown
+          status?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "walks_dog_id_fkey"
+            columns: ["dog_id"]
+            isOneToOne: false
+            referencedRelation: "dogs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      weekly_challenges: {
+        Row: {
+          created_at: string | null
+          criteria: Json
+          description: string | null
+          id: string
+          is_active: boolean | null
+          reward_badge_code: string | null
+          reward_xp: number | null
+          title: string
+          week_start: string
+        }
+        Insert: {
+          created_at?: string | null
+          criteria: Json
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          reward_badge_code?: string | null
+          reward_xp?: number | null
+          title: string
+          week_start: string
+        }
+        Update: {
+          created_at?: string | null
+          criteria?: Json
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          reward_badge_code?: string | null
+          reward_xp?: number | null
+          title?: string
+          week_start?: string
+        }
+        Relationships: []
+      }
+      xp_events: {
+        Row: {
+          created_at: string
+          id: string
+          metadata: Json | null
+          points: number
+          ref_id: string | null
+          type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          points?: number
+          ref_id?: string | null
+          type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          points?: number
+          ref_id?: string | null
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
       }
     }
     Views: {
@@ -967,6 +1433,15 @@ export type Database = {
         }
         Relationships: []
       }
+      user_xp_summary: {
+        Row: {
+          level: number | null
+          total_events: number | null
+          total_xp: number | null
+          user_id: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       _postgis_deprecate: {
@@ -1058,6 +1533,16 @@ export type Database = {
         Returns: unknown
       }
       _st_within: { Args: { geom1: unknown; geom2: unknown }; Returns: boolean }
+      add_xp_event: {
+        Args: {
+          p_metadata?: Json
+          p_points: number
+          p_ref_id?: string
+          p_type: string
+          p_user_id: string
+        }
+        Returns: string
+      }
       addauth: { Args: { "": string }; Returns: boolean }
       addgeometrycolumn:
         | {
@@ -1096,6 +1581,13 @@ export type Database = {
             }
             Returns: string
           }
+      check_and_award_badges: {
+        Args: { p_user_id: string }
+        Returns: {
+          badge_code: string
+          newly_awarded: boolean
+        }[]
+      }
       disablelongtransactions: { Args: never; Returns: string }
       dropgeometrycolumn:
         | {
