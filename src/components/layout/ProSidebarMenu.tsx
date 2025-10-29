@@ -12,7 +12,8 @@ import {
   LogOut,
   CreditCard,
   Bell,
-  QrCode
+  QrCode,
+  RefreshCw
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -20,6 +21,8 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { AccountSwitcher } from "./AccountSwitcher";
+import { useAccounts } from "@/contexts/AccountContext";
 
 interface ProSidebarMenuProps {
   open: boolean;
@@ -29,6 +32,8 @@ interface ProSidebarMenuProps {
 export function ProSidebarMenu({ open, onOpenChange }: ProSidebarMenuProps) {
   const [profile, setProfile] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [showAccountSwitcher, setShowAccountSwitcher] = useState(false);
+  const { accounts } = useAccounts();
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -91,7 +96,9 @@ export function ProSidebarMenu({ open, onOpenChange }: ProSidebarMenuProps) {
   ];
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
+    <>
+      <AccountSwitcher open={showAccountSwitcher} onOpenChange={setShowAccountSwitcher} />
+      <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="left" className="w-[320px] overflow-y-auto">
         <SheetHeader>
           <SheetTitle className="flex items-center gap-2">
@@ -133,6 +140,20 @@ export function ProSidebarMenu({ open, onOpenChange }: ProSidebarMenuProps) {
               </div>
             </div>
           </div>
+        )}
+
+        {/* Account Switcher */}
+        {accounts.length > 1 && (
+          <button
+            onClick={() => {
+              onOpenChange(false);
+              setShowAccountSwitcher(true);
+            }}
+            className="mt-4 w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors hover:bg-accent text-left border"
+          >
+            <RefreshCw className="h-5 w-5" />
+            <span className="font-semibold">Changer de compte</span>
+          </button>
         )}
 
         <div className="mt-6 space-y-6">
@@ -231,5 +252,6 @@ export function ProSidebarMenu({ open, onOpenChange }: ProSidebarMenuProps) {
         </div>
       </SheetContent>
     </Sheet>
+    </>
   );
 }

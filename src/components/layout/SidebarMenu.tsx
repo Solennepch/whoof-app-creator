@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
-import { Building, Briefcase, Bug, Percent, User, Star, Gift, Crown, Shield } from "lucide-react";
+import { Building, Briefcase, Bug, Percent, User, Star, Gift, Crown, Shield, RefreshCw } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { AccountSwitcher } from "./AccountSwitcher";
+import { useAccounts } from "@/contexts/AccountContext";
 
 interface SidebarMenuProps {
   open: boolean;
@@ -13,6 +15,8 @@ export function SidebarMenu({ open, onOpenChange }: SidebarMenuProps) {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isPro, setIsPro] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [showAccountSwitcher, setShowAccountSwitcher] = useState(false);
+  const { accounts } = useAccounts();
 
   useEffect(() => {
     const checkUserRoles = async () => {
@@ -84,13 +88,28 @@ export function SidebarMenu({ open, onOpenChange }: SidebarMenuProps) {
   }
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
+    <>
+      <AccountSwitcher open={showAccountSwitcher} onOpenChange={setShowAccountSwitcher} />
+      <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="left" className="w-[280px] sm:w-[320px]">
         <SheetHeader>
           <SheetTitle>Menu</SheetTitle>
         </SheetHeader>
 
         <div className="mt-6 flex flex-col gap-2">
+          {accounts.length > 1 && (
+            <button
+              onClick={() => {
+                onOpenChange(false);
+                setShowAccountSwitcher(true);
+              }}
+              className="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors hover:bg-accent w-full text-left border-b mb-2"
+            >
+              <RefreshCw className="h-5 w-5" />
+              <span className="font-semibold">Changer de compte</span>
+            </button>
+          )}
+
           {isLoading ? (
             <div className="text-sm text-muted-foreground">Chargement...</div>
           ) : (
@@ -115,5 +134,6 @@ export function SidebarMenu({ open, onOpenChange }: SidebarMenuProps) {
         </div>
       </SheetContent>
     </Sheet>
+    </>
   );
 }

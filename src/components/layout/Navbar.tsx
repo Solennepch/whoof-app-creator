@@ -6,6 +6,7 @@ import { CongratsModal } from "@/components/ui/CongratsModal";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { SidebarMenu } from "./SidebarMenu";
+import { AvatarWithSwitch } from "./AvatarWithSwitch";
 
 export function Navbar() {
   const [xp, setXp] = useState(850);
@@ -51,14 +52,17 @@ export function Navbar() {
               </div>
             </div>
 
-            <Button
-              onClick={addXp}
-              size="sm"
-              className="rounded-2xl"
-              style={{ backgroundColor: "var(--brand-plum)" }}
-            >
-              +XP
-            </Button>
+            <div className="flex items-center gap-2">
+              <AvatarWithSwitch />
+              <Button
+                onClick={addXp}
+                size="sm"
+                className="rounded-2xl"
+                style={{ backgroundColor: "var(--brand-plum)" }}
+              >
+                +XP
+              </Button>
+            </div>
           </div>
 
           {/* XP Progress Bar */}
