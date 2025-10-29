@@ -1,20 +1,20 @@
 import { NavLink, useLocation } from "react-router-dom";
-import { Map, Heart, MessageCircle, Calendar, Trophy } from "lucide-react";
+import { Home, MessageCircle, User, Briefcase, MoreHorizontal } from "lucide-react";
 
-export function BottomNavigation() {
+export function ProBottomNavigation() {
   const location = useLocation();
   
-  // Don't show on pro routes
-  if (location.pathname.startsWith('/pro')) {
+  // Only show on pro routes
+  if (!location.pathname.startsWith('/pro')) {
     return null;
   }
 
   const navItems = [
-    { to: "/map", icon: Map, label: "Explore" },
-    { to: "/discover", icon: Heart, label: "Matche" },
-    { to: "/messages", icon: MessageCircle, label: "Messages" },
-    { to: "/events", icon: Calendar, label: "Agenda" },
-    { to: "/ranking", icon: Trophy, label: "Classement" },
+    { to: "/pro/home", icon: Home, label: "Home" },
+    { to: "/pro/messages", icon: MessageCircle, label: "Messages" },
+    { to: "/pro/edit", icon: User, label: "Profil" },
+    { to: "/pro/partners", icon: Briefcase, label: "Annuaire" },
+    { to: "/pro/more", icon: MoreHorizontal, label: "Plus" },
   ];
 
   return (

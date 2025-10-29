@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 // Fetch current user's pro profile
 export function useMyProProfile() {
@@ -225,5 +226,31 @@ export function useIsFavorite(proId?: string) {
       return !!data;
     },
     enabled: !!proId,
+  });
+}
+
+// Toggle publish status
+export function useTogglePublish() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ proId, isPublished }: { proId: string; isPublished: boolean }) => {
+      const { error } = await supabase
+        .from('pro_profiles')
+        .update({ 
+          is_published: isPublished,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', proId);
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['my-pro-profile'] });
+    },
+    onError: (error) => {
+      console.error('Toggle publish error:', error);
+      toast.error('Erreur lors de la mise à jour');
+    },
   });
 }

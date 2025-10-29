@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Header } from "./components/layout/Header";
 import { BottomNavigation } from "./components/layout/BottomNavigation";
+import { ProBottomNavigation } from "./components/layout/ProBottomNavigation";
 import Home from "./pages/Home";
 import Index from "./pages/Index";
 import MatchHome from "./pages/MatchHome";
@@ -30,6 +31,7 @@ import ProHome from "./pages/pro/Home";
 import ProEdit from "./pages/pro/Edit";
 import ProMessages from "./pages/pro/Messages";
 import ProPartners from "./pages/pro/Partners";
+import ProMore from "./pages/pro/More";
 import PremiumPricing from "./pages/premium/Pricing";
 import Premium from "./pages/Premium";
 import Parrainage from "./pages/Parrainage";
@@ -52,6 +54,9 @@ const App = () => (
       <BrowserRouter>
         <Header />
         <Routes>
+          {/* Pro Routes - Use ProBottomNavigation */}
+          <Route path="/pro/*" element={<ProBottomNavigation />} />
+          
           {/* Auth & Onboarding Flow */}
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
@@ -92,6 +97,7 @@ const App = () => (
           <Route path="/pro/edit" element={<ProEdit />} />
           <Route path="/pro/messages" element={<ProMessages />} />
           <Route path="/pro/partners" element={<ProPartners />} />
+          <Route path="/pro/more" element={<ProMore />} />
           <Route path="/pro/dashboard" element={<ProDashboard />} />
           <Route path="/pro/pricing" element={<ProPricing />} />
           
@@ -107,6 +113,7 @@ const App = () => (
           <Route path="*" element={<NotFound />} />
         </Routes>
         <BottomNavigation />
+        <ProBottomNavigation />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
