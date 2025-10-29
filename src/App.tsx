@@ -35,6 +35,7 @@ import ProfileOnboarding from "./pages/onboarding/Profile";
 import DogOnboarding from "./pages/onboarding/Dog";
 import DebugHealth from "./pages/DebugHealth";
 import NotFound from "./pages/NotFound";
+import AdminModeration from "./pages/admin/Moderation";
 
 const queryClient = new QueryClient();
 
@@ -84,6 +85,9 @@ const App = () => (
           <Route path="/pro/onboarding" element={<ProOnboarding />} />
           <Route path="/pro/dashboard" element={<ProDashboard />} />
           <Route path="/pro/pricing" element={<ProPricing />} />
+          
+          {/* Admin */}
+          <Route path="/admin/moderation" element={<AdminModeration />} />
           
           {/* Legacy & Debug */}
           <Route path="/home" element={<Home />} />
