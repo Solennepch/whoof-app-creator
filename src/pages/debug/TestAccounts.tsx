@@ -19,7 +19,7 @@ const TEST_ACCOUNTS: TestAccount[] = [
   {
     email: "test@whoof.app",
     password: "Test123!",
-    displayName: "Solenne Martin (Perso + Pro)",
+    displayName: "Solenne Pichon (Perso + Pro)",
     role: "user",
     isPro: true // Has BOTH personal and pro profiles
   },
@@ -261,7 +261,7 @@ export default function TestAccounts() {
         </CardHeader>
         <CardContent className="text-sm space-y-2">
           <div>
-            <span className="font-medium">Solenne Martin:</span> Compte combo avec profil personnel ET professionnel. Utilisez le double-tap sur l'avatar ou "Changer de compte" pour basculer entre les deux modes.
+            <span className="font-medium">Solenne Pichon:</span> Compte combo avec profil personnel ET professionnel. Utilisez le double-tap sur l'avatar ou "Changer de compte" pour basculer entre les deux modes.
           </div>
           <div>
             <span className="font-medium">Admin:</span> Compte administrateur avec accès à la modération et toutes les fonctionnalités.

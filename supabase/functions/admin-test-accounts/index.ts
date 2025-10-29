@@ -35,7 +35,7 @@ serve(async (req) => {
           email: 'test@whoof.app',
           password: 'Test123!',
           role: 'user',
-          display_name: 'Solenne Martin',
+          display_name: 'Solenne Pichon',
           isPro: true, // This user has BOTH personal and pro profiles
           proBusinessName: 'Salon Canin Paris'
         },
@@ -138,7 +138,7 @@ serve(async (req) => {
       const { data: profiles } = await supabaseAdmin
         .from('profiles')
         .select('id, display_name')
-        .or('display_name.eq.Solenne Martin,display_name.eq.Admin Whoof');
+        .or('display_name.eq.Solenne Pichon,display_name.eq.Admin Whoof');
 
       const accountsWithRoles = await Promise.all(
         (profiles || []).map(async (profile) => {
