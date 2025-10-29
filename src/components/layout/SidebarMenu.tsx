@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Building, Briefcase, Bug, Percent, User, Star, Gift, Crown } from "lucide-react";
+import { Building, Briefcase, Bug, Percent, User, Star, Gift, Crown, Shield } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
@@ -74,8 +74,9 @@ export function SidebarMenu({ open, onOpenChange }: SidebarMenuProps) {
     menuItems.push({ to: "/pro/onboarding", icon: Briefcase, label: "Devenir Pro" });
   }
 
-  // Add Debug link only for admins
+  // Add Admin links only for admins
   if (isAdmin) {
+    menuItems.push({ to: "/admin/moderation", icon: Shield, label: "Modération" });
     menuItems.push({ to: "/debug/health", icon: Bug, label: "Debug" });
   }
 
