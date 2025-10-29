@@ -11,8 +11,9 @@ import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { User, Loader2 } from "lucide-react";
+import { User, Loader2, Sparkles } from "lucide-react";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import { useAddXPEvent, useCheckBadges } from "@/hooks/useGamification";
 
 const profileSchema = z.object({
   display_name: z.string().trim().min(2, "Le nom doit contenir au moins 2 caractères").max(50, "Le nom ne peut pas dépasser 50 caractères"),
@@ -26,6 +27,7 @@ function ProfileOnboardingContent() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const checkBadges = useCheckBadges();
 
   const {
     register,
@@ -91,7 +93,18 @@ function ProfileOnboardingContent() {
         throw new Error('Failed to update profile');
       }
 
-      toast.success("Profil créé avec succès !");
+      const result = await response.json();
+      
+      // Check for new badges
+      if (session?.user?.id) {
+        checkBadges.mutate(session.user.id);
+      }
+
+      toast.success("Profil créé avec succès !", {
+        description: data.bio ? "+50 XP - Profil complet ! 🎉" : "N'oublie pas d'ajouter une bio pour gagner des XP",
+        icon: data.bio ? <Sparkles className="w-4 h-4" /> : undefined,
+      });
+      
       navigate('/onboarding/dog');
 
     } catch (error) {

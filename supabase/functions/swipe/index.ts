@@ -82,6 +82,33 @@ serve(async (req) => {
           .eq('id', reciprocalSwipe.id);
 
         console.log(`Match! Between ${user.id} and ${to_user}`);
+
+        // Award XP for match (both users)
+        const { error: xpError1 } = await supabase.rpc('add_xp_event', {
+          p_user_id: user.id,
+          p_type: 'match',
+          p_points: 30,
+          p_ref_id: swipe.id,
+          p_metadata: { matched_with: to_user }
+        });
+
+        const { error: xpError2 } = await supabase.rpc('add_xp_event', {
+          p_user_id: to_user,
+          p_type: 'match',
+          p_points: 30,
+          p_ref_id: reciprocalSwipe.id,
+          p_metadata: { matched_with: user.id }
+        });
+
+        if (xpError1 || xpError2) {
+          console.error('Error adding XP for match:', xpError1 || xpError2);
+        } else {
+          console.log(`Awarded 30 XP to both users for match`);
+        }
+
+        // Check badges for both users
+        await supabase.rpc('check_and_award_badges', { p_user_id: user.id });
+        await supabase.rpc('check_and_award_badges', { p_user_id: to_user });
       }
     }
 

@@ -1,1 +1,4 @@
 project_id = "rybwknsebvzndmruexcb"
+
+[functions.walk-xp]
+verify_jwt = true

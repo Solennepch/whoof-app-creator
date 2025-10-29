@@ -186,6 +186,35 @@ serve(async (req) => {
 
       if (error) throw error;
 
+      // Check if profile is complete (has display_name and bio)
+      const isComplete = data.display_name && data.bio && data.bio.length > 0;
+      
+      if (isComplete) {
+        // Award XP for profile completion
+        const { error: xpError } = await supabase.rpc('add_xp_event', {
+          p_user_id: user.id,
+          p_type: 'profile_complete',
+          p_points: 50,
+          p_ref_id: user.id,
+          p_metadata: {}
+        });
+
+        if (xpError) {
+          console.error('Error adding XP for profile completion:', xpError);
+        } else {
+          console.log(`Awarded 50 XP to user ${user.id} for completing profile`);
+        }
+
+        // Check and award badges
+        const { error: badgeError } = await supabase.rpc('check_and_award_badges', {
+          p_user_id: user.id
+        });
+
+        if (badgeError) {
+          console.error('Error checking badges:', badgeError);
+        }
+      }
+
       return new Response(JSON.stringify({ ok: true, profile: data }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });

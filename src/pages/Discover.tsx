@@ -3,6 +3,9 @@ import { X, Heart, Info } from "lucide-react";
 import { ReasonChip } from "@/components/ui/ReasonChip";
 import { Button } from "@/components/ui/button";
 import { MatchAnimation } from "@/components/match/MatchAnimation";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 const profiles = [
   {
@@ -37,15 +40,31 @@ export default function Discover() {
   const [showMatch, setShowMatch] = useState(false);
   const [matchedProfile, setMatchedProfile] = useState<string>("");
 
+  const { data: session } = useQuery({
+    queryKey: ["session"],
+    queryFn: async () => {
+      const { data } = await supabase.auth.getSession();
+      return data.session;
+    },
+  });
+
   const current = profiles[currentIndex];
 
-  const handleSwipe = (liked: boolean) => {
+  const handleSwipe = async (liked: boolean) => {
+    if (!session?.user?.id) {
+      toast.error("Tu dois être connecté pour swiper");
+      return;
+    }
+
+    // In a real app, we would call the swipe edge function here
+    // For now, simulate the behavior
     if (liked) {
       // Simulate match (30% chance)
       const isMatch = Math.random() > 0.7;
       if (isMatch) {
         setMatchedProfile(current.name);
         setShowMatch(true);
+        toast.success("+30 XP - C'est un match ! 🎉");
         return;
       }
     }
