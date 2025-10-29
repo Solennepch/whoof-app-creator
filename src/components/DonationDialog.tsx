@@ -104,14 +104,13 @@ export function DonationDialog({ open, onOpenChange }: DonationDialogProps) {
                 <Button
                   key={value}
                   type="button"
-                  variant={amount === value && !customAmount ? "default" : "outline"}
-                  className="rounded-xl font-semibold"
-                  onClick={() => handleAmountClick(value)}
-                  style={
+                  variant="outline"
+                  className={`rounded-xl font-semibold ${
                     amount === value && !customAmount
-                      ? { backgroundColor: "var(--brand-plum)", color: "white" }
-                      : undefined
-                  }
+                      ? "bg-[var(--brand-plum)] text-white border-[var(--brand-plum)] hover:bg-[var(--brand-plum)]/90 hover:text-white"
+                      : ""
+                  }`}
+                  onClick={() => handleAmountClick(value)}
                 >
                   {value}€
                 </Button>
