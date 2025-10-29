@@ -9,6 +9,7 @@ import { safeFetch } from "@/lib/safeFetch";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { AlertTriangle, User, Dog as DogIcon, Edit, Crown, Zap, Heart, ChevronRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { DonationDialog } from "@/components/DonationDialog";
 
 const badges = [
   { icon: "🦴", name: "Premier pas", desc: "Créé ton profil" },
@@ -86,6 +87,7 @@ function ProfileContent() {
   const [isOwnProfile, setIsOwnProfile] = useState(false);
   const [isPro, setIsPro] = useState(false);
   const [isPremium, setIsPremium] = useState(false);
+  const [showDonationDialog, setShowDonationDialog] = useState(false);
 
   const fetchProfileData = async () => {
     if (!id) {
@@ -443,6 +445,25 @@ function ProfileContent() {
             </div>
           </Card>
         )}
+
+        {/* Support/Donation Section */}
+        {isOwnProfile && (
+          <Card 
+            className="rounded-2xl shadow-soft overflow-hidden cursor-pointer transition-transform hover:scale-[1.02]"
+            onClick={() => setShowDonationDialog(true)}
+          >
+            <div className="bg-gradient-to-r from-[#FF5DA2] to-[#FFC14D] p-4 text-white flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Heart className="w-6 h-6" />
+                <div>
+                  <p className="font-bold">Nous soutenir</p>
+                  <p className="text-xs opacity-90">Soutenez le développement de Whoof</p>
+                </div>
+              </div>
+              <ChevronRight className="w-5 h-5" />
+            </div>
+          </Card>
+        )}
         {/* Parrainage Section */}
         {isOwnProfile && (
           <Card className="p-6 rounded-3xl shadow-soft">
@@ -508,6 +529,12 @@ function ProfileContent() {
           </div>
         )}
       </div>
+
+      {/* Donation Dialog */}
+      <DonationDialog 
+        open={showDonationDialog} 
+        onOpenChange={setShowDonationDialog}
+      />
     </main>
   );
 }
