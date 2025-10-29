@@ -24,6 +24,20 @@ const TEST_ACCOUNTS: TestAccount[] = [
     isPro: true // Has BOTH personal and pro profiles
   },
   {
+    email: "test.user@whoof.app",
+    password: "TestUser123!",
+    displayName: "Anthony Groubé",
+    role: "user",
+    isPro: false
+  },
+  {
+    email: "test.pro@whoof.app",
+    password: "TestPro123!",
+    displayName: "Rodolphe Pichon",
+    role: "user",
+    isPro: true
+  },
+  {
     email: "test.admin@whoof.app",
     password: "TestAdmin123!",
     displayName: "Admin Whoof",
@@ -76,7 +90,7 @@ export default function TestAccounts() {
         body: { action: 'list' }
       });
 
-      if (!error && data?.accounts && data.accounts.length >= 2) {
+      if (!error && data?.accounts && data.accounts.length >= 4) {
         setAccountsCreated(true);
       }
     } catch (error) {
@@ -262,6 +276,12 @@ export default function TestAccounts() {
         <CardContent className="text-sm space-y-2">
           <div>
             <span className="font-medium">Solenne Pichon:</span> Compte combo avec profil personnel ET professionnel. Utilisez le double-tap sur l'avatar ou "Changer de compte" pour basculer entre les deux modes.
+          </div>
+          <div>
+            <span className="font-medium">Anthony Groubé:</span> Compte utilisateur particulier uniquement.
+          </div>
+          <div>
+            <span className="font-medium">Rodolphe Pichon:</span> Compte professionnel uniquement.
           </div>
           <div>
             <span className="font-medium">Admin:</span> Compte administrateur avec accès à la modération et toutes les fonctionnalités.

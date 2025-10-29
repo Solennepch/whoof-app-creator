@@ -40,6 +40,21 @@ serve(async (req) => {
           proBusinessName: 'Salon Canin Paris'
         },
         {
+          email: 'test.user@whoof.app',
+          password: 'TestUser123!',
+          role: 'user',
+          display_name: 'Anthony Groubé',
+          isPro: false
+        },
+        {
+          email: 'test.pro@whoof.app',
+          password: 'TestPro123!',
+          role: 'user',
+          display_name: 'Rodolphe Pichon',
+          isPro: true,
+          proBusinessName: 'Cabinet Vétérinaire Lyon'
+        },
+        {
           email: 'test.admin@whoof.app',
           password: 'TestAdmin123!',
           role: 'admin',
@@ -138,7 +153,7 @@ serve(async (req) => {
       const { data: profiles } = await supabaseAdmin
         .from('profiles')
         .select('id, display_name')
-        .or('display_name.eq.Solenne Pichon,display_name.eq.Admin Whoof');
+        .or('display_name.eq.Solenne Pichon,display_name.eq.Anthony Groubé,display_name.eq.Rodolphe Pichon,display_name.eq.Admin Whoof');
 
       const accountsWithRoles = await Promise.all(
         (profiles || []).map(async (profile) => {
