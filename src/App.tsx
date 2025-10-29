@@ -63,10 +63,10 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <AccountProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
+      <Toaster />
+      <Sonner />
+      <BrowserRouter>
+        <AccountProvider>
         <Header />
         <Routes>
           {/* Pro Routes - Use ProBottomNavigation */}
@@ -140,10 +140,10 @@ const App = () => (
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
-        <BottomNavigation />
-        <ProBottomNavigation />
+          <BottomNavigation />
+          <ProBottomNavigation />
+        </AccountProvider>
       </BrowserRouter>
-      </AccountProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
