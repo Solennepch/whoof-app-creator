@@ -45,9 +45,11 @@ export default function TestAccounts() {
   const [userRoles, setUserRoles] = useState<{ isAdmin: boolean; isModerator: boolean }>({ isAdmin: false, isModerator: false });
   const [isCreating, setIsCreating] = useState(false);
   const [accountsCreated, setAccountsCreated] = useState(false);
+  const [checkingAccounts, setCheckingAccounts] = useState(true);
 
   useEffect(() => {
     checkAuth();
+    checkIfAccountsExist();
     const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
       checkAuth();
     });
@@ -74,6 +76,23 @@ export default function TestAccounts() {
     }
   };
 
+  const checkIfAccountsExist = async () => {
+    setCheckingAccounts(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('admin-test-accounts', {
+        body: { action: 'list' }
+      });
+
+      if (!error && data?.accounts && data.accounts.length >= 3) {
+        setAccountsCreated(true);
+      }
+    } catch (error) {
+      console.error('Error checking accounts:', error);
+    } finally {
+      setCheckingAccounts(false);
+    }
+  };
+
   const createTestAccounts = async () => {
     setIsCreating(true);
     try {
@@ -83,7 +102,7 @@ export default function TestAccounts() {
 
       if (error) throw error;
 
-      toast.success("Comptes de test créés !");
+      toast.success("Comptes de test créés ! Vous pouvez maintenant vous connecter.");
       setAccountsCreated(true);
     } catch (error: any) {
       console.error('Error creating test accounts:', error);
@@ -165,19 +184,40 @@ export default function TestAccounts() {
         </Card>
       )}
 
-      {!accountsCreated && (
-        <Card className="mb-6 border-primary">
+      {checkingAccounts ? (
+        <Card className="mb-6">
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-center gap-2">
+              <RefreshCw className="h-4 w-4 animate-spin" />
+              <span>Vérification des comptes...</span>
+            </div>
+          </CardContent>
+        </Card>
+      ) : !accountsCreated ? (
+        <Card className="mb-6 border-primary bg-primary/5">
           <CardHeader>
-            <CardTitle>Première utilisation</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              <RefreshCw className="h-5 w-5" />
+              Première utilisation
+            </CardTitle>
             <CardDescription>
-              Créez les comptes de test avant de pouvoir les utiliser
+              ⚠️ Les comptes de test n'existent pas encore. Vous devez d'abord les créer avant de pouvoir vous connecter avec.
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Button onClick={createTestAccounts} disabled={isCreating}>
+            <Button onClick={createTestAccounts} disabled={isCreating} size="lg" className="w-full">
               <RefreshCw className={`h-4 w-4 mr-2 ${isCreating ? 'animate-spin' : ''}`} />
               {isCreating ? 'Création en cours...' : 'Créer les comptes de test'}
             </Button>
+          </CardContent>
+        </Card>
+      ) : (
+        <Card className="mb-6 border-green-500 bg-green-50">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-2 text-green-700">
+              <span className="text-lg">✅</span>
+              <span className="font-medium">Comptes de test disponibles - Vous pouvez maintenant vous connecter</span>
+            </div>
           </CardContent>
         </Card>
       )}
@@ -211,10 +251,10 @@ export default function TestAccounts() {
                 </div>
                 <Button 
                   onClick={() => switchAccount(account)}
-                  disabled={currentUser?.email === account.email}
+                  disabled={currentUser?.email === account.email || !accountsCreated}
                 >
                   <LogIn className="h-4 w-4 mr-2" />
-                  {currentUser?.email === account.email ? 'Actuel' : 'Se connecter'}
+                  {currentUser?.email === account.email ? 'Actuel' : !accountsCreated ? 'Créer d\'abord' : 'Se connecter'}
                 </Button>
               </div>
             </CardContent>
