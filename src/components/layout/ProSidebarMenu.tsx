@@ -11,7 +11,8 @@ import {
   HelpCircle, 
   LogOut,
   CreditCard,
-  Bell
+  Bell,
+  QrCode
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -70,6 +71,7 @@ export function ProSidebarMenu({ open, onOpenChange }: ProSidebarMenuProps) {
 
   const activitySection = [
     { to: "/pro/dashboard", icon: LayoutDashboard, label: "Tableau de bord complet" },
+    { to: "/pro/qrcode", icon: QrCode, label: "Mon QR code pro" },
     { to: "/pro/edit", icon: Settings, label: "Mes services et tarifs" },
     { to: "/pro/offers", icon: Tag, label: "Mes offres et promotions" },
     { to: "/pro/reviews", icon: Star, label: "Mes avis clients" },

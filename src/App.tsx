@@ -37,6 +37,7 @@ import ProMap from "./pages/pro/ProMap";
 import ProSettings from "./pages/pro/Settings";
 import ProNotifications from "./pages/pro/Notifications";
 import ProHelp from "./pages/pro/Help";
+import ProQRCode from "./pages/pro/QRCode";
 import PremiumPricing from "./pages/premium/Pricing";
 import Premium from "./pages/Premium";
 import Parrainage from "./pages/Parrainage";
@@ -99,6 +100,7 @@ const App = () => (
           <Route path="/premium/pricing" element={<PremiumPricing />} />
           <Route path="/pro/onboarding" element={<ProOnboarding />} />
           <Route path="/pro/home" element={<ProHome />} />
+          <Route path="/pro/qrcode" element={<ProQRCode />} />
           <Route path="/pro/agenda" element={<ProAgenda />} />
           <Route path="/pro/map" element={<ProMap />} />
           <Route path="/pro/edit" element={<ProEdit />} />
