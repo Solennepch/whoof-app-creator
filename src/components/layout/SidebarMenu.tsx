@@ -77,6 +77,7 @@ export function SidebarMenu({ open, onOpenChange }: SidebarMenuProps) {
   // Add Admin links only for admins
   if (isAdmin) {
     menuItems.push({ to: "/admin/moderation", icon: Shield, label: "Modération" });
+    menuItems.push({ to: "/debug/accounts", icon: User, label: "Comptes Test" });
     menuItems.push({ to: "/debug/health", icon: Bug, label: "Debug" });
   }
 

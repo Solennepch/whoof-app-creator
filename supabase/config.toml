@@ -6,5 +6,8 @@ verify_jwt = true
 [functions.admin-moderation]
 verify_jwt = true
 
+[functions.admin-test-accounts]
+verify_jwt = true
+
 [functions.pro-profile]
 verify_jwt = true

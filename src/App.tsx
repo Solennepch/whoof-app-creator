@@ -40,6 +40,7 @@ import DogOnboarding from "./pages/onboarding/Dog";
 import DebugHealth from "./pages/DebugHealth";
 import NotFound from "./pages/NotFound";
 import AdminModeration from "./pages/admin/Moderation";
+import TestAccounts from "./pages/debug/TestAccounts";
 
 const queryClient = new QueryClient();
 
@@ -100,6 +101,7 @@ const App = () => (
           {/* Legacy & Debug */}
           <Route path="/home" element={<Home />} />
           <Route path="/debug/health" element={<DebugHealth />} />
+          <Route path="/debug/accounts" element={<TestAccounts />} />
           
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
