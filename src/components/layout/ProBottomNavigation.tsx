@@ -1,5 +1,5 @@
 import { NavLink, useLocation } from "react-router-dom";
-import { Home, MessageCircle, User, Briefcase, MoreHorizontal } from "lucide-react";
+import { LayoutDashboard, Calendar, MessageCircle, MapPin, User } from "lucide-react";
 
 export function ProBottomNavigation() {
   const location = useLocation();
@@ -10,11 +10,11 @@ export function ProBottomNavigation() {
   }
 
   const navItems = [
-    { to: "/pro/home", icon: Home, label: "Home" },
+    { to: "/pro/home", icon: LayoutDashboard, label: "Accueil" },
+    { to: "/pro/agenda", icon: Calendar, label: "Agenda" },
     { to: "/pro/messages", icon: MessageCircle, label: "Messages" },
-    { to: "/pro/edit", icon: User, label: "Profil" },
-    { to: "/pro/partners", icon: Briefcase, label: "Annuaire" },
-    { to: "/pro/more", icon: MoreHorizontal, label: "Plus" },
+    { to: "/pro/map", icon: MapPin, label: "Carte" },
+    { to: "/pro/edit", icon: User, label: "Profil Pro" },
   ];
 
   return (

@@ -1,11 +1,16 @@
 import { useState } from "react";
 import { Menu } from "lucide-react";
+import { useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { SidebarMenu } from "./SidebarMenu";
+import { ProSidebarMenu } from "./ProSidebarMenu";
 import logoWhoof from "@/assets/logo-whoof-v3.png";
 
 export function Header() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const location = useLocation();
+  const isProRoute = location.pathname.startsWith('/pro');
 
   return (
     <>
@@ -37,13 +42,25 @@ export function Header() {
                 <span className="text-xl font-bold" style={{ color: "hsl(var(--ink))" }}>
                   Whoof Apps
                 </span>
+                {isProRoute && (
+                  <Badge 
+                    className="text-white font-bold text-xs"
+                    style={{ background: "linear-gradient(90deg, #7B61FF, #FF5DA2)" }}
+                  >
+                    PRO
+                  </Badge>
+                )}
               </div>
             </div>
           </div>
         </div>
       </header>
 
-      <SidebarMenu open={sidebarOpen} onOpenChange={setSidebarOpen} />
+      {isProRoute ? (
+        <ProSidebarMenu open={sidebarOpen} onOpenChange={setSidebarOpen} />
+      ) : (
+        <SidebarMenu open={sidebarOpen} onOpenChange={setSidebarOpen} />
+      )}
     </>
   );
 }

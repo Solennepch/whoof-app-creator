@@ -32,6 +32,11 @@ import ProEdit from "./pages/pro/Edit";
 import ProMessages from "./pages/pro/Messages";
 import ProPartners from "./pages/pro/Partners";
 import ProMore from "./pages/pro/More";
+import ProAgenda from "./pages/pro/Agenda";
+import ProMap from "./pages/pro/ProMap";
+import ProSettings from "./pages/pro/Settings";
+import ProNotifications from "./pages/pro/Notifications";
+import ProHelp from "./pages/pro/Help";
 import PremiumPricing from "./pages/premium/Pricing";
 import Premium from "./pages/Premium";
 import Parrainage from "./pages/Parrainage";
@@ -94,12 +99,17 @@ const App = () => (
           <Route path="/premium/pricing" element={<PremiumPricing />} />
           <Route path="/pro/onboarding" element={<ProOnboarding />} />
           <Route path="/pro/home" element={<ProHome />} />
+          <Route path="/pro/agenda" element={<ProAgenda />} />
+          <Route path="/pro/map" element={<ProMap />} />
           <Route path="/pro/edit" element={<ProEdit />} />
           <Route path="/pro/messages" element={<ProMessages />} />
           <Route path="/pro/partners" element={<ProPartners />} />
           <Route path="/pro/more" element={<ProMore />} />
           <Route path="/pro/dashboard" element={<ProDashboard />} />
           <Route path="/pro/pricing" element={<ProPricing />} />
+          <Route path="/pro/settings" element={<ProSettings />} />
+          <Route path="/pro/notifications" element={<ProNotifications />} />
+          <Route path="/pro/help" element={<ProHelp />} />
           
           {/* Admin */}
           <Route path="/admin/moderation" element={<AdminModeration />} />
