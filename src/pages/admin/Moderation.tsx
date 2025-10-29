@@ -1,12 +1,14 @@
 import { Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Shield, AlertTriangle, FileWarning, ShieldAlert } from "lucide-react";
+import { Shield, AlertTriangle, FileWarning, ShieldAlert, ArrowRight } from "lucide-react";
 import { useAdminRole, usePendingVerifications, useOpenReports, useActiveAlerts } from "@/hooks/useAdmin";
 import { VerificationsQueue } from "@/components/admin/VerificationsQueue";
 import { ReportsQueue } from "@/components/admin/ReportsQueue";
 import { AlertsQueue } from "@/components/admin/AlertsQueue";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
 
 export default function Moderation() {
   const { data: roleData, isLoading: roleLoading } = useAdminRole();
@@ -37,7 +39,15 @@ export default function Moderation() {
             Gérez les vérifications, signalements et alertes
           </p>
         </div>
-        <Shield className="h-12 w-12 text-primary" />
+        <div className="flex items-center gap-3">
+          <Link to="/admin/moderation-v2">
+            <Button variant="outline" className="gap-2">
+              Tester la v2
+              <ArrowRight className="h-4 w-4" />
+            </Button>
+          </Link>
+          <Shield className="h-12 w-12 text-primary" />
+        </div>
       </div>
 
       {/* Stats Cards */}
