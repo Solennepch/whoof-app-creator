@@ -854,12 +854,11 @@ export default function Map() {
               </PopoverContent>
             </Popover>
 
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-                    onClick={handleGoToUser}
-                    className="bg-white hover:bg-gray-50 text-black rounded-full transition-all flex items-center justify-center shrink-0"
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={handleGoToUser}
+                  className="bg-white hover:bg-gray-50 text-black rounded-full transition-all flex items-center justify-center shrink-0"
                     style={{
                       width: '40px',
                       height: '40px',
@@ -870,12 +869,11 @@ export default function Map() {
                   >
                     <span className="text-xl">📍</span>
                   </button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Recentrer sur ma position</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Recentrer sur ma position</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
         </div>
 
