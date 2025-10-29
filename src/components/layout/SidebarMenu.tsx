@@ -74,10 +74,12 @@ export function SidebarMenu({ open, onOpenChange }: SidebarMenuProps) {
     menuItems.push({ to: "/pro/onboarding", icon: Briefcase, label: "Devenir Pro" });
   }
 
+  // Add test accounts for all users (dev mode)
+  menuItems.push({ to: "/debug/accounts", icon: User, label: "Comptes Test" });
+
   // Add Admin links only for admins
   if (isAdmin) {
     menuItems.push({ to: "/admin/moderation", icon: Shield, label: "Modération" });
-    menuItems.push({ to: "/debug/accounts", icon: User, label: "Comptes Test" });
     menuItems.push({ to: "/debug/health", icon: Bug, label: "Debug" });
   }
 

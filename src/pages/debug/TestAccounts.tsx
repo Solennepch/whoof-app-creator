@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { useAdminRole } from "@/hooks/useAdmin";
 import { LogIn, LogOut, RefreshCw, Shield, Briefcase, User } from "lucide-react";
 
 interface TestAccount {
@@ -42,8 +41,8 @@ const TEST_ACCOUNTS: TestAccount[] = [
 
 export default function TestAccounts() {
   const navigate = useNavigate();
-  const { data: roleData, isLoading: roleLoading } = useAdminRole();
   const [currentUser, setCurrentUser] = useState<any>(null);
+  const [userRoles, setUserRoles] = useState<{ isAdmin: boolean; isModerator: boolean }>({ isAdmin: false, isModerator: false });
   const [isCreating, setIsCreating] = useState(false);
   const [accountsCreated, setAccountsCreated] = useState(false);
 
@@ -55,16 +54,24 @@ export default function TestAccounts() {
     return () => subscription.unsubscribe();
   }, []);
 
-  useEffect(() => {
-    if (!roleLoading && !roleData?.hasAccess) {
-      navigate("/");
-      toast.error("Accès refusé - Admin uniquement");
-    }
-  }, [roleData, roleLoading, navigate]);
-
   const checkAuth = async () => {
     const { data: { user } } = await supabase.auth.getUser();
     setCurrentUser(user);
+    
+    if (user) {
+      // Check roles for display purposes only
+      const { data: adminRole } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', user.id)
+        .in('role', ['admin', 'moderator'])
+        .maybeSingle();
+      
+      setUserRoles({
+        isAdmin: adminRole?.role === 'admin',
+        isModerator: adminRole?.role === 'moderator'
+      });
+    }
   };
 
   const createTestAccounts = async () => {
@@ -123,14 +130,6 @@ export default function TestAccounts() {
     navigate("/login");
   };
 
-  if (roleLoading) {
-    return (
-      <div className="container mx-auto p-6">
-        <p className="text-muted-foreground">Chargement...</p>
-      </div>
-    );
-  }
-
   return (
     <div className="container mx-auto p-6 max-w-4xl">
       <div className="mb-8">
@@ -153,8 +152,8 @@ export default function TestAccounts() {
               <div>
                 <p className="font-medium">{currentUser.email}</p>
                 <div className="flex gap-2 mt-2">
-                  {roleData?.isAdmin && <Badge variant="destructive">Admin</Badge>}
-                  {roleData?.isModerator && <Badge variant="secondary">Modérateur</Badge>}
+                  {userRoles.isAdmin && <Badge variant="destructive">Admin</Badge>}
+                  {userRoles.isModerator && <Badge variant="secondary">Modérateur</Badge>}
                 </div>
               </div>
               <Button onClick={handleLogout} variant="outline">

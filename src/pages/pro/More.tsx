@@ -14,7 +14,8 @@ import {
   Loader2,
   ExternalLink,
   FileText,
-  Shield
+  Shield,
+  User
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
@@ -199,6 +200,10 @@ export default function ProMore() {
           <CardTitle>Support & Paramètres</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
+          <Button variant="ghost" className="w-full justify-start" onClick={() => navigate("/debug/accounts")}>
+            <User className="h-4 w-4 mr-2" />
+            Comptes Test
+          </Button>
           <Button variant="ghost" className="w-full justify-start">
             <HelpCircle className="h-4 w-4 mr-2" />
             Centre d'aide
