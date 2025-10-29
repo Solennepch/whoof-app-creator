@@ -130,8 +130,8 @@ export default function ProHome() {
 
       {/* Quick Actions */}
       <div className="grid gap-4 md:grid-cols-2">
-        <Card className="cursor-pointer hover:border-primary transition-colors" asChild>
-          <Link to="/pro/messages">
+        <Link to="/pro/messages">
+          <Card className="cursor-pointer hover:border-primary transition-colors">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <MessageSquare className="h-5 w-5" />
@@ -141,11 +141,11 @@ export default function ProHome() {
                 Répondez aux demandes de vos clients
               </CardDescription>
             </CardHeader>
-          </Link>
-        </Card>
+          </Card>
+        </Link>
 
-        <Card className="cursor-pointer hover:border-primary transition-colors" asChild>
-          <Link to="/pro/partners">
+        <Link to="/pro/partners">
+          <Card className="cursor-pointer hover:border-primary transition-colors">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Gift className="h-5 w-5" />
@@ -155,8 +155,8 @@ export default function ProHome() {
                 Découvrez les opportunités de collaboration
               </CardDescription>
             </CardHeader>
-          </Link>
-        </Card>
+          </Card>
+        </Link>
 
         <Card className="cursor-pointer hover:border-primary transition-colors">
           <CardHeader>

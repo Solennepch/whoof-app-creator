@@ -34,13 +34,13 @@ export function SidebarMenu({ open, onOpenChange }: SidebarMenuProps) {
         setIsAdmin(!!adminRole);
 
         // Check pro status
-        const { data: proAccount } = await supabase
-          .from('pro_accounts')
+        const { data: proProfile } = await supabase
+          .from('pro_profiles')
           .select('id')
           .eq('user_id', user.id)
           .maybeSingle();
 
-        setIsPro(!!proAccount);
+        setIsPro(!!proProfile);
       } catch (error) {
         console.error('Error checking user roles:', error);
       } finally {
@@ -69,7 +69,9 @@ export function SidebarMenu({ open, onOpenChange }: SidebarMenuProps) {
 
   // Add Pro Dashboard only if user is pro
   if (isPro) {
-    menuItems.push({ to: "/pro/dashboard", icon: Briefcase, label: "Espace Pro" });
+    menuItems.push({ to: "/pro/home", icon: Briefcase, label: "Espace Pro" });
+  } else {
+    menuItems.push({ to: "/pro/onboarding", icon: Briefcase, label: "Devenir Pro" });
   }
 
   // Add Debug link only for admins

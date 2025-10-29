@@ -1897,6 +1897,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      increment_pro_view: { Args: { pro_id: string }; Returns: undefined }
       longtransactionsenabled: { Args: never; Returns: boolean }
       nearby_profiles: {
         Args: { lat: number; lng: number; meters: number }

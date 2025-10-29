@@ -91,7 +91,7 @@ export function useProStats(proId?: string) {
 export function useIncrementProView() {
   return useMutation({
     mutationFn: async (proId: string) => {
-      const { error } = await supabase.rpc('increment_pro_view', { pro_id: proId });
+      const { error } = await supabase.rpc('increment_pro_view' as any, { pro_id: proId });
       if (error) throw error;
     },
   });

@@ -10,14 +10,13 @@ import { Building, Mail, Phone, Link2, MapPin, Upload } from "lucide-react";
 import { toast } from "sonner";
 
 const CATEGORIES = [
-  { value: 'veterinaire', label: 'Vétérinaire' },
+  { value: 'vet', label: 'Vétérinaire' },
   { value: 'toiletteur', label: 'Toiletteur' },
   { value: 'educateur', label: 'Éducateur canin' },
-  { value: 'pet-sitter', label: 'Pet-sitter' },
-  { value: 'refuge', label: 'Refuge / Association' },
-  { value: 'boutique', label: 'Boutique' },
-  { value: 'pension', label: 'Pension' },
-  { value: 'photographe', label: 'Photographe animalier' },
+  { value: 'sitter', label: 'Pet-sitter / Promeneur' },
+  { value: 'pension', label: 'Pension / Garde' },
+  { value: 'marque', label: 'Marque / Boutique' },
+  { value: 'autre', label: 'Autre' },
 ];
 
 export default function ProOnboarding() {
@@ -40,48 +39,36 @@ export default function ProOnboarding() {
     setIsLoading(true);
 
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
         navigate('/login');
         return;
       }
 
-      // Prepare geo field
-      let geo = null;
-      if (formData.lat && formData.lng) {
-        geo = `POINT(${formData.lng} ${formData.lat})`;
-      }
+      // Create pro profile
+      const { error } = await supabase
+        .from('pro_profiles')
+        .insert({
+          user_id: user.id,
+          business_name: formData.business_name,
+          activity: formData.category,
+          description: formData.description || null,
+          website: formData.website || null,
+          phone: formData.phone || null,
+          email: formData.email || null,
+          city: formData.address || null,
+          lat: formData.lat ? parseFloat(formData.lat) : null,
+          lng: formData.lng ? parseFloat(formData.lng) : null,
+          is_published: false, // Draft by default
+        });
 
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/pro-onboard`,
-        {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${session.access_token}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            business_name: formData.business_name,
-            category: formData.category,
-            description: formData.description || null,
-            website: formData.website || null,
-            phone: formData.phone || null,
-            email: formData.email || null,
-            address: formData.address || null,
-            geo,
-          }),
-        }
-      );
+      if (error) throw error;
 
-      if (!response.ok) {
-        throw new Error('Failed to create pro account');
-      }
-
-      toast.success('Demande envoyée ! Nous vérifions votre fiche sous 48h ⚡');
-      navigate('/pro/dashboard');
+      toast.success('Profil professionnel créé ! Vous pouvez maintenant le personnaliser.');
+      navigate('/pro/home');
     } catch (error) {
       console.error('Error:', error);
-      toast.error('Erreur lors de l\'inscription');
+      toast.error('Erreur lors de la création du profil');
     } finally {
       setIsLoading(false);
     }

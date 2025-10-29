@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -28,18 +28,37 @@ export default function ProEdit() {
   const upsertProfile = useUpsertProProfile();
 
   const [formData, setFormData] = useState({
-    business_name: profile?.business_name || '',
-    activity: profile?.activity || 'autre',
-    siret: profile?.siret || '',
-    city: profile?.city || '',
-    description: profile?.description || '',
-    website: profile?.website || '',
-    email: profile?.email || '',
-    phone: profile?.phone || '',
-    radius_km: profile?.radius_km || 25,
-    tags: profile?.tags?.join(', ') || '',
-    is_published: profile?.is_published || false,
+    business_name: '',
+    activity: 'autre',
+    siret: '',
+    city: '',
+    description: '',
+    website: '',
+    email: '',
+    phone: '',
+    radius_km: 25,
+    tags: '',
+    is_published: false,
   });
+
+  // Initialize form data when profile loads
+  useEffect(() => {
+    if (profile) {
+      setFormData({
+        business_name: profile.business_name || '',
+        activity: profile.activity || 'autre',
+        siret: profile.siret || '',
+        city: profile.city || '',
+        description: profile.description || '',
+        website: profile.website || '',
+        email: profile.email || '',
+        phone: profile.phone || '',
+        radius_km: profile.radius_km || 25,
+        tags: profile.tags?.join(', ') || '',
+        is_published: profile.is_published || false,
+      });
+    }
+  }, [profile]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
