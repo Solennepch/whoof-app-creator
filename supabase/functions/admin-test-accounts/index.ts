@@ -32,24 +32,18 @@ serve(async (req) => {
       // Test accounts to create
       const testAccounts = [
         {
-          email: 'test.user@whoof.app',
-          password: 'TestUser123!',
+          email: 'test@whoof.app',
+          password: 'Test123!',
           role: 'user',
-          display_name: 'Test User',
-          isPro: false
-        },
-        {
-          email: 'test.pro@whoof.app',
-          password: 'TestPro123!',
-          role: 'user',
-          display_name: 'Test Pro',
-          isPro: true
+          display_name: 'Solenne Martin',
+          isPro: true, // This user has BOTH personal and pro profiles
+          proBusinessName: 'Salon Canin Paris'
         },
         {
           email: 'test.admin@whoof.app',
           password: 'TestAdmin123!',
           role: 'admin',
-          display_name: 'Test Admin',
+          display_name: 'Admin Whoof',
           isPro: false
         }
       ];
@@ -116,11 +110,12 @@ serve(async (req) => {
             .from('pro_profiles')
             .insert({
               user_id: newUser.user.id,
-              business_name: 'Test Pro Business',
-              activity: 'veterinaire',
+              business_name: account.proBusinessName || 'Test Pro Business',
+              activity: 'toiletteur',
               email: account.email,
               phone: '0612345678',
               city: 'Paris',
+              description: 'Salon de toilettage professionnel situé au cœur de Paris',
               is_published: true,
               verified: true
             });
@@ -143,7 +138,7 @@ serve(async (req) => {
       const { data: profiles } = await supabaseAdmin
         .from('profiles')
         .select('id, display_name')
-        .or('display_name.eq.Test User,display_name.eq.Test Pro,display_name.eq.Test Admin');
+        .or('display_name.eq.Solenne Martin,display_name.eq.Admin Whoof');
 
       const accountsWithRoles = await Promise.all(
         (profiles || []).map(async (profile) => {

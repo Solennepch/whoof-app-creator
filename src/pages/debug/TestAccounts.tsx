@@ -17,23 +17,16 @@ interface TestAccount {
 
 const TEST_ACCOUNTS: TestAccount[] = [
   {
-    email: "test.user@whoof.app",
-    password: "TestUser123!",
-    displayName: "Test User",
+    email: "test@whoof.app",
+    password: "Test123!",
+    displayName: "Solenne Martin (Perso + Pro)",
     role: "user",
-    isPro: false
-  },
-  {
-    email: "test.pro@whoof.app",
-    password: "TestPro123!",
-    displayName: "Test Pro",
-    role: "user",
-    isPro: true
+    isPro: true // Has BOTH personal and pro profiles
   },
   {
     email: "test.admin@whoof.app",
     password: "TestAdmin123!",
-    displayName: "Test Admin",
+    displayName: "Admin Whoof",
     role: "admin",
     isPro: false
   }
@@ -83,7 +76,7 @@ export default function TestAccounts() {
         body: { action: 'list' }
       });
 
-      if (!error && data?.accounts && data.accounts.length >= 3) {
+      if (!error && data?.accounts && data.accounts.length >= 2) {
         setAccountsCreated(true);
       }
     } catch (error) {
@@ -268,13 +261,10 @@ export default function TestAccounts() {
         </CardHeader>
         <CardContent className="text-sm space-y-2">
           <div>
-            <span className="font-medium">User:</span> Accès aux fonctionnalités standards (découverte, profil, etc.)
+            <span className="font-medium">Solenne Martin:</span> Compte combo avec profil personnel ET professionnel. Utilisez le double-tap sur l'avatar ou "Changer de compte" pour basculer entre les deux modes.
           </div>
           <div>
-            <span className="font-medium">Pro:</span> Accès à l'espace Pro + fonctionnalités User
-          </div>
-          <div>
-            <span className="font-medium">Admin:</span> Accès à la modération + toutes les fonctionnalités
+            <span className="font-medium">Admin:</span> Compte administrateur avec accès à la modération et toutes les fonctionnalités.
           </div>
         </CardContent>
       </Card>
