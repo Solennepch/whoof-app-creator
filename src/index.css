@@ -306,4 +306,53 @@ All colors MUST be HSL.
     color: inherit !important;
     -webkit-text-fill-color: inherit !important;
   }
+  
+  /* Amélioration du design du hero mobile sur /discover */
+  .discover-hero {
+    padding-top: 24px !important;
+    padding-bottom: 40px;
+    text-align: center;
+    background: radial-gradient(circle at top center, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+  }
+
+  /* Petit badge "Match" au-dessus du titre */
+  .discover-hero::before {
+    content: "🎯 Match";
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.25);
+    color: #2a004f;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    border-radius: 999px;
+    padding: 4px 10px;
+    margin-bottom: 12px;
+  }
+
+  /* Ajustement du texte */
+  .discover-hero h1, 
+  .discover-hero h2, 
+  .discover-hero h3 {
+    font-size: 26px !important;
+    line-height: 1.2;
+    max-width: 300px;
+    margin: 12px auto 8px;
+  }
+
+  .discover-hero p {
+    color: rgba(0, 0, 0, 0.7);
+    font-size: 15px;
+    margin: 0 auto 16px;
+    max-width: 280px;
+  }
+
+  /* Petit label avant les boutons */
+  .discover-hero .cta-label::before {
+    content: "Choisis une aventure 👇";
+    display: block;
+    font-size: 13px;
+    color: rgba(80, 0, 140, 0.6);
+    margin-bottom: 8px;
+  }
 }

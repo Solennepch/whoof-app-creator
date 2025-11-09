@@ -100,7 +100,7 @@ export default function Discover() {
       <div className="h-16 shrink-0" />
       
       <div className="mx-auto max-w-2xl px-4 flex flex-col flex-1 pb-20">
-        <div className="relative pt-5 pb-3 text-center shrink-0">
+        <div className="relative pt-5 pb-3 text-center shrink-0 discover-hero">
           {/* Subtle paw pattern background */}
           <div 
             className="absolute inset-0 opacity-[0.04] pointer-events-none"
@@ -178,6 +178,9 @@ export default function Discover() {
             <ReasonChip key={i} label={reason} />
           ))}
         </div>
+
+        {/* CTA Label */}
+        <div className="cta-label"></div>
 
         {/* Actions */}
         <div className="flex justify-center items-center gap-4 mb-2 shrink-0">
