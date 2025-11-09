@@ -100,15 +100,42 @@ export default function Discover() {
       <div className="h-16 shrink-0" />
       
       <div className="mx-auto max-w-2xl px-4 flex flex-col flex-1 pb-20">
-        <div className="mb-3 text-center shrink-0">
-          <h1 className="mb-1 text-2xl font-bold text-foreground">
-            Découvrir
-          </h1>
-          <p className="text-sm text-muted-foreground">Swipe pour matcher avec de nouveaux amis</p>
+        <div className="relative pt-5 pb-3 text-center shrink-0">
+          {/* Subtle paw pattern background */}
+          <div 
+            className="absolute inset-0 opacity-[0.04] pointer-events-none"
+            style={{
+              background: 'radial-gradient(circle at center, hsl(var(--brand-violet-woof)) 0%, transparent 70%)'
+            }}
+          />
+          
+          <div className="relative mx-auto" style={{ maxWidth: '290px' }}>
+            {/* Badge */}
+            <div className="inline-flex items-center gap-1 px-3 py-1 mb-2 rounded-full bg-white/20 backdrop-blur-sm">
+              <span className="text-xs font-semibold uppercase tracking-wide" style={{ fontSize: '12px', color: 'hsl(var(--brand-violet-woof))' }}>
+                🎯 Match
+              </span>
+            </div>
+            
+            {/* Title */}
+            <h1 className="mb-1.5 font-bold text-foreground leading-tight" style={{ fontSize: '25px' }}>
+              Découvrir
+            </h1>
+            
+            {/* Subtitle */}
+            <p className="text-sm text-muted-foreground mb-2">
+              Swipe pour matcher avec de nouveaux amis
+            </p>
+            
+            {/* Mini label */}
+            <p className="text-xs tracking-wide" style={{ fontSize: '12px', color: 'hsl(var(--brand-violet-woof))', opacity: 0.7 }}>
+              Choisis une aventure 👇
+            </p>
+          </div>
         </div>
 
         {/* Card Stack */}
-        <div className="relative flex-1 min-h-0">
+        <div className="relative flex-1 min-h-0 mt-3">
           <div
             className={`absolute inset-0 rounded-3xl bg-white shadow-soft ring-1 ring-black/5 transition-transform duration-300 ${
               direction === "left" ? "-translate-x-full rotate-[-20deg] opacity-0" : ""
