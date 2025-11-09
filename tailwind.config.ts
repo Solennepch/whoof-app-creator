@@ -14,9 +14,17 @@ export default {
     },
     extend: {
       fontFamily: {
-        'fredoka': ['Fredoka', 'sans-serif'],
+        'sans': ['Poppins', 'sans-serif'],
+        'poppins': ['Poppins', 'sans-serif'],
+        'whoof': ['Poppins', 'sans-serif'],
       },
       colors: {
+        'whoof': {
+          'rose': 'hsl(var(--brand-rose-woof))',
+          'violet': 'hsl(var(--brand-violet-woof))',
+          'jaune': 'hsl(var(--brand-jaune-miel))',
+          'gris': 'hsl(var(--brand-gris-nuit))',
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

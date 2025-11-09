@@ -8,104 +8,102 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Whoof Brand Colors - New Design System (All HSL) */
-    --brand-raspberry: 334 100% 68%; /* #FF5DA2 - Rose framboise */
-    --brand-raspberry-light: 334 100% 78%;
-    --brand-raspberry-dark: 334 100% 58%;
+    /* Whoof Brand Colors - Kit UI Officiel (All HSL) */
+    --brand-rose-woof: 325 100% 69%; /* #FF5EBE - Rose Woof */
+    --brand-rose-woof-light: 325 100% 79%;
+    --brand-rose-woof-dark: 325 100% 59%;
     
-    --brand-yellow: 39 100% 65%; /* #FFC14D - Jaune orangé */
-    --brand-yellow-light: 39 100% 75%;
-    --brand-yellow-dark: 39 100% 55%;
+    --brand-violet-woof: 255 100% 68%; /* #8D5BFF - Violet Woof */
+    --brand-violet-woof-light: 255 100% 78%;
+    --brand-violet-woof-dark: 255 100% 58%;
     
-    --brand-plum: 250 100% 69%; /* #7B61FF - Violet prune */
-    --brand-plum-light: 250 100% 79%;
-    --brand-plum-dark: 250 100% 59%;
+    --brand-jaune-miel: 43 100% 71%; /* #FFD66B - Jaune Miel */
+    --brand-jaune-miel-light: 43 100% 81%;
+    --brand-jaune-miel-dark: 43 100% 61%;
     
-    --brand-sky: 200 100% 70%;
-    --brand-mint: 160 60% 65%;
+    --brand-gris-nuit: 240 29% 14%; /* #1A1A2E - Gris Nuit */
+    --brand-blanc-pur: 0 0% 100%; /* #FFFFFF - Blanc Pur */
     
-    --ink: 220 39% 11%; /* #111827 - Texte principal */
-    --paper: 210 20% 98%; /* #F9FAFB - Fond clair */
-    
-    /* Design System - Fun & Colorful */
-    --background: 210 20% 98%; /* #F9FAFB */
-    --foreground: 220 39% 11%; /* #111827 */
+    /* Design System - Whoof Apps */
+    --background: 0 0% 100%; /* Blanc Pur */
+    --foreground: 240 29% 14%; /* Gris Nuit */
 
     --card: 0 0% 100%;
-    --card-foreground: 220 39% 11%;
+    --card-foreground: 240 29% 14%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 39% 11%;
+    --popover-foreground: 240 29% 14%;
 
-    --primary: 334 100% 68%; /* #FF5DA2 - Rose framboise */
+    --primary: 325 100% 69%; /* Rose Woof */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 39 100% 65%; /* #FFC14D - Jaune orangé */
-    --secondary-foreground: 220 39% 11%;
+    --secondary: 255 100% 68%; /* Violet Woof */
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 210 20% 95%;
-    --muted-foreground: 220 10% 45%;
+    --muted: 240 5% 96%;
+    --muted-foreground: 240 4% 46%;
 
-    --accent: 250 100% 69%; /* #7B61FF - Violet prune */
-    --accent-foreground: 0 0% 100%;
+    --accent: 43 100% 71%; /* Jaune Miel */
+    --accent-foreground: 240 29% 14%;
 
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 210 20% 90%;
-    --input: 210 20% 92%;
-    --ring: 334 100% 68%;
+    --border: 240 6% 90%;
+    --input: 240 6% 90%;
+    --ring: 325 100% 69%;
 
-    --radius: 1.25rem;
+    --radius: 1.25rem; /* 20px pour les CTA */
 
-    /* Colorful Shadows & Effects */
+    /* Whoof Shadows & Effects */
     --shadow-soft: 0 2px 8px -2px rgba(0, 0, 0, 0.1);
-    --shadow-glow: 0 0 24px rgba(255, 93, 162, 0.15);
-    --shadow-vibrant: 0 8px 32px -8px rgba(255, 193, 77, 0.2);
+    --shadow-glow: 0 4px 16px -4px rgba(255, 94, 190, 0.3);
+    --shadow-vibrant: 0 8px 32px -8px rgba(141, 91, 255, 0.25);
     
-    /* Gradients */
-    --gradient-hero: linear-gradient(135deg, hsl(var(--brand-plum)) 0%, hsl(var(--brand-raspberry)) 100%);
-    --gradient-warm: linear-gradient(135deg, hsl(var(--brand-yellow)) 0%, hsl(var(--brand-raspberry)) 100%);
-    --gradient-cool: linear-gradient(135deg, hsl(var(--brand-plum)) 0%, hsl(var(--brand-sky)) 100%);
-    --gradient-playful: linear-gradient(135deg, hsl(var(--brand-yellow)) 0%, hsl(var(--brand-raspberry)) 50%, hsl(var(--brand-plum)) 100%);
+    /* Gradients Whoof - Signature */
+    --gradient-signature: linear-gradient(135deg, hsl(325 100% 69%) 0%, hsl(255 100% 68%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(325 100% 69%) 0%, hsl(255 100% 68%) 100%);
+    --gradient-warm: linear-gradient(135deg, hsl(43 100% 71%) 0%, hsl(325 100% 69%) 100%);
+    --gradient-cool: linear-gradient(135deg, hsl(255 100% 68%) 0%, hsl(200 100% 70%) 100%);
+    --gradient-playful: linear-gradient(135deg, hsl(43 100% 71%) 0%, hsl(325 100% 69%) 50%, hsl(255 100% 68%) 100%);
     
-    /* Transitions */
+    /* Transitions - Fluides et naturelles (max 300ms) */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   }
 
   .dark {
-    --background: 220 26% 12%;
-    --foreground: 220 20% 98%;
+    --background: 240 29% 14%; /* Gris Nuit en dark */
+    --foreground: 0 0% 100%;
 
-    --card: 220 24% 16%;
-    --card-foreground: 220 20% 98%;
+    --card: 240 25% 18%;
+    --card-foreground: 0 0% 100%;
 
-    --popover: 220 24% 16%;
-    --popover-foreground: 220 20% 98%;
+    --popover: 240 25% 18%;
+    --popover-foreground: 0 0% 100%;
 
-    --primary: 336 100% 70%;
+    --primary: 325 100% 69%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 41 100% 68%;
-    --secondary-foreground: 220 26% 14%;
+    --secondary: 255 100% 68%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 220 20% 22%;
-    --muted-foreground: 220 10% 65%;
+    --muted: 240 20% 22%;
+    --muted-foreground: 240 10% 65%;
 
-    --accent: 255 100% 72%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 43 100% 71%;
+    --accent-foreground: 240 29% 14%;
 
-    --destructive: 0 62.8% 50%;
-    --destructive-foreground: 220 20% 98%;
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 220 20% 24%;
-    --input: 220 20% 22%;
-    --ring: 336 100% 70%;
+    --border: 240 20% 24%;
+    --input: 240 20% 22%;
+    --ring: 325 100% 69%;
     
-    --shadow-soft: 0 4px 16px -4px rgba(123, 97, 255, 0.3);
-    --shadow-glow: 0 0 32px rgba(255, 93, 162, 0.25);
-    --shadow-vibrant: 0 8px 32px -8px rgba(255, 193, 77, 0.2);
+    --shadow-soft: 0 4px 16px -4px rgba(141, 91, 255, 0.3);
+    --shadow-glow: 0 6px 24px rgba(255, 94, 190, 0.4);
+    --shadow-vibrant: 0 8px 32px -8px rgba(255, 214, 107, 0.25);
   }
 }
 
@@ -118,8 +116,14 @@ All colors MUST be HSL.
     @apply bg-background text-foreground antialiased;
   }
   
-  h1, h2, h3 {
-    @apply font-fredoka;
+  /* Typographie Whoof - Poppins */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700; /* Bold pour les titres */
+  }
+  
+  body {
+    font-family: 'Poppins', sans-serif;
   }
 }
 
@@ -134,6 +138,10 @@ All colors MUST be HSL.
   
   .shadow-vibrant {
     box-shadow: var(--shadow-vibrant);
+  }
+  
+  .gradient-signature {
+    background: var(--gradient-signature);
   }
   
   .gradient-hero {
