@@ -47,17 +47,17 @@ export function BottomNavigation() {
                     style={{ 
                       color: isActive 
                         ? "hsl(var(--brand-rose-woof))" 
-                        : "hsl(var(--brand-violet-woof) / 0.6)",
+                        : "hsl(var(--brand-violet-woof))",
                       fill: isActive ? "hsl(var(--brand-rose-woof))" : "none"
                     }}
-                    strokeWidth={isActive ? 0 : 2}
+                    strokeWidth={isActive ? 0 : 2.5}
                   />
                   <span 
                     className="text-xs font-medium transition-colors duration-300 whitespace-nowrap overflow-hidden text-ellipsis text-center w-full px-1"
                     style={{ 
                       color: isActive 
                         ? "hsl(var(--brand-rose-woof))" 
-                        : "hsl(var(--brand-violet-woof) / 0.6)",
+                        : "hsl(var(--brand-violet-woof))",
                       lineHeight: "1"
                     }}
                   >
