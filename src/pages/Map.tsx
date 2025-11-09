@@ -868,7 +868,7 @@ export default function Map() {
                     style={{
                       width: '40px',
                       height: '40px',
-                      border: '2px solid rgba(0,0,0,0.1)',
+                      border: '2px solid hsl(var(--brand-violet-woof))',
                       boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
                     }}
                     aria-label="Recentrer sur ma position"
