@@ -4,13 +4,15 @@ import { Button } from "@/components/ui/button";
 import { List, MapPin, Navigation } from "lucide-react";
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import { getMapboxToken } from '@/lib/mapbox-config';
 
 // Initialize Mapbox token
-const mapboxToken = (import.meta?.env?.VITE_MAPBOX_TOKEN || (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_MAPBOX_TOKEN)) as string;
+const mapboxToken = getMapboxToken();
 
 if (!mapboxToken) {
   console.error('❌ MAPBOX TOKEN ERROR: No Mapbox token found.');
 } else {
+  console.log('✅ Mapbox token loaded successfully');
   mapboxgl.accessToken = mapboxToken;
 }
 

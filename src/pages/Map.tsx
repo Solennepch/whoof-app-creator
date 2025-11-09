@@ -642,15 +642,6 @@ export default function Map() {
           zoom: 13,
         });
 
-        // Wait for map to load
-        map.current.on('load', () => {
-          console.log('✅ Map loaded successfully with Mapbox');
-        });
-
-        map.current.on('error', (e: any) => {
-          console.error('❌ Map error:', e);
-        });
-
         // Add navigation controls
         map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
@@ -671,14 +662,29 @@ export default function Map() {
 
         console.log('✅ User marker added at', coords);
 
-        // Fetch and display nearby profiles and POIs
-        setIsLoading(true);
-        const profiles = await fetchNearbyProfiles(coords[0], coords[1]);
-        const generatedPOIs = generateMockPOIs(coords[0], coords[1]);
-        setNearbyProfiles(profiles);
-        setPois(generatedPOIs);
-        addMarkersToMap(profiles, generatedPOIs, coords);
-        setIsLoading(false);
+        // Wait for map style to load before adding sources
+        map.current.on('load', async () => {
+          console.log('✅ Map loaded successfully with Mapbox');
+          
+          try {
+            // Fetch and display nearby profiles and POIs
+            setIsLoading(true);
+            const profiles = await fetchNearbyProfiles(coords[0], coords[1]);
+            const generatedPOIs = generateMockPOIs(coords[0], coords[1]);
+            setNearbyProfiles(profiles);
+            setPois(generatedPOIs);
+            addMarkersToMap(profiles, generatedPOIs, coords);
+            setIsLoading(false);
+          } catch (error) {
+            console.error('Error loading markers:', error);
+            setIsLoading(false);
+          }
+        });
+
+        map.current.on('error', (e: any) => {
+          console.error('❌ Map error:', e);
+        });
+
       } catch (error) {
         console.error('Error initializing map:', error);
         setIsLoading(false);
