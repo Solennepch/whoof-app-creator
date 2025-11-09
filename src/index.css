@@ -9,17 +9,17 @@ All colors MUST be HSL.
 @layer base {
   :root {
     /* Whoof Brand Colors - Kit UI Officiel (All HSL) */
-    --brand-rose-woof: 325 100% 69%; /* #FF5EBE - Rose Woof */
-    --brand-rose-woof-light: 325 100% 79%;
-    --brand-rose-woof-dark: 325 100% 59%;
+    --brand-rose-woof: 334 100% 68%; /* #FF5DA2 - Rose Woof */
+    --brand-rose-woof-light: 334 100% 78%;
+    --brand-rose-woof-dark: 334 100% 58%;
     
-    --brand-violet-woof: 255 100% 68%; /* #8D5BFF - Violet Woof */
-    --brand-violet-woof-light: 255 100% 78%;
-    --brand-violet-woof-dark: 255 100% 58%;
+    --brand-violet-woof: 250 100% 69%; /* #7B61FF - Violet Woof */
+    --brand-violet-woof-light: 250 100% 79%;
+    --brand-violet-woof-dark: 250 100% 59%;
     
-    --brand-jaune-miel: 43 100% 71%; /* #FFD66B - Jaune Miel */
-    --brand-jaune-miel-light: 43 100% 81%;
-    --brand-jaune-miel-dark: 43 100% 61%;
+    --brand-jaune-miel: 39 100% 65%; /* #FFC14D - Jaune Miel */
+    --brand-jaune-miel-light: 39 100% 75%;
+    --brand-jaune-miel-dark: 39 100% 55%;
     
     --brand-gris-nuit: 240 29% 14%; /* #1A1A2E - Gris Nuit */
     --brand-blanc-pur: 0 0% 100%; /* #FFFFFF - Blanc Pur */
@@ -34,16 +34,16 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 240 29% 14%;
 
-    --primary: 325 100% 69%; /* Rose Woof */
+    --primary: 334 100% 68%; /* #FF5DA2 - Rose Woof */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 255 100% 68%; /* Violet Woof */
+    --secondary: 250 100% 69%; /* #7B61FF - Violet Woof */
     --secondary-foreground: 0 0% 100%;
 
     --muted: 240 5% 96%;
     --muted-foreground: 240 4% 46%;
 
-    --accent: 43 100% 71%; /* Jaune Miel */
+    --accent: 39 100% 65%; /* #FFC14D - Jaune Miel */
     --accent-foreground: 240 29% 14%;
 
     --destructive: 0 84% 60%;
@@ -51,7 +51,7 @@ All colors MUST be HSL.
 
     --border: 240 6% 90%;
     --input: 240 6% 90%;
-    --ring: 325 100% 69%;
+    --ring: 334 100% 68%;
 
     --radius: 1.25rem; /* 20px pour les CTA */
 
@@ -61,11 +61,11 @@ All colors MUST be HSL.
     --shadow-vibrant: 0 8px 32px -8px rgba(141, 91, 255, 0.25);
     
     /* Gradients Whoof - Signature */
-    --gradient-signature: linear-gradient(135deg, hsl(325 100% 69%) 0%, hsl(255 100% 68%) 100%);
-    --gradient-hero: linear-gradient(135deg, hsl(325 100% 69%) 0%, hsl(255 100% 68%) 100%);
-    --gradient-warm: linear-gradient(135deg, hsl(43 100% 71%) 0%, hsl(325 100% 69%) 100%);
-    --gradient-cool: linear-gradient(135deg, hsl(255 100% 68%) 0%, hsl(200 100% 70%) 100%);
-    --gradient-playful: linear-gradient(135deg, hsl(43 100% 71%) 0%, hsl(325 100% 69%) 50%, hsl(255 100% 68%) 100%);
+    --gradient-signature: linear-gradient(135deg, hsl(334 100% 68%) 0%, hsl(250 100% 69%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(334 100% 68%) 0%, hsl(250 100% 69%) 100%);
+    --gradient-warm: linear-gradient(135deg, hsl(39 100% 65%) 0%, hsl(334 100% 68%) 100%);
+    --gradient-cool: linear-gradient(135deg, hsl(250 100% 69%) 0%, hsl(200 100% 70%) 100%);
+    --gradient-playful: linear-gradient(135deg, hsl(39 100% 65%) 0%, hsl(334 100% 68%) 50%, hsl(250 100% 69%) 100%);
     
     /* Transitions - Fluides et naturelles (max 300ms) */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -82,16 +82,16 @@ All colors MUST be HSL.
     --popover: 240 25% 18%;
     --popover-foreground: 0 0% 100%;
 
-    --primary: 325 100% 69%;
+    --primary: 334 100% 68%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 255 100% 68%;
+    --secondary: 250 100% 69%;
     --secondary-foreground: 0 0% 100%;
 
     --muted: 240 20% 22%;
     --muted-foreground: 240 10% 65%;
 
-    --accent: 43 100% 71%;
+    --accent: 39 100% 65%;
     --accent-foreground: 240 29% 14%;
 
     --destructive: 0 62% 50%;
@@ -99,7 +99,7 @@ All colors MUST be HSL.
 
     --border: 240 20% 24%;
     --input: 240 20% 22%;
-    --ring: 325 100% 69%;
+    --ring: 334 100% 68%;
     
     --shadow-soft: 0 4px 16px -4px rgba(141, 91, 255, 0.3);
     --shadow-glow: 0 6px 24px rgba(255, 94, 190, 0.4);
