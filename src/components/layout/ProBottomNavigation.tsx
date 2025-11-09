@@ -46,9 +46,9 @@ export function ProBottomNavigation() {
                     className="w-6 h-6 max-w-full transition-colors duration-300" 
                     style={{ 
                       color: isActive 
-                        ? "hsl(var(--brand-raspberry))" 
-                        : "hsl(var(--ink) / 0.6)",
-                      fill: isActive ? "hsl(var(--brand-raspberry))" : "none"
+                        ? "hsl(var(--brand-rose-woof))" 
+                        : "hsl(var(--brand-violet-woof) / 0.6)",
+                      fill: isActive ? "hsl(var(--brand-rose-woof))" : "none"
                     }}
                     strokeWidth={isActive ? 0 : 2}
                   />
@@ -56,8 +56,8 @@ export function ProBottomNavigation() {
                     className="text-xs font-medium transition-colors duration-300 whitespace-nowrap overflow-hidden text-ellipsis text-center w-full px-1"
                     style={{ 
                       color: isActive 
-                        ? "hsl(var(--brand-raspberry))" 
-                        : "hsl(var(--ink) / 0.6)",
+                        ? "hsl(var(--brand-rose-woof))" 
+                        : "hsl(var(--brand-violet-woof) / 0.6)",
                       lineHeight: "1"
                     }}
                   >
