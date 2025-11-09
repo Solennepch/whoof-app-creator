@@ -15,7 +15,7 @@ const adoptionProfiles = [
     age: "2 ans",
     image: "https://images.unsplash.com/photo-1558788353-f76d92427f16?w=800&h=800&fit=crop",
     bio: "Abandonnée mais pleine de vie ! Luna cherche une famille aimante pour recommencer une nouvelle vie 🌟",
-    reasons: ["Affectueuse", "Calme", "Moyen gabarit"],
+    reasons: ["Affectueuse", "Calme", "Moyen gabarit", "Compatible enfants", "Coup de cœur"],
     shelter: "SPA Paris",
   },
   {
@@ -24,7 +24,7 @@ const adoptionProfiles = [
     age: "5 ans",
     image: "https://images.unsplash.com/photo-1568572933382-74d440642117?w=800&h=800&fit=crop",
     bio: "Fidèle et protecteur. Max a besoin d'un jardin et d'un maître expérimenté 🐕",
-    reasons: ["Loyal", "Grand gabarit", "Éduqué"],
+    reasons: ["Loyal", "Grand gabarit", "Besoin d'espace", "Sportif", "À l'adoption"],
     shelter: "SPA Lyon",
   },
   {
@@ -33,7 +33,7 @@ const adoptionProfiles = [
     age: "3 ans",
     image: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=800&h=800&fit=crop",
     bio: "Petite mais dynamique ! Bella adore jouer et a besoin d'activité quotidienne ⚡",
-    reasons: ["Énergique", "Petit gabarit", "Joueuse"],
+    reasons: ["Énergique", "Petit gabarit", "Joueuse", "Aime les balades", "Recommandé"],
     shelter: "SPA Marseille",
   },
   {
@@ -42,7 +42,7 @@ const adoptionProfiles = [
     age: "4 ans",
     image: "https://images.unsplash.com/photo-1583511655826-05700d52f4d9?w=800&h=800&fit=crop",
     bio: "Adorable compagnon d'appartement. Rocky ronronne de bonheur ! 💤",
-    reasons: ["Calme", "Compact", "Sociable"],
+    reasons: ["Calme", "Compact", "Sociable", "OK appartement", "SPA"],
     shelter: "SPA Bordeaux",
   },
   {
@@ -51,7 +51,7 @@ const adoptionProfiles = [
     age: "6 ans",
     image: "https://images.unsplash.com/photo-1633722715463-d30f4f325e24?w=800&h=800&fit=crop",
     bio: "Senior plein de sagesse et d'amour à donner. Milo mérite une retraite heureuse 🧡",
-    reasons: ["Doux", "Senior", "Famille"],
+    reasons: ["Doux", "Très grand", "Compatible chats", "Jardin idéal", "En sauvetage"],
     shelter: "SPA Toulouse",
   },
 ];
