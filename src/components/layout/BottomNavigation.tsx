@@ -50,7 +50,7 @@ export function BottomNavigation() {
                         : "hsl(var(--brand-violet-woof))",
                       fill: isActive ? "hsl(var(--brand-rose-woof))" : "none"
                     }}
-                    strokeWidth={isActive ? 0 : 2.5}
+                    strokeWidth={isActive ? 0 : 2}
                   />
                   <span 
                     className="text-xs font-medium transition-colors duration-300 whitespace-nowrap overflow-hidden text-ellipsis text-center w-full px-1"
