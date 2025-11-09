@@ -99,10 +99,15 @@ export default function Events() {
               key={i}
               className="flex gap-4 rounded-2xl bg-white p-4 shadow-soft ring-1 ring-black/5 transition hover:shadow-md"
             >
-              <div
-                className="h-24 w-32 flex-shrink-0 rounded-2xl bg-cover bg-center ring-1 ring-black/5"
-                style={{ backgroundImage: `url(${event.image})` }}
-              />
+              <div className="flex flex-col gap-2">
+                <div
+                  className="h-24 w-32 flex-shrink-0 rounded-2xl bg-cover bg-center ring-1 ring-black/5"
+                  style={{ backgroundImage: `url(${event.image})` }}
+                />
+                <Button variant="outline" className="rounded-2xl w-32">
+                  Participer
+                </Button>
+              </div>
 
               <div className="flex-1">
                 <h3 className="mb-2 text-lg font-semibold" style={{ color: "var(--ink)" }}>
@@ -123,12 +128,6 @@ export default function Events() {
                     {event.attendees} participants
                   </div>
                 </div>
-              </div>
-
-              <div className="flex items-center">
-                <Button variant="outline" className="rounded-2xl">
-                  Participer
-                </Button>
               </div>
             </div>
           ))}
