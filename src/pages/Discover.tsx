@@ -169,12 +169,12 @@ export default function Discover() {
       {/* Header spacing to avoid overlap with sticky header */}
       <div className="h-16 shrink-0" />
       
-      <div className="mx-auto max-w-2xl px-4 flex flex-col flex-1 pb-24">
-        <div className="mb-2 text-center shrink-0">
-          <h1 className="mb-0.5 text-xl font-bold text-foreground">
+      <div className="mx-auto max-w-2xl px-4 flex flex-col flex-1 pb-20">
+        <div className="mb-1.5 text-center shrink-0">
+          <h1 className="mb-0.5 text-lg font-bold text-foreground">
             Découvrir
           </h1>
-          <p className="text-xs text-muted-foreground">Swipe pour matcher avec de nouveaux amis</p>
+          <p className="text-[11px] text-muted-foreground">Swipe pour matcher avec de nouveaux amis</p>
         </div>
 
         {/* Card Stack */}
@@ -189,26 +189,26 @@ export default function Discover() {
               style={{ backgroundImage: `url(${current.image})` }}
             />
 
-            <div className="p-4">
-              <div className="mb-2 flex items-start justify-between">
+            <div className="p-3">
+              <div className="mb-1.5 flex items-start justify-between">
                 <div>
-                  <h2 className="text-xl font-bold" style={{ color: "var(--ink)" }}>
+                  <h2 className="text-lg font-bold" style={{ color: "var(--ink)" }}>
                     {current.name}
                   </h2>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-xs text-muted-foreground">
                     {current.breed} • {current.age}
                   </p>
                 </div>
                 <Button
                   size="icon"
                   variant="outline"
-                  className="rounded-full h-8 w-8"
+                  className="rounded-full h-7 w-7"
                 >
                   <Info className="h-3 w-3" />
                 </Button>
               </div>
 
-              <p className="text-xs line-clamp-2" style={{ color: "var(--ink)", opacity: 0.8 }}>
+              <p className="text-[11px] line-clamp-2" style={{ color: "var(--ink)", opacity: 0.8 }}>
                 {current.bio}
               </p>
             </div>
@@ -216,64 +216,64 @@ export default function Discover() {
         </div>
 
         {/* Tags */}
-        <div className="mt-2 mb-2 flex flex-wrap justify-center gap-1.5 shrink-0">
+        <div className="mt-1.5 mb-1.5 flex flex-wrap justify-center gap-1 shrink-0">
           {current.reasons.map((reason, i) => (
             <ReasonChip key={i} label={reason} />
           ))}
         </div>
 
         {/* Actions */}
-        <div className="flex justify-center items-center gap-4 mb-1 shrink-0">
+        <div className="flex justify-center items-center gap-2.5 mb-0.5 shrink-0">
           <Button
             size="lg"
             variant="outline"
-            className={`h-14 w-14 rounded-full shadow-soft ${!isPremium ? 'opacity-40 cursor-not-allowed' : ''}`}
+            className={`h-12 w-12 rounded-full shadow-soft ${!isPremium ? 'opacity-40 cursor-not-allowed' : ''}`}
             onClick={handleUndo}
             disabled={!isPremium}
           >
-            <Undo2 className="h-6 w-6" style={{ color: isPremium ? "var(--ink)" : "#9CA3AF" }} />
+            <Undo2 className="h-5 w-5" style={{ color: isPremium ? "var(--ink)" : "#9CA3AF" }} />
           </Button>
 
           <Button
             size="lg"
             variant="outline"
-            className="h-16 w-16 rounded-full shadow-soft"
+            className="h-14 w-14 rounded-full shadow-soft"
             onClick={() => handleSwipe(false)}
           >
-            <X className="h-8 w-8" style={{ color: "var(--ink)", opacity: 0.6 }} />
+            <X className="h-7 w-7" style={{ color: "var(--ink)", opacity: 0.6 }} />
           </Button>
 
           <Button
             size="lg"
             variant="outline"
-            className={`h-14 w-14 rounded-full shadow-soft ${!isPremium ? 'opacity-40 cursor-not-allowed' : 'bg-gradient-to-br from-yellow-400 to-orange-500 border-0'}`}
+            className={`h-12 w-12 rounded-full shadow-soft ${!isPremium ? 'opacity-40 cursor-not-allowed' : 'bg-gradient-to-br from-yellow-400 to-orange-500 border-0'}`}
             onClick={handleSuperLike}
             disabled={!isPremium}
           >
-            <Star className="h-6 w-6" style={{ color: isPremium ? "white" : "#9CA3AF" }} fill={isPremium ? "white" : "none"} />
+            <Star className="h-5 w-5" style={{ color: isPremium ? "white" : "#9CA3AF" }} fill={isPremium ? "white" : "none"} />
           </Button>
 
           <Button
             size="lg"
-            className="h-16 w-16 rounded-full shadow-soft bg-[#FF5DA2] hover:bg-[#FF5DA2]/90"
+            className="h-14 w-14 rounded-full shadow-soft bg-[#FF5DA2] hover:bg-[#FF5DA2]/90"
             onClick={() => handleSwipe(true)}
           >
-            <Heart className="h-8 w-8 text-white fill-white" />
+            <Heart className="h-7 w-7 text-white fill-white" />
           </Button>
 
           <Button
             size="lg"
             variant="outline"
-            className={`h-14 w-14 rounded-full shadow-soft ${!isPremium ? 'opacity-40 cursor-not-allowed' : ''}`}
+            className={`h-12 w-12 rounded-full shadow-soft ${!isPremium ? 'opacity-40 cursor-not-allowed' : ''}`}
             onClick={handleShare}
             disabled={!isPremium}
           >
-            <Share2 className="h-6 w-6" style={{ color: isPremium ? "var(--ink)" : "#9CA3AF" }} />
+            <Share2 className="h-5 w-5" style={{ color: isPremium ? "var(--ink)" : "#9CA3AF" }} />
           </Button>
         </div>
 
         {/* Progress */}
-        <div className="text-center text-xs text-muted-foreground pb-1 shrink-0">
+        <div className="text-center text-[11px] text-muted-foreground shrink-0">
           {currentIndex + 1} / {profiles.length}
         </div>
       </div>
