@@ -19,8 +19,8 @@ export function ProBottomNavigation() {
 
   return (
     <nav 
-      className="fixed bottom-0 left-0 right-0 z-50 shadow-soft md:hidden w-full overflow-hidden backdrop-blur-sm" 
-      style={{ 
+      className="fixed bottom-0 left-0 right-0 z-50 shadow-soft md:hidden w-full overflow-hidden" 
+      style={{
         backgroundColor: "hsl(var(--paper))",
         borderTop: "1px solid hsl(var(--border))",
         paddingLeft: "env(safe-area-inset-left)",
