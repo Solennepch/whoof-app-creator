@@ -268,23 +268,23 @@ export default function DiscoverAdoption() {
         {/* Header spacing to avoid overlap with sticky header */}
         <div className="h-16 shrink-0" />
         
-        <div className="mx-auto max-w-2xl px-3 flex flex-col flex-1 pb-[72px]">
-          <div className="mb-1 shrink-0">
-            <div className="flex items-center justify-between gap-2 mb-0">
-              <h1 className="text-base font-bold text-foreground">
+        <div className="mx-auto max-w-2xl px-4 flex flex-col flex-1 pb-24">
+          <div className="mb-2 shrink-0">
+            <div className="flex items-center justify-between gap-2 mb-0.5">
+              <h1 className="text-xl font-bold text-foreground">
                 Adoption SPA
               </h1>
               {/* Global counter */}
-              <div className="bg-white/90 backdrop-blur-sm px-2 py-0.5 rounded-full shadow-lg">
-                <div className="flex items-center gap-0.5">
-                  <Users className="h-2 w-2 text-[#FF5DA2]" />
-                  <span className="text-[9px] font-semibold whitespace-nowrap" style={{ color: "var(--ink)" }}>
+              <div className="bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded-full shadow-lg">
+                <div className="flex items-center gap-1">
+                  <Users className="h-3 w-3 text-[#FF5DA2]" />
+                  <span className="text-[10px] font-semibold whitespace-nowrap" style={{ color: "var(--ink)" }}>
                     {totalMatches.toLocaleString()} contacts
                   </span>
                 </div>
               </div>
             </div>
-            <p className="text-[10px] text-muted-foreground">Swipe pour découvrir ton futur compagnon</p>
+            <p className="text-xs text-muted-foreground">Swipe pour découvrir ton futur compagnon</p>
           </div>
 
           {/* Card Stack */}
@@ -298,33 +298,33 @@ export default function DiscoverAdoption() {
                 className="h-2/3 rounded-t-3xl bg-cover bg-center relative"
                 style={{ backgroundImage: `url(${current.image})` }}
               >
-                <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm px-2 py-0.5 rounded-full">
-                  <p className="text-[9px] font-semibold" style={{ color: "var(--brand-raspberry)" }}>
+                <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full">
+                  <p className="text-xs font-semibold" style={{ color: "var(--brand-raspberry)" }}>
                     {current.shelter}
                   </p>
                 </div>
               </div>
 
-              <div className="p-2.5">
-                <div className="mb-1 flex items-start justify-between">
+              <div className="p-4">
+                <div className="mb-2 flex items-start justify-between">
                   <div>
-                    <h2 className="text-base font-bold" style={{ color: "var(--ink)" }}>
+                    <h2 className="text-xl font-bold" style={{ color: "var(--ink)" }}>
                       {current.name}
                     </h2>
-                    <p className="text-[11px] text-muted-foreground">
+                    <p className="text-sm text-muted-foreground">
                       {current.breed} • {current.age}
                     </p>
                   </div>
                   <Button
                     size="icon"
                     variant="outline"
-                    className="rounded-full h-6 w-6"
+                    className="rounded-full h-8 w-8"
                   >
-                    <Info className="h-2.5 w-2.5" />
+                    <Info className="h-3 w-3" />
                   </Button>
                 </div>
 
-                <p className="text-[10px] line-clamp-2" style={{ color: "var(--ink)", opacity: 0.8 }}>
+                <p className="text-xs line-clamp-2" style={{ color: "var(--ink)", opacity: 0.8 }}>
                   {current.bio}
                 </p>
               </div>
@@ -332,64 +332,64 @@ export default function DiscoverAdoption() {
           </div>
 
           {/* Tags */}
-          <div className="mt-1 mb-1 flex flex-wrap justify-center gap-0.5 shrink-0">
+          <div className="mt-2 mb-2 flex flex-wrap justify-center gap-1.5 shrink-0">
             {current.reasons.map((reason, i) => (
               <ReasonChip key={i} label={reason} />
             ))}
           </div>
 
         {/* Actions */}
-        <div className="flex justify-center items-center gap-2 shrink-0">
+        <div className="flex justify-center items-center gap-4 mb-1 shrink-0">
           <Button
             size="lg"
             variant="outline"
-            className={`h-11 w-11 rounded-full shadow-soft ${!isPremium ? 'opacity-40 cursor-not-allowed' : ''}`}
+            className={`h-14 w-14 rounded-full shadow-soft ${!isPremium ? 'opacity-40 cursor-not-allowed' : ''}`}
             onClick={handleUndo}
             disabled={!isPremium}
           >
-            <Undo2 className="h-4.5 w-4.5" style={{ color: isPremium ? "var(--ink)" : "#9CA3AF" }} />
+            <Undo2 className="h-6 w-6" style={{ color: isPremium ? "var(--ink)" : "#9CA3AF" }} />
           </Button>
 
           <Button
             size="lg"
             variant="outline"
-            className="h-13 w-13 rounded-full shadow-soft"
+            className="h-16 w-16 rounded-full shadow-soft"
             onClick={() => handleSwipe(false)}
           >
-            <X className="h-6 w-6" style={{ color: "var(--ink)", opacity: 0.6 }} />
+            <X className="h-8 w-8" style={{ color: "var(--ink)", opacity: 0.6 }} />
           </Button>
 
           <Button
             size="lg"
             variant="outline"
-            className={`h-11 w-11 rounded-full shadow-soft ${!isPremium ? 'opacity-40 cursor-not-allowed' : 'bg-gradient-to-br from-yellow-400 to-orange-500 border-0'}`}
+            className={`h-14 w-14 rounded-full shadow-soft ${!isPremium ? 'opacity-40 cursor-not-allowed' : 'bg-gradient-to-br from-yellow-400 to-orange-500 border-0'}`}
             onClick={handleSuperLike}
             disabled={!isPremium}
           >
-            <Star className="h-4.5 w-4.5" style={{ color: isPremium ? "white" : "#9CA3AF" }} fill={isPremium ? "white" : "none"} />
+            <Star className="h-6 w-6" style={{ color: isPremium ? "white" : "#9CA3AF" }} fill={isPremium ? "white" : "none"} />
           </Button>
 
           <Button
             size="lg"
-            className="h-13 w-13 rounded-full shadow-soft bg-[#FF5DA2] hover:bg-[#FF5DA2]/90"
+            className="h-16 w-16 rounded-full shadow-soft bg-[#FF5DA2] hover:bg-[#FF5DA2]/90"
             onClick={() => handleSwipe(true)}
           >
-            <Heart className="h-6 w-6 text-white fill-white" />
+            <Heart className="h-8 w-8 text-white fill-white" />
           </Button>
 
           <Button
             size="lg"
             variant="outline"
-            className={`h-11 w-11 rounded-full shadow-soft ${!isPremium ? 'opacity-40 cursor-not-allowed' : ''}`}
+            className={`h-14 w-14 rounded-full shadow-soft ${!isPremium ? 'opacity-40 cursor-not-allowed' : ''}`}
             onClick={handleShare}
             disabled={!isPremium}
           >
-            <Share2 className="h-4.5 w-4.5" style={{ color: isPremium ? "var(--ink)" : "#9CA3AF" }} />
+            <Share2 className="h-6 w-6" style={{ color: isPremium ? "var(--ink)" : "#9CA3AF" }} />
           </Button>
         </div>
 
           {/* Progress */}
-          <div className="text-center text-[10px] text-muted-foreground mt-0.5 shrink-0">
+          <div className="text-center text-xs text-muted-foreground pb-1 shrink-0">
             {currentIndex + 1} / {adoptionProfiles.length}
           </div>
         </div>
