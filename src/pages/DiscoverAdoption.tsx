@@ -339,30 +339,30 @@ export default function DiscoverAdoption() {
           </div>
 
         {/* Actions */}
-        <div className="flex justify-center items-center gap-3 mb-1 shrink-0">
+        <div className="flex justify-center items-center gap-4 mb-1 shrink-0">
           <Button
             size="lg"
             variant="outline"
-            className={`h-12 w-12 rounded-full shadow-soft ${!isPremium ? 'opacity-40 cursor-not-allowed' : ''}`}
+            className={`h-14 w-14 rounded-full shadow-soft ${!isPremium ? 'opacity-40 cursor-not-allowed' : ''}`}
             onClick={handleUndo}
             disabled={!isPremium}
           >
-            <Undo2 className="h-5 w-5" style={{ color: isPremium ? "var(--ink)" : "#9CA3AF" }} />
+            <Undo2 className="h-6 w-6" style={{ color: isPremium ? "var(--ink)" : "#9CA3AF" }} />
           </Button>
 
           <Button
             size="lg"
             variant="outline"
-            className="h-14 w-14 rounded-full shadow-soft"
+            className="h-16 w-16 rounded-full shadow-soft"
             onClick={() => handleSwipe(false)}
           >
-            <X className="h-7 w-7" style={{ color: "var(--ink)", opacity: 0.6 }} />
+            <X className="h-8 w-8" style={{ color: "var(--ink)", opacity: 0.6 }} />
           </Button>
 
           <Button
             size="lg"
             variant="outline"
-            className={`h-12 w-12 rounded-full shadow-soft ${!isPremium ? 'opacity-40 cursor-not-allowed' : 'bg-gradient-to-br from-yellow-400 to-orange-500 border-0'}`}
+            className={`h-14 w-14 rounded-full shadow-soft ${!isPremium ? 'opacity-40 cursor-not-allowed' : 'bg-gradient-to-br from-yellow-400 to-orange-500 border-0'}`}
             onClick={handleSuperLike}
             disabled={!isPremium}
           >
@@ -380,11 +380,11 @@ export default function DiscoverAdoption() {
           <Button
             size="lg"
             variant="outline"
-            className={`h-12 w-12 rounded-full shadow-soft ${!isPremium ? 'opacity-40 cursor-not-allowed' : ''}`}
+            className={`h-14 w-14 rounded-full shadow-soft ${!isPremium ? 'opacity-40 cursor-not-allowed' : ''}`}
             onClick={handleShare}
             disabled={!isPremium}
           >
-            <Share2 className="h-5 w-5" style={{ color: isPremium ? "var(--ink)" : "#9CA3AF" }} />
+            <Share2 className="h-6 w-6" style={{ color: isPremium ? "var(--ink)" : "#9CA3AF" }} />
           </Button>
         </div>
 
