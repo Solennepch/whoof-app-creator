@@ -268,23 +268,23 @@ export default function DiscoverAdoption() {
         {/* Header spacing to avoid overlap with sticky header */}
         <div className="h-16 shrink-0" />
         
-        <div className="mx-auto max-w-2xl px-4 flex flex-col flex-1 pb-20">
-          <div className="mb-3 shrink-0">
-            <div className="flex items-center justify-between gap-2 mb-1">
-              <h1 className="text-2xl font-bold text-foreground">
+        <div className="mx-auto max-w-2xl px-4 flex flex-col flex-1 pb-24">
+          <div className="mb-2 shrink-0">
+            <div className="flex items-center justify-between gap-2 mb-0.5">
+              <h1 className="text-xl font-bold text-foreground">
                 Adoption SPA
               </h1>
               {/* Global counter */}
-              <div className="bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full shadow-lg">
-                <div className="flex items-center gap-1.5">
-                  <Users className="h-3.5 w-3.5 text-[#FF5DA2]" />
-                  <span className="text-xs font-semibold whitespace-nowrap" style={{ color: "var(--ink)" }}>
-                    Nos mises en contact : {totalMatches.toLocaleString()}
+              <div className="bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded-full shadow-lg">
+                <div className="flex items-center gap-1">
+                  <Users className="h-3 w-3 text-[#FF5DA2]" />
+                  <span className="text-[10px] font-semibold whitespace-nowrap" style={{ color: "var(--ink)" }}>
+                    {totalMatches.toLocaleString()} contacts
                   </span>
                 </div>
               </div>
             </div>
-            <p className="text-sm text-muted-foreground">Swipe pour découvrir ton futur compagnon</p>
+            <p className="text-xs text-muted-foreground">Swipe pour découvrir ton futur compagnon</p>
           </div>
 
           {/* Card Stack */}
@@ -332,14 +332,14 @@ export default function DiscoverAdoption() {
           </div>
 
           {/* Tags */}
-          <div className="mt-3 mb-3 flex flex-wrap justify-center gap-1.5 shrink-0">
+          <div className="mt-2 mb-2 flex flex-wrap justify-center gap-1.5 shrink-0">
             {current.reasons.map((reason, i) => (
               <ReasonChip key={i} label={reason} />
             ))}
           </div>
 
         {/* Actions */}
-        <div className="flex justify-center items-center gap-3 mb-2 shrink-0">
+        <div className="flex justify-center items-center gap-3 mb-1 shrink-0">
           <Button
             size="lg"
             variant="outline"
@@ -389,7 +389,7 @@ export default function DiscoverAdoption() {
         </div>
 
           {/* Progress */}
-          <div className="text-center text-xs text-muted-foreground pb-2 shrink-0">
+          <div className="text-center text-xs text-muted-foreground pb-1 shrink-0">
             {currentIndex + 1} / {adoptionProfiles.length}
           </div>
         </div>

@@ -169,12 +169,12 @@ export default function Discover() {
       {/* Header spacing to avoid overlap with sticky header */}
       <div className="h-16 shrink-0" />
       
-      <div className="mx-auto max-w-2xl px-4 flex flex-col flex-1 pb-20">
-        <div className="mb-3 text-center shrink-0">
-          <h1 className="mb-1 text-2xl font-bold text-foreground">
+      <div className="mx-auto max-w-2xl px-4 flex flex-col flex-1 pb-24">
+        <div className="mb-2 text-center shrink-0">
+          <h1 className="mb-0.5 text-xl font-bold text-foreground">
             Découvrir
           </h1>
-          <p className="text-sm text-muted-foreground">Swipe pour matcher avec de nouveaux amis</p>
+          <p className="text-xs text-muted-foreground">Swipe pour matcher avec de nouveaux amis</p>
         </div>
 
         {/* Card Stack */}
@@ -216,14 +216,14 @@ export default function Discover() {
         </div>
 
         {/* Tags */}
-        <div className="mt-3 mb-3 flex flex-wrap justify-center gap-1.5 shrink-0">
+        <div className="mt-2 mb-2 flex flex-wrap justify-center gap-1.5 shrink-0">
           {current.reasons.map((reason, i) => (
             <ReasonChip key={i} label={reason} />
           ))}
         </div>
 
         {/* Actions */}
-        <div className="flex justify-center items-center gap-3 mb-2 shrink-0">
+        <div className="flex justify-center items-center gap-3 mb-1 shrink-0">
           <Button
             size="lg"
             variant="outline"
@@ -273,7 +273,7 @@ export default function Discover() {
         </div>
 
         {/* Progress */}
-        <div className="text-center text-xs text-muted-foreground pb-2 shrink-0">
+        <div className="text-center text-xs text-muted-foreground pb-1 shrink-0">
           {currentIndex + 1} / {profiles.length}
         </div>
       </div>
