@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { X, Heart, Info, Users } from "lucide-react";
+import { X, Heart, Info, Users, Share2, Undo2, Star } from "lucide-react";
 import { ReasonChip } from "@/components/ui/ReasonChip";
 import { Button } from "@/components/ui/button";
 import { MatchAnimation } from "@/components/match/MatchAnimation";
@@ -7,6 +7,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { AdoptionFollowUpDialog } from "@/components/adoption/AdoptionFollowUpDialog";
 import { useAdoptionFollowUp } from "@/hooks/useAdoptionFollowUp";
+import { usePremium } from "@/hooks/usePremium";
+import { useNavigate } from "react-router-dom";
 
 const adoptionProfiles = [
   {
@@ -62,7 +64,11 @@ export default function DiscoverAdoption() {
   const [showMatch, setShowMatch] = useState(false);
   const [matchedProfile, setMatchedProfile] = useState<string>("");
   const [totalMatches, setTotalMatches] = useState<number>(0);
+  const [history, setHistory] = useState<number[]>([]);
   const { pendingFollowUp, clearPendingFollowUp } = useAdoptionFollowUp();
+  const navigate = useNavigate();
+
+  const { data: isPremium } = usePremium();
 
   const current = adoptionProfiles[currentIndex];
 
@@ -137,6 +143,7 @@ export default function DiscoverAdoption() {
       }
     }
     
+    setHistory([...history, currentIndex]);
     setDirection(liked ? "right" : "left");
     setTimeout(() => {
       setCurrentIndex((prev) => (prev + 1) % adoptionProfiles.length);
@@ -151,6 +158,91 @@ export default function DiscoverAdoption() {
       setCurrentIndex((prev) => (prev + 1) % adoptionProfiles.length);
       setDirection(null);
     }, 300);
+  };
+
+  const handleUndo = () => {
+    if (!isPremium) {
+      toast({
+        title: "Premium requis",
+        description: "Cette fonctionnalité est réservée aux membres Premium",
+        variant: "destructive"
+      });
+      navigate("/premium");
+      return;
+    }
+
+    if (history.length === 0) {
+      toast({
+        title: "Aucun profil précédent",
+        description: "Il n'y a pas de profil à revoir"
+      });
+      return;
+    }
+
+    const previousIndex = history[history.length - 1];
+    setHistory(history.slice(0, -1));
+    setCurrentIndex(previousIndex);
+    toast({
+      title: "Profil précédent",
+      description: "Retour au profil précédent"
+    });
+  };
+
+  const handleSuperLike = async () => {
+    if (!isPremium) {
+      toast({
+        title: "Premium requis",
+        description: "Cette fonctionnalité est réservée aux membres Premium",
+        variant: "destructive"
+      });
+      navigate("/premium");
+      return;
+    }
+
+    toast({
+      title: "Super Like envoyé ! ⭐",
+      description: "Ton super like a été envoyé"
+    });
+    setHistory([...history, currentIndex]);
+    setDirection("right");
+    setTimeout(() => {
+      setCurrentIndex((prev) => (prev + 1) % adoptionProfiles.length);
+      setDirection(null);
+    }, 300);
+  };
+
+  const handleShare = async () => {
+    if (!isPremium) {
+      toast({
+        title: "Premium requis",
+        description: "Cette fonctionnalité est réservée aux membres Premium",
+        variant: "destructive"
+      });
+      navigate("/premium");
+      return;
+    }
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `Profil d'adoption de ${current.name}`,
+          text: `Découvre ${current.name}, ${current.breed} de ${current.age} disponible à l'adoption sur Whoof !`,
+          url: window.location.href,
+        });
+        toast({
+          title: "Profil partagé !",
+          description: "Le profil a été partagé avec succès"
+        });
+      } catch (error) {
+        console.error("Erreur de partage:", error);
+      }
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      toast({
+        title: "Lien copié !",
+        description: "Le lien a été copié dans le presse-papier"
+      });
+    }
   };
 
   if (!current) return null;
@@ -246,25 +338,55 @@ export default function DiscoverAdoption() {
             ))}
           </div>
 
-          {/* Actions */}
-          <div className="flex justify-center items-center gap-4 mb-2 shrink-0">
-            <Button
-              size="lg"
-              variant="outline"
-              className="h-14 w-14 rounded-full shadow-soft"
-              onClick={() => handleSwipe(false)}
-            >
-              <X className="h-7 w-7" style={{ color: "var(--ink)", opacity: 0.6 }} />
-            </Button>
+        {/* Actions */}
+        <div className="flex justify-center items-center gap-3 mb-2 shrink-0">
+          <Button
+            size="lg"
+            variant="outline"
+            className={`h-12 w-12 rounded-full shadow-soft ${!isPremium ? 'opacity-40 cursor-not-allowed' : ''}`}
+            onClick={handleUndo}
+            disabled={!isPremium}
+          >
+            <Undo2 className="h-5 w-5" style={{ color: isPremium ? "var(--ink)" : "#9CA3AF" }} />
+          </Button>
 
-            <Button
-              size="lg"
-              className="h-16 w-16 rounded-full shadow-soft bg-[#FF5DA2] hover:bg-[#FF5DA2]/90"
-              onClick={() => handleSwipe(true)}
-            >
-              <Heart className="h-8 w-8 text-white fill-white" />
-            </Button>
-          </div>
+          <Button
+            size="lg"
+            variant="outline"
+            className="h-14 w-14 rounded-full shadow-soft"
+            onClick={() => handleSwipe(false)}
+          >
+            <X className="h-7 w-7" style={{ color: "var(--ink)", opacity: 0.6 }} />
+          </Button>
+
+          <Button
+            size="lg"
+            variant="outline"
+            className={`h-12 w-12 rounded-full shadow-soft ${!isPremium ? 'opacity-40 cursor-not-allowed' : 'bg-gradient-to-br from-yellow-400 to-orange-500 border-0'}`}
+            onClick={handleSuperLike}
+            disabled={!isPremium}
+          >
+            <Star className="h-6 w-6" style={{ color: isPremium ? "white" : "#9CA3AF" }} fill={isPremium ? "white" : "none"} />
+          </Button>
+
+          <Button
+            size="lg"
+            className="h-16 w-16 rounded-full shadow-soft bg-[#FF5DA2] hover:bg-[#FF5DA2]/90"
+            onClick={() => handleSwipe(true)}
+          >
+            <Heart className="h-8 w-8 text-white fill-white" />
+          </Button>
+
+          <Button
+            size="lg"
+            variant="outline"
+            className={`h-12 w-12 rounded-full shadow-soft ${!isPremium ? 'opacity-40 cursor-not-allowed' : ''}`}
+            onClick={handleShare}
+            disabled={!isPremium}
+          >
+            <Share2 className="h-5 w-5" style={{ color: isPremium ? "var(--ink)" : "#9CA3AF" }} />
+          </Button>
+        </div>
 
           {/* Progress */}
           <div className="text-center text-xs text-muted-foreground pb-2 shrink-0">

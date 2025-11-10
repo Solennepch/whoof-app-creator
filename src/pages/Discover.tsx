@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { X, Heart, Info } from "lucide-react";
+import { X, Heart, Info, Share2, Undo2, Star } from "lucide-react";
 import { ReasonChip } from "@/components/ui/ReasonChip";
 import { Button } from "@/components/ui/button";
 import { MatchAnimation } from "@/components/match/MatchAnimation";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { usePremium } from "@/hooks/usePremium";
+import { useNavigate } from "react-router-dom";
 
 const profiles = [
   {
@@ -39,6 +41,8 @@ export default function Discover() {
   const [direction, setDirection] = useState<"left" | "right" | null>(null);
   const [showMatch, setShowMatch] = useState(false);
   const [matchedProfile, setMatchedProfile] = useState<string>("");
+  const [history, setHistory] = useState<number[]>([]);
+  const navigate = useNavigate();
 
   const { data: session } = useQuery({
     queryKey: ["session"],
@@ -47,6 +51,8 @@ export default function Discover() {
       return data.session;
     },
   });
+
+  const { data: isPremium } = usePremium();
 
   const current = profiles[currentIndex];
 
@@ -69,6 +75,7 @@ export default function Discover() {
       }
     }
     
+    setHistory([...history, currentIndex]);
     setDirection(liked ? "right" : "left");
     setTimeout(() => {
       setCurrentIndex((prev) => (prev + 1) % profiles.length);
@@ -83,6 +90,69 @@ export default function Discover() {
       setCurrentIndex((prev) => (prev + 1) % profiles.length);
       setDirection(null);
     }, 300);
+  };
+
+  const handleUndo = () => {
+    if (!isPremium) {
+      toast.error("Cette fonctionnalité est réservée aux membres Premium");
+      navigate("/premium");
+      return;
+    }
+
+    if (history.length === 0) {
+      toast.info("Aucun profil précédent");
+      return;
+    }
+
+    const previousIndex = history[history.length - 1];
+    setHistory(history.slice(0, -1));
+    setCurrentIndex(previousIndex);
+    toast.success("Profil précédent");
+  };
+
+  const handleSuperLike = async () => {
+    if (!isPremium) {
+      toast.error("Cette fonctionnalité est réservée aux membres Premium");
+      navigate("/premium");
+      return;
+    }
+
+    if (!session?.user?.id) {
+      toast.error("Tu dois être connecté pour envoyer un super like");
+      return;
+    }
+
+    toast.success("Super Like envoyé ! ⭐");
+    setHistory([...history, currentIndex]);
+    setDirection("right");
+    setTimeout(() => {
+      setCurrentIndex((prev) => (prev + 1) % profiles.length);
+      setDirection(null);
+    }, 300);
+  };
+
+  const handleShare = async () => {
+    if (!isPremium) {
+      toast.error("Cette fonctionnalité est réservée aux membres Premium");
+      navigate("/premium");
+      return;
+    }
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `Profil de ${current.name}`,
+          text: `Découvre ${current.name}, ${current.breed} de ${current.age} sur Whoof !`,
+          url: window.location.href,
+        });
+        toast.success("Profil partagé !");
+      } catch (error) {
+        console.error("Erreur de partage:", error);
+      }
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      toast.success("Lien copié dans le presse-papier !");
+    }
   };
 
   if (!current) return null;
@@ -153,7 +223,17 @@ export default function Discover() {
         </div>
 
         {/* Actions */}
-        <div className="flex justify-center items-center gap-4 mb-2 shrink-0">
+        <div className="flex justify-center items-center gap-3 mb-2 shrink-0">
+          <Button
+            size="lg"
+            variant="outline"
+            className={`h-12 w-12 rounded-full shadow-soft ${!isPremium ? 'opacity-40 cursor-not-allowed' : ''}`}
+            onClick={handleUndo}
+            disabled={!isPremium}
+          >
+            <Undo2 className="h-5 w-5" style={{ color: isPremium ? "var(--ink)" : "#9CA3AF" }} />
+          </Button>
+
           <Button
             size="lg"
             variant="outline"
@@ -165,10 +245,30 @@ export default function Discover() {
 
           <Button
             size="lg"
+            variant="outline"
+            className={`h-12 w-12 rounded-full shadow-soft ${!isPremium ? 'opacity-40 cursor-not-allowed' : 'bg-gradient-to-br from-yellow-400 to-orange-500 border-0'}`}
+            onClick={handleSuperLike}
+            disabled={!isPremium}
+          >
+            <Star className="h-6 w-6" style={{ color: isPremium ? "white" : "#9CA3AF" }} fill={isPremium ? "white" : "none"} />
+          </Button>
+
+          <Button
+            size="lg"
             className="h-16 w-16 rounded-full shadow-soft bg-[#FF5DA2] hover:bg-[#FF5DA2]/90"
             onClick={() => handleSwipe(true)}
           >
             <Heart className="h-8 w-8 text-white fill-white" />
+          </Button>
+
+          <Button
+            size="lg"
+            variant="outline"
+            className={`h-12 w-12 rounded-full shadow-soft ${!isPremium ? 'opacity-40 cursor-not-allowed' : ''}`}
+            onClick={handleShare}
+            disabled={!isPremium}
+          >
+            <Share2 className="h-5 w-5" style={{ color: isPremium ? "var(--ink)" : "#9CA3AF" }} />
           </Button>
         </div>
 
