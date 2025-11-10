@@ -16,11 +16,7 @@ export function Header() {
   return (
     <>
       <header 
-        className="sticky top-0 z-50 shadow-soft backdrop-blur-sm" 
-        style={{ 
-          backgroundColor: "hsl(var(--paper))",
-          borderBottom: "1px solid hsl(var(--border))"
-        }}
+        className="sticky top-0 z-50 shadow-soft backdrop-blur-sm bg-background border-b border-border"
       >
         <div className="mx-auto max-w-7xl px-4">
           <div className="flex h-16 items-center justify-between">
@@ -31,7 +27,7 @@ export function Header() {
                 onClick={() => setSidebarOpen(true)}
                 className="rounded-2xl"
               >
-                <Menu className="h-5 w-5" style={{ color: "hsl(var(--ink))" }} />
+                <Menu className="h-5 w-5 text-foreground" />
               </Button>
               
               <div className="flex items-center gap-2">
@@ -40,7 +36,7 @@ export function Header() {
                   alt="Whoof Apps Logo" 
                   className="h-10 w-10"
                 />
-                <span className="text-xl font-bold" style={{ color: "hsl(var(--ink))" }}>
+                <span className="text-xl font-bold text-foreground">
                   Whoof Apps
                 </span>
                 {isProRoute && (

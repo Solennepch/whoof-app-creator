@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Building, Briefcase, Bug, Percent, User, Star, Gift, Crown, Shield, RefreshCw } from "lucide-react";
+import { Building, Briefcase, Bug, Percent, User, Star, Gift, Crown, Shield, RefreshCw, Settings } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
@@ -69,6 +69,7 @@ export function SidebarMenu({ open, onOpenChange }: SidebarMenuProps) {
     { to: "/partenariats", icon: Percent, label: "Bons plans" },
     { to: "/recompenses", icon: Gift, label: "Récompenses" },
     { to: "/astro-dog", icon: Star, label: "Mon Astro Dog" },
+    { to: "/settings", icon: Settings, label: "Paramètres" },
   ];
 
   // Add Pro Dashboard only if user is pro

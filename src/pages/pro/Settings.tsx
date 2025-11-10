@@ -2,8 +2,9 @@ import { Navigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useMyProProfile } from "@/hooks/usePro";
-import { Settings, User, Building, Phone, Mail } from "lucide-react";
+import { Settings, User, Building, Phone, Mail, Palette } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 export default function ProSettings() {
   const { data: profile, isLoading } = useMyProProfile();
@@ -33,6 +34,22 @@ export default function ProSettings() {
       </div>
 
       <div className="space-y-4">
+        {/* Apparence */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Palette className="h-5 w-5" />
+              Apparence
+            </CardTitle>
+            <CardDescription>
+              Personnalisez l'apparence de l'application
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ThemeToggle />
+          </CardContent>
+        </Card>
+
         {/* Photo et logo */}
         <Card>
           <CardHeader>

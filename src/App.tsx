@@ -3,6 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { ThemeProvider } from "next-themes";
 import { AccountProvider } from "@/contexts/AccountContext";
 import { Header } from "./components/layout/Header";
 import { BottomNavigation } from "./components/layout/BottomNavigation";
@@ -58,16 +59,18 @@ import NotFound from "./pages/NotFound";
 import AdminModeration from "./pages/admin/Moderation";
 import AdminModerationV2 from "./pages/admin/ModerationV2";
 import TestAccounts from "./pages/debug/TestAccounts";
+import Settings from "./pages/Settings";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <AccountProvider>
+    <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <AccountProvider>
         <Header />
         <Routes>
           {/* Pro Routes - Use ProBottomNavigation */}
@@ -92,6 +95,7 @@ const App = () => (
           {/* Profile Pages */}
           <Route path="/profile/me" element={<ProfileMe />} />
           <Route path="/profile/:id" element={<Profile />} />
+          <Route path="/settings" element={<Settings />} />
           
           {/* Features */}
           <Route path="/astro-dog" element={<AstroDog />} />
@@ -147,6 +151,7 @@ const App = () => (
         </AccountProvider>
       </BrowserRouter>
     </TooltipProvider>
+    </ThemeProvider>
   </QueryClientProvider>
 );
 
