@@ -42,6 +42,8 @@ export default function Discover() {
   const [showMatch, setShowMatch] = useState(false);
   const [matchedProfile, setMatchedProfile] = useState<string>("");
   const [history, setHistory] = useState<number[]>([]);
+  const [touchStart, setTouchStart] = useState<{ x: number; y: number } | null>(null);
+  const [touchCurrent, setTouchCurrent] = useState<{ x: number; y: number } | null>(null);
   const navigate = useNavigate();
 
   const { data: session } = useQuery({
@@ -155,7 +157,45 @@ export default function Discover() {
     }
   };
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    const touch = e.touches[0];
+    setTouchStart({ x: touch.clientX, y: touch.clientY });
+    setTouchCurrent({ x: touch.clientX, y: touch.clientY });
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!touchStart) return;
+    const touch = e.touches[0];
+    setTouchCurrent({ x: touch.clientX, y: touch.clientY });
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchCurrent) return;
+
+    const deltaX = touchCurrent.x - touchStart.x;
+    const deltaY = Math.abs(touchCurrent.y - touchStart.y);
+
+    // Only swipe if horizontal movement is greater than vertical
+    if (Math.abs(deltaX) > 100 && Math.abs(deltaX) > deltaY) {
+      if (deltaX > 0) {
+        handleSwipe(true); // Right swipe = like
+      } else {
+        handleSwipe(false); // Left swipe = pass
+      }
+    }
+
+    setTouchStart(null);
+    setTouchCurrent(null);
+  };
+
   if (!current) return null;
+
+  const getCardTransform = () => {
+    if (!touchStart || !touchCurrent) return "";
+    const deltaX = touchCurrent.x - touchStart.x;
+    const rotate = deltaX / 20;
+    return `translateX(${deltaX}px) rotate(${rotate}deg)`;
+  };
 
   return (
     <>
@@ -180,9 +220,15 @@ export default function Discover() {
         {/* Card Stack */}
         <div className="relative flex-1 min-h-0">
           <div
-            className={`absolute inset-0 rounded-3xl bg-white shadow-soft ring-1 ring-black/5 transition-transform duration-300 ${
+            className={`absolute inset-0 rounded-3xl bg-white shadow-soft ring-1 ring-black/5 ${
+              direction ? "transition-transform duration-300" : ""
+            } ${
               direction === "left" ? "-translate-x-full rotate-[-20deg] opacity-0" : ""
             } ${direction === "right" ? "translate-x-full rotate-[20deg] opacity-0" : ""}`}
+            style={!direction && touchStart ? { transform: getCardTransform() } : undefined}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
           >
             <div
               className="h-2/3 rounded-t-3xl bg-cover bg-center"
