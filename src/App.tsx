@@ -45,6 +45,10 @@ const ProDashboard = lazy(() => import("./pages/pro/Dashboard"));
 // Admin routes
 const Moderation = lazy(() => import("./pages/admin/Moderation"));
 
+// Debug routes
+const DebugHealth = lazy(() => import("./pages/DebugHealth"));
+const TestAccounts = lazy(() => import("./pages/debug/TestAccounts"));
+
 // Loading fallback
 const PageLoader = () => (
   <div className="min-h-screen flex items-center justify-center" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
@@ -105,6 +109,10 @@ const App = () => {
                   {/* Fallback */}
                   <Route path="*" element={<Navigate to="/" replace />} />
                 </Route>
+                
+                {/* Debug routes - outside MainLayout */}
+                <Route path="/debug/health" element={<PageErrorBoundary><DebugHealth /></PageErrorBoundary>} />
+                <Route path="/debug/test-accounts" element={<PageErrorBoundary><TestAccounts /></PageErrorBoundary>} />
               </Routes>
             </Suspense>
           </AccountProvider>
