@@ -137,6 +137,45 @@ export type Database = {
         }
         Relationships: []
       }
+      astrodog_horoscopes: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          horoscope_text: string
+          id: string
+          is_active: boolean | null
+          mood: string
+          published_at: string | null
+          week_end: string
+          week_start: string
+          zodiac_sign: string
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          horoscope_text: string
+          id?: string
+          is_active?: boolean | null
+          mood: string
+          published_at?: string | null
+          week_end: string
+          week_start: string
+          zodiac_sign: string
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          horoscope_text?: string
+          id?: string
+          is_active?: boolean | null
+          mood?: string
+          published_at?: string | null
+          week_end?: string
+          week_start?: string
+          zodiac_sign?: string
+        }
+        Relationships: []
+      }
       audit_logs: {
         Row: {
           action: string
@@ -825,6 +864,8 @@ export type Database = {
         Row: {
           avatar: string | null
           avatar_url: string | null
+          ban_reason: string | null
+          banned_at: string | null
           bio: string | null
           city: string | null
           created_at: string | null
@@ -832,6 +873,7 @@ export type Database = {
           gender: string | null
           home_geom: unknown
           id: string
+          is_banned: boolean | null
           mood_tags: string[] | null
           notif_prefs: Json | null
           privacy: Json | null
@@ -840,6 +882,8 @@ export type Database = {
         Insert: {
           avatar?: string | null
           avatar_url?: string | null
+          ban_reason?: string | null
+          banned_at?: string | null
           bio?: string | null
           city?: string | null
           created_at?: string | null
@@ -847,6 +891,7 @@ export type Database = {
           gender?: string | null
           home_geom?: unknown
           id: string
+          is_banned?: boolean | null
           mood_tags?: string[] | null
           notif_prefs?: Json | null
           privacy?: Json | null
@@ -855,6 +900,8 @@ export type Database = {
         Update: {
           avatar?: string | null
           avatar_url?: string | null
+          ban_reason?: string | null
+          banned_at?: string | null
           bio?: string | null
           city?: string | null
           created_at?: string | null
@@ -862,6 +909,7 @@ export type Database = {
           gender?: string | null
           home_geom?: unknown
           id?: string
+          is_banned?: boolean | null
           mood_tags?: string[] | null
           notif_prefs?: Json | null
           privacy?: Json | null

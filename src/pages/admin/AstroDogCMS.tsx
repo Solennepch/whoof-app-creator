@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/select";
 import { Star, Save, Eye } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const zodiacSigns = [
   { value: "aries", label: "Bélier", emoji: "♈" },
@@ -50,7 +51,7 @@ export default function AstroDogCMS() {
 
   const currentSign = zodiacSigns.find(s => s.value === selectedSign);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!weekRange || !horoscopeText) {
       toast({
         title: "Champs manquants",
@@ -60,11 +61,44 @@ export default function AstroDogCMS() {
       return;
     }
 
-    // TODO: Save to Supabase database
-    toast({
-      title: "Horoscope enregistré",
-      description: `L'horoscope pour ${currentSign?.label} a été sauvegardé`,
-    });
+    try {
+      // Parse week range (format: "Semaine du DD MMM - DD MMM")
+      const today = new Date();
+      const weekStart = today.toISOString().split('T')[0];
+      const weekEndDate = new Date(today);
+      weekEndDate.setDate(weekEndDate.getDate() + 6);
+      const weekEnd = weekEndDate.toISOString().split('T')[0];
+
+      const { error } = await supabase.functions.invoke('admin-content', {
+        body: {
+          action: 'create_horoscope',
+          zodiac_sign: selectedSign,
+          week_start: weekStart,
+          week_end: weekEnd,
+          horoscope_text: horoscopeText,
+          mood: mood,
+          is_active: false, // Draft by default
+        },
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Horoscope enregistré",
+        description: `L'horoscope pour ${currentSign?.label} a été sauvegardé en brouillon`,
+      });
+
+      // Reset form
+      setHoroscopeText("");
+      setWeekRange("");
+    } catch (error) {
+      console.error('Error saving horoscope:', error);
+      toast({
+        title: "Erreur",
+        description: "Impossible de sauvegarder l'horoscope",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
