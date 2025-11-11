@@ -86,7 +86,7 @@ export default function AdminDashboard() {
       icon: Briefcase,
       color: "text-purple-600",
       bgColor: "bg-purple-50",
-      link: "/admin/users?type=pro",
+      link: "/admin/professionals",
     },
     {
       title: "Chiens",
@@ -226,6 +226,12 @@ export default function AdminDashboard() {
                 Gérer utilisateurs
               </Button>
             </Link>
+            <Link to="/admin/professionals">
+              <Button variant="outline" className="w-full">
+                <Briefcase className="h-4 w-4 mr-2" />
+                Gérer pros
+              </Button>
+            </Link>
             <Link to="/admin/content/astrodog">
               <Button variant="outline" className="w-full">
                 <Star className="h-4 w-4 mr-2" />
@@ -236,11 +242,6 @@ export default function AdminDashboard() {
               <Button variant="outline" className="w-full">
                 <AlertCircle className="h-4 w-4 mr-2" />
                 Modération
-              </Button>
-            </Link>
-            <Link to="/debug">
-              <Button variant="outline" className="w-full">
-                Debug Tools
               </Button>
             </Link>
           </div>
