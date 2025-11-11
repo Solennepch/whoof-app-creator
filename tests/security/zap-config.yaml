@@ -1,0 +1,102 @@
+# OWASP ZAP Security Configuration
+# This file configures automated security scanning for the Whoof Apps application
+
+env:
+  contexts:
+    - name: "Whoof Apps"
+      urls:
+        - "https://ozdaxhiqnfapfevdropz.supabase.co/functions/v1/.*"
+      includePaths:
+        - "https://ozdaxhiqnfapfevdropz.supabase.co/functions/v1/.*"
+      excludePaths: []
+      authentication:
+        method: "scriptBased"
+        parameters: {}
+      sessionManagement:
+        method: "cookieBased"
+        parameters: {}
+
+  parameters:
+    failOnError: true
+    failOnWarning: false
+    progressToStdout: true
+
+  vars: {}
+
+jobs:
+  - type: passiveScan-config
+    parameters:
+      maxAlertsPerRule: 10
+      scanOnlyInScope: true
+      
+  - type: spider
+    parameters:
+      context: "Whoof Apps"
+      maxDuration: 10
+      maxDepth: 5
+      
+  - type: spiderAjax
+    parameters:
+      context: "Whoof Apps"
+      maxDuration: 10
+      maxCrawlDepth: 5
+      
+  - type: activeScan
+    parameters:
+      context: "Whoof Apps"
+      policy: "API-Minimal"
+      maxRuleDurationInMins: 10
+      maxScanDurationInMins: 30
+      
+  # SQL Injection Detection
+  - type: activeScan
+    parameters:
+      policy: "SQL-Injection"
+      scanners:
+        - id: 40018 # SQL Injection
+          strength: "HIGH"
+          
+  # XSS Detection
+  - type: activeScan
+    parameters:
+      policy: "XSS"
+      scanners:
+        - id: 40012 # Cross Site Scripting (Reflected)
+          strength: "HIGH"
+        - id: 40014 # Cross Site Scripting (Persistent)
+          strength: "HIGH"
+        - id: 40016 # Cross Site Scripting (Persistent) - Prime
+          strength: "HIGH"
+        - id: 40017 # Cross Site Scripting (Persistent) - Spider
+          strength: "HIGH"
+          
+  # CSRF Detection
+  - type: activeScan
+    parameters:
+      policy: "CSRF"
+      scanners:
+        - id: 10202 # Absence of Anti-CSRF Tokens
+          strength: "HIGH"
+          
+  # Authentication & Session Management
+  - type: activeScan
+    parameters:
+      policy: "Authentication"
+      scanners:
+        - id: 10055 # CSP Scanner
+          strength: "HIGH"
+        - id: 10098 # Cross-Domain Misconfiguration
+          strength: "HIGH"
+          
+  - type: report
+    parameters:
+      template: "modern"
+      reportDir: "tests/security/reports"
+      reportFile: "zap-report"
+      reportTitle: "Whoof Apps Security Scan Report"
+      reportDescription: "Automated security vulnerability scan"
+      displayReport: false
+    risks:
+      - high
+      - medium
+      - low

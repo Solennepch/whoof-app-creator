@@ -549,6 +549,152 @@ Le test affiche des violations détaillées avec :
 
 **Voir le guide détaillé:** `tests/accessibility/README.md`
 
+## 🔒 Tests de Sécurité (OWASP ZAP)
+
+### Qu'est-ce qu'OWASP ZAP ?
+
+OWASP ZAP (Zed Attack Proxy) est un outil de sécurité qui détecte automatiquement les vulnérabilités web courantes comme SQL injection, XSS et CSRF.
+
+### Lancer les tests de sécurité
+
+```bash
+# Tous les tests de sécurité
+chmod +x tests/security/run-zap-scan.sh
+./tests/security/run-zap-scan.sh
+
+# Avec Docker (recommandé)
+docker run --rm -v "$(pwd):/zap/wrk/:rw" \
+  -t zaproxy/zap-stable \
+  zap-baseline.py \
+  -t "https://ozdaxhiqnfapfevdropz.supabase.co/functions/v1" \
+  -r "tests/security/reports/zap-report.html"
+
+# Cibler une URL spécifique
+TARGET_URL="https://your-app.com" ./tests/security/run-zap-scan.sh
+```
+
+### Vulnérabilités détectées
+
+**🔴 High Risk:**
+- SQL Injection (scanner 40018)
+- Cross-Site Scripting (scanners 40012, 40014, 40016, 40017)
+- Missing Anti-CSRF Tokens (scanner 10202)
+
+**🟡 Medium Risk:**
+- Missing security headers (CSP, X-Frame-Options)
+- Cross-Domain Misconfiguration
+- Weak authentication mechanisms
+
+**🔵 Low Risk:**
+- Information disclosure
+- Browser cache issues
+- Cookie security
+
+### Configuration
+
+Le fichier `tests/security/zap-config.yaml` définit :
+- Contextes de scan (Edge Functions Supabase)
+- Politiques d'attaque (SQL Injection, XSS, CSRF)
+- Durée max (30 minutes) et profondeur (5 niveaux)
+- Rapports HTML, JSON et Markdown
+
+### Interpréter les résultats
+
+```bash
+# Voir le rapport HTML
+open tests/security/reports/zap-report.html
+
+# Analyser les alertes JSON
+jq '.site[].alerts[]' tests/security/reports/zap-report.json
+```
+
+**Seuils CI/CD:**
+- 0 alertes High → ✅ CI passe
+- 1+ alertes High → ❌ CI échoue
+- 6+ alertes Medium → ⚠️ CI échoue
+
+**Voir le guide complet:** `tests/security/README.md`
+
+## ⚡ Optimisation Performance (Redis Cache)
+
+### Pourquoi le cache ?
+
+Les tests de charge k6 ont identifié des goulots d'étranglement :
+- Profils utilisateurs : 350ms → **25ms** (93% plus rapide)
+- Profils suggérés : 500ms → **30ms** (94% plus rapide)  
+- Annuaire pro : 600ms → **40ms** (93% plus rapide)
+- Disponibilités : 400ms → **15ms** (96% plus rapide)
+
+### Configuration Redis (Upstash)
+
+1. Créer une base Redis sur [console.upstash.com](https://console.upstash.com)
+2. Récupérer les credentials REST API
+3. Ajouter les secrets Lovable Cloud :
+
+```bash
+# Via CLI Lovable
+lovable secrets add UPSTASH_REDIS_REST_URL UPSTASH_REDIS_REST_TOKEN
+
+# Ou via interface Settings → Secrets
+```
+
+### Utilisation dans le code
+
+```typescript
+import { getCachedProfile, getCachedSuggested } from "@/services/cachedApi";
+
+// Récupérer avec cache automatique (5 min TTL)
+const profile = await getCachedProfile();
+const suggested = await getCachedSuggested();
+
+// Cache bas niveau
+import { cache } from "@/lib/cache";
+
+const data = await cache.getOrSet(
+  'my-key',
+  async () => fetchDataFromAPI(),
+  { type: 'profile', ttl: 300 }
+);
+```
+
+### TTL par type de données
+
+| Type | TTL | Raison |
+|------|-----|--------|
+| profile | 5 min | Données utilisateur peu fréquentes |
+| suggested | 2 min | Suggestions doivent rester fraîches |
+| directory | 10 min | Annuaire pro change rarement |
+| availability | 1 min | Créneaux nécessitent précision temps réel |
+
+### Invalidation du cache
+
+```typescript
+import { invalidateProfileCache } from "@/services/cachedApi";
+
+// Après mise à jour profil
+await updateProfile(data);
+await invalidateProfileCache(userId);
+
+// Tout nettoyer (admin uniquement)
+await clearAllCache();
+```
+
+### Monitoring
+
+**Dashboard Upstash:**
+- Taux de cache hit/miss
+- Latence des requêtes
+- Usage mémoire
+- Nombre de clés
+
+**Logs application:**
+```
+Cache HIT: profile:user123  ✅ Trouvé en cache
+Cache MISS: profile:user456 ❌ Pas en cache, fetch API
+```
+
+**Guide complet:** `docs/CACHE_SETUP.md`
+
 ## 🚀 CI/CD (GitHub Actions)
 
 ### Workflows automatiques
@@ -594,7 +740,15 @@ Le pipeline CI/CD s'exécute automatiquement sur :
 - Upload accessibility reports
 ```
 
-#### 6. Build
+#### 6. Security Scan
+```yaml
+- Pull OWASP ZAP Docker image
+- Run ZAP baseline scan
+- Check for critical vulnerabilities
+- Upload security reports
+```
+
+#### 7. Build
 ```yaml
 - Build production bundle (only if all tests pass)
 - Upload build artifacts
@@ -620,9 +774,10 @@ Ajoutez ces secrets dans GitHub :
 - [x] Tests de charge avec k6
 - [x] Tests de performance avec Lighthouse CI
 - [x] Tests d'accessibilité avec Axe
+- [x] Tests de sécurité avec OWASP ZAP
 - [ ] Tests des composants de formulaires
 - [ ] Tests E2E du chat/messagerie temps réel
-- [ ] Tests de sécurité avec OWASP ZAP
+- [ ] Optimisation cache Redis pour toutes les APIs
 
 ### Améliorations CI/CD
 
@@ -630,7 +785,8 @@ Ajoutez ces secrets dans GitHub :
 - [x] Alertes Sentry personnalisées par type d'erreur
 - [x] Tests d'accessibilité avec Axe
 - [x] Tests de performance avec Lighthouse
-- [ ] Tests de sécurité avec OWASP ZAP
+- [x] Tests de sécurité avec OWASP ZAP
+- [x] Système de cache Redis avec Upstash
 - [ ] Déploiement automatique après tests réussis
 - [ ] Monitoring continu avec Grafana + k6 Cloud
 

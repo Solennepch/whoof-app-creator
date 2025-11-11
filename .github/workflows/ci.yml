@@ -189,10 +189,54 @@ jobs:
           path: playwright-report/
           retention-days: 30
 
+  security:
+    name: Security Scan (OWASP ZAP)
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Pull ZAP Docker Image
+        run: docker pull zaproxy/zap-stable
+      
+      - name: Create Reports Directory
+        run: mkdir -p tests/security/reports
+      
+      - name: Run OWASP ZAP Baseline Scan
+        run: |
+          docker run --rm -v "$(pwd):/zap/wrk/:rw" \
+            -t zaproxy/zap-stable \
+            zap-baseline.py \
+            -t "https://ozdaxhiqnfapfevdropz.supabase.co/functions/v1" \
+            -r "tests/security/reports/zap-report.html" \
+            -J "tests/security/reports/zap-report.json" \
+            -w "tests/security/reports/zap-report.md" \
+            -I
+      
+      - name: Upload Security Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: zap-security-report
+          path: tests/security/reports/
+      
+      - name: Check for Critical Vulnerabilities
+        if: always()
+        run: |
+          if [ -f "tests/security/reports/zap-report.json" ]; then
+            HIGH_ALERTS=$(jq '[.site[].alerts[] | select(.riskcode == "3")] | length' tests/security/reports/zap-report.json || echo "0")
+            echo "High-risk alerts found: $HIGH_ALERTS"
+            if [ "$HIGH_ALERTS" -gt 0 ]; then
+              echo "❌ Critical security vulnerabilities detected!"
+              exit 1
+            fi
+          fi
+
   build:
     name: Build
     runs-on: ubuntu-latest
-    needs: [test-unit, test-e2e, lint, lighthouse, accessibility]
+    needs: [test-unit, test-e2e, lint, lighthouse, accessibility, security]
     
     steps:
       - name: Checkout code
