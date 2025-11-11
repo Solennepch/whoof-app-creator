@@ -95,7 +95,7 @@ export function ProSidebarMenu({ open, onOpenChange }: ProSidebarMenuProps) {
   const settingsSection = [
     { to: "/pro/settings", icon: Settings, label: "Profil et identité" },
     { to: "/pro/notifications", icon: Bell, label: "Notifications & préférences" },
-    { to: "/pro/payments", icon: CreditCard, label: "Moyens de paiement" },
+    { to: "/pro/payments", icon: CreditCard, label: "Paiements & factures" },
     { to: "/pro/help", icon: HelpCircle, label: "Aide et support" },
   ];
 

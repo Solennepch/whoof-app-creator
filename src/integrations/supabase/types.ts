@@ -622,6 +622,39 @@ export type Database = {
           },
         ]
       }
+      notifications: {
+        Row: {
+          created_at: string | null
+          data: Json | null
+          id: string
+          is_read: boolean | null
+          message: string
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          data?: Json | null
+          id?: string
+          is_read?: boolean | null
+          message: string
+          title: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          data?: Json | null
+          id?: string
+          is_read?: boolean | null
+          message?: string
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       partner_campaigns: {
         Row: {
           code: string
@@ -955,6 +988,66 @@ export type Database = {
         }
         Relationships: []
       }
+      pro_reviews: {
+        Row: {
+          booking_id: string | null
+          comment: string | null
+          created_at: string | null
+          id: string
+          is_moderated: boolean | null
+          is_verified: boolean | null
+          pro_profile_id: string
+          pro_response: string | null
+          rating: number
+          status: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          booking_id?: string | null
+          comment?: string | null
+          created_at?: string | null
+          id?: string
+          is_moderated?: boolean | null
+          is_verified?: boolean | null
+          pro_profile_id: string
+          pro_response?: string | null
+          rating: number
+          status?: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          booking_id?: string | null
+          comment?: string | null
+          created_at?: string | null
+          id?: string
+          is_moderated?: boolean | null
+          is_verified?: boolean | null
+          pro_profile_id?: string
+          pro_response?: string | null
+          rating?: number
+          status?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pro_reviews_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "pro_bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pro_reviews_pro_profile_id_fkey"
+            columns: ["pro_profile_id"]
+            isOneToOne: false
+            referencedRelation: "pro_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       pro_services: {
         Row: {
           created_at: string | null
@@ -995,6 +1088,69 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "pro_services_pro_profile_id_fkey"
+            columns: ["pro_profile_id"]
+            isOneToOne: false
+            referencedRelation: "pro_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pro_transactions: {
+        Row: {
+          amount: number
+          booking_id: string | null
+          created_at: string | null
+          currency: string
+          id: string
+          metadata: Json | null
+          payment_method: string | null
+          pro_profile_id: string
+          status: string
+          stripe_payment_id: string | null
+          type: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          booking_id?: string | null
+          created_at?: string | null
+          currency?: string
+          id?: string
+          metadata?: Json | null
+          payment_method?: string | null
+          pro_profile_id: string
+          status?: string
+          stripe_payment_id?: string | null
+          type: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          booking_id?: string | null
+          created_at?: string | null
+          currency?: string
+          id?: string
+          metadata?: Json | null
+          payment_method?: string | null
+          pro_profile_id?: string
+          status?: string
+          stripe_payment_id?: string | null
+          type?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pro_transactions_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "pro_bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pro_transactions_pro_profile_id_fkey"
             columns: ["pro_profile_id"]
             isOneToOne: false
             referencedRelation: "pro_profiles"
