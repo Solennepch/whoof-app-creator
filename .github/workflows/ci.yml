@@ -66,6 +66,15 @@ jobs:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
 
+      - name: Percy visual tests
+        run: npx percy exec -- npm run test:e2e -- --project=${{ matrix.browser }}
+        env:
+          PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
+          PLAYWRIGHT_TEST_BASE_URL: http://localhost:5173
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
+        if: matrix.browser == 'chromium'
+
       - name: Upload Playwright Report
         uses: actions/upload-artifact@v4
         if: always()

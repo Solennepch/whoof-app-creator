@@ -43,8 +43,8 @@ export const initSentry = () => {
         'ComboSearch is not defined',
       ],
       
-      // Filter sensitive data
-      beforeSend(event) {
+      // Filter sensitive data and configure alerts
+      beforeSend(event, hint) {
         // Don't send events in development
         if (import.meta.env.DEV) {
           return null;
@@ -56,6 +56,34 @@ export const initSentry = () => {
           if (event.request.headers) {
             delete event.request.headers['Authorization'];
             delete event.request.headers['Cookie'];
+          }
+        }
+
+        // Set custom tags for alerting
+        const error = hint.originalException;
+        if (error instanceof Error) {
+          // Critical errors
+          if (
+            error.message.includes('Payment failed') ||
+            error.message.includes('Database connection') ||
+            error.message.includes('Authentication failed')
+          ) {
+            event.level = 'error';
+            event.tags = { ...event.tags, alert_type: 'critical', notify_email: 'true' };
+          }
+          // Warnings
+          else if (
+            error.message.includes('Slow query') ||
+            error.message.includes('Rate limit') ||
+            error.message.includes('API timeout')
+          ) {
+            event.level = 'warning';
+            event.tags = { ...event.tags, alert_type: 'warning', notify_email: 'false' };
+          }
+          // Info
+          else {
+            event.level = 'info';
+            event.tags = { ...event.tags, alert_type: 'info', notify_email: 'false' };
           }
         }
         

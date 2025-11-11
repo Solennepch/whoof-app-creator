@@ -12,6 +12,8 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
+    "@percy/cli": "^1.31.4",
+    "@percy/playwright": "^1.0.9",
     "@playwright/test": "^1.56.1",
     "@radix-ui/react-accordion": "^1.2.11",
     "@radix-ui/react-alert-dialog": "^1.1.14",
