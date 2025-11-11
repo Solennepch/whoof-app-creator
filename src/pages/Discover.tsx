@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { X, Heart, Info, Share2, Undo2, Star } from "lucide-react";
+import { X, Heart, Info, Share2, Undo2, Star, SlidersHorizontal } from "lucide-react";
 import { ReasonChip } from "@/components/ui/ReasonChip";
 import { Button } from "@/components/ui/button";
 import { MatchAnimation } from "@/components/match/MatchAnimation";
@@ -13,6 +13,7 @@ import { ModeToggle } from "@/components/ui/ModeToggle";
 import { MatchCounter } from "@/components/ui/MatchCounter";
 import { SwipeTutorial } from "@/components/ui/SwipeTutorial";
 import { haptic } from "@/utils/haptic";
+import { FiltersPanel, Filters } from "@/components/ui/FiltersPanel";
 
 type RegionProfile = {
   name: string;
@@ -95,6 +96,14 @@ export default function Discover() {
   const [touchCurrent, setTouchCurrent] = useState<{ x: number; y: number } | null>(null);
   const [todayMatches, setTodayMatches] = useState(0);
   const [showTutorial, setShowTutorial] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+  const [filters, setFilters] = useState<Filters>({
+    distance: 25,
+    ages: [],
+    sizes: [],
+    temperaments: [],
+    breeds: [],
+  });
   const navigate = useNavigate();
 
   const { data: session } = useQuery({
@@ -113,10 +122,18 @@ export default function Discover() {
   // Show tutorial on first visit
   useEffect(() => {
     const hasSeenTutorial = localStorage.getItem("hasSeenSwipeTutorial");
+    const onboardingCompleted = localStorage.getItem("onboardingCompleted");
+    
+    // If no onboarding completed, redirect to welcome
+    if (!onboardingCompleted && !hasSeenTutorial) {
+      navigate("/onboarding/welcome");
+      return;
+    }
+    
     if (!hasSeenTutorial) {
       setShowTutorial(true);
     }
-  }, []);
+  }, [navigate]);
 
   const handleTutorialClose = () => {
     setShowTutorial(false);
@@ -128,6 +145,12 @@ export default function Discover() {
     setCurrentIndex(0);
     setHistory([]);
     setDirection(null);
+  };
+
+  const handleFiltersApply = (newFilters: Filters) => {
+    setFilters(newFilters);
+    toast.success("Filtres appliqués");
+    // In real app, refetch profiles with filters
   };
 
   const handleSwipe = async (liked: boolean) => {
@@ -275,6 +298,7 @@ export default function Discover() {
   return (
     <>
       <SwipeTutorial show={showTutorial} onClose={handleTutorialClose} />
+      <FiltersPanel show={showFilters} onClose={() => setShowFilters(false)} onApply={handleFiltersApply} />
       
       <MatchAnimation 
         show={showMatch} 
@@ -290,7 +314,17 @@ export default function Discover() {
         {/* Header with toggle and counter */}
         <div className="mb-3 flex items-center justify-between shrink-0">
           <ModeToggle mode={mode} onChange={handleModeChange} />
-          <MatchCounter count={todayMatches} />
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setShowFilters(true)}
+              className="rounded-full h-10 w-10"
+            >
+              <SlidersHorizontal className="h-5 w-5" />
+            </Button>
+            <MatchCounter count={todayMatches} />
+          </div>
         </div>
 
         {/* Card Stack - Zone de swipe élargie (toute la carte) */}

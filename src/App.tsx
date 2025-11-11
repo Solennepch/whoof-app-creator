@@ -61,6 +61,9 @@ import AdminModeration from "./pages/admin/Moderation";
 import AdminModerationV2 from "./pages/admin/ModerationV2";
 import TestAccounts from "./pages/debug/TestAccounts";
 import Settings from "./pages/Settings";
+import Welcome from "./pages/onboarding/Welcome";
+import Preferences from "./pages/onboarding/Preferences";
+import Location from "./pages/onboarding/Location";
 
 const queryClient = new QueryClient();
 
@@ -80,8 +83,11 @@ const App = () => (
           {/* Auth & Onboarding Flow */}
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/onboarding/welcome" element={<Welcome />} />
           <Route path="/onboarding/profile" element={<ProfileOnboarding />} />
           <Route path="/onboarding/dog" element={<DogOnboarding />} />
+          <Route path="/onboarding/preferences" element={<Preferences />} />
+          <Route path="/onboarding/location" element={<Location />} />
           
           {/* Main App Pages */}
           <Route path="/" element={<Index />} />

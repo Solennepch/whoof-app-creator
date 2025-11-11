@@ -140,7 +140,7 @@ function DogOnboardingContent() {
       }
 
       toast.success("Profil de ton chien créé avec succès !");
-      navigate('/profile/me');
+      navigate('/onboarding/preferences');
 
     } catch (error) {
       console.error('Error creating dog:', error);
