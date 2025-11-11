@@ -655,6 +655,84 @@ export type Database = {
           },
         ]
       }
+      notification_logs: {
+        Row: {
+          channel: string
+          clicked_at: string | null
+          created_at: string | null
+          delivered_at: string | null
+          error_message: string | null
+          id: string
+          metadata: Json | null
+          opened_at: string | null
+          recipient: string
+          sent_at: string | null
+          status: string
+          template_name: string
+          user_id: string
+        }
+        Insert: {
+          channel: string
+          clicked_at?: string | null
+          created_at?: string | null
+          delivered_at?: string | null
+          error_message?: string | null
+          id?: string
+          metadata?: Json | null
+          opened_at?: string | null
+          recipient: string
+          sent_at?: string | null
+          status?: string
+          template_name: string
+          user_id: string
+        }
+        Update: {
+          channel?: string
+          clicked_at?: string | null
+          created_at?: string | null
+          delivered_at?: string | null
+          error_message?: string | null
+          id?: string
+          metadata?: Json | null
+          opened_at?: string | null
+          recipient?: string
+          sent_at?: string | null
+          status?: string
+          template_name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      notification_preferences: {
+        Row: {
+          channel: string
+          created_at: string | null
+          enabled: boolean | null
+          event_type: string
+          id: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          channel?: string
+          created_at?: string | null
+          enabled?: boolean | null
+          event_type: string
+          id?: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          channel?: string
+          created_at?: string | null
+          enabled?: boolean | null
+          event_type?: string
+          id?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           created_at: string | null

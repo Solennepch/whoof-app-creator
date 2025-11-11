@@ -1,5 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import NotificationPreferences from "@/components/settings/NotificationPreferences";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -33,6 +34,8 @@ export default function Settings() {
               <ThemeToggle />
             </CardContent>
           </Card>
+
+          <NotificationPreferences />
         </div>
       </div>
     </div>

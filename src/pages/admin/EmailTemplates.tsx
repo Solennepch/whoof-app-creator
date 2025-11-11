@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Plus, Save, Trash2 } from "lucide-react";
 
@@ -25,6 +26,10 @@ export default function EmailTemplates() {
   const [loading, setLoading] = useState(true);
   const [editingTemplate, setEditingTemplate] = useState<EmailTemplate | null>(null);
   const [saving, setSaving] = useState(false);
+  const [showTestDialog, setShowTestDialog] = useState(false);
+  const [testEmail, setTestEmail] = useState("");
+  const [testVariables, setTestVariables] = useState<Record<string, string>>({});
+  const [sendingTest, setSendingTest] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -113,6 +118,45 @@ export default function EmailTemplates() {
         description: error.message,
         variant: "destructive",
       });
+    }
+  };
+
+  const handleSendTest = async () => {
+    if (!editingTemplate || !testEmail) {
+      toast({
+        title: "Erreur",
+        description: "Veuillez renseigner l'email de test",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setSendingTest(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('test-email-template', {
+        body: {
+          templateId: editingTemplate.id,
+          testEmail,
+          testVariables,
+        },
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Succès",
+        description: "Email de test envoyé avec succès",
+      });
+
+      setShowTestDialog(false);
+    } catch (error: any) {
+      toast({
+        title: "Erreur",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setSendingTest(false);
     }
   };
 
@@ -215,6 +259,13 @@ export default function EmailTemplates() {
                 )}
                 Enregistrer
               </Button>
+              <Button
+                variant="outline"
+                onClick={() => setShowTestDialog(true)}
+                disabled={!editingTemplate.name}
+              >
+                📧 Tester l'envoi
+              </Button>
               <Button variant="outline" onClick={() => setEditingTemplate(null)}>
                 Annuler
               </Button>
@@ -262,6 +313,55 @@ export default function EmailTemplates() {
           ))}
         </div>
       )}
+
+      {/* Test Email Dialog */}
+      <Dialog open={showTestDialog} onOpenChange={setShowTestDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Tester le template</DialogTitle>
+            <DialogDescription>
+              Envoyez un email de test pour vérifier le rendu
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="test-email">Email de test</Label>
+              <Input
+                id="test-email"
+                type="email"
+                value={testEmail}
+                onChange={(e) => setTestEmail(e.target.value)}
+                placeholder="test@example.com"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Variables de test (JSON)</Label>
+              <Textarea
+                value={JSON.stringify(testVariables, null, 2)}
+                onChange={(e) => {
+                  try {
+                    setTestVariables(JSON.parse(e.target.value));
+                  } catch {}
+                }}
+                rows={6}
+                className="font-mono text-sm"
+                placeholder='{"user_name": "John", "service_name": "Toilettage"}'
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowTestDialog(false)}>
+              Annuler
+            </Button>
+            <Button onClick={handleSendTest} disabled={sendingTest}>
+              {sendingTest ? (
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              ) : null}
+              Envoyer le test
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
