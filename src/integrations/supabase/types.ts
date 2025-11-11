@@ -14,6 +14,123 @@ export type Database = {
   }
   public: {
     Tables: {
+      ab_test_results: {
+        Row: {
+          ab_test_id: string
+          clicked_count: number | null
+          created_at: string | null
+          delivered_count: number | null
+          id: string
+          notification_log_id: string
+          opened_count: number | null
+          sent_count: number | null
+          updated_at: string | null
+          variant_id: string
+        }
+        Insert: {
+          ab_test_id: string
+          clicked_count?: number | null
+          created_at?: string | null
+          delivered_count?: number | null
+          id?: string
+          notification_log_id: string
+          opened_count?: number | null
+          sent_count?: number | null
+          updated_at?: string | null
+          variant_id: string
+        }
+        Update: {
+          ab_test_id?: string
+          clicked_count?: number | null
+          created_at?: string | null
+          delivered_count?: number | null
+          id?: string
+          notification_log_id?: string
+          opened_count?: number | null
+          sent_count?: number | null
+          updated_at?: string | null
+          variant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ab_test_results_ab_test_id_fkey"
+            columns: ["ab_test_id"]
+            isOneToOne: false
+            referencedRelation: "ab_tests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ab_test_results_notification_log_id_fkey"
+            columns: ["notification_log_id"]
+            isOneToOne: false
+            referencedRelation: "notification_logs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ab_test_results_variant_id_fkey"
+            columns: ["variant_id"]
+            isOneToOne: false
+            referencedRelation: "email_template_variants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ab_tests: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          end_date: string | null
+          id: string
+          start_date: string | null
+          status: string
+          template_id: string
+          test_name: string
+          traffic_split: Json | null
+          updated_at: string | null
+          variant_ids: string[]
+          winner_variant_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          start_date?: string | null
+          status?: string
+          template_id: string
+          test_name: string
+          traffic_split?: Json | null
+          updated_at?: string | null
+          variant_ids: string[]
+          winner_variant_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          start_date?: string | null
+          status?: string
+          template_id?: string
+          test_name?: string
+          traffic_split?: Json | null
+          updated_at?: string | null
+          variant_ids?: string[]
+          winner_variant_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ab_tests_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "email_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       admin_notes: {
         Row: {
           author_id: string
@@ -431,6 +548,47 @@ export type Database = {
           },
         ]
       }
+      email_template_variants: {
+        Row: {
+          created_at: string | null
+          html_body: string
+          id: string
+          is_active: boolean | null
+          subject: string
+          template_id: string
+          updated_at: string | null
+          variant_name: string
+        }
+        Insert: {
+          created_at?: string | null
+          html_body: string
+          id?: string
+          is_active?: boolean | null
+          subject: string
+          template_id: string
+          updated_at?: string | null
+          variant_name: string
+        }
+        Update: {
+          created_at?: string | null
+          html_body?: string
+          id?: string
+          is_active?: boolean | null
+          subject?: string
+          template_id?: string
+          updated_at?: string | null
+          variant_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_template_variants_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "email_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       email_templates: {
         Row: {
           created_at: string | null
@@ -670,6 +828,8 @@ export type Database = {
           status: string
           template_name: string
           user_id: string
+          variant_id: string | null
+          webhook_id: string | null
         }
         Insert: {
           channel: string
@@ -685,6 +845,8 @@ export type Database = {
           status?: string
           template_name: string
           user_id: string
+          variant_id?: string | null
+          webhook_id?: string | null
         }
         Update: {
           channel?: string
@@ -700,8 +862,18 @@ export type Database = {
           status?: string
           template_name?: string
           user_id?: string
+          variant_id?: string | null
+          webhook_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "notification_logs_variant_id_fkey"
+            columns: ["variant_id"]
+            isOneToOne: false
+            referencedRelation: "email_template_variants"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       notification_preferences: {
         Row: {

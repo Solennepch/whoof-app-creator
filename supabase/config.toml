@@ -38,3 +38,6 @@ verify_jwt = false
 
 [functions.test-email-template]
 verify_jwt = true
+
+[functions.resend-webhook]
+verify_jwt = false

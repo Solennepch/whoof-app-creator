@@ -87,6 +87,10 @@ serve(async (req) => {
         to: [testEmail],
         subject: `[TEST] ${subject}`,
         html: htmlBody,
+        tags: [
+          { name: 'environment', value: 'test' },
+          { name: 'template', value: template.name }
+        ]
       }),
     });
 
@@ -95,13 +99,16 @@ serve(async (req) => {
       throw new Error(`Failed to send email: ${error}`);
     }
 
-    // Log the test
+    const emailData = await emailResponse.json();
+
+    // Log the test with webhook_id for tracking
     await supabaseClient.from('notification_logs').insert({
       user_id: user.id,
       template_name: template.name,
       channel: 'email',
       recipient: testEmail,
       status: 'sent',
+      webhook_id: emailData.id, // Store Resend email ID for webhook tracking
       metadata: { is_test: true, test_variables: testVariables },
       sent_at: new Date().toISOString(),
     });

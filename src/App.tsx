@@ -55,6 +55,7 @@ const AdminProfessionals = lazy(() => import("./pages/admin/Professionals"));
 const AdminProfessionalDetail = lazy(() => import("./pages/admin/ProfessionalDetail"));
 const AdminEmailTemplates = lazy(() => import("./pages/admin/EmailTemplates"));
 const AdminNotificationDashboard = lazy(() => import("./pages/admin/NotificationDashboard"));
+const AdminABTesting = lazy(() => import("./pages/admin/ABTesting"));
 
 // Debug routes
 const Debug = lazy(() => import("./pages/Debug"));
@@ -129,6 +130,7 @@ const App = () => {
                   <Route path="/admin/content/astrodog" element={<PageErrorBoundary><AstroDogCMS /></PageErrorBoundary>} />
                   <Route path="/admin/email-templates" element={<PageErrorBoundary><AdminEmailTemplates /></PageErrorBoundary>} />
                   <Route path="/admin/notifications" element={<PageErrorBoundary><AdminNotificationDashboard /></PageErrorBoundary>} />
+                  <Route path="/admin/ab-testing" element={<PageErrorBoundary><AdminABTesting /></PageErrorBoundary>} />
 
                   {/* Fallback */}
                   <Route path="*" element={<Navigate to="/" replace />} />
