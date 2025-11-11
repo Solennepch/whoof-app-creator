@@ -44,6 +44,7 @@ const ProDashboard = lazy(() => import("./pages/pro/Dashboard"));
 
 // Admin routes
 const Moderation = lazy(() => import("./pages/admin/Moderation"));
+const ModerationV2 = lazy(() => import("./pages/admin/ModerationV2"));
 
 // Debug routes
 const DebugHealth = lazy(() => import("./pages/DebugHealth"));
@@ -105,6 +106,7 @@ const App = () => {
 
                   {/* Admin */}
                   <Route path="/admin/moderation" element={<PageErrorBoundary><Moderation /></PageErrorBoundary>} />
+                  <Route path="/admin/moderation-v2" element={<PageErrorBoundary><ModerationV2 /></PageErrorBoundary>} />
 
                   {/* Fallback */}
                   <Route path="*" element={<Navigate to="/" replace />} />
