@@ -133,6 +133,31 @@ console.log('Cache MISS: profile:456'); // Not found, fetching from API
 
 ## 🧹 Cache Maintenance
 
+### Cache Warming Automatique
+
+Le système inclut un cache warming automatique qui pré-charge les données les plus populaires :
+
+**Stratégie de warming :**
+- Top 50 profils utilisateurs les plus actifs (mis à jour récemment)
+- Top 30 profils professionnels les plus vus
+- Services de chaque professionnel actif
+
+**Planification automatique :**
+- Tous les jours à 6h00 (refresh complet)
+- Toutes les 4h pendant les heures de pointe (8h, 12h, 16h, 20h)
+
+Le cache warming peut aussi être déclenché manuellement :
+```typescript
+// Déclencher manuellement via l'edge function
+await supabase.functions.invoke('cache-warming');
+```
+
+**Avantages du cache warming :**
+- ⚡ Temps de réponse < 50ms pour les profils populaires
+- 🔄 Données fraîches chargées avant l'arrivée des utilisateurs
+- 📉 Réduction de la charge sur la base de données principale
+- 🚀 Expérience utilisateur optimale dès la première visite
+
 ### Clear All Cache (Admin Only)
 
 ```typescript
