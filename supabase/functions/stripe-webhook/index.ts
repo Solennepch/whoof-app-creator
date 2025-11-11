@@ -118,7 +118,8 @@ serve(async (req) => {
     const relevantEvents = [
       'checkout.session.completed',
       'customer.subscription.updated',
-      'customer.subscription.deleted'
+      'customer.subscription.deleted',
+      'payment_intent.succeeded'
     ];
 
     if (!relevantEvents.includes(event.type)) {
@@ -136,9 +137,77 @@ serve(async (req) => {
       metadata = event.data.object.metadata || {};
     } else if (event.type.startsWith('customer.subscription.')) {
       metadata = event.data.object.metadata || {};
+    } else if (event.type === 'payment_intent.succeeded') {
+      metadata = event.data.object.metadata || {};
     }
 
-    const type = metadata.type; // 'user' or 'pro'
+    const type = metadata.type; // 'user', 'pro', or 'booking'
+    
+    // Handle booking payments
+    if (type === 'booking') {
+      const bookingId = metadata.booking_id;
+      const amount = parseFloat(metadata.amount || '0');
+      const proUserId = metadata.pro_user_id;
+      const userId = metadata.user_id;
+      const serviceId = metadata.service_id;
+
+      logStep('Processing booking payment', { bookingId, amount, proUserId });
+
+      // Create transaction record
+      const transactionResponse = await fetch(
+        `${SUPABASE_URL}/rest/v1/pro_transactions`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+            'apikey': SUPABASE_SERVICE_ROLE_KEY,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=minimal',
+          },
+          body: JSON.stringify({
+            pro_profile_id: proUserId,
+            booking_id: bookingId,
+            user_id: userId,
+            amount: amount,
+            currency: 'EUR',
+            type: 'payment',
+            status: 'completed',
+            payment_method: 'stripe',
+            stripe_payment_id: event.data.object.id,
+            metadata: { service_id: serviceId }
+          }),
+        }
+      );
+
+      if (transactionResponse.ok) {
+        logStep('Transaction created', { bookingId });
+        
+        // Update booking status to confirmed
+        const bookingResponse = await fetch(
+          `${SUPABASE_URL}/rest/v1/pro_bookings?id=eq.${bookingId}`,
+          {
+            method: 'PATCH',
+            headers: {
+              'Authorization': `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+              'apikey': SUPABASE_SERVICE_ROLE_KEY,
+              'Content-Type': 'application/json',
+              'Prefer': 'return=minimal',
+            },
+            body: JSON.stringify({ status: 'confirmed' }),
+          }
+        );
+
+        if (bookingResponse.ok) {
+          logStep('Booking confirmed', { bookingId });
+        }
+      }
+
+      return new Response(
+        JSON.stringify({ ok: true }),
+        { status: 200, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
     const userId = metadata.user_id;
 
     if (!type || !userId) {

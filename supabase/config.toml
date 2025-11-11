@@ -23,3 +23,9 @@ verify_jwt = true
 
 [functions.pro-customer-portal]
 verify_jwt = true
+
+[functions.create-booking-payment]
+verify_jwt = true
+
+[functions.send-notification]
+verify_jwt = false
