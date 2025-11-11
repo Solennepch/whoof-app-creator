@@ -41,6 +41,7 @@ const LocationOnboarding = lazy(() => import("./pages/onboarding/Location"));
 // Pro routes
 const ProHome = lazy(() => import("./pages/pro/Home"));
 const ProDashboard = lazy(() => import("./pages/pro/Dashboard"));
+const ProStats = lazy(() => import("./pages/pro/Stats"));
 
 // Admin routes
 const Moderation = lazy(() => import("./pages/admin/Moderation"));
@@ -109,6 +110,7 @@ const App = () => {
                 {/* Pro routes */}
                 <Route path="/pro" element={<PageErrorBoundary><ProHome /></PageErrorBoundary>} />
                 <Route path="/pro/dashboard" element={<PageErrorBoundary><ProDashboard /></PageErrorBoundary>} />
+                <Route path="/pro/stats" element={<PageErrorBoundary><ProStats /></PageErrorBoundary>} />
 
                   {/* Admin */}
                   <Route path="/admin" element={<PageErrorBoundary><AdminDashboard /></PageErrorBoundary>} />

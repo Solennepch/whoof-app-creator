@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { useMyProProfile, useProServices, useCreateService, useUpdateService, useDeleteService } from "@/hooks/usePro";
-import { Settings, Plus, Lightbulb, Trash2, Edit } from "lucide-react";
+import { Settings, Plus, Lightbulb, Trash2, Edit, Image } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import {
@@ -17,6 +17,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { ServiceGallery } from "@/components/pro/ServiceGallery";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 
 export default function ProServices() {
   const { data: profile, isLoading } = useMyProProfile();
@@ -125,28 +131,50 @@ export default function ProServices() {
         <div className="space-y-3">
           {services.map((service) => (
             <Card key={service.id}>
-              <CardContent className="flex items-center justify-between p-4">
-                <div className="flex-1">
-                  <h3 className="font-semibold">{service.name}</h3>
-                  {service.description && (
-                    <p className="text-sm text-muted-foreground mb-1">{service.description}</p>
-                  )}
-                  {service.duration && (
-                    <p className="text-sm text-muted-foreground">{service.duration}</p>
-                  )}
-                </div>
-                <div className="flex items-center gap-3">
-                  <Badge variant="secondary" className="text-lg font-bold">
-                    {service.price}€
-                  </Badge>
-                  <Button variant="ghost" size="sm" onClick={() => handleOpenDialog(service)}>
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                  <Button variant="ghost" size="sm" onClick={() => handleDelete(service.id)}>
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              </CardContent>
+              <Collapsible>
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex-1">
+                      <h3 className="font-semibold">{service.name}</h3>
+                      {service.description && (
+                        <p className="text-sm text-muted-foreground mb-1">{service.description}</p>
+                      )}
+                      {service.duration && (
+                        <p className="text-sm text-muted-foreground">{service.duration}</p>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Badge variant="secondary" className="text-lg font-bold">
+                        {service.price}€
+                      </Badge>
+                      {service.gallery_urls && service.gallery_urls.length > 0 && (
+                        <CollapsibleTrigger asChild>
+                          <Button variant="ghost" size="sm">
+                            <Image className="h-4 w-4" />
+                          </Button>
+                        </CollapsibleTrigger>
+                      )}
+                      <Button variant="ghost" size="sm" onClick={() => handleOpenDialog(service)}>
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="sm" onClick={() => handleDelete(service.id)}>
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+
+                  <CollapsibleContent>
+                    <ServiceGallery
+                      serviceId={service.id}
+                      galleryUrls={service.gallery_urls || []}
+                      onUpdate={() => {
+                        // Refresh services list after gallery update
+                      }}
+                      editable={true}
+                    />
+                  </CollapsibleContent>
+                </CardContent>
+              </Collapsible>
             </Card>
           ))}
         </div>

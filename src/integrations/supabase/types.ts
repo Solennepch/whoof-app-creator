@@ -785,6 +785,101 @@ export type Database = {
         }
         Relationships: []
       }
+      pro_availability: {
+        Row: {
+          created_at: string | null
+          day_of_week: number
+          end_time: string
+          id: string
+          is_active: boolean | null
+          pro_profile_id: string
+          start_time: string
+        }
+        Insert: {
+          created_at?: string | null
+          day_of_week: number
+          end_time: string
+          id?: string
+          is_active?: boolean | null
+          pro_profile_id: string
+          start_time: string
+        }
+        Update: {
+          created_at?: string | null
+          day_of_week?: number
+          end_time?: string
+          id?: string
+          is_active?: boolean | null
+          pro_profile_id?: string
+          start_time?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pro_availability_pro_profile_id_fkey"
+            columns: ["pro_profile_id"]
+            isOneToOne: false
+            referencedRelation: "pro_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pro_bookings: {
+        Row: {
+          booking_date: string
+          created_at: string | null
+          end_time: string
+          id: string
+          notes: string | null
+          pro_profile_id: string
+          service_id: string
+          start_time: string
+          status: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          booking_date: string
+          created_at?: string | null
+          end_time: string
+          id?: string
+          notes?: string | null
+          pro_profile_id: string
+          service_id: string
+          start_time: string
+          status?: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          booking_date?: string
+          created_at?: string | null
+          end_time?: string
+          id?: string
+          notes?: string | null
+          pro_profile_id?: string
+          service_id?: string
+          start_time?: string
+          status?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pro_bookings_pro_profile_id_fkey"
+            columns: ["pro_profile_id"]
+            isOneToOne: false
+            referencedRelation: "pro_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pro_bookings_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "pro_services"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       pro_profiles: {
         Row: {
           activity: string
@@ -865,6 +960,7 @@ export type Database = {
           created_at: string | null
           description: string | null
           duration: string | null
+          gallery_urls: string[] | null
           id: string
           is_active: boolean | null
           name: string
@@ -876,6 +972,7 @@ export type Database = {
           created_at?: string | null
           description?: string | null
           duration?: string | null
+          gallery_urls?: string[] | null
           id?: string
           is_active?: boolean | null
           name: string
@@ -887,6 +984,7 @@ export type Database = {
           created_at?: string | null
           description?: string | null
           duration?: string | null
+          gallery_urls?: string[] | null
           id?: string
           is_active?: boolean | null
           name?: string

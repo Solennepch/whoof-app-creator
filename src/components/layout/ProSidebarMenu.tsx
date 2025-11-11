@@ -23,6 +23,8 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { AccountSwitcher } from "./AccountSwitcher";
 import { useAccounts } from "@/contexts/AccountContext";
+import { ProTierBadge } from "@/components/pro/ProTierBadge";
+import { useProSubscriptionStatus } from "@/hooks/useProSubscription";
 
 interface ProSidebarMenuProps {
   open: boolean;
@@ -34,6 +36,7 @@ export function ProSidebarMenu({ open, onOpenChange }: ProSidebarMenuProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [showAccountSwitcher, setShowAccountSwitcher] = useState(false);
   const { accounts } = useAccounts();
+  const { data: subscription } = useProSubscriptionStatus();
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -76,6 +79,7 @@ export function ProSidebarMenu({ open, onOpenChange }: ProSidebarMenuProps) {
 
   const activitySection = [
     { to: "/pro/dashboard", icon: LayoutDashboard, label: "Tableau de bord complet" },
+    { to: "/pro/stats", icon: DollarSign, label: "Statistiques & Analytics" },
     { to: "/pro/services", icon: Settings, label: "Mes services et tarifs" },
     { to: "/pro/offers", icon: Tag, label: "Mes offres et promotions" },
     { to: "/pro/reviews", icon: Star, label: "Mes avis clients" },
@@ -117,7 +121,7 @@ export function ProSidebarMenu({ open, onOpenChange }: ProSidebarMenuProps) {
         {/* Profile Header */}
         {!isLoading && profile && (
           <div className="mt-6 p-4 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 mb-2">
               <div className="relative">
                 <Avatar className="h-12 w-12 border-2 border-white shadow-md">
                   <AvatarImage src={profile.logo_url || undefined} />
@@ -139,6 +143,11 @@ export function ProSidebarMenu({ open, onOpenChange }: ProSidebarMenuProps) {
                 </p>
               </div>
             </div>
+            {subscription?.tier && (
+              <div className="flex justify-center">
+                <ProTierBadge tier={subscription.tier} />
+              </div>
+            )}
           </div>
         )}
 
