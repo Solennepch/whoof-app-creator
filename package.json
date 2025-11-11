@@ -11,7 +11,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@axe-core/playwright": "^4.11.0",
     "@hookform/resolvers": "^3.10.0",
+    "@lhci/cli": "^0.15.1",
     "@percy/cli": "^1.31.4",
     "@percy/playwright": "^1.0.9",
     "@playwright/test": "^1.56.1",

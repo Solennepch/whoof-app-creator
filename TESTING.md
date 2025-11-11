@@ -383,6 +383,233 @@ npx playwright show-report
 - [Sentry React Documentation](https://docs.sentry.io/platforms/javascript/guides/react/)
 - [GitHub Actions](https://docs.github.com/en/actions)
 
+## 🔥 Tests de Charge (k6)
+
+### Qu'est-ce que k6 ?
+
+k6 est un outil de tests de charge moderne pour simuler des pics de trafic et identifier les goulots d'étranglement dans les APIs et edge functions.
+
+### Installation
+
+```bash
+# macOS
+brew install k6
+
+# Linux
+sudo gpg -k
+sudo gpg --no-default-keyring --keyring /usr/share/keyrings/k6-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69
+echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+sudo apt-get update
+sudo apt-get install k6
+
+# Windows
+choco install k6
+```
+
+### Lancer les tests de charge
+
+```bash
+# Tous les tests de charge
+npm run test:load
+
+# Test individuel d'authentification (1000 utilisateurs simultanés)
+k6 run tests/load/auth-load.js
+
+# Test de swipe (500 utilisateurs simultanés)
+k6 run tests/load/swipe-load.js
+
+# Test de réservation pro (300 utilisateurs simultanés)
+k6 run tests/load/pro-booking-load.js
+```
+
+### Tests disponibles
+
+#### 1. Test d'Authentification (`auth-load.js`)
+Simule jusqu'à **1000 utilisateurs simultanés** :
+- Endpoints testés : `/profile`, `/suggested`, `/check-subscription`
+- Seuils : p(95) < 500ms, p(99) < 1000ms, erreurs < 5%
+
+#### 2. Test de Swipe (`swipe-load.js`)
+Simule jusqu'à **500 utilisateurs simultanés** :
+- Endpoint testé : `/swipe`
+- Seuils : p(95) < 800ms, p(99) < 1500ms, succès > 85%
+
+#### 3. Test de Réservation Pro (`pro-booking-load.js`)
+Simule jusqu'à **300 utilisateurs simultanés** :
+- Endpoints testés : `/pro-directory`, `/pro-public`, `/create-booking-payment`
+- Seuils : p(95) < 1000ms, p(99) < 2000ms, succès > 75%
+
+### Analyser les résultats
+
+Les résultats sont stockés dans `tests/load/results/` au format JSON.
+
+**Métriques clés:**
+- `http_req_duration` : Temps de réponse (avg, p95, p99)
+- `http_req_failed` : Taux d'échec des requêtes
+- `http_reqs` : Nombre total de requêtes (throughput)
+- `vus` : Nombre d'utilisateurs virtuels actifs
+
+**Voir le README détaillé:** `tests/load/README.md`
+
+## ⚡ Tests de Performance (Lighthouse CI)
+
+### Qu'est-ce que Lighthouse CI ?
+
+Lighthouse CI mesure et track automatiquement les **Core Web Vitals** et le score SEO sur chaque commit.
+
+### Configuration
+
+Le fichier `lighthouserc.json` définit :
+- URLs testées : `/`, `/discover`, `/premium/pricing`, `/annuaire`, `/profile/me`
+- 3 runs par URL pour moyenner les résultats
+- Preset desktop avec throttling modéré
+
+### Métriques trackées
+
+**Core Web Vitals:**
+- **LCP (Largest Contentful Paint)** : < 2500ms
+- **FID (First Input Delay)** : via TBT < 300ms
+- **CLS (Cumulative Layout Shift)** : < 0.1
+
+**Autres métriques:**
+- **FCP (First Contentful Paint)** : < 2000ms
+- **Speed Index** : < 3000ms
+- **Time to Interactive** : < 3500ms
+
+**Scores:**
+- Performance : > 85%
+- Accessibilité : > 90%
+- Best Practices : > 90%
+- SEO : > 90%
+
+### Lancer Lighthouse CI
+
+```bash
+# Localement
+npm run lighthouse
+
+# Automatiquement dans CI/CD sur chaque push
+```
+
+### Interpréter les résultats
+
+Les rapports sont uploadés sur **temporary-public-storage** et disponibles dans les artifacts GitHub Actions.
+
+**✅ Vert (> 90%)** : Excellent, aucune action requise
+**🟡 Orange (50-89%)** : Améliorations recommandées
+**🔴 Rouge (< 50%)** : Action immédiate requise
+
+## ♿ Tests d'Accessibilité (Axe)
+
+### Qu'est-ce qu'Axe ?
+
+Axe est un moteur de tests d'accessibilité qui garantit la conformité **WCAG 2.1 niveau AA**.
+
+### Lancer les tests d'accessibilité
+
+```bash
+# Tous les tests d'accessibilité
+npm run test:a11y
+
+# Mode debug
+npx playwright test tests/accessibility/axe.spec.ts --debug
+
+# Avec rapport HTML
+npx playwright test tests/accessibility/axe.spec.ts --reporter=html
+```
+
+### Normes testées
+
+**WCAG 2.1 AA couvre:**
+1. **Perceptible** : Contrastes, alternatives textuelles, contenu adaptable
+2. **Opérable** : Navigation clavier, temps suffisant, navigation facilitée
+3. **Compréhensible** : Texte lisible, prévisibilité, assistance saisie
+4. **Robuste** : Compatibilité technologies d'assistance
+
+### Critères spécifiques
+
+- ✅ **Contrastes de couleurs** : Ratio minimum 4.5:1 (texte normal)
+- ✅ **Labels ARIA** : Tous les éléments interactifs ont des labels
+- ✅ **Navigation clavier** : Tous les éléments sont focusables
+- ✅ **Hiérarchie titres** : H1 unique, pas de saut de niveau
+- ✅ **Texte des liens** : Descriptif, pas de "cliquez ici"
+- ✅ **Labels formulaires** : Tous les champs ont des labels associés
+- ✅ **Alt des images** : Toutes les images ont un alt descriptif
+- ✅ **Taille cibles tactiles** : Boutons ≥ 44x44px
+
+### Violations détectées
+
+Le test affiche des violations détaillées avec :
+- ID de la règle violée
+- Impact (critical, serious, moderate, minor)
+- Description du problème
+- Élément HTML concerné
+- Instructions de correction
+- Lien vers la documentation
+
+**Voir le guide détaillé:** `tests/accessibility/README.md`
+
+## 🚀 CI/CD (GitHub Actions)
+
+### Workflows automatiques
+
+Le pipeline CI/CD s'exécute automatiquement sur :
+- Push sur `main` et `develop`
+- Pull requests vers `main` et `develop`
+
+### Jobs CI
+
+#### 1. Tests Unitaires
+```yaml
+- Install dependencies
+- Run Vitest
+- Upload coverage to Codecov
+```
+
+#### 2. Tests E2E
+```yaml
+- Install Playwright browsers
+- Run E2E tests (Chromium, Firefox, WebKit)
+- Run Percy visual tests (Chromium only)
+- Upload Playwright reports
+```
+
+#### 3. Lint & Type Check
+```yaml
+- Run ESLint
+- Run TypeScript type check
+```
+
+#### 4. Lighthouse Performance
+```yaml
+- Build application
+- Run Lighthouse CI
+- Upload performance reports
+```
+
+#### 5. Accessibility Tests
+```yaml
+- Install Playwright + Axe
+- Run accessibility tests
+- Upload accessibility reports
+```
+
+#### 6. Build
+```yaml
+- Build production bundle (only if all tests pass)
+- Upload build artifacts
+```
+
+### Configuration requise
+
+Ajoutez ces secrets dans GitHub :
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_PUBLISHABLE_KEY`
+- `PERCY_TOKEN` (pour tests visuels)
+- `VITE_SENTRY_DSN` (pour monitoring erreurs)
+- `LHCI_GITHUB_APP_TOKEN` (optionnel pour Lighthouse)
+- `CODECOV_TOKEN` (optionnel)
+
 ## 🎯 Prochaines Étapes
 
 ### Tests à ajouter
@@ -390,17 +617,22 @@ npx playwright show-report
 - [x] Tests unitaires des hooks restants (usePremium, useWalks, useMessages, useProBookings)
 - [x] Tests E2E du paiement Stripe complet
 - [x] Tests de régression visuelle avec Percy
+- [x] Tests de charge avec k6
+- [x] Tests de performance avec Lighthouse CI
+- [x] Tests d'accessibilité avec Axe
 - [ ] Tests des composants de formulaires
 - [ ] Tests E2E du chat/messagerie temps réel
-- [ ] Tests de performance avec Lighthouse
+- [ ] Tests de sécurité avec OWASP ZAP
 
 ### Améliorations CI/CD
 
 - [x] Tests de régression visuelle avec Percy
 - [x] Alertes Sentry personnalisées par type d'erreur
-- [ ] Tests d'accessibilité avec Axe
+- [x] Tests d'accessibilité avec Axe
+- [x] Tests de performance avec Lighthouse
 - [ ] Tests de sécurité avec OWASP ZAP
 - [ ] Déploiement automatique après tests réussis
+- [ ] Monitoring continu avec Grafana + k6 Cloud
 
 ---
 
