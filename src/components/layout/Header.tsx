@@ -7,6 +7,7 @@ import { SidebarMenu } from "./SidebarMenu";
 import { ProSidebarMenu } from "./ProSidebarMenu";
 import { AdminSidebarMenu } from "./AdminSidebarMenu";
 import { QuickSwitchButton } from "./QuickSwitchButton";
+import { AdminNotificationBell } from "@/components/admin/AdminNotificationBell";
 import logoWhoof from "@/assets/logo-whoof-v3.png";
 
 export function Header() {
@@ -52,8 +53,10 @@ export function Header() {
               </div>
             </div>
 
-            {/* Bouton de switch rapide */}
-            <QuickSwitchButton />
+            <div className="flex items-center gap-3">
+              {isAdminRoute && <AdminNotificationBell />}
+              {!isAdminRoute && <QuickSwitchButton />}
+            </div>
           </div>
         </div>
       </header>

@@ -2,13 +2,13 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
-// Check if current user is admin/moderator
+// Check if current user is admin/moderator with permissions
 export function useAdminRole() {
   return useQuery({
     queryKey: ['admin-role'],
     queryFn: async () => {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return { isAdmin: false, isModerator: false };
+      if (!user) return { isAdmin: false, isModerator: false, hasAccess: false, permissions: [] };
 
       const { data: roles } = await supabase
         .from('user_roles')
@@ -18,7 +18,22 @@ export function useAdminRole() {
       const isAdmin = roles?.some(r => r.role === 'admin') || false;
       const isModerator = roles?.some(r => r.role === 'moderator') || false;
 
-      return { isAdmin, isModerator, hasAccess: isAdmin || isModerator };
+      // Récupérer les permissions
+      const userRoles = roles?.map(r => r.role) || [];
+      const { data: permissions } = await supabase
+        .from('role_permissions')
+        .select('permission')
+        .in('role', userRoles);
+
+      const permissionsList = permissions?.map(p => p.permission) || [];
+
+      return { 
+        isAdmin, 
+        isModerator, 
+        hasAccess: isAdmin || isModerator,
+        permissions: permissionsList,
+        role: isAdmin ? 'admin' : isModerator ? 'moderator' : 'user'
+      };
     },
   });
 }

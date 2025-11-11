@@ -93,6 +93,10 @@ type TabKey = "dashboard" | "verifications" | "reports" | "alerts" | "history" |
 export default function ModerationV2() {
   const adminData = useAdminRole();
   const isAdmin = adminData.data?.isAdmin || false;
+  const isModerator = adminData.data?.isModerator || false;
+  const hasAccess = adminData.data?.hasAccess || false;
+  const userRole = adminData.data?.role || 'user';
+  const permissions = adminData.data?.permissions || [];
   const adminLoading = adminData.isLoading;
   const [searchParams] = useSearchParams();
   const initialTab = (searchParams.get("tab") as TabKey) || "dashboard";
@@ -139,7 +143,7 @@ export default function ModerationV2() {
     );
   }
 
-  if (!isAdmin) {
+  if (!hasAccess) {
     return (
       <div className="mx-auto max-w-2xl p-6">
         <div className="rounded-2xl border border-destructive bg-card p-6 shadow-sm">
@@ -192,13 +196,19 @@ export default function ModerationV2() {
     <main className="mx-auto max-w-5xl p-4 md:p-6">
       {/* Header */}
       <header className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-extrabold tracking-tight text-foreground">Modération</h1>
-          <p className="text-muted-foreground">Gérez les vérifications, signalements et alertes pour protéger la communauté Whoof.</p>
+        <div className="flex items-center gap-3">
+          <div>
+            <h1 className="text-3xl font-extrabold tracking-tight text-foreground">Modération</h1>
+            <p className="text-sm text-muted-foreground">
+              Interface de gestion et modération
+            </p>
+          </div>
+          <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+            userRole === 'admin' ? 'bg-red-500 text-white' : 'bg-orange-500 text-white'
+          }`}>
+            {userRole === 'admin' ? '👑 Admin' : '🛡️ Modérateur'}
+          </span>
         </div>
-        <span className="hidden rounded-full border border-pink-200 bg-pink-50 px-3 py-1 text-sm font-medium text-pink-600 md:block">
-          Espace sécurisé
-        </span>
       </header>
 
       {/* Tabs */}

@@ -1,78 +1,19 @@
-import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, Briefcase, Heart, Star, TrendingUp, AlertCircle } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
+import { useAdminStats } from "@/hooks/useAdminStats";
+import { Badge } from "@/components/ui/badge";
 
 export default function AdminDashboard() {
-  const [stats, setStats] = useState({
-    totalUsers: 0,
-    proUsers: 0,
-    totalDogs: 0,
-    totalMatches: 0,
-    pendingVerifications: 0,
-    activeReports: 0,
-  });
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    loadStats();
-  }, []);
-
-  const loadStats = async () => {
-    setLoading(true);
-    try {
-      // Get total users (from profiles)
-      const { count: usersCount } = await supabase
-        .from('profiles')
-        .select('*', { count: 'exact', head: true });
-
-      // Get pro users
-      const { count: proCount } = await supabase
-        .from('pro_profiles')
-        .select('*', { count: 'exact', head: true });
-
-      // Get total dogs
-      const { count: dogsCount } = await supabase
-        .from('dogs')
-        .select('*', { count: 'exact', head: true });
-
-      // Note: Using dogs table as proxy for matches since matches table doesn't exist
-      const matchesCount = dogsCount ? Math.floor(dogsCount / 2) : 0;
-
-      // Get pending verifications
-      const { count: verificationsCount } = await supabase
-        .from('verifications')
-        .select('*', { count: 'exact', head: true })
-        .eq('status', 'pending');
-
-      // Get active reports
-      const { count: reportsCount } = await supabase
-        .from('reports')
-        .select('*', { count: 'exact', head: true })
-        .eq('status', 'open');
-
-      setStats({
-        totalUsers: usersCount || 0,
-        proUsers: proCount || 0,
-        totalDogs: dogsCount || 0,
-        totalMatches: matchesCount || 0,
-        pendingVerifications: verificationsCount || 0,
-        activeReports: reportsCount || 0,
-      });
-    } catch (error) {
-      console.error('Error loading stats:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { data: stats, isLoading, refetch } = useAdminStats();
 
   const statCards = [
     {
       title: "Utilisateurs",
-      value: stats.totalUsers,
+      value: stats?.totalUsers || 0,
+      newToday: stats?.newUsersToday || 0,
       description: "Comptes particuliers actifs",
       icon: Users,
       color: "text-blue-600",
@@ -81,55 +22,55 @@ export default function AdminDashboard() {
     },
     {
       title: "Professionnels",
-      value: stats.proUsers,
-      description: "Comptes pro vérifiés",
+      value: stats?.totalPros || 0,
+      description: "Comptes pro actifs",
       icon: Briefcase,
       color: "text-purple-600",
       bgColor: "bg-purple-50",
       link: "/admin/professionals",
     },
     {
-      title: "Chiens",
-      value: stats.totalDogs,
-      description: "Profils canins créés",
-      icon: Heart,
-      color: "text-pink-600",
-      bgColor: "bg-pink-50",
-      link: "/admin/dogs",
-    },
-    {
       title: "Matches",
-      value: stats.totalMatches,
+      value: stats?.totalMatches || 0,
       description: "Connexions réussies",
       icon: TrendingUp,
       color: "text-green-600",
       bgColor: "bg-green-50",
-      link: "/admin/matches",
+      link: "/admin/users",
     },
   ];
 
   const alertCards = [
     {
       title: "Vérifications en attente",
-      value: stats.pendingVerifications,
+      value: stats?.pendingVerifications || 0,
       description: "Demandes à traiter",
       icon: AlertCircle,
       color: "text-orange-600",
       link: "/admin/moderation?tab=verifications",
-      urgent: stats.pendingVerifications > 0,
+      urgent: (stats?.pendingVerifications || 0) > 0,
     },
     {
       title: "Signalements ouverts",
-      value: stats.activeReports,
+      value: stats?.openReports || 0,
       description: "À modérer",
       icon: AlertCircle,
       color: "text-red-600",
-      link: "/admin/moderation?tab=reports",
-      urgent: stats.activeReports > 0,
+      link: "/admin/moderation?tab=signalements",
+      urgent: (stats?.openReports || 0) > 0,
+    },
+    {
+      title: "Alertes actives",
+      value: stats?.activeAlerts || 0,
+      description: "Système",
+      icon: AlertCircle,
+      color: "text-yellow-600",
+      link: "/admin/moderation?tab=alertes",
+      urgent: (stats?.activeAlerts || 0) > 0,
     },
   ];
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="container mx-auto p-6 space-y-6">
         <Skeleton className="h-12 w-64" />
@@ -149,17 +90,36 @@ export default function AdminDashboard() {
         <div>
           <h1 className="text-3xl font-bold">Dashboard Admin</h1>
           <p className="text-muted-foreground">
-            Vue d'ensemble de Whoof Apps
+            Vue d'ensemble • Mise à jour automatique toutes les 30s
           </p>
         </div>
-        <Button onClick={loadStats} variant="outline">
+        <Button onClick={() => refetch()} variant="outline">
           Actualiser
         </Button>
       </div>
 
+      {/* Stats en temps réel */}
+      {stats && stats.newUsersToday > 0 && (
+        <Card className="border-primary/50 bg-primary/5">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-3">
+              <Badge variant="default" className="text-lg px-3 py-1">
+                +{stats.newUsersToday}
+              </Badge>
+              <div>
+                <p className="font-semibold">Nouveaux utilisateurs aujourd'hui</p>
+                <p className="text-sm text-muted-foreground">
+                  {stats.newUsersThisWeek} cette semaine
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Alerts */}
-      {(stats.pendingVerifications > 0 || stats.activeReports > 0) && (
-        <div className="grid gap-4 md:grid-cols-2">
+      {((stats?.pendingVerifications || 0) > 0 || (stats?.openReports || 0) > 0 || (stats?.activeAlerts || 0) > 0) && (
+        <div className="grid gap-4 md:grid-cols-3">
           {alertCards.map((card) => {
             const Icon = card.icon;
             if (card.value === 0) return null;
@@ -186,7 +146,7 @@ export default function AdminDashboard() {
       )}
 
       {/* Stats Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {statCards.map((card) => {
           const Icon = card.icon;
           return (
@@ -202,6 +162,11 @@ export default function AdminDashboard() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-3xl font-bold">{card.value}</div>
+                  {card.newToday !== undefined && card.newToday > 0 && (
+                    <Badge variant="secondary" className="mt-2">
+                      +{card.newToday} aujourd'hui
+                    </Badge>
+                  )}
                   <p className="text-xs text-muted-foreground mt-1">
                     {card.description}
                   </p>
@@ -232,7 +197,7 @@ export default function AdminDashboard() {
                 Gérer pros
               </Button>
             </Link>
-            <Link to="/admin/content/astrodog">
+            <Link to="/admin/astrodog-cms">
               <Button variant="outline" className="w-full">
                 <Star className="h-4 w-4 mr-2" />
                 AstroDog CMS
