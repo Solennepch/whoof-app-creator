@@ -25,6 +25,7 @@ export function AdminSidebarMenu({ open, onOpenChange }: AdminSidebarMenuProps) 
       items: [
         { to: "/debug/accounts", icon: Beaker, label: "Comptes Test" },
         { to: "/debug/health", icon: TestTube, label: "Debug Health" },
+        { to: "/debug/feature-flags", icon: TestTube, label: "Feature Flags" },
       ]
     },
     {

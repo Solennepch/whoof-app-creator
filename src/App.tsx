@@ -69,6 +69,7 @@ const AdminABTesting = lazy(() => import("./pages/admin/ABTesting"));
 const Debug = lazy(() => import("./pages/Debug"));
 const DebugHealth = lazy(() => import("./pages/DebugHealth"));
 const TestAccounts = lazy(() => import("./pages/debug/TestAccounts"));
+const FeatureFlags = lazy(() => import("./pages/debug/FeatureFlags"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 // Loading fallback
@@ -158,6 +159,7 @@ const App = () => {
                 <Route path="/debug" element={<PageErrorBoundary><Debug /></PageErrorBoundary>} />
                 <Route path="/debug/health" element={<PageErrorBoundary><DebugHealth /></PageErrorBoundary>} />
                 <Route path="/debug/test-accounts" element={<PageErrorBoundary><TestAccounts /></PageErrorBoundary>} />
+                <Route path="/debug/feature-flags" element={<PageErrorBoundary><FeatureFlags /></PageErrorBoundary>} />
               </Routes>
             </Suspense>
           </AccountProvider>
