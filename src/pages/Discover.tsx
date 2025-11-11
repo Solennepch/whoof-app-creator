@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X, Heart, Info, Share2, Undo2, Star } from "lucide-react";
 import { ReasonChip } from "@/components/ui/ReasonChip";
 import { Button } from "@/components/ui/button";
@@ -9,8 +9,24 @@ import { toast } from "sonner";
 import { usePremium } from "@/hooks/usePremium";
 import { useNavigate } from "react-router-dom";
 import { PremiumBadge, PremiumTooltip } from "@/components/ui/PremiumBadge";
+import { ModeToggle } from "@/components/ui/ModeToggle";
+import { MatchCounter } from "@/components/ui/MatchCounter";
+import { SwipeTutorial } from "@/components/ui/SwipeTutorial";
 
-const profiles = [
+type RegionProfile = {
+  name: string;
+  breed: string;
+  age: string;
+  image: string;
+  bio: string;
+  reasons: string[];
+};
+
+type AdoptionProfile = RegionProfile & {
+  shelter: string;
+};
+
+const regionProfiles: RegionProfile[] = [
   {
     name: "Charlie",
     breed: "Corgi",
@@ -37,7 +53,38 @@ const profiles = [
   },
 ];
 
+const adoptionProfiles: AdoptionProfile[] = [
+  {
+    name: "Luna",
+    breed: "Labrador croisé",
+    age: "2 ans",
+    image: "https://images.unsplash.com/photo-1558788353-f76d92427f16?w=800&h=800&fit=crop",
+    bio: "Abandonnée mais pleine de vie ! Luna cherche une famille aimante 🌟",
+    reasons: ["Affectueuse", "Calme", "Moyen gabarit", "Compatible enfants", "Coup de cœur"],
+    shelter: "SPA Paris",
+  },
+  {
+    name: "Max",
+    breed: "Berger allemand",
+    age: "5 ans",
+    image: "https://images.unsplash.com/photo-1568572933382-74d440642117?w=800&h=800&fit=crop",
+    bio: "Fidèle et protecteur. Max a besoin d'un jardin et d'un maître expérimenté 🐕",
+    reasons: ["Loyal", "Grand gabarit", "Besoin d'espace", "Sportif", "À l'adoption"],
+    shelter: "SPA Lyon",
+  },
+  {
+    name: "Bella",
+    breed: "Jack Russell",
+    age: "3 ans",
+    image: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=800&h=800&fit=crop",
+    bio: "Petite mais dynamique ! Bella adore jouer et a besoin d'activité quotidienne ⚡",
+    reasons: ["Énergique", "Petit gabarit", "Joueuse", "Aime les balades", "Recommandé"],
+    shelter: "SPA Marseille",
+  },
+];
+
 export default function Discover() {
+  const [mode, setMode] = useState<"region" | "adoption">("region");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState<"left" | "right" | null>(null);
   const [showMatch, setShowMatch] = useState(false);
@@ -45,6 +92,8 @@ export default function Discover() {
   const [history, setHistory] = useState<number[]>([]);
   const [touchStart, setTouchStart] = useState<{ x: number; y: number } | null>(null);
   const [touchCurrent, setTouchCurrent] = useState<{ x: number; y: number } | null>(null);
+  const [todayMatches, setTodayMatches] = useState(0);
+  const [showTutorial, setShowTutorial] = useState(false);
   const navigate = useNavigate();
 
   const { data: session } = useQuery({
@@ -57,7 +106,28 @@ export default function Discover() {
 
   const { data: isPremium } = usePremium();
 
+  const profiles = mode === "region" ? regionProfiles : adoptionProfiles;
   const current = profiles[currentIndex];
+
+  // Show tutorial on first visit
+  useEffect(() => {
+    const hasSeenTutorial = localStorage.getItem("hasSeenSwipeTutorial");
+    if (!hasSeenTutorial) {
+      setShowTutorial(true);
+    }
+  }, []);
+
+  const handleTutorialClose = () => {
+    setShowTutorial(false);
+    localStorage.setItem("hasSeenSwipeTutorial", "true");
+  };
+
+  const handleModeChange = (newMode: "region" | "adoption") => {
+    setMode(newMode);
+    setCurrentIndex(0);
+    setHistory([]);
+    setDirection(null);
+  };
 
   const handleSwipe = async (liked: boolean) => {
     if (!session?.user?.id) {
@@ -65,14 +135,12 @@ export default function Discover() {
       return;
     }
 
-    // In a real app, we would call the swipe edge function here
-    // For now, simulate the behavior
     if (liked) {
-      // Simulate match (30% chance)
       const isMatch = Math.random() > 0.7;
       if (isMatch) {
         setMatchedProfile(current.name);
         setShowMatch(true);
+        setTodayMatches(prev => prev + 1);
         toast.success("+30 XP - C'est un match ! 🎉");
         return;
       }
@@ -200,6 +268,8 @@ export default function Discover() {
 
   return (
     <>
+      <SwipeTutorial show={showTutorial} onClose={handleTutorialClose} />
+      
       <MatchAnimation 
         show={showMatch} 
         onComplete={handleMatchComplete}
@@ -207,21 +277,20 @@ export default function Discover() {
       />
       
       <div className="flex flex-col h-screen overflow-hidden" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
-      {/* Header spacing to avoid overlap with sticky header */}
+      {/* Header spacing */}
       <div className="h-16 shrink-0" />
       
       <div className="mx-auto max-w-2xl px-4 flex flex-col flex-1 pb-24">
-        <div className="mb-2 text-center shrink-0">
-          <h1 className="mb-0.5 text-xl font-bold text-foreground">
-            Découvrir
-          </h1>
-          <p className="text-xs text-muted-foreground">Swipe pour matcher avec de nouveaux amis</p>
+        {/* Header with toggle and counter */}
+        <div className="mb-3 flex items-center justify-between shrink-0">
+          <ModeToggle mode={mode} onChange={handleModeChange} />
+          <MatchCounter count={todayMatches} />
         </div>
 
-        {/* Card Stack */}
+        {/* Card Stack - Zone de swipe élargie (toute la carte) */}
         <div className="relative flex-1 min-h-0">
           <div
-            className={`absolute inset-0 rounded-3xl bg-white shadow-soft ring-1 ring-black/5 ${
+            className={`absolute inset-0 rounded-3xl bg-white shadow-soft ring-1 ring-black/5 cursor-grab active:cursor-grabbing ${
               direction ? "transition-transform duration-300" : ""
             } ${
               direction === "left" ? "-translate-x-full rotate-[-20deg] opacity-0" : ""
@@ -232,14 +301,20 @@ export default function Discover() {
             onTouchEnd={handleTouchEnd}
           >
             <div
-              className="h-2/3 rounded-t-3xl bg-cover bg-center"
+              className="h-2/3 rounded-t-3xl bg-cover bg-center relative"
               style={{ backgroundImage: `url(${current.image})` }}
-            />
+            >
+              {mode === "adoption" && (current as AdoptionProfile).shelter && (
+                <div className="absolute top-4 left-4 px-3 py-1.5 bg-white/90 backdrop-blur-sm rounded-xl text-xs font-semibold text-foreground shadow-soft">
+                  {(current as AdoptionProfile).shelter}
+                </div>
+              )}
+            </div>
 
             <div className="p-4">
               <div className="mb-2 flex items-start justify-between">
                 <div>
-                  <h2 className="text-xl font-bold" style={{ color: "var(--ink)" }}>
+                  <h2 className="text-xl font-bold text-foreground">
                     {current.name}
                   </h2>
                   <p className="text-sm text-muted-foreground">
@@ -255,7 +330,7 @@ export default function Discover() {
                 </Button>
               </div>
 
-              <p className="text-xs line-clamp-2" style={{ color: "var(--ink)", opacity: 0.8 }}>
+              <p className="text-xs line-clamp-2 text-foreground/80">
                 {current.bio}
               </p>
             </div>
