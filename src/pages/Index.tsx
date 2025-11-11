@@ -1,7 +1,8 @@
-import { Search, Users } from "lucide-react";
+import { Heart, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import logoWhoof from "@/assets/logo-whoof-v3.png";
+import { motion } from "framer-motion";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -9,8 +10,13 @@ const Index = () => {
   return (
     <div className="min-h-screen flex items-center justify-center" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
       <section className="relative overflow-hidden px-4 py-16">
-        <div className="relative mx-auto max-w-6xl">
-          <div className="text-center">
+        <div className="relative mx-auto max-w-2xl">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-center"
+          >
             <div className="mb-6 inline-flex">
               <img 
                 src={logoWhoof} 
@@ -18,32 +24,37 @@ const Index = () => {
                 className="h-24 w-24 sm:h-32 sm:w-32"
               />
             </div>
-            <h1 className="mb-8 text-5xl font-bold tracking-tight sm:text-6xl md:text-7xl">
+            <h1 className="mb-4 text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
               Bienvenue sur{" "}
               <span className="bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent">
                 Whoof Apps
               </span>
             </h1>
-            <div className="flex flex-wrap items-center justify-center gap-3">
+            <p className="mb-12 text-lg text-muted-foreground max-w-md mx-auto">
+              Trouve des copains pour ton chien ou adopte ton futur meilleur ami
+            </p>
+            
+            <div className="flex flex-col gap-4 max-w-sm mx-auto">
               <Button 
                 size="lg" 
-                className="rounded-2xl bg-primary text-primary-foreground hover:bg-primary/90 shadow-soft"
+                variant="like"
+                className="w-full h-16 text-base"
                 onClick={() => navigate('/discover')}
               >
-                <Users className="mr-2 h-5 w-5" />
-                Rejoindre ma communauté
+                <Heart className="mr-2 h-6 w-6" />
+                Je cherche des copains
               </Button>
               <Button 
                 size="lg" 
-                variant="outline"
-                className="rounded-2xl shadow-soft"
-                onClick={() => navigate('/map')}
+                variant="superlike"
+                className="w-full h-16 text-base"
+                onClick={() => navigate('/discover-adoption')}
               >
-                <Search className="mr-2 h-5 w-5" />
-                Découvrir
+                <Home className="mr-2 h-6 w-6" />
+                Je veux adopter
               </Button>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
     </div>

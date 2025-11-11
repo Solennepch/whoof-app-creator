@@ -17,12 +17,18 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
         gradient: "gradient-signature text-white shadow-glow hover:shadow-vibrant hover:scale-[1.02] transition-smooth",
         disabled: "bg-muted text-muted-foreground opacity-40 cursor-not-allowed",
+        // Tinder-style action buttons
+        like: "bg-primary/10 text-primary border-2 border-primary hover:bg-primary hover:text-white hover:scale-110 active:scale-95 transition-smooth shadow-soft",
+        pass: "bg-muted/50 text-muted-foreground border-2 border-muted hover:bg-destructive/10 hover:border-destructive hover:text-destructive hover:scale-110 active:scale-95 transition-smooth",
+        superlike: "gradient-signature text-white border-2 border-white/20 hover:scale-110 hover:shadow-vibrant active:scale-95 transition-smooth shadow-glow",
+        premium: "bg-muted/30 text-muted-foreground/40 border-2 border-muted/30 cursor-not-allowed relative",
       },
       size: {
         default: "h-12 px-6 py-3", /* 48px height - Kit UI */
         sm: "h-9 rounded-2xl px-4",
         lg: "h-14 rounded-2xl px-8 text-base font-bold",
         icon: "h-12 w-12",
+        action: "h-14 w-14 rounded-full", /* 56px - Tinder actions */
       },
     },
     defaultVariants: {

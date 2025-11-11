@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { usePremium } from "@/hooks/usePremium";
 import { useNavigate } from "react-router-dom";
+import { PremiumBadge, PremiumTooltip } from "@/components/ui/PremiumBadge";
 
 const profiles = [
   {
@@ -270,52 +271,86 @@ export default function Discover() {
 
         {/* Actions */}
         <div className="flex justify-center items-center gap-4 mb-1 shrink-0">
-          <Button
-            size="lg"
-            variant="outline"
-            className={`h-14 w-14 rounded-full shadow-soft ${!isPremium ? 'opacity-40 cursor-not-allowed' : ''}`}
-            onClick={handleUndo}
-            disabled={!isPremium}
-          >
-            <Undo2 className="h-6 w-6" style={{ color: isPremium ? "var(--ink)" : "#9CA3AF" }} />
-          </Button>
+          {isPremium ? (
+            <Button
+              size="action"
+              variant="ghost"
+              onClick={handleUndo}
+            >
+              <Undo2 className="h-6 w-6" />
+            </Button>
+          ) : (
+            <PremiumTooltip>
+              <Button
+                size="action"
+                variant="premium"
+                disabled
+              >
+                <Undo2 className="h-6 w-6" />
+                <PremiumBadge className="absolute -top-2 -right-2 scale-75" />
+              </Button>
+            </PremiumTooltip>
+          )}
 
           <Button
-            size="lg"
-            variant="outline"
-            className="h-16 w-16 rounded-full shadow-soft"
+            size="action"
+            variant="pass"
             onClick={() => handleSwipe(false)}
+            className="h-16 w-16"
           >
-            <X className="h-8 w-8" style={{ color: "var(--ink)", opacity: 0.6 }} />
+            <X className="h-8 w-8" />
           </Button>
 
-          <Button
-            size="lg"
-            variant="outline"
-            className={`h-14 w-14 rounded-full shadow-soft ${!isPremium ? 'opacity-40 cursor-not-allowed' : 'bg-gradient-to-br from-yellow-400 to-orange-500 border-0'}`}
-            onClick={handleSuperLike}
-            disabled={!isPremium}
-          >
-            <Star className="h-6 w-6" style={{ color: isPremium ? "white" : "#9CA3AF" }} fill={isPremium ? "white" : "none"} />
-          </Button>
+          {isPremium ? (
+            <Button
+              size="action"
+              variant="superlike"
+              onClick={handleSuperLike}
+            >
+              <Star className="h-6 w-6" fill="white" />
+            </Button>
+          ) : (
+            <PremiumTooltip>
+              <Button
+                size="action"
+                variant="premium"
+                disabled
+              >
+                <Star className="h-6 w-6" />
+                <PremiumBadge className="absolute -top-2 -right-2 scale-75" />
+              </Button>
+            </PremiumTooltip>
+          )}
 
           <Button
-            size="lg"
-            className="h-16 w-16 rounded-full shadow-soft bg-[#FF5DA2] hover:bg-[#FF5DA2]/90"
+            size="action"
+            variant="like"
             onClick={() => handleSwipe(true)}
+            className="h-16 w-16"
           >
-            <Heart className="h-8 w-8 text-white fill-white" />
+            <Heart className="h-8 w-8" />
           </Button>
 
-          <Button
-            size="lg"
-            variant="outline"
-            className={`h-14 w-14 rounded-full shadow-soft ${!isPremium ? 'opacity-40 cursor-not-allowed' : ''}`}
-            onClick={handleShare}
-            disabled={!isPremium}
-          >
-            <Share2 className="h-6 w-6" style={{ color: isPremium ? "var(--ink)" : "#9CA3AF" }} />
-          </Button>
+          {isPremium ? (
+            <Button
+              size="action"
+              variant="ghost"
+              onClick={handleShare}
+            >
+              <Share2 className="h-6 w-6" />
+            </Button>
+          ) : (
+            <PremiumTooltip>
+              <Button
+                size="action"
+                variant="premium"
+                disabled
+              >
+                <Share2 className="h-6 w-6" />
+                <PremiumBadge className="absolute -top-2 -right-2 scale-75" />
+              </Button>
+            </PremiumTooltip>
+          )}
         </div>
 
         {/* Progress */}
