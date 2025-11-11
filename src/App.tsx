@@ -64,7 +64,6 @@ const ProSettings = lazy(() => import("./pages/pro/Settings"));
 
 // Admin routes
 const Moderation = lazy(() => import("./pages/admin/Moderation"));
-const ModerationV2 = lazy(() => import("./pages/admin/ModerationV2"));
 const AdminDashboard = lazy(() => import("./pages/admin/Dashboard"));
 const AdminUsers = lazy(() => import("./pages/admin/Users"));
 const AstroDogCMS = lazy(() => import("./pages/admin/AstroDogCMS"));
@@ -161,7 +160,6 @@ const App = () => {
                   <Route path="/admin/professionals" element={<PageErrorBoundary><AdminProfessionals /></PageErrorBoundary>} />
                   <Route path="/admin/professionals/:id" element={<PageErrorBoundary><AdminProfessionalDetail /></PageErrorBoundary>} />
                   <Route path="/admin/moderation" element={<PageErrorBoundary><Moderation /></PageErrorBoundary>} />
-                  <Route path="/admin/moderation-v2" element={<PageErrorBoundary><ModerationV2 /></PageErrorBoundary>} />
                   <Route path="/admin/astrodog-cms" element={<PageErrorBoundary><AstroDogCMS /></PageErrorBoundary>} />
                   <Route path="/admin/email-templates" element={<PageErrorBoundary><AdminEmailTemplates /></PageErrorBoundary>} />
                   <Route path="/admin/notification-dashboard" element={<PageErrorBoundary><AdminNotificationDashboard /></PageErrorBoundary>} />

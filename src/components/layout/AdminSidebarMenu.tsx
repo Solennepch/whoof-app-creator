@@ -31,7 +31,7 @@ export function AdminSidebarMenu({ open, onOpenChange }: AdminSidebarMenuProps) 
       items: [
         { to: "/admin/users", icon: Users, label: "Utilisateurs" },
         { to: "/admin/professionals", icon: Briefcase, label: "Professionnels" },
-        { to: "/admin/moderation-v2", icon: Shield, label: "Modération" },
+        { to: "/admin/moderation", icon: Shield, label: "Modération" },
       ]
     },
     {

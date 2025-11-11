@@ -2,6 +2,7 @@ import { Outlet, useLocation } from "react-router-dom";
 import { Header } from "./Header";
 import { BottomNavigation } from "./BottomNavigation";
 import { ProBottomNavigation } from "./ProBottomNavigation";
+import { AdminBottomNavigation } from "./AdminBottomNavigation";
 
 export function MainLayout() {
   const location = useLocation();
@@ -14,6 +15,7 @@ export function MainLayout() {
   }
 
   const isProRoute = location.pathname.startsWith('/pro');
+  const isAdminRoute = location.pathname.startsWith('/admin') || location.pathname.startsWith('/debug');
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -23,7 +25,13 @@ export function MainLayout() {
         <Outlet />
       </main>
       
-      {isProRoute ? <ProBottomNavigation /> : <BottomNavigation />}
+      {isAdminRoute ? (
+        <AdminBottomNavigation />
+      ) : isProRoute ? (
+        <ProBottomNavigation />
+      ) : (
+        <BottomNavigation />
+      )}
     </div>
   );
 }

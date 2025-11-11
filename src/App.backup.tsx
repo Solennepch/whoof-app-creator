@@ -58,7 +58,6 @@ import DogOnboarding from "./pages/onboarding/Dog";
 import DebugHealth from "./pages/DebugHealth";
 import NotFound from "./pages/NotFound";
 import AdminModeration from "./pages/admin/Moderation";
-import AdminModerationV2 from "./pages/admin/ModerationV2";
 import TestAccounts from "./pages/debug/TestAccounts";
 import Settings from "./pages/Settings";
 import Welcome from "./pages/onboarding/Welcome";
@@ -144,7 +143,6 @@ const App = () => (
           
           {/* Admin */}
           <Route path="/admin/moderation" element={<AdminModeration />} />
-          <Route path="/admin/moderation-v2" element={<AdminModerationV2 />} />
           
           {/* Legacy & Debug */}
           <Route path="/home" element={<Home />} />
