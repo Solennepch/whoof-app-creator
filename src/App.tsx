@@ -8,6 +8,7 @@ import { AccountProvider } from "@/contexts/AccountContext";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PageErrorBoundary } from "@/components/common/PageErrorBoundary";
 import { queryClient } from "@/lib/queryClient";
+import { MainLayout } from "@/components/layout/MainLayout";
 
 // Eager loading for critical routes
 import Index from "./pages/Index";
@@ -65,13 +66,14 @@ const App = () => {
             <Sonner />
             <Suspense fallback={<PageLoader />}>
               <Routes>
-                {/* Public routes */}
-                <Route path="/" element={<Index />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<Signup />} />
+                <Route element={<MainLayout />}>
+                  {/* Public routes */}
+                  <Route path="/" element={<Index />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/signup" element={<Signup />} />
 
-                {/* Main app routes with error boundaries */}
-                <Route path="/home" element={<PageErrorBoundary><Home /></PageErrorBoundary>} />
+                  {/* Main app routes with error boundaries */}
+                  <Route path="/home" element={<PageErrorBoundary><Home /></PageErrorBoundary>} />
                 <Route path="/discover" element={<PageErrorBoundary><Discover /></PageErrorBoundary>} />
                 <Route path="/map" element={<PageErrorBoundary><Map /></PageErrorBoundary>} />
                 <Route path="/messages" element={<PageErrorBoundary><Messages /></PageErrorBoundary>} />
@@ -97,11 +99,12 @@ const App = () => {
                 <Route path="/pro" element={<PageErrorBoundary><ProHome /></PageErrorBoundary>} />
                 <Route path="/pro/dashboard" element={<PageErrorBoundary><ProDashboard /></PageErrorBoundary>} />
 
-                {/* Admin */}
-                <Route path="/admin/moderation" element={<PageErrorBoundary><Moderation /></PageErrorBoundary>} />
+                  {/* Admin */}
+                  <Route path="/admin/moderation" element={<PageErrorBoundary><Moderation /></PageErrorBoundary>} />
 
-                {/* Fallback */}
-                <Route path="*" element={<Navigate to="/" replace />} />
+                  {/* Fallback */}
+                  <Route path="*" element={<Navigate to="/" replace />} />
+                </Route>
               </Routes>
             </Suspense>
           </AccountProvider>

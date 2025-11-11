@@ -6,9 +6,7 @@ export interface Message {
   id: string;
   thread_id: string;
   sender_id: string;
-  receiver_id: string;
-  content: string;
-  read: boolean;
+  body: string;
   created_at: string;
 }
 
