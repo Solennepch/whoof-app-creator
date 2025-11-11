@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { SidebarMenu } from "./SidebarMenu";
 import { ProSidebarMenu } from "./ProSidebarMenu";
+import { AdminSidebarMenu } from "./AdminSidebarMenu";
 import { QuickSwitchButton } from "./QuickSwitchButton";
 import logoWhoof from "@/assets/logo-whoof-v3.png";
 
@@ -12,6 +13,7 @@ export function Header() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
   const isProRoute = location.pathname.startsWith('/pro');
+  const isAdminRoute = location.pathname.startsWith('/admin') || location.pathname.startsWith('/debug');
 
   return (
     <>
@@ -56,7 +58,9 @@ export function Header() {
         </div>
       </header>
 
-      {isProRoute ? (
+      {isAdminRoute ? (
+        <AdminSidebarMenu open={sidebarOpen} onOpenChange={setSidebarOpen} />
+      ) : isProRoute ? (
         <ProSidebarMenu open={sidebarOpen} onOpenChange={setSidebarOpen} />
       ) : (
         <SidebarMenu open={sidebarOpen} onOpenChange={setSidebarOpen} />
