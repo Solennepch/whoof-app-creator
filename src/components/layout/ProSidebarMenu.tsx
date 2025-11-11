@@ -82,25 +82,20 @@ export function ProSidebarMenu({ open, onOpenChange }: ProSidebarMenuProps) {
   ];
 
   const activitySection = [
-    { to: "/pro/dashboard", icon: LayoutDashboard, label: "Tableau de bord" },
+    { to: "/pro/home", icon: LayoutDashboard, label: "Accueil" },
     { to: "/pro/appointments", icon: Calendar, label: "Rendez-vous" },
     { to: "/pro/stats", icon: DollarSign, label: "Statistiques" },
     { to: "/pro/services", icon: Settings, label: "Services & tarifs" },
-    { to: "/pro/offers", icon: Tag, label: "Offres & promos" },
     { to: "/pro/reviews", icon: Star, label: "Avis clients" },
   ];
 
   const communitySection = [
-    { to: "/pro/community", icon: Users, label: "Communauté pro" },
-    { to: "/pro/events", icon: Calendar, label: "Événements" },
     { to: "/pro/partners", icon: Gift, label: "Partenaires" },
   ];
 
   const settingsSection = [
     { to: "/pro/settings", icon: Settings, label: "Mon profil" },
-    { to: "/pro/notifications", icon: Bell, label: "Notifications" },
     { to: "/pro/payments", icon: CreditCard, label: "Paiements" },
-    { to: "/pro/help", icon: HelpCircle, label: "Aide" },
   ];
 
   return (

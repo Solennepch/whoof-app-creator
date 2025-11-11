@@ -11,10 +11,9 @@ export function ProBottomNavigation() {
 
   const navItems = [
     { to: "/pro/home", icon: LayoutDashboard, label: "Accueil" },
-    { to: "/pro/agenda", icon: Calendar, label: "Agenda" },
+    { to: "/pro/appointments", icon: Calendar, label: "Agenda" },
     { to: "/pro/messages", icon: MessageCircle, label: "Messages" },
-    { to: "/pro/map", icon: MapPin, label: "Carte" },
-    { to: "/pro/profile", icon: User, label: "Profil Pro" },
+    { to: "/pro/stats", icon: User, label: "Stats" },
   ];
 
   return (
