@@ -29,3 +29,9 @@ verify_jwt = true
 
 [functions.send-notification]
 verify_jwt = false
+
+[functions.send-booking-reminder]
+verify_jwt = false
+
+[functions.confirm-booking]
+verify_jwt = false
