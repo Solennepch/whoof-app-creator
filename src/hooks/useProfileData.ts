@@ -59,6 +59,16 @@ export const useProfileData = (id?: string) => {
     setError(null);
 
     try {
+      // Wait for auth to be ready
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      // If no session and trying to access own profile, wait for auth to initialize
+      if (!session && id === 'me') {
+        setError(new Error('Veuillez vous connecter pour accéder à votre profil'));
+        setIsLoading(false);
+        return;
+      }
+
       const { data: { user } } = await supabase.auth.getUser();
       const currentUserId = user?.id;
       
@@ -95,6 +105,8 @@ export const useProfileData = (id?: string) => {
       
       if (err instanceof Error && err.message.includes('404')) {
         setError(new Error('Profil non trouvé'));
+      } else if (err instanceof Error && err.message.includes('401')) {
+        setError(new Error('Veuillez vous connecter pour accéder à ce profil'));
       } else {
         setError(err instanceof Error ? err : new Error('Une erreur est survenue'));
       }
