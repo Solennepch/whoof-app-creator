@@ -16,9 +16,52 @@ export default function Moderation() {
   const { data: reports, isLoading: reportsLoading } = useOpenReports();
   const { data: alerts, isLoading: alertsLoading } = useActiveAlerts();
 
-  // Redirect if not admin/moderator
+  // Show access denied message if not admin/moderator
   if (!roleLoading && !roleData?.hasAccess) {
-    return <Navigate to="/" replace />;
+    return (
+      <div className="container mx-auto p-6 max-w-2xl">
+        <Card className="border-destructive">
+          <CardHeader>
+            <div className="flex items-center gap-3">
+              <Shield className="h-8 w-8 text-destructive" />
+              <div>
+                <CardTitle className="text-destructive">Accès refusé</CardTitle>
+                <CardDescription>
+                  Cette page est réservée aux administrateurs et modérateurs
+                </CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="rounded-lg bg-muted p-4">
+              <h3 className="font-semibold mb-2">Comment obtenir l'accès admin ?</h3>
+              <ol className="list-decimal list-inside space-y-2 text-sm text-muted-foreground">
+                <li>Allez sur <code className="bg-background px-2 py-1 rounded">/debug/test-accounts</code></li>
+                <li>Cliquez sur "Créer les comptes de test"</li>
+                <li>Connectez-vous avec le compte admin :
+                  <ul className="list-disc list-inside ml-6 mt-1">
+                    <li>Email : <code className="bg-background px-2 py-1 rounded">test.admin@whoof.app</code></li>
+                    <li>Mot de passe : <code className="bg-background px-2 py-1 rounded">TestAdmin123!</code></li>
+                  </ul>
+                </li>
+              </ol>
+            </div>
+            <div className="flex gap-2">
+              <Link to="/debug/test-accounts" className="flex-1">
+                <Button className="w-full" variant="default">
+                  Créer les comptes de test
+                </Button>
+              </Link>
+              <Link to="/" className="flex-1">
+                <Button className="w-full" variant="outline">
+                  Retour à l'accueil
+                </Button>
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
   }
 
   if (roleLoading) {

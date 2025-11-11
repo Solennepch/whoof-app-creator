@@ -140,7 +140,48 @@ export default function ModerationV2() {
   }
 
   if (!isAdmin) {
-    return <Navigate to="/" replace />;
+    return (
+      <div className="mx-auto max-w-2xl p-6">
+        <div className="rounded-2xl border border-destructive bg-card p-6 shadow-sm">
+          <div className="mb-4 flex items-center gap-3">
+            <span className="text-4xl">🛡️</span>
+            <div>
+              <h1 className="text-2xl font-bold text-destructive">Accès refusé</h1>
+              <p className="text-sm text-muted-foreground">
+                Cette page est réservée aux administrateurs
+              </p>
+            </div>
+          </div>
+          
+          <div className="mb-4 rounded-lg bg-muted p-4">
+            <h3 className="mb-2 font-semibold">Comment obtenir l'accès admin ?</h3>
+            <ol className="list-decimal list-inside space-y-2 text-sm text-muted-foreground">
+              <li>Allez sur <code className="bg-background px-2 py-1 rounded">/debug/test-accounts</code></li>
+              <li>Cliquez sur "Créer les comptes de test"</li>
+              <li>Connectez-vous avec le compte admin :
+                <ul className="list-disc list-inside ml-6 mt-1">
+                  <li>Email : <code className="bg-background px-2 py-1 rounded">test.admin@whoof.app</code></li>
+                  <li>Mot de passe : <code className="bg-background px-2 py-1 rounded">TestAdmin123!</code></li>
+                </ul>
+              </li>
+            </ol>
+          </div>
+          
+          <div className="flex gap-2">
+            <a href="/debug/test-accounts" className="flex-1">
+              <button className="w-full rounded-lg bg-gradient-to-r from-purple-500 to-orange-400 px-4 py-2 text-sm font-medium text-white transition hover:opacity-90">
+                Créer les comptes de test
+              </button>
+            </a>
+            <a href="/" className="flex-1">
+              <button className="w-full rounded-lg border border-border bg-background px-4 py-2 text-sm font-medium transition hover:bg-muted">
+                Retour à l'accueil
+              </button>
+            </a>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   const pendingVerifs = verifications.filter(v => v.status === "pending").length;
