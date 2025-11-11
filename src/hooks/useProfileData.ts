@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { safeFetch } from '@/lib/safeFetch';
+import { cache } from '@/lib/cache';
 
 interface Dog {
   id: string;
@@ -61,7 +62,14 @@ export const useProfileData = (id?: string) => {
       const { data: { user } } = await supabase.auth.getUser();
       const currentUserId = user?.id;
       
-      const data = await safeFetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/profile/${id}`);
+      // Try to get from cache first
+      const data = await cache.getOrSet(
+        cache.profileKey(id),
+        async () => {
+          return await safeFetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/profile/${id}`);
+        },
+        { type: 'profile' }
+      );
 
       if (!data?.profile) {
         setError(new Error('Profil non trouvé'));

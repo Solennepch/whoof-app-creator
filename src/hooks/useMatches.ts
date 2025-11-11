@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { safeFetch } from "@/lib/safeFetch";
 import { toast } from "sonner";
+import { cache } from "@/lib/cache";
 
 export interface Match {
   id: string;
@@ -42,10 +43,20 @@ export function useMatches() {
   const { data: suggested, isLoading: suggestedLoading } = useQuery({
     queryKey: ["suggested"],
     queryFn: async () => {
-      const baseUrl = import.meta.env.VITE_SUPABASE_URL;
-      const data = await safeFetch(`${baseUrl}/functions/v1/suggested`, {
-        method: "GET",
-      });
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Not authenticated");
+
+      // Try to get from cache first
+      const data = await cache.getOrSet(
+        cache.suggestedKey(user.id),
+        async () => {
+          const baseUrl = import.meta.env.VITE_SUPABASE_URL;
+          return await safeFetch(`${baseUrl}/functions/v1/suggested`, {
+            method: "GET",
+          });
+        },
+        { type: 'suggested' }
+      );
       return data;
     },
   });
@@ -66,9 +77,15 @@ export function useMatches() {
       });
       return data;
     },
-    onSuccess: (data) => {
+    onSuccess: async (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["suggested"] });
       queryClient.invalidateQueries({ queryKey: ["matches"] });
+      
+      // Invalidate cache
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        await cache.delete(cache.suggestedKey(user.id));
+      }
       
       if (data.match) {
         toast.success(data.message || "C'est un match ! 🎉");

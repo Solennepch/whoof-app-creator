@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { cache } from "@/lib/cache";
 
 // Fetch current user's pro profile
 export function useMyProProfile() {
@@ -11,14 +12,23 @@ export function useMyProProfile() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Not authenticated');
 
-      const { data, error } = await supabase
-        .from('pro_profiles')
-        .select('*')
-        .eq('user_id', user.id)
-        .single();
+      // Try to get from cache first
+      const data = await cache.getOrSet(
+        `pro-profile:${user.id}`,
+        async () => {
+          const { data, error } = await supabase
+            .from('pro_profiles')
+            .select('*')
+            .eq('user_id', user.id)
+            .single();
 
-      if (error && error.code !== 'PGRST116') throw error;
-      return data || null;
+          if (error && error.code !== 'PGRST116') throw error;
+          return data || null;
+        },
+        { type: 'profile' }
+      );
+
+      return data;
     },
   });
 }
@@ -45,8 +55,15 @@ export function useUpsertProProfile() {
       if (error) throw error;
       return data;
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: ['my-pro-profile'] });
+      
+      // Invalidate cache
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        await cache.delete(`pro-profile:${user.id}`);
+      }
+      
       toast.success('Profil professionnel mis à jour');
     },
     onError: (error) => {
@@ -262,15 +279,24 @@ export function useProServices(proId?: string) {
     queryFn: async () => {
       if (!proId) return [];
       
-      const { data, error } = await supabase
-        .from('pro_services')
-        .select('*')
-        .eq('pro_profile_id', proId)
-        .eq('is_active', true)
-        .order('created_at', { ascending: false });
+      // Try to get from cache first
+      const data = await cache.getOrSet(
+        `pro-services:${proId}`,
+        async () => {
+          const { data, error } = await supabase
+            .from('pro_services')
+            .select('*')
+            .eq('pro_profile_id', proId)
+            .eq('is_active', true)
+            .order('created_at', { ascending: false });
 
-      if (error) throw error;
-      return data || [];
+          if (error) throw error;
+          return data || [];
+        },
+        { type: 'directory' }
+      );
+      
+      return data;
     },
     enabled: !!proId,
   });
@@ -296,8 +322,12 @@ export function useCreateService() {
       if (error) throw error;
       return data;
     },
-    onSuccess: () => {
+    onSuccess: async (data) => {
       queryClient.invalidateQueries({ queryKey: ['pro-services'] });
+      
+      // Invalidate cache
+      await cache.delete(`pro-services:${data.pro_profile_id}`);
+      
       toast.success("Service créé avec succès");
     },
     onError: (error) => {
@@ -329,8 +359,12 @@ export function useUpdateService() {
       if (error) throw error;
       return data;
     },
-    onSuccess: () => {
+    onSuccess: async (data) => {
       queryClient.invalidateQueries({ queryKey: ['pro-services'] });
+      
+      // Invalidate cache
+      await cache.delete(`pro-services:${data.pro_profile_id}`);
+      
       toast.success("Service mis à jour");
     },
     onError: (error) => {
