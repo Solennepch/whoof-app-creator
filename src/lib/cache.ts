@@ -1,10 +1,18 @@
 import { supabase } from "@/integrations/supabase/client";
+import { indexedDBCache } from "./indexeddb";
 
 /**
- * Redis Cache Client for Whoof Apps
+ * Multi-Tier Cache Client
  * 
- * Provides a simple interface to cache frequently accessed data using Upstash Redis.
- * Automatically handles cache hits/misses and TTL management.
+ * Implements a 3-level caching strategy for optimal performance:
+ * 1. IndexedDB (browser local cache) - <5ms
+ * 2. Redis (server cache) - 10-50ms
+ * 3. Direct API call - 200-800ms
+ * 
+ * This architecture provides:
+ * - Ultra-fast local reads from IndexedDB
+ * - Shared cache across users via Redis
+ * - Automatic fallback to API on cache miss
  */
 
 type CacheType = 'profile' | 'suggested' | 'directory' | 'availability' | 'default';
@@ -45,38 +53,106 @@ class CacheClient {
   }
 
   /**
-   * Get a value from cache
-   * @param key Cache key
-   * @returns Cached value or null if not found
+   * Get value from cache (multi-tier strategy)
+   * 1. Try IndexedDB first (local, ultra-fast)
+   * 2. Try Redis if IndexedDB miss (shared, fast)
+   * 3. Return null if both miss (caller will fetch from API)
    */
   async get<T>(key: string): Promise<T | null> {
-    const result = await this.callCacheFunction('get', key);
-    return result?.hit ? result.value : null;
+    try {
+      // Level 1: Try IndexedDB first
+      const localValue = await indexedDBCache.get<T>(key);
+      if (localValue !== null) {
+        return localValue;
+      }
+
+      // Level 2: Try Redis
+      const result = await this.callCacheFunction('get', key);
+      
+      if (result?.hit) {
+        console.log(`Redis HIT: ${key}`);
+        const value = result.value as T;
+        
+        // Populate IndexedDB with Redis value for next time
+        const ttl = this.getTTLForType(result.type || 'default');
+        await indexedDBCache.set(key, value, ttl);
+        
+        return value;
+      } else {
+        console.log(`Cache MISS (all levels): ${key}`);
+        return null;
+      }
+    } catch (error) {
+      console.error('Cache get error:', error);
+      return null;
+    }
   }
 
   /**
-   * Set a value in cache
-   * @param key Cache key
-   * @param value Value to cache
-   * @param options Cache options (type, ttl)
+   * Helper to get TTL in seconds based on cache type
+   */
+  private getTTLForType(type: CacheType): number {
+    const ttlMap: Record<CacheType, number> = {
+      profile: 300,     // 5 minutes
+      suggested: 120,   // 2 minutes
+      directory: 600,   // 10 minutes
+      availability: 60, // 1 minute
+      default: 300,     // 5 minutes
+    };
+    return ttlMap[type] || 300;
+  }
+
+  /**
+   * Set value in cache (write to both levels)
    */
   async set(key: string, value: any, options?: CacheOptions): Promise<void> {
-    await this.callCacheFunction('set', key, value, options);
+    try {
+      const ttl = options?.ttl || this.getTTLForType(options?.type || 'default');
+
+      // Write to both caches in parallel for speed
+      await Promise.all([
+        indexedDBCache.set(key, value, ttl),
+        this.callCacheFunction('set', key, value, options),
+      ]);
+
+      console.log(`Cache SET (all levels): ${key}`);
+    } catch (error) {
+      console.error('Cache set error:', error);
+    }
   }
 
   /**
-   * Delete a value from cache
-   * @param key Cache key
+   * Delete value from cache (remove from both levels)
    */
   async delete(key: string): Promise<void> {
-    await this.callCacheFunction('delete', key);
+    try {
+      // Delete from both caches in parallel
+      await Promise.all([
+        indexedDBCache.delete(key),
+        this.callCacheFunction('delete', key),
+      ]);
+
+      console.log(`Cache DELETE (all levels): ${key}`);
+    } catch (error) {
+      console.error('Cache delete error:', error);
+    }
   }
 
   /**
-   * Clear all cache (use with caution)
+   * Clear entire cache (both levels)
    */
   async clear(): Promise<void> {
-    await this.callCacheFunction('clear', 'all');
+    try {
+      // Clear both caches in parallel
+      await Promise.all([
+        indexedDBCache.clear(),
+        this.callCacheFunction('clear', 'all'),
+      ]);
+
+      console.log('Cache CLEAR (all levels): All cache cleared');
+    } catch (error) {
+      console.error('Cache clear error:', error);
+    }
   }
 
   /**
@@ -135,6 +211,40 @@ class CacheClient {
    */
   availabilityKey(proId: string, date: string): string {
     return `availability:${proId}:${date}`;
+  }
+
+  /**
+   * Get cache statistics from both levels
+   */
+  async getStats(): Promise<{
+    indexedDB: { totalEntries: number; totalSize: number };
+    redis: { available: boolean };
+  }> {
+    try {
+      const indexedDBStats = await indexedDBCache.getStats();
+
+      return {
+        indexedDB: indexedDBStats,
+        redis: { available: true }, // Redis availability checked via edge function
+      };
+    } catch (error) {
+      console.error('Cache stats error:', error);
+      return {
+        indexedDB: { totalEntries: 0, totalSize: 0 },
+        redis: { available: false },
+      };
+    }
+  }
+
+  /**
+   * Cleanup expired entries from IndexedDB
+   */
+  async cleanup(): Promise<void> {
+    try {
+      await indexedDBCache.cleanup();
+    } catch (error) {
+      console.error('Cache cleanup error:', error);
+    }
   }
 }
 

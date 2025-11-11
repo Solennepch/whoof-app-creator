@@ -91,12 +91,40 @@ export const invalidateSuggestedCache = async (userId: string) => {
 
 /**
  * Clear all application cache (admin only)
+ * Clears both IndexedDB and Redis caches
  */
 export const clearAllCache = async () => {
   try {
     await cache.clear();
-    console.log('All cache cleared');
+    console.log('All cache cleared (IndexedDB + Redis)');
   } catch (error) {
     console.error('Cache clear failed:', error);
+  }
+};
+
+/**
+ * Get comprehensive cache statistics
+ */
+export const getCacheStats = async () => {
+  try {
+    return await cache.getStats();
+  } catch (error) {
+    console.error('Cache stats failed:', error);
+    return {
+      indexedDB: { totalEntries: 0, totalSize: 0 },
+      redis: { available: false },
+    };
+  }
+};
+
+/**
+ * Cleanup expired entries from IndexedDB
+ */
+export const cleanupCache = async () => {
+  try {
+    await cache.cleanup();
+    console.log('Cache cleanup completed');
+  } catch (error) {
+    console.error('Cache cleanup failed:', error);
   }
 };
