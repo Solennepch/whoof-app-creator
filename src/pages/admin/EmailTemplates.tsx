@@ -39,7 +39,10 @@ export default function EmailTemplates() {
         .order("created_at", { ascending: false });
 
       if (error) throw error;
-      setTemplates(data || []);
+      setTemplates((data || []).map(t => ({
+        ...t,
+        variables: Array.isArray(t.variables) ? t.variables as string[] : []
+      })));
     } catch (error: any) {
       toast({
         title: "Erreur",
