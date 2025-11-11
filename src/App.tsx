@@ -78,6 +78,7 @@ const AdminABTesting = lazy(() => import("./pages/admin/ABTesting"));
 const Debug = lazy(() => import("./pages/Debug"));
 const DebugHealth = lazy(() => import("./pages/DebugHealth"));
 const TestAccounts = lazy(() => import("./pages/debug/TestAccounts"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 
 // Loading fallback
 const PageLoader = () => (
@@ -167,7 +168,7 @@ const App = () => {
                   <Route path="/admin/ab-testing" element={<PageErrorBoundary><AdminABTesting /></PageErrorBoundary>} />
 
                   {/* Fallback */}
-                  <Route path="*" element={<Navigate to="/" replace />} />
+                  <Route path="*" element={<PageErrorBoundary><NotFound /></PageErrorBoundary>} />
                 </Route>
                 
                 {/* Debug routes - outside MainLayout */}
