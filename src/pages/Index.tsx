@@ -48,10 +48,22 @@ const Index = () => {
                 size="lg" 
                 variant="superlike"
                 className="w-full h-16 text-base"
-                onClick={() => navigate('/discover-adoption')}
+                onClick={() => navigate('/discover')}
               >
                 <Home className="mr-2 h-6 w-6" />
                 Je veux adopter
+              </Button>
+            </div>
+            
+            {/* Debug Access Link */}
+            <div className="mt-8 pt-6 border-t border-primary/10">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate('/debug/test-accounts')}
+                className="text-xs text-muted-foreground hover:text-foreground"
+              >
+                🛠️ Comptes de test
               </Button>
             </div>
           </motion.div>

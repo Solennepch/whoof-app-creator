@@ -119,6 +119,21 @@ export default function NotFound() {
               Événements
             </Button>
           </div>
+          
+          {/* Debug Access */}
+          <div className="mt-8 pt-6 border-t border-border/20">
+            <p className="text-xs text-muted-foreground mb-3">
+              🛠️ Accès développeur
+            </p>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => navigate('/debug/test-accounts')}
+              className="text-xs"
+            >
+              Comptes de test
+            </Button>
+          </div>
         </div>
       </motion.div>
     </div>
