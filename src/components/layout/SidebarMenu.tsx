@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Building, Briefcase, Bug, Percent, User, Star, Gift, Crown, Shield, RefreshCw, Settings } from "lucide-react";
+import { Building, Briefcase, Bug, Percent, User, Star, Gift, Crown, Shield, RefreshCw, Settings, Heart } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
@@ -65,6 +65,7 @@ export function SidebarMenu({ open, onOpenChange }: SidebarMenuProps) {
 
   const menuItems = [
     { to: "/profile/me", icon: User, label: "Profil" },
+    { to: "/likes", icon: Heart, label: "Mes Likes", premium: true },
     { to: "/annuaire", icon: Building, label: "Annuaire" },
     { to: "/partenariats", icon: Percent, label: "Bons plans" },
     { to: "/recompenses", icon: Gift, label: "Récompenses" },
@@ -129,6 +130,9 @@ export function SidebarMenu({ open, onOpenChange }: SidebarMenuProps) {
               >
                 <item.icon className="h-5 w-5" />
                 <span>{item.label}</span>
+                {'premium' in item && item.premium && (
+                  <Crown className="h-3 w-3 ml-auto text-accent" />
+                )}
               </NavLink>
             ))
           )}

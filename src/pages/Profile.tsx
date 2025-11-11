@@ -10,6 +10,7 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 import { AlertTriangle, User, Dog as DogIcon, Edit, Crown, Zap, Heart, ChevronRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { DonationDialog } from "@/components/DonationDialog";
+import { PremiumTeaser } from "@/components/ui/PremiumTeaser";
 
 const badges = [
   { icon: "🦴", name: "Premier pas", desc: "Créé ton profil" },
@@ -377,50 +378,9 @@ function ProfileContent() {
           </div>
         )}
 
-        {/* Premium Section - Only for non-premium users */}
+        {/* Premium Teaser - Only for non-premium users */}
         {isOwnProfile && !isPremium && (
-          <Card 
-            className="rounded-2xl shadow-lg overflow-hidden cursor-pointer transition-transform hover:scale-[1.02]"
-            onClick={() => navigate('/premium')}
-          >
-            <div className="bg-gradient-to-r from-[#7B61FF] to-[#FF5DA2] p-6 text-white">
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <Crown className="w-6 h-6" />
-                    <h3 className="text-xl font-bold">Whoof Premium</h3>
-                  </div>
-                  <p className="text-sm opacity-90">Débloquez toutes les fonctionnalités</p>
-                </div>
-                <ChevronRight className="w-6 h-6" />
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-sm">
-                  <Zap className="w-4 h-4" />
-                  <span>Matchs illimités</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <Heart className="w-4 h-4" />
-                  <span>Voir qui a liké ton profil</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <Crown className="w-4 h-4" />
-                  <span>Badge vérifié</span>
-                </div>
-              </div>
-
-              <Button
-                className="w-full mt-4 bg-white text-[#7B61FF] hover:bg-white/90 font-bold rounded-full"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  navigate('/premium');
-                }}
-              >
-                Passer à Premium
-              </Button>
-            </div>
-          </Card>
+          <PremiumTeaser blurredCount={12} />
         )}
 
         {/* Premium Badge - For premium users */}

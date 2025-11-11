@@ -49,6 +49,7 @@ import ProEvents from "./pages/pro/Events";
 import ProPayments from "./pages/pro/Payments";
 import PremiumPricing from "./pages/premium/Pricing";
 import Premium from "./pages/Premium";
+import LikesHistory from "./pages/LikesHistory";
 import Parrainage from "./pages/Parrainage";
 import AstroDog from "./pages/AstroDog";
 import Recompenses from "./pages/Recompenses";
@@ -112,6 +113,7 @@ const App = () => (
           {/* Premium & Pro */}
           <Route path="/premium" element={<Premium />} />
           <Route path="/premium/pricing" element={<PremiumPricing />} />
+          <Route path="/likes" element={<LikesHistory />} />
           <Route path="/pro/onboarding" element={<ProOnboarding />} />
           <Route path="/pro/home" element={<ProHome />} />
           <Route path="/pro/agenda" element={<ProAgenda />} />

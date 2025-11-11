@@ -10,6 +10,7 @@ import { useAdoptionFollowUp } from "@/hooks/useAdoptionFollowUp";
 import { usePremium } from "@/hooks/usePremium";
 import { useNavigate } from "react-router-dom";
 import { PremiumBadge, PremiumTooltip } from "@/components/ui/PremiumBadge";
+import { haptic } from "@/utils/haptic";
 
 const adoptionProfiles = [
   {
@@ -117,11 +118,15 @@ export default function DiscoverAdoption() {
   };
 
   const handleSwipe = async (liked: boolean) => {
+    // Haptic feedback for swipe
+    haptic.medium();
+    
     if (liked) {
-      // Simulate match (higher chance for adoption)
       const isMatch = Math.random() > 0.5;
       if (isMatch) {
-        // Save match to database
+        // Strong haptic for match
+        haptic.strong();
+        
         try {
           const { data: { user } } = await supabase.auth.getUser();
           if (user) {

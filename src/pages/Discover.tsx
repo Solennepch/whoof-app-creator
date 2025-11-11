@@ -12,6 +12,7 @@ import { PremiumBadge, PremiumTooltip } from "@/components/ui/PremiumBadge";
 import { ModeToggle } from "@/components/ui/ModeToggle";
 import { MatchCounter } from "@/components/ui/MatchCounter";
 import { SwipeTutorial } from "@/components/ui/SwipeTutorial";
+import { haptic } from "@/utils/haptic";
 
 type RegionProfile = {
   name: string;
@@ -135,12 +136,17 @@ export default function Discover() {
       return;
     }
 
+    // Haptic feedback for swipe
+    haptic.medium();
+
     if (liked) {
       const isMatch = Math.random() > 0.7;
       if (isMatch) {
         setMatchedProfile(current.name);
         setShowMatch(true);
         setTodayMatches(prev => prev + 1);
+        // Strong haptic for match
+        haptic.strong();
         toast.success("+30 XP - C'est un match ! 🎉");
         return;
       }
