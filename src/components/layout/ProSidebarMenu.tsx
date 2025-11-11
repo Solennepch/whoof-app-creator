@@ -77,10 +77,6 @@ export function ProSidebarMenu({ open, onOpenChange }: ProSidebarMenuProps) {
     onOpenChange(false);
   };
 
-  const debugSection = [
-    { to: "/debug/test-accounts", icon: QrCode, label: "🐛 Comptes Test" },
-  ];
-
   const activitySection = [
     { to: "/pro/dashboard", icon: LayoutDashboard, label: "Tableau de bord complet" },
     { to: "/pro/stats", icon: DollarSign, label: "Statistiques & Analytics" },
@@ -170,34 +166,6 @@ export function ProSidebarMenu({ open, onOpenChange }: ProSidebarMenuProps) {
         )}
 
         <div className="mt-6 space-y-6">
-          {/* Debug section at the top */}
-          <div>
-            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3 px-2">
-              🐛 Développement
-            </h3>
-            <div className="space-y-1">
-              {debugSection.map((item) => (
-                <NavLink
-                  key={item.to}
-                  to={item.to}
-                  onClick={() => onOpenChange(false)}
-                  className={({ isActive }) =>
-                    `flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition ${
-                      isActive
-                        ? "bg-primary/10 text-primary"
-                        : "text-foreground hover:bg-muted"
-                    }`
-                  }
-                >
-                  <item.icon className="h-4 w-4 shrink-0" />
-                  <span>{item.label}</span>
-                </NavLink>
-              ))}
-            </div>
-          </div>
-
-          <Separator />
-
           {/* Mon activité */}
           <div>
             <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3 px-2">
