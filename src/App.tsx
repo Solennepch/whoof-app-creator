@@ -44,6 +44,23 @@ const ProDashboard = lazy(() => import("./pages/pro/Dashboard"));
 const ProStats = lazy(() => import("./pages/pro/Stats"));
 const ProPayments = lazy(() => import("./pages/pro/Payments"));
 const ProAppointments = lazy(() => import("./pages/pro/Appointments"));
+const ProAgenda = lazy(() => import("./pages/pro/Agenda"));
+const ProCommunity = lazy(() => import("./pages/pro/Community"));
+const ProEdit = lazy(() => import("./pages/pro/Edit"));
+const ProEvents = lazy(() => import("./pages/pro/Events"));
+const ProHelp = lazy(() => import("./pages/pro/Help"));
+const ProMessages = lazy(() => import("./pages/pro/Messages"));
+const ProMore = lazy(() => import("./pages/pro/More"));
+const ProNotifications = lazy(() => import("./pages/pro/Notifications"));
+const ProOffers = lazy(() => import("./pages/pro/Offers"));
+const ProOnboarding = lazy(() => import("./pages/pro/Onboarding"));
+const ProPartners = lazy(() => import("./pages/pro/Partners"));
+const ProPricing = lazy(() => import("./pages/pro/Pricing"));
+const ProMap = lazy(() => import("./pages/pro/ProMap"));
+const ProProfile = lazy(() => import("./pages/pro/Profile"));
+const ProReviews = lazy(() => import("./pages/pro/Reviews"));
+const ProServices = lazy(() => import("./pages/pro/Services"));
+const ProSettings = lazy(() => import("./pages/pro/Settings"));
 
 // Admin routes
 const Moderation = lazy(() => import("./pages/admin/Moderation"));
@@ -118,6 +135,23 @@ const App = () => {
                 <Route path="/pro/stats" element={<PageErrorBoundary><ProStats /></PageErrorBoundary>} />
                 <Route path="/pro/payments" element={<PageErrorBoundary><ProPayments /></PageErrorBoundary>} />
                 <Route path="/pro/appointments" element={<PageErrorBoundary><ProAppointments /></PageErrorBoundary>} />
+                <Route path="/pro/agenda" element={<PageErrorBoundary><ProAgenda /></PageErrorBoundary>} />
+                <Route path="/pro/community" element={<PageErrorBoundary><ProCommunity /></PageErrorBoundary>} />
+                <Route path="/pro/edit" element={<PageErrorBoundary><ProEdit /></PageErrorBoundary>} />
+                <Route path="/pro/events" element={<PageErrorBoundary><ProEvents /></PageErrorBoundary>} />
+                <Route path="/pro/help" element={<PageErrorBoundary><ProHelp /></PageErrorBoundary>} />
+                <Route path="/pro/messages" element={<PageErrorBoundary><ProMessages /></PageErrorBoundary>} />
+                <Route path="/pro/more" element={<PageErrorBoundary><ProMore /></PageErrorBoundary>} />
+                <Route path="/pro/notifications" element={<PageErrorBoundary><ProNotifications /></PageErrorBoundary>} />
+                <Route path="/pro/offers" element={<PageErrorBoundary><ProOffers /></PageErrorBoundary>} />
+                <Route path="/pro/onboarding" element={<PageErrorBoundary><ProOnboarding /></PageErrorBoundary>} />
+                <Route path="/pro/partners" element={<PageErrorBoundary><ProPartners /></PageErrorBoundary>} />
+                <Route path="/pro/pricing" element={<PageErrorBoundary><ProPricing /></PageErrorBoundary>} />
+                <Route path="/pro/map" element={<PageErrorBoundary><ProMap /></PageErrorBoundary>} />
+                <Route path="/pro/profile" element={<PageErrorBoundary><ProProfile /></PageErrorBoundary>} />
+                <Route path="/pro/reviews" element={<PageErrorBoundary><ProReviews /></PageErrorBoundary>} />
+                <Route path="/pro/services" element={<PageErrorBoundary><ProServices /></PageErrorBoundary>} />
+                <Route path="/pro/settings" element={<PageErrorBoundary><ProSettings /></PageErrorBoundary>} />
 
                   {/* Admin */}
                   <Route path="/admin" element={<PageErrorBoundary><AdminDashboard /></PageErrorBoundary>} />
@@ -127,9 +161,9 @@ const App = () => {
                   <Route path="/admin/professionals/:id" element={<PageErrorBoundary><AdminProfessionalDetail /></PageErrorBoundary>} />
                   <Route path="/admin/moderation" element={<PageErrorBoundary><Moderation /></PageErrorBoundary>} />
                   <Route path="/admin/moderation-v2" element={<PageErrorBoundary><ModerationV2 /></PageErrorBoundary>} />
-                  <Route path="/admin/content/astrodog" element={<PageErrorBoundary><AstroDogCMS /></PageErrorBoundary>} />
+                  <Route path="/admin/astrodog-cms" element={<PageErrorBoundary><AstroDogCMS /></PageErrorBoundary>} />
                   <Route path="/admin/email-templates" element={<PageErrorBoundary><AdminEmailTemplates /></PageErrorBoundary>} />
-                  <Route path="/admin/notifications" element={<PageErrorBoundary><AdminNotificationDashboard /></PageErrorBoundary>} />
+                  <Route path="/admin/notification-dashboard" element={<PageErrorBoundary><AdminNotificationDashboard /></PageErrorBoundary>} />
                   <Route path="/admin/ab-testing" element={<PageErrorBoundary><AdminABTesting /></PageErrorBoundary>} />
 
                   {/* Fallback */}
