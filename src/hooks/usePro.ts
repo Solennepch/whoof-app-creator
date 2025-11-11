@@ -254,3 +254,133 @@ export function useTogglePublish() {
     },
   });
 }
+
+// Services Management
+export function useProServices(proId?: string) {
+  return useQuery({
+    queryKey: ['pro-services', proId],
+    queryFn: async () => {
+      if (!proId) return [];
+      
+      const { data, error } = await supabase
+        .from('pro_services')
+        .select('*')
+        .eq('pro_profile_id', proId)
+        .eq('is_active', true)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      return data || [];
+    },
+    enabled: !!proId,
+  });
+}
+
+export function useCreateService() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (service: {
+      pro_profile_id: string;
+      name: string;
+      description?: string;
+      price: number;
+      duration?: string;
+    }) => {
+      const { data, error } = await supabase
+        .from('pro_services')
+        .insert([service])
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['pro-services'] });
+      toast.success("Service créé avec succès");
+    },
+    onError: (error) => {
+      console.error('Error creating service:', error);
+      toast.error("Erreur lors de la création du service");
+    }
+  });
+}
+
+export function useUpdateService() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, ...updates }: {
+      id: string;
+      name?: string;
+      description?: string;
+      price?: number;
+      duration?: string;
+      is_active?: boolean;
+    }) => {
+      const { data, error } = await supabase
+        .from('pro_services')
+        .update(updates)
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['pro-services'] });
+      toast.success("Service mis à jour");
+    },
+    onError: (error) => {
+      console.error('Error updating service:', error);
+      toast.error("Erreur lors de la mise à jour");
+    }
+  });
+}
+
+export function useDeleteService() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase
+        .from('pro_services')
+        .update({ is_active: false })
+        .eq('id', id);
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['pro-services'] });
+      toast.success("Service supprimé");
+    },
+    onError: (error) => {
+      console.error('Error deleting service:', error);
+      toast.error("Erreur lors de la suppression");
+    }
+  });
+}
+
+// Audit logs
+export function useProAuditLogs(proId?: string) {
+  return useQuery({
+    queryKey: ['pro-audit-logs', proId],
+    queryFn: async () => {
+      if (!proId) return [];
+      
+      const { data, error } = await supabase
+        .from('audit_logs')
+        .select('*')
+        .eq('entity_type', 'pro_profiles')
+        .eq('entity_id', proId)
+        .order('created_at', { ascending: false })
+        .limit(50);
+
+      if (error) throw error;
+      return data || [];
+    },
+    enabled: !!proId,
+  });
+}

@@ -24,10 +24,12 @@ import {
   Globe,
   Building,
   Clock,
-  Euro
+  Euro,
+  History
 } from "lucide-react";
-import { format } from "date-fns";
+import { format, formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
+import { useProAuditLogs } from "@/hooks/usePro";
 
 interface ProProfile {
   id: string;
@@ -54,6 +56,7 @@ export default function AdminProfessionalDetail() {
   const [pro, setPro] = useState<ProProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const { data: auditLogs = [] } = useProAuditLogs(id);
   
   // Form state
   const [formData, setFormData] = useState({
@@ -414,17 +417,69 @@ export default function AdminProfessionalDetail() {
             </CardContent>
           </Card>
 
-          {/* Change History - Placeholder for future implementation */}
+          {/* Change History */}
           <Card>
             <CardHeader>
-              <CardTitle>Historique des modifications</CardTitle>
-              <CardDescription>À implémenter : suivi des changements effectués</CardDescription>
+              <CardTitle className="flex items-center gap-2">
+                <History className="h-5 w-5" />
+                Historique des modifications
+              </CardTitle>
+              <CardDescription>
+                {auditLogs.length} modifications enregistrées
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="text-center py-8 text-muted-foreground">
-                <Clock className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p>Fonctionnalité à venir</p>
-              </div>
+              {auditLogs.length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  <Clock className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                  <p>Aucune modification enregistrée</p>
+                </div>
+              ) : (
+                <div className="space-y-3 max-h-96 overflow-y-auto">
+                  {auditLogs.map((log) => (
+                    <div key={log.id} className="border rounded-lg p-3 text-sm">
+                      <div className="flex items-center justify-between mb-2">
+                        <Badge variant={
+                          log.action === 'INSERT' ? 'default' :
+                          log.action === 'UPDATE' ? 'secondary' : 'destructive'
+                        }>
+                          {log.action}
+                        </Badge>
+                        <span className="text-xs text-muted-foreground">
+                          {log.created_at && formatDistanceToNow(new Date(log.created_at), { 
+                            addSuffix: true,
+                            locale: fr 
+                          })}
+                        </span>
+                      </div>
+                      
+                      {log.action === 'UPDATE' && log.before && log.after && (
+                        <div className="space-y-1 text-xs">
+                          {Object.keys(log.after as any).map((key) => {
+                            const oldVal = (log.before as any)?.[key];
+                            const newVal = (log.after as any)?.[key];
+                            if (oldVal !== newVal && !['id', 'created_at', 'updated_at'].includes(key)) {
+                              return (
+                                <div key={key} className="flex gap-2">
+                                  <span className="font-medium">{key}:</span>
+                                  <span className="line-through text-muted-foreground">
+                                    {String(oldVal || '-')}
+                                  </span>
+                                  →
+                                  <span className="text-primary">
+                                    {String(newVal || '-')}
+                                  </span>
+                                </div>
+                              );
+                            }
+                            return null;
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
