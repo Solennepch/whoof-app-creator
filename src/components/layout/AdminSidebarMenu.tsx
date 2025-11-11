@@ -21,13 +21,20 @@ export function AdminSidebarMenu({ open, onOpenChange }: AdminSidebarMenuProps) 
 
   const adminSections = [
     {
-      title: "Vue d'ensemble",
+      title: "🔧 Développement",
       items: [
-        { to: "/admin", icon: LayoutDashboard, label: "Dashboard Admin" },
+        { to: "/debug/accounts", icon: Beaker, label: "Comptes Test" },
+        { to: "/debug/health", icon: TestTube, label: "Debug Health" },
       ]
     },
     {
-      title: "Gestion Utilisateurs",
+      title: "📊 Vue d'ensemble",
+      items: [
+        { to: "/admin", icon: LayoutDashboard, label: "Dashboard" },
+      ]
+    },
+    {
+      title: "👥 Gestion Utilisateurs",
       items: [
         { to: "/admin/users", icon: Users, label: "Utilisateurs" },
         { to: "/admin/professionals", icon: Briefcase, label: "Professionnels" },
@@ -36,18 +43,12 @@ export function AdminSidebarMenu({ open, onOpenChange }: AdminSidebarMenuProps) 
       ]
     },
     {
-      title: "Contenu & Communication",
+      title: "✨ Contenu & Communication",
       items: [
         { to: "/admin/astrodog-cms", icon: Star, label: "AstroDog CMS" },
         { to: "/admin/email-templates", icon: Mail, label: "Templates Email" },
         { to: "/admin/notification-dashboard", icon: Bell, label: "Notifications" },
         { to: "/admin/ab-testing", icon: TestTube, label: "A/B Testing" },
-      ]
-    },
-    {
-      title: "Développement",
-      items: [
-        { to: "/debug/test-accounts", icon: Beaker, label: "Comptes Test" },
       ]
     }
   ];

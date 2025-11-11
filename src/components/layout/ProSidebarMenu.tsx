@@ -77,26 +77,30 @@ export function ProSidebarMenu({ open, onOpenChange }: ProSidebarMenuProps) {
     onOpenChange(false);
   };
 
+  const debugSection = [
+    { to: "/debug/accounts", icon: QrCode, label: "Comptes Test" },
+  ];
+
   const activitySection = [
-    { to: "/pro/dashboard", icon: LayoutDashboard, label: "Tableau de bord complet" },
-    { to: "/pro/stats", icon: DollarSign, label: "Statistiques & Analytics" },
-    { to: "/pro/services", icon: Settings, label: "Mes services et tarifs" },
-    { to: "/pro/offers", icon: Tag, label: "Mes offres et promotions" },
-    { to: "/pro/reviews", icon: Star, label: "Mes avis clients" },
-    { to: "/pro/appointments", icon: Calendar, label: "Mes rendez-vous" },
+    { to: "/pro/dashboard", icon: LayoutDashboard, label: "Tableau de bord" },
+    { to: "/pro/appointments", icon: Calendar, label: "Rendez-vous" },
+    { to: "/pro/stats", icon: DollarSign, label: "Statistiques" },
+    { to: "/pro/services", icon: Settings, label: "Services & tarifs" },
+    { to: "/pro/offers", icon: Tag, label: "Offres & promos" },
+    { to: "/pro/reviews", icon: Star, label: "Avis clients" },
   ];
 
   const communitySection = [
-    { to: "/pro/community", icon: Users, label: "Groupes / forums pros" },
-    { to: "/pro/events", icon: Calendar, label: "Événements / salons canins" },
-    { to: "/pro/partners", icon: Gift, label: "Offres partenaires" },
+    { to: "/pro/community", icon: Users, label: "Communauté pro" },
+    { to: "/pro/events", icon: Calendar, label: "Événements" },
+    { to: "/pro/partners", icon: Gift, label: "Partenaires" },
   ];
 
   const settingsSection = [
-    { to: "/pro/settings", icon: Settings, label: "Profil et identité" },
-    { to: "/pro/notifications", icon: Bell, label: "Notifications & préférences" },
-    { to: "/pro/payments", icon: CreditCard, label: "Paiements & factures" },
-    { to: "/pro/help", icon: HelpCircle, label: "Aide et support" },
+    { to: "/pro/settings", icon: Settings, label: "Mon profil" },
+    { to: "/pro/notifications", icon: Bell, label: "Notifications" },
+    { to: "/pro/payments", icon: CreditCard, label: "Paiements" },
+    { to: "/pro/help", icon: HelpCircle, label: "Aide" },
   ];
 
   return (
@@ -166,10 +170,38 @@ export function ProSidebarMenu({ open, onOpenChange }: ProSidebarMenuProps) {
         )}
 
         <div className="mt-6 space-y-6">
+          {/* Debug */}
+          <div>
+            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3 px-2">
+              🔧 Développement
+            </h3>
+            <div className="space-y-1">
+              {debugSection.map((item) => (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  onClick={() => onOpenChange(false)}
+                  className={({ isActive }) =>
+                    `flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition ${
+                      isActive
+                        ? "bg-primary/10 text-primary"
+                        : "text-foreground hover:bg-muted"
+                    }`
+                  }
+                >
+                  <item.icon className="h-4 w-4 shrink-0" />
+                  <span>{item.label}</span>
+                </NavLink>
+              ))}
+            </div>
+          </div>
+
+          <Separator />
+
           {/* Mon activité */}
           <div>
             <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3 px-2">
-              Mon activité
+              📊 Mon activité
             </h3>
             <div className="space-y-1">
               {activitySection.map((item) => (
@@ -197,7 +229,7 @@ export function ProSidebarMenu({ open, onOpenChange }: ProSidebarMenuProps) {
           {/* Communauté & partenaires */}
           <div>
             <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3 px-2">
-              Communauté & partenaires
+              🤝 Communauté
             </h3>
             <div className="space-y-1">
               {communitySection.map((item) => (
@@ -225,7 +257,7 @@ export function ProSidebarMenu({ open, onOpenChange }: ProSidebarMenuProps) {
           {/* Paramètres */}
           <div>
             <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3 px-2">
-              Paramètres
+              ⚙️ Paramètres
             </h3>
             <div className="space-y-1">
               {settingsSection.map((item) => (

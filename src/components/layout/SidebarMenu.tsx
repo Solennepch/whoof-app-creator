@@ -63,31 +63,48 @@ export function SidebarMenu({ open, onOpenChange }: SidebarMenuProps) {
     return () => subscription.unsubscribe();
   }, [open]);
 
-  const menuItems = [
-    { to: "/profile/me", icon: User, label: "Profil" },
+  // Debug section - always first
+  const debugItems: Array<{
+    to: string;
+    icon: React.ElementType;
+    label: string;
+    premium?: boolean;
+  }> = [
+    { to: "/debug/accounts", icon: User, label: "🔧 Comptes Test" },
+  ];
+
+  if (isAdmin) {
+    debugItems.push({ to: "/debug/health", icon: Bug, label: "🔧 Debug Health" });
+  }
+
+  // Main user menu items
+  const menuItems: Array<{
+    to: string;
+    icon: React.ElementType;
+    label: string;
+    premium?: boolean;
+  }> = [
+    { to: "/profile/me", icon: User, label: "Mon Profil" },
     { to: "/likes", icon: Heart, label: "Mes Likes", premium: true },
-    { to: "/annuaire", icon: Building, label: "Annuaire" },
-    { to: "/partenariats", icon: Percent, label: "Bons plans" },
     { to: "/recompenses", icon: Gift, label: "Récompenses" },
-    { to: "/astro-dog", icon: Star, label: "Mon Astro Dog" },
+    { to: "/astro-dog", icon: Star, label: "Astro Dog" },
+    { to: "/annuaire", icon: Building, label: "Annuaire Pro" },
+    { to: "/partenariats", icon: Percent, label: "Bons Plans" },
     { to: "/settings", icon: Settings, label: "Paramètres" },
   ];
 
-  // Add Pro Dashboard only if user is pro
+  // Add Pro/Admin access at the end
   if (isPro) {
-    menuItems.push({ to: "/pro/home", icon: Briefcase, label: "Espace Pro" });
+    menuItems.push({ to: "/pro/home", icon: Briefcase, label: "🔷 Espace Pro" });
   } else {
     menuItems.push({ to: "/pro/onboarding", icon: Briefcase, label: "Devenir Pro" });
   }
 
-  // Add test accounts for all users (dev mode)
-  menuItems.push({ to: "/debug/accounts", icon: User, label: "Comptes Test" });
-
-  // Add Admin links only for admins
   if (isAdmin) {
-    menuItems.push({ to: "/admin/moderation", icon: Shield, label: "Modération" });
-    menuItems.push({ to: "/debug/health", icon: Bug, label: "Debug" });
+    menuItems.push({ to: "/admin", icon: Shield, label: "🛡️ Admin Panel" });
   }
+
+  const allItems = [...debugItems, ...menuItems];
 
   return (
     <>
@@ -115,7 +132,7 @@ export function SidebarMenu({ open, onOpenChange }: SidebarMenuProps) {
           {isLoading ? (
             <div className="text-sm text-muted-foreground">Chargement...</div>
           ) : (
-            menuItems.map((item) => (
+            allItems.map((item) => (
               <NavLink
                 key={item.to}
                 to={item.to}
