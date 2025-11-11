@@ -1,166 +1,114 @@
+import { lazy, Suspense } from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { ThemeProvider } from "next-themes";
 import { AccountProvider } from "@/contexts/AccountContext";
-import { Header } from "./components/layout/Header";
-import { BottomNavigation } from "./components/layout/BottomNavigation";
-import { ProBottomNavigation } from "./components/layout/ProBottomNavigation";
-import Home from "./pages/Home";
+import { Skeleton } from "@/components/ui/skeleton";
+import { PageErrorBoundary } from "@/components/common/PageErrorBoundary";
+import { queryClient } from "@/lib/queryClient";
+
+// Eager loading for critical routes
 import Index from "./pages/Index";
-import MatchHome from "./pages/MatchHome";
-import Discover from "./pages/Discover";
-import DiscoverAdoption from "./pages/DiscoverAdoption";
-import Events from "./pages/Events";
-import Map from "./pages/Map";
-import Messages from "./pages/Messages";
-import Profile from "./pages/Profile";
-import ProfileMe from "./pages/ProfileMe";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import Ranking from "./pages/Ranking";
-import Annuaire from "./pages/Annuaire";
-import AnnuaireMap from "./pages/AnnuaireMap";
-import AnnuaireDetail from "./pages/AnnuaireDetail";
-import Partenariats from "./pages/Partenariats";
-import PartenariatDetail from "./pages/PartenariatDetail";
-import ProOnboarding from "./pages/pro/Onboarding";
-import ProDashboard from "./pages/pro/Dashboard";
-import ProPricing from "./pages/pro/Pricing";
-import ProHome from "./pages/pro/Home";
-import ProEdit from "./pages/pro/Edit";
-import ProServices from "./pages/pro/Services";
-import ProMessages from "./pages/pro/Messages";
-import ProPartners from "./pages/pro/Partners";
-import ProMore from "./pages/pro/More";
-import ProAgenda from "./pages/pro/Agenda";
-import ProMap from "./pages/pro/ProMap";
-import ProSettings from "./pages/pro/Settings";
-import ProNotifications from "./pages/pro/Notifications";
-import ProHelp from "./pages/pro/Help";
-import ProProfile from "./pages/pro/Profile";
-import ProOffers from "./pages/pro/Offers";
-import ProReviews from "./pages/pro/Reviews";
-import ProAppointments from "./pages/pro/Appointments";
-import ProCommunity from "./pages/pro/Community";
-import ProEvents from "./pages/pro/Events";
-import ProPayments from "./pages/pro/Payments";
-import PremiumPricing from "./pages/premium/Pricing";
-import Premium from "./pages/Premium";
-import LikesHistory from "./pages/LikesHistory";
-import Parrainage from "./pages/Parrainage";
-import AstroDog from "./pages/AstroDog";
-import Recompenses from "./pages/Recompenses";
-import ProfileOnboarding from "./pages/onboarding/Profile";
-import DogOnboarding from "./pages/onboarding/Dog";
-import DebugHealth from "./pages/DebugHealth";
-import NotFound from "./pages/NotFound";
-import AdminModeration from "./pages/admin/Moderation";
-import AdminModerationV2 from "./pages/admin/ModerationV2";
-import TestAccounts from "./pages/debug/TestAccounts";
-import Settings from "./pages/Settings";
-import Welcome from "./pages/onboarding/Welcome";
-import Preferences from "./pages/onboarding/Preferences";
-import Location from "./pages/onboarding/Location";
 
-const queryClient = new QueryClient();
+// Lazy loading for non-critical routes
+const Home = lazy(() => import("./pages/Home"));
+const Discover = lazy(() => import("./pages/Discover"));
+const Map = lazy(() => import("./pages/Map"));
+const Messages = lazy(() => import("./pages/Messages"));
+const Profile = lazy(() => import("./pages/Profile"));
+const ProfileMe = lazy(() => import("./pages/ProfileMe"));
+const Settings = lazy(() => import("./pages/Settings"));
+const MatchHome = lazy(() => import("./pages/MatchHome"));
+const LikesHistory = lazy(() => import("./pages/LikesHistory"));
+const Premium = lazy(() => import("./pages/Premium"));
+const Recompenses = lazy(() => import("./pages/Recompenses"));
+const Events = lazy(() => import("./pages/Events"));
+const Parrainage = lazy(() => import("./pages/Parrainage"));
+const Ranking = lazy(() => import("./pages/Ranking"));
+const AstroDog = lazy(() => import("./pages/AstroDog"));
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+// Onboarding
+const Welcome = lazy(() => import("./pages/onboarding/Welcome"));
+const DogOnboarding = lazy(() => import("./pages/onboarding/Dog"));
+const Preferences = lazy(() => import("./pages/onboarding/Preferences"));
+const LocationOnboarding = lazy(() => import("./pages/onboarding/Location"));
+
+// Pro routes
+const ProHome = lazy(() => import("./pages/pro/Home"));
+const ProDashboard = lazy(() => import("./pages/pro/Dashboard"));
+
+// Admin routes
+const Moderation = lazy(() => import("./pages/admin/Moderation"));
+
+// Loading fallback
+const PageLoader = () => (
+  <div className="min-h-screen flex items-center justify-center" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
+    <div className="space-y-4 max-w-md w-full px-4">
+      <Skeleton className="h-12 w-full" />
+      <Skeleton className="h-64 w-full" />
+      <Skeleton className="h-12 w-full" />
+    </div>
+  </div>
+);
+
+const App = () => {
+  return (
+    <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <Toaster />
-        <Sonner />
         <BrowserRouter>
           <AccountProvider>
-        <Header />
-        <Routes>
-          {/* Pro Routes - Use ProBottomNavigation */}
-          <Route path="/pro/*" element={<ProBottomNavigation />} />
-          
-          {/* Auth & Onboarding Flow */}
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/onboarding/welcome" element={<Welcome />} />
-          <Route path="/onboarding/profile" element={<ProfileOnboarding />} />
-          <Route path="/onboarding/dog" element={<DogOnboarding />} />
-          <Route path="/onboarding/preferences" element={<Preferences />} />
-          <Route path="/onboarding/location" element={<Location />} />
-          
-          {/* Main App Pages */}
-          <Route path="/" element={<Index />} />
-          <Route path="/map" element={<Map />} />
-          <Route path="/discover" element={<MatchHome />} />
-          <Route path="/discover/region" element={<Discover />} />
-          <Route path="/discover/adoption" element={<DiscoverAdoption />} />
-          <Route path="/messages" element={<Messages />} />
-          <Route path="/events" element={<Events />} />
-          <Route path="/ranking" element={<Ranking />} />
-          
-          {/* Profile Pages */}
-          <Route path="/profile/me" element={<ProfileMe />} />
-          <Route path="/profile/:id" element={<Profile />} />
-          <Route path="/settings" element={<Settings />} />
-          
-          {/* Features */}
-          <Route path="/astro-dog" element={<AstroDog />} />
-          <Route path="/recompenses" element={<Recompenses />} />
-          <Route path="/parrainage" element={<Parrainage />} />
-          
-          {/* Directory & Partnerships */}
-          <Route path="/annuaire" element={<Annuaire />} />
-          <Route path="/annuaire/carte" element={<AnnuaireMap />} />
-          <Route path="/annuaire/:id" element={<AnnuaireDetail />} />
-          <Route path="/partenariats" element={<Partenariats />} />
-          <Route path="/partenariats/:id" element={<PartenariatDetail />} />
-          
-          {/* Premium & Pro */}
-          <Route path="/premium" element={<Premium />} />
-          <Route path="/premium/pricing" element={<PremiumPricing />} />
-          <Route path="/likes" element={<LikesHistory />} />
-          <Route path="/pro/onboarding" element={<ProOnboarding />} />
-          <Route path="/pro/home" element={<ProHome />} />
-          <Route path="/pro/agenda" element={<ProAgenda />} />
-          <Route path="/pro/map" element={<ProMap />} />
-          <Route path="/pro/edit" element={<ProEdit />} />
-          <Route path="/pro/services" element={<ProServices />} />
-          <Route path="/pro/messages" element={<ProMessages />} />
-          <Route path="/pro/partners" element={<ProPartners />} />
-          <Route path="/pro/more" element={<ProMore />} />
-          <Route path="/pro/dashboard" element={<ProDashboard />} />
-          <Route path="/pro/pricing" element={<ProPricing />} />
-          <Route path="/pro/profile" element={<ProProfile />} />
-          <Route path="/pro/offers" element={<ProOffers />} />
-          <Route path="/pro/reviews" element={<ProReviews />} />
-          <Route path="/pro/appointments" element={<ProAppointments />} />
-          <Route path="/pro/community" element={<ProCommunity />} />
-          <Route path="/pro/events" element={<ProEvents />} />
-          <Route path="/pro/payments" element={<ProPayments />} />
-          <Route path="/pro/settings" element={<ProSettings />} />
-          <Route path="/pro/notifications" element={<ProNotifications />} />
-          <Route path="/pro/help" element={<ProHelp />} />
-          
-          {/* Admin */}
-          <Route path="/admin/moderation" element={<AdminModeration />} />
-          <Route path="/admin/moderation-v2" element={<AdminModerationV2 />} />
-          
-          {/* Legacy & Debug */}
-          <Route path="/home" element={<Home />} />
-          <Route path="/debug/health" element={<DebugHealth />} />
-          <Route path="/debug/accounts" element={<TestAccounts />} />
-          
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-          <BottomNavigation />
-          <ProBottomNavigation />
-        </AccountProvider>
-      </BrowserRouter>
-    </TooltipProvider>
-    </ThemeProvider>
-  </QueryClientProvider>
-);
+            <Toaster />
+            <Sonner />
+            <Suspense fallback={<PageLoader />}>
+              <Routes>
+                {/* Public routes */}
+                <Route path="/" element={<Index />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
+
+                {/* Main app routes with error boundaries */}
+                <Route path="/home" element={<PageErrorBoundary><Home /></PageErrorBoundary>} />
+                <Route path="/discover" element={<PageErrorBoundary><Discover /></PageErrorBoundary>} />
+                <Route path="/map" element={<PageErrorBoundary><Map /></PageErrorBoundary>} />
+                <Route path="/messages" element={<PageErrorBoundary><Messages /></PageErrorBoundary>} />
+                <Route path="/profile/me" element={<PageErrorBoundary><ProfileMe /></PageErrorBoundary>} />
+                <Route path="/profile/:id" element={<PageErrorBoundary><Profile /></PageErrorBoundary>} />
+                <Route path="/settings" element={<PageErrorBoundary><Settings /></PageErrorBoundary>} />
+                <Route path="/match" element={<PageErrorBoundary><MatchHome /></PageErrorBoundary>} />
+                <Route path="/likes" element={<PageErrorBoundary><LikesHistory /></PageErrorBoundary>} />
+                <Route path="/premium" element={<PageErrorBoundary><Premium /></PageErrorBoundary>} />
+                <Route path="/recompenses" element={<PageErrorBoundary><Recompenses /></PageErrorBoundary>} />
+                <Route path="/events" element={<PageErrorBoundary><Events /></PageErrorBoundary>} />
+                <Route path="/parrainage" element={<PageErrorBoundary><Parrainage /></PageErrorBoundary>} />
+                <Route path="/ranking" element={<PageErrorBoundary><Ranking /></PageErrorBoundary>} />
+                <Route path="/astrodog" element={<PageErrorBoundary><AstroDog /></PageErrorBoundary>} />
+
+                {/* Onboarding */}
+                <Route path="/onboarding/welcome" element={<PageErrorBoundary><Welcome /></PageErrorBoundary>} />
+                <Route path="/onboarding/dog" element={<PageErrorBoundary><DogOnboarding /></PageErrorBoundary>} />
+                <Route path="/onboarding/preferences" element={<PageErrorBoundary><Preferences /></PageErrorBoundary>} />
+                <Route path="/onboarding/location" element={<PageErrorBoundary><LocationOnboarding /></PageErrorBoundary>} />
+
+                {/* Pro routes */}
+                <Route path="/pro" element={<PageErrorBoundary><ProHome /></PageErrorBoundary>} />
+                <Route path="/pro/dashboard" element={<PageErrorBoundary><ProDashboard /></PageErrorBoundary>} />
+
+                {/* Admin */}
+                <Route path="/admin/moderation" element={<PageErrorBoundary><Moderation /></PageErrorBoundary>} />
+
+                {/* Fallback */}
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </Suspense>
+          </AccountProvider>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;

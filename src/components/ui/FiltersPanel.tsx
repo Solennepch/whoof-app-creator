@@ -2,7 +2,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, SlidersHorizontal, Check } from "lucide-react";
 import { Button } from "./button";
 import { Slider } from "./slider";
-import { useState } from "react";
+import { useState, memo } from "react";
+import { 
+  ageOptions, 
+  sizeOptions, 
+  temperamentOptions, 
+  breedOptions,
+  DEFAULT_DISTANCE
+} from "@/config/filters";
 
 interface FiltersPanelProps {
   show: boolean;
@@ -18,13 +25,8 @@ export interface Filters {
   breeds: string[];
 }
 
-const ageOptions = ["Chiot (0-1 an)", "Jeune (1-3 ans)", "Adulte (3-7 ans)", "Senior (7+ ans)"];
-const sizeOptions = ["Petit", "Moyen", "Grand"];
-const temperamentOptions = ["Calme", "Joueur", "Énergique", "Affectueux", "Protecteur"];
-const breedOptions = ["Labrador", "Berger Allemand", "Golden Retriever", "Bulldog", "Beagle", "Corgi"];
-
-export function FiltersPanel({ show, onClose, onApply }: FiltersPanelProps) {
-  const [distance, setDistance] = useState([25]);
+export const FiltersPanel = memo(function FiltersPanel({ show, onClose, onApply }: FiltersPanelProps) {
+  const [distance, setDistance] = useState([DEFAULT_DISTANCE]);
   const [selectedAges, setSelectedAges] = useState<string[]>([]);
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
   const [selectedTemperaments, setSelectedTemperaments] = useState<string[]>([]);
@@ -48,7 +50,7 @@ export function FiltersPanel({ show, onClose, onApply }: FiltersPanelProps) {
   };
 
   const handleReset = () => {
-    setDistance([25]);
+    setDistance([DEFAULT_DISTANCE]);
     setSelectedAges([]);
     setSelectedSizes([]);
     setSelectedTemperaments([]);
@@ -56,7 +58,7 @@ export function FiltersPanel({ show, onClose, onApply }: FiltersPanelProps) {
   };
 
   const hasFilters = 
-    distance[0] !== 25 ||
+    distance[0] !== DEFAULT_DISTANCE ||
     selectedAges.length > 0 ||
     selectedSizes.length > 0 ||
     selectedTemperaments.length > 0 ||
@@ -236,4 +238,4 @@ export function FiltersPanel({ show, onClose, onApply }: FiltersPanelProps) {
       )}
     </AnimatePresence>
   );
-}
+});

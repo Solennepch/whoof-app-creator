@@ -14,87 +14,30 @@ import { MatchCounter } from "@/components/ui/MatchCounter";
 import { SwipeTutorial } from "@/components/ui/SwipeTutorial";
 import { haptic } from "@/utils/haptic";
 import { FiltersPanel, Filters } from "@/components/ui/FiltersPanel";
-
-type RegionProfile = {
-  name: string;
-  breed: string;
-  age: string;
-  image: string;
-  bio: string;
-  reasons: string[];
-};
-
-type AdoptionProfile = RegionProfile & {
-  shelter: string;
-};
-
-const regionProfiles: RegionProfile[] = [
-  {
-    name: "Charlie",
-    breed: "Corgi",
-    age: "1 an",
-    image: "https://images.unsplash.com/photo-1597633425046-08f5110420b5?w=800&h=800&fit=crop",
-    bio: "Petit mais plein d'énergie ! J'adore courir et jouer avec mes amis 🦴",
-    reasons: ["Jeune", "Énergique", "Petit gabarit"],
-  },
-  {
-    name: "Daisy",
-    breed: "Beagle",
-    age: "3 ans",
-    image: "https://images.unsplash.com/photo-1505628346881-b72b27e84530?w=800&h=800&fit=crop",
-    bio: "Curieuse et affectueuse, toujours prête pour de nouvelles aventures ! 🌼",
-    reasons: ["Affectueux", "Moyen gabarit", "Sociable"],
-  },
-  {
-    name: "Zeus",
-    breed: "Doberman",
-    age: "4 ans",
-    image: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=800&h=800&fit=crop",
-    bio: "Élégant et protecteur. Cherche des compagnons pour des balades urbaines 🏙️",
-    reasons: ["Grand", "Élégant", "Urbain"],
-  },
-];
-
-const adoptionProfiles: AdoptionProfile[] = [
-  {
-    name: "Luna",
-    breed: "Labrador croisé",
-    age: "2 ans",
-    image: "https://images.unsplash.com/photo-1558788353-f76d92427f16?w=800&h=800&fit=crop",
-    bio: "Abandonnée mais pleine de vie ! Luna cherche une famille aimante 🌟",
-    reasons: ["Affectueuse", "Calme", "Moyen gabarit", "Compatible enfants", "Coup de cœur"],
-    shelter: "SPA Paris",
-  },
-  {
-    name: "Max",
-    breed: "Berger allemand",
-    age: "5 ans",
-    image: "https://images.unsplash.com/photo-1568572933382-74d440642117?w=800&h=800&fit=crop",
-    bio: "Fidèle et protecteur. Max a besoin d'un jardin et d'un maître expérimenté 🐕",
-    reasons: ["Loyal", "Grand gabarit", "Besoin d'espace", "Sportif", "À l'adoption"],
-    shelter: "SPA Lyon",
-  },
-  {
-    name: "Bella",
-    breed: "Jack Russell",
-    age: "3 ans",
-    image: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=800&h=800&fit=crop",
-    bio: "Petite mais dynamique ! Bella adore jouer et a besoin d'activité quotidienne ⚡",
-    reasons: ["Énergique", "Petit gabarit", "Joueuse", "Aime les balades", "Recommandé"],
-    shelter: "SPA Marseille",
-  },
-];
+import { useSwipeGestures } from "@/hooks/useSwipeGestures";
+import { useAppStore } from "@/store/useAppStore";
+import { regionProfiles, adoptionProfiles, type RegionProfile, type AdoptionProfile } from "@/config/profiles";
 
 export default function Discover() {
-  const [mode, setMode] = useState<"region" | "adoption">("region");
+  const navigate = useNavigate();
+  
+  // Zustand store
+  const { 
+    todayMatches, 
+    incrementMatches,
+    hasSeenTutorial,
+    setHasSeenTutorial,
+    onboardingCompleted,
+    discoveryMode,
+    setDiscoveryMode
+  } = useAppStore();
+  
+  // Local state
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState<"left" | "right" | null>(null);
   const [showMatch, setShowMatch] = useState(false);
   const [matchedProfile, setMatchedProfile] = useState<string>("");
   const [history, setHistory] = useState<number[]>([]);
-  const [touchStart, setTouchStart] = useState<{ x: number; y: number } | null>(null);
-  const [touchCurrent, setTouchCurrent] = useState<{ x: number; y: number } | null>(null);
-  const [todayMatches, setTodayMatches] = useState(0);
   const [showTutorial, setShowTutorial] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState<Filters>({
@@ -104,7 +47,6 @@ export default function Discover() {
     temperaments: [],
     breeds: [],
   });
-  const navigate = useNavigate();
 
   const { data: session } = useQuery({
     queryKey: ["session"],
@@ -116,15 +58,23 @@ export default function Discover() {
 
   const { data: isPremium } = usePremium();
 
-  const profiles = mode === "region" ? regionProfiles : adoptionProfiles;
+  const profiles = discoveryMode === "region" ? regionProfiles : adoptionProfiles;
   const current = profiles[currentIndex];
+  
+  // Swipe gestures hook
+  const { 
+    handleTouchStart, 
+    handleTouchMove, 
+    handleTouchEnd,
+    getCardTransform,
+    touchStart
+  } = useSwipeGestures(
+    () => handleSwipe(false), // left swipe
+    () => handleSwipe(true)   // right swipe
+  );
 
   // Show tutorial on first visit
   useEffect(() => {
-    const hasSeenTutorial = localStorage.getItem("hasSeenSwipeTutorial");
-    const onboardingCompleted = localStorage.getItem("onboardingCompleted");
-    
-    // If no onboarding completed, redirect to welcome
     if (!onboardingCompleted && !hasSeenTutorial) {
       navigate("/onboarding/welcome");
       return;
@@ -133,15 +83,15 @@ export default function Discover() {
     if (!hasSeenTutorial) {
       setShowTutorial(true);
     }
-  }, [navigate]);
+  }, [navigate, hasSeenTutorial, onboardingCompleted]);
 
   const handleTutorialClose = () => {
     setShowTutorial(false);
-    localStorage.setItem("hasSeenSwipeTutorial", "true");
+    setHasSeenTutorial(true);
   };
 
   const handleModeChange = (newMode: "region" | "adoption") => {
-    setMode(newMode);
+    setDiscoveryMode(newMode);
     setCurrentIndex(0);
     setHistory([]);
     setDirection(null);
@@ -167,7 +117,7 @@ export default function Discover() {
       if (isMatch) {
         setMatchedProfile(current.name);
         setShowMatch(true);
-        setTodayMatches(prev => prev + 1);
+        incrementMatches();
         // Strong haptic for match
         haptic.strong();
         toast.success("+30 XP - C'est un match ! 🎉");
@@ -255,45 +205,7 @@ export default function Discover() {
     }
   };
 
-  const handleTouchStart = (e: React.TouchEvent) => {
-    const touch = e.touches[0];
-    setTouchStart({ x: touch.clientX, y: touch.clientY });
-    setTouchCurrent({ x: touch.clientX, y: touch.clientY });
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (!touchStart) return;
-    const touch = e.touches[0];
-    setTouchCurrent({ x: touch.clientX, y: touch.clientY });
-  };
-
-  const handleTouchEnd = () => {
-    if (!touchStart || !touchCurrent) return;
-
-    const deltaX = touchCurrent.x - touchStart.x;
-    const deltaY = Math.abs(touchCurrent.y - touchStart.y);
-
-    // Only swipe if horizontal movement is greater than vertical
-    if (Math.abs(deltaX) > 100 && Math.abs(deltaX) > deltaY) {
-      if (deltaX > 0) {
-        handleSwipe(true); // Right swipe = like
-      } else {
-        handleSwipe(false); // Left swipe = pass
-      }
-    }
-
-    setTouchStart(null);
-    setTouchCurrent(null);
-  };
-
   if (!current) return null;
-
-  const getCardTransform = () => {
-    if (!touchStart || !touchCurrent) return "";
-    const deltaX = touchCurrent.x - touchStart.x;
-    const rotate = deltaX / 20;
-    return `translateX(${deltaX}px) rotate(${rotate}deg)`;
-  };
 
   return (
     <>
@@ -313,7 +225,7 @@ export default function Discover() {
       <div className="mx-auto max-w-2xl px-4 flex flex-col flex-1 pb-24">
         {/* Header with toggle and counter */}
         <div className="mb-3 flex items-center justify-between shrink-0">
-          <ModeToggle mode={mode} onChange={handleModeChange} />
+          <ModeToggle mode={discoveryMode} onChange={handleModeChange} />
           <div className="flex items-center gap-2">
             <Button
               variant="ghost"
@@ -344,7 +256,7 @@ export default function Discover() {
               className="h-2/3 rounded-t-3xl bg-cover bg-center relative"
               style={{ backgroundImage: `url(${current.image})` }}
             >
-              {mode === "adoption" && (current as AdoptionProfile).shelter && (
+              {discoveryMode === "adoption" && (current as AdoptionProfile).shelter && (
                 <div className="absolute top-4 left-4 px-3 py-1.5 bg-white/90 backdrop-blur-sm rounded-xl text-xs font-semibold text-foreground shadow-soft">
                   {(current as AdoptionProfile).shelter}
                 </div>

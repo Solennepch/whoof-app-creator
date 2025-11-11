@@ -1,4 +1,5 @@
 import { Sparkles } from "lucide-react";
+import { memo } from "react";
 
 /**
  * ReasonChip — badges explicatifs pour le matching/suggestions
@@ -35,7 +36,7 @@ const getChipColors = (label: string): { bg: string; text: string } => {
   return { bg: "#FFD8F0", text: "#C71585" };
 };
 
-export function ReasonChip({ label }: { label: string }) {
+export const ReasonChip = memo(function ReasonChip({ label }: { label: string }) {
   const colors = getChipColors(label);
   
   return (
@@ -50,4 +51,4 @@ export function ReasonChip({ label }: { label: string }) {
       {label}
     </span>
   );
-}
+});

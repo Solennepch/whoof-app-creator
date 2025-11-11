@@ -3,42 +3,74 @@ import { ArrowLeft, Heart, MessageCircle, Crown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { usePremium } from "@/hooks/usePremium";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, memo } from "react";
 import { ReasonChip } from "@/components/ui/ReasonChip";
+import { mockLikedProfiles } from "@/config/profiles";
+import { formatTime } from "@/utils/profileHelpers";
 
-// Mock data - sera remplacé par des vraies données de la DB
-const mockLikedProfiles = [
-  {
-    id: "1",
-    name: "Charlie",
-    breed: "Corgi",
-    age: "1 an",
-    image: "https://images.unsplash.com/photo-1597633425046-08f5110420b5?w=800&h=800&fit=crop",
-    likedAt: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2h ago
-    reasons: ["Énergique", "Petit gabarit"],
-    matched: false,
-  },
-  {
-    id: "2",
-    name: "Daisy",
-    breed: "Beagle",
-    age: "3 ans",
-    image: "https://images.unsplash.com/photo-1505628346881-b72b27e84530?w=800&h=800&fit=crop",
-    likedAt: new Date(Date.now() - 5 * 60 * 60 * 1000), // 5h ago
-    reasons: ["Affectueux", "Sociable"],
-    matched: true,
-  },
-  {
-    id: "3",
-    name: "Luna",
-    breed: "Labrador croisé",
-    age: "2 ans",
-    image: "https://images.unsplash.com/photo-1558788353-f76d92427f16?w=800&h=800&fit=crop",
-    likedAt: new Date(Date.now() - 24 * 60 * 60 * 1000), // 1 day ago
-    reasons: ["Calme", "Compatible enfants"],
-    matched: true,
-  },
-];
+const LikeCard = memo(function LikeCard({ profile, onNavigate }: any) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="bg-white rounded-2xl shadow-soft overflow-hidden"
+    >
+      <div className="flex gap-4 p-4">
+        <div
+          className="w-24 h-24 rounded-xl bg-cover bg-center flex-shrink-0 relative"
+          style={{ backgroundImage: `url(${profile.image})` }}
+        >
+          {profile.matched && (
+            <div className="absolute -top-2 -right-2 w-6 h-6 bg-primary rounded-full flex items-center justify-center shadow-soft">
+              <Heart className="h-3 w-3 text-white fill-white" />
+            </div>
+          )}
+        </div>
+        
+        <div className="flex-1 min-w-0">
+          <div className="flex items-start justify-between mb-1">
+            <div>
+              <h3 className="font-bold text-foreground">{profile.name}</h3>
+              <p className="text-sm text-muted-foreground">
+                {profile.breed} • {profile.age}
+              </p>
+            </div>
+            <span className="text-xs text-muted-foreground whitespace-nowrap">
+              {formatTime(profile.likedAt)}
+            </span>
+          </div>
+          
+          <div className="flex flex-wrap gap-1 mb-2">
+            {profile.reasons.map((reason: string, i: number) => (
+              <ReasonChip key={i} label={reason} />
+            ))}
+          </div>
+
+          <div className="flex gap-2">
+            {profile.matched && (
+              <Button
+                size="sm"
+                variant="like"
+                className="flex-1"
+              >
+                <MessageCircle className="h-4 w-4 mr-1" />
+                Message
+              </Button>
+            )}
+            <Button
+              size="sm"
+              variant="outline"
+              className="flex-1"
+              onClick={() => onNavigate(`/profile/${profile.id}`)}
+            >
+              Voir profil
+            </Button>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+});
 
 export default function LikesHistory() {
   const navigate = useNavigate();
@@ -70,11 +102,7 @@ export default function LikesHistory() {
   }
 
   const formatTime = (date: Date) => {
-    const hours = Math.floor((Date.now() - date.getTime()) / (1000 * 60 * 60));
-    if (hours < 1) return "À l'instant";
-    if (hours < 24) return `Il y a ${hours}h`;
-    const days = Math.floor(hours / 24);
-    return `Il y a ${days}j`;
+    return formatTime(date);
   };
 
   return (
@@ -108,68 +136,12 @@ export default function LikesHistory() {
           </div>
         ) : (
           <div className="grid gap-4">
-            {likedProfiles.map((profile, index) => (
-              <motion.div
-                key={profile.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className="bg-white rounded-2xl shadow-soft overflow-hidden"
-              >
-                <div className="flex gap-4 p-4">
-                  <div
-                    className="w-24 h-24 rounded-xl bg-cover bg-center flex-shrink-0 relative"
-                    style={{ backgroundImage: `url(${profile.image})` }}
-                  >
-                    {profile.matched && (
-                      <div className="absolute -top-2 -right-2 w-6 h-6 bg-primary rounded-full flex items-center justify-center shadow-soft">
-                        <Heart className="h-3 w-3 text-white fill-white" />
-                      </div>
-                    )}
-                  </div>
-                  
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between mb-1">
-                      <div>
-                        <h3 className="font-bold text-foreground">{profile.name}</h3>
-                        <p className="text-sm text-muted-foreground">
-                          {profile.breed} • {profile.age}
-                        </p>
-                      </div>
-                      <span className="text-xs text-muted-foreground whitespace-nowrap">
-                        {formatTime(profile.likedAt)}
-                      </span>
-                    </div>
-                    
-                    <div className="flex flex-wrap gap-1 mb-2">
-                      {profile.reasons.map((reason, i) => (
-                        <ReasonChip key={i} label={reason} />
-                      ))}
-                    </div>
-
-                    <div className="flex gap-2">
-                      {profile.matched && (
-                        <Button
-                          size="sm"
-                          variant="like"
-                          className="flex-1"
-                        >
-                          <MessageCircle className="h-4 w-4 mr-1" />
-                          Message
-                        </Button>
-                      )}
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="flex-1"
-                        onClick={() => navigate(`/profile/${profile.id}`)}
-                      >
-                        Voir profil
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
+            {likedProfiles.map((profile) => (
+              <LikeCard 
+                key={profile.id} 
+                profile={profile} 
+                onNavigate={navigate}
+              />
             ))}
           </div>
         )}
