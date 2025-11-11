@@ -21,6 +21,13 @@ export function AdminSidebarMenu({ open, onOpenChange }: AdminSidebarMenuProps) 
 
   const adminSections = [
     {
+      title: "🐛 Développement",
+      items: [
+        { to: "/debug/test-accounts", icon: Beaker, label: "Comptes Test" },
+        { to: "/debug/health", icon: TestTube, label: "Debug Health" },
+      ]
+    },
+    {
       title: "Vue d'ensemble",
       items: [
         { to: "/admin", icon: LayoutDashboard, label: "Dashboard Admin" },
@@ -42,12 +49,6 @@ export function AdminSidebarMenu({ open, onOpenChange }: AdminSidebarMenuProps) 
         { to: "/admin/email-templates", icon: Mail, label: "Templates Email" },
         { to: "/admin/notification-dashboard", icon: Bell, label: "Notifications" },
         { to: "/admin/ab-testing", icon: TestTube, label: "A/B Testing" },
-      ]
-    },
-    {
-      title: "Développement",
-      items: [
-        { to: "/debug/test-accounts", icon: Beaker, label: "Comptes Test" },
       ]
     }
   ];

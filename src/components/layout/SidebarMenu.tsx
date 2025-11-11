@@ -63,30 +63,33 @@ export function SidebarMenu({ open, onOpenChange }: SidebarMenuProps) {
     return () => subscription.unsubscribe();
   }, [open]);
 
-  const menuItems = [
+  const menuItems: Array<{ to: string; icon: any; label: string; premium?: boolean }> = [
+    // Debug links at the top for quick access
+    { to: "/debug/test-accounts", icon: Bug, label: "🐛 Comptes Test" },
+  ];
+
+  // Add admin debug link only for admins
+  if (isAdmin) {
+    menuItems.push({ to: "/debug/health", icon: Bug, label: "🔧 Debug Health" });
+    menuItems.push({ to: "/admin/moderation", icon: Shield, label: "Modération" });
+  }
+
+  // Main menu items
+  menuItems.push(
     { to: "/profile/me", icon: User, label: "Profil" },
     { to: "/likes", icon: Heart, label: "Mes Likes", premium: true },
     { to: "/annuaire", icon: Building, label: "Annuaire" },
     { to: "/partenariats", icon: Percent, label: "Bons plans" },
     { to: "/recompenses", icon: Gift, label: "Récompenses" },
     { to: "/astro-dog", icon: Star, label: "Mon Astro Dog" },
-    { to: "/settings", icon: Settings, label: "Paramètres" },
-  ];
+    { to: "/settings", icon: Settings, label: "Paramètres" }
+  );
 
   // Add Pro Dashboard only if user is pro
   if (isPro) {
     menuItems.push({ to: "/pro/home", icon: Briefcase, label: "Espace Pro" });
   } else {
     menuItems.push({ to: "/pro/onboarding", icon: Briefcase, label: "Devenir Pro" });
-  }
-
-  // Add test accounts for all users (dev mode)
-  menuItems.push({ to: "/debug/accounts", icon: User, label: "Comptes Test" });
-
-  // Add Admin links only for admins
-  if (isAdmin) {
-    menuItems.push({ to: "/admin/moderation", icon: Shield, label: "Modération" });
-    menuItems.push({ to: "/debug/health", icon: Bug, label: "Debug" });
   }
 
   return (
