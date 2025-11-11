@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,24 +10,40 @@ import logoWhoof from "@/assets/logo-whoof-v3.png";
 
 export default function Login() {
   const navigate = useNavigate();
+  const { signIn, signInWithGoogle } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!email || !password) {
+      toast.error("Veuillez remplir tous les champs");
+      return;
+    }
+
+    if (password.length < 6) {
+      toast.error("Le mot de passe doit contenir au moins 6 caractères");
+      return;
+    }
+
     setIsLoading(true);
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-      if (error) throw error;
-      toast.success("Connexion réussie !");
-      navigate("/profile/me");
+      const { error } = await signIn(email, password);
+      if (error) {
+        if (error.message.includes("Invalid login credentials")) {
+          toast.error("Email ou mot de passe incorrect");
+        } else {
+          toast.error(error.message);
+        }
+      } else {
+        toast.success("Connexion réussie !");
+      }
     } catch (error: any) {
-      toast.error(error.message || "Une erreur est survenue");
+      toast.error("Une erreur est survenue");
+      console.error(error);
     } finally {
       setIsLoading(false);
     }
@@ -35,12 +51,7 @@ export default function Login() {
 
   const handleGoogleAuth = async () => {
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: `${window.location.origin}/profile/me`,
-        },
-      });
+      const { error } = await signInWithGoogle();
       if (error) throw error;
     } catch (error: any) {
       toast.error(error.message || "Erreur lors de la connexion Google");
