@@ -49,6 +49,7 @@ const AdminDashboard = lazy(() => import("./pages/admin/Dashboard"));
 const AdminUsers = lazy(() => import("./pages/admin/Users"));
 const AstroDogCMS = lazy(() => import("./pages/admin/AstroDogCMS"));
 const AdminProfessionals = lazy(() => import("./pages/admin/Professionals"));
+const AdminProfessionalDetail = lazy(() => import("./pages/admin/ProfessionalDetail"));
 
 // Debug routes
 const Debug = lazy(() => import("./pages/Debug"));
@@ -114,6 +115,7 @@ const App = () => {
                   <Route path="/admin/dashboard" element={<PageErrorBoundary><AdminDashboard /></PageErrorBoundary>} />
                   <Route path="/admin/users" element={<PageErrorBoundary><AdminUsers /></PageErrorBoundary>} />
                   <Route path="/admin/professionals" element={<PageErrorBoundary><AdminProfessionals /></PageErrorBoundary>} />
+                  <Route path="/admin/professionals/:id" element={<PageErrorBoundary><AdminProfessionalDetail /></PageErrorBoundary>} />
                   <Route path="/admin/moderation" element={<PageErrorBoundary><Moderation /></PageErrorBoundary>} />
                   <Route path="/admin/moderation-v2" element={<PageErrorBoundary><ModerationV2 /></PageErrorBoundary>} />
                   <Route path="/admin/content/astrodog" element={<PageErrorBoundary><AstroDogCMS /></PageErrorBoundary>} />

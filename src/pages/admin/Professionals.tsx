@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -20,10 +21,13 @@ import {
   Phone,
   MapPin,
   Star,
-  TrendingUp
+  TrendingUp,
+  Download,
+  ExternalLink
 } from "lucide-react";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
+import { exportProfessionalsToCSV } from "@/utils/exportCSV";
 
 interface ProProfile {
   id: string;
@@ -176,9 +180,19 @@ export default function AdminProfessionals() {
             {filteredPros.length} professionnel{filteredPros.length > 1 ? 's' : ''} trouvé{filteredPros.length > 1 ? 's' : ''}
           </p>
         </div>
-        <Button onClick={loadPros} variant="outline">
-          Actualiser
-        </Button>
+        <div className="flex gap-2">
+          <Button 
+            onClick={() => exportProfessionalsToCSV(filteredPros)} 
+            variant="outline"
+            disabled={filteredPros.length === 0}
+          >
+            <Download className="h-4 w-4 mr-2" />
+            Exporter CSV
+          </Button>
+          <Button onClick={loadPros} variant="outline">
+            Actualiser
+          </Button>
+        </div>
       </div>
 
       {/* Stats Cards */}
@@ -404,6 +418,16 @@ export default function AdminProfessionals() {
                     </TableCell>
                     <TableCell>
                       <div className="flex flex-col gap-2">
+                        <Link to={`/admin/professionals/${pro.id}`}>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="w-full"
+                          >
+                            <ExternalLink className="h-3 w-3 mr-1" />
+                            Détails
+                          </Button>
+                        </Link>
                         {!pro.verified ? (
                           <Button
                             size="sm"

@@ -11,9 +11,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Star, Save, Eye } from "lucide-react";
+import { Star, Save, Eye, Download } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { exportHoroscopesToCSV } from "@/utils/exportCSV";
 
 const zodiacSigns = [
   { value: "aries", label: "Bélier", emoji: "♈" },
@@ -112,6 +113,20 @@ export default function AstroDogCMS() {
         <p className="text-muted-foreground mt-1">
           Gérer les horoscopes canins hebdomadaires
         </p>
+      </div>
+
+      {/* Export Button */}
+      <div className="flex justify-end">
+        <Button
+          onClick={async () => {
+            const { data } = await supabase.from('astrodog_horoscopes').select('*').order('week_start', { ascending: false });
+            if (data) exportHoroscopesToCSV(data);
+          }}
+          variant="outline"
+        >
+          <Download className="h-4 w-4 mr-2" />
+          Exporter les horoscopes
+        </Button>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">

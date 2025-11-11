@@ -9,5 +9,17 @@ verify_jwt = true
 [functions.admin-test-accounts]
 verify_jwt = true
 
+[functions.admin-content]
+verify_jwt = true
+
 [functions.pro-profile]
+verify_jwt = true
+
+[functions.pro-checkout]
+verify_jwt = true
+
+[functions.pro-subscription-status]
+verify_jwt = true
+
+[functions.pro-customer-portal]
 verify_jwt = true

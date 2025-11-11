@@ -10,10 +10,11 @@ import {
   TableHeader, 
   TableRow 
 } from "@/components/ui/table";
-import { Search, UserX, Ban, CheckCircle } from "lucide-react";
+import { Search, UserX, Ban, CheckCircle, Download } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
+import { exportUsersToCSV } from "@/utils/exportCSV";
 
 type User = {
   id: string;
@@ -137,6 +138,14 @@ export default function AdminUsers() {
                 />
               </div>
             </div>
+            <Button 
+              onClick={() => exportUsersToCSV(filteredUsers)} 
+              variant="outline"
+              disabled={filteredUsers.length === 0}
+            >
+              <Download className="h-4 w-4 mr-2" />
+              Exporter CSV
+            </Button>
             <Button onClick={loadUsers} variant="outline">
               Actualiser
             </Button>
