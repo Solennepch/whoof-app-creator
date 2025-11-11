@@ -69,6 +69,7 @@ const AdminUsers = lazy(() => import("./pages/admin/Users"));
 const AstroDogCMS = lazy(() => import("./pages/admin/AstroDogCMS"));
 const AdminProfessionals = lazy(() => import("./pages/admin/Professionals"));
 const AdminProfessionalDetail = lazy(() => import("./pages/admin/ProfessionalDetail"));
+const RolesManagement = lazy(() => import("./pages/admin/RolesManagement"));
 const AdminEmailTemplates = lazy(() => import("./pages/admin/EmailTemplates"));
 const AdminNotificationDashboard = lazy(() => import("./pages/admin/NotificationDashboard"));
 const AdminABTesting = lazy(() => import("./pages/admin/ABTesting"));
@@ -160,6 +161,7 @@ const App = () => {
                   <Route path="/admin/professionals" element={<PageErrorBoundary><AdminProfessionals /></PageErrorBoundary>} />
                   <Route path="/admin/professionals/:id" element={<PageErrorBoundary><AdminProfessionalDetail /></PageErrorBoundary>} />
                   <Route path="/admin/moderation" element={<PageErrorBoundary><Moderation /></PageErrorBoundary>} />
+                  <Route path="/admin/roles" element={<PageErrorBoundary><RolesManagement /></PageErrorBoundary>} />
                   <Route path="/admin/astrodog-cms" element={<PageErrorBoundary><AstroDogCMS /></PageErrorBoundary>} />
                   <Route path="/admin/email-templates" element={<PageErrorBoundary><AdminEmailTemplates /></PageErrorBoundary>} />
                   <Route path="/admin/notification-dashboard" element={<PageErrorBoundary><AdminNotificationDashboard /></PageErrorBoundary>} />

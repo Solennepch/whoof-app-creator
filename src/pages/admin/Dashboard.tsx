@@ -1,13 +1,68 @@
-import { Link } from "react-router-dom";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, Briefcase, Heart, Star, TrendingUp, AlertCircle } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Button } from "@/components/ui/button";
 import { useAdminStats } from "@/hooks/useAdminStats";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Users, UserPlus, Briefcase, ShieldCheck, Flag, AlertTriangle, Heart, TrendingUp } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { subDays, format } from "date-fns";
+import { fr } from "date-fns/locale";
+import { supabase } from "@/integrations/supabase/client";
+import { useQuery } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
-export default function AdminDashboard() {
+export default function Dashboard() {
   const { data: stats, isLoading, refetch } = useAdminStats();
+
+  // Fetch trend data for charts
+  const { data: userTrends } = useQuery({
+    queryKey: ['user-trends'],
+    queryFn: async () => {
+      const days = 30;
+      const trends = [];
+      
+      for (let i = days; i >= 0; i--) {
+        const date = subDays(new Date(), i);
+        const dateStr = date.toISOString().split('T')[0];
+        
+        const { count } = await supabase
+          .from('profiles')
+          .select('id', { count: 'exact', head: true })
+          .gte('created_at', dateStr)
+          .lt('created_at', new Date(date.getTime() + 24 * 60 * 60 * 1000).toISOString());
+        
+        trends.push({
+          date: format(date, 'dd MMM', { locale: fr }),
+          users: count || 0
+        });
+      }
+      
+      return trends;
+    },
+    refetchInterval: 300000, // Refresh every 5 minutes
+  });
+
+  // Fetch reports by type
+  const { data: reportsByType } = useQuery({
+    queryKey: ['reports-by-type'],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from('reports')
+        .select('kind');
+      
+      const typeCounts = (data || []).reduce((acc, report) => {
+        acc[report.kind] = (acc[report.kind] || 0) + 1;
+        return acc;
+      }, {} as Record<string, number>);
+
+      return Object.entries(typeCounts).map(([type, count]) => ({
+        name: type,
+        value: count
+      }));
+    },
+  });
+
+  const COLORS = ['hsl(var(--primary))', 'hsl(var(--secondary))', 'hsl(var(--accent))', 'hsl(var(--destructive))', 'hsl(var(--muted))'];
 
   const statCards = [
     {
@@ -45,7 +100,7 @@ export default function AdminDashboard() {
       title: "Vérifications en attente",
       value: stats?.pendingVerifications || 0,
       description: "Demandes à traiter",
-      icon: AlertCircle,
+      icon: AlertTriangle,
       color: "text-orange-600",
       link: "/admin/moderation?tab=verifications",
       urgent: (stats?.pendingVerifications || 0) > 0,
@@ -54,7 +109,7 @@ export default function AdminDashboard() {
       title: "Signalements ouverts",
       value: stats?.openReports || 0,
       description: "À modérer",
-      icon: AlertCircle,
+      icon: Flag,
       color: "text-red-600",
       link: "/admin/moderation?tab=signalements",
       urgent: (stats?.openReports || 0) > 0,
@@ -63,7 +118,7 @@ export default function AdminDashboard() {
       title: "Alertes actives",
       value: stats?.activeAlerts || 0,
       description: "Système",
-      icon: AlertCircle,
+      icon: AlertTriangle,
       color: "text-yellow-600",
       link: "/admin/moderation?tab=alertes",
       urgent: (stats?.activeAlerts || 0) > 0,
@@ -177,54 +232,129 @@ export default function AdminDashboard() {
         })}
       </div>
 
-      {/* Quick Actions */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Actions rapides</CardTitle>
-          <CardDescription>Gérer le contenu et les utilisateurs</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
-            <Link to="/admin/users">
-              <Button variant="outline" className="w-full">
-                <Users className="h-4 w-4 mr-2" />
-                Gérer utilisateurs
-              </Button>
-            </Link>
-            <Link to="/admin/professionals">
-              <Button variant="outline" className="w-full">
-                <Briefcase className="h-4 w-4 mr-2" />
-                Gérer pros
-              </Button>
-            </Link>
-            <Link to="/admin/astrodog-cms">
-              <Button variant="outline" className="w-full">
-                <Star className="h-4 w-4 mr-2" />
-                AstroDog CMS
-              </Button>
-            </Link>
-            <Link to="/admin/moderation">
-              <Button variant="outline" className="w-full">
-                <AlertCircle className="h-4 w-4 mr-2" />
-                Modération
-              </Button>
-            </Link>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Charts Section */}
+      <div className="grid gap-6 md:grid-cols-2">
+        {/* User Registration Trend */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <TrendingUp className="h-5 w-5" />
+              Inscriptions - 30 derniers jours
+            </CardTitle>
+            <CardDescription>Évolution quotidienne des nouvelles inscriptions</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {userTrends ? (
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={userTrends}>
+                  <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                  <XAxis 
+                    dataKey="date" 
+                    className="text-xs"
+                    tick={{ fill: 'hsl(var(--muted-foreground))' }}
+                  />
+                  <YAxis 
+                    className="text-xs"
+                    tick={{ fill: 'hsl(var(--muted-foreground))' }}
+                  />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: 'hsl(var(--background))',
+                      border: '1px solid hsl(var(--border))',
+                      borderRadius: '8px'
+                    }}
+                  />
+                  <Legend />
+                  <Line 
+                    type="monotone" 
+                    dataKey="users" 
+                    stroke="hsl(var(--primary))" 
+                    strokeWidth={2}
+                    name="Nouveaux utilisateurs"
+                    dot={{ fill: 'hsl(var(--primary))' }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            ) : (
+              <Skeleton className="h-[300px] w-full" />
+            )}
+          </CardContent>
+        </Card>
 
-      {/* Recent Activity (placeholder) */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Activité récente</CardTitle>
-          <CardDescription>Dernières actions sur la plateforme</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground py-8 text-center">
-            Système de logs à venir
-          </p>
-        </CardContent>
-      </Card>
+        {/* Reports by Type */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Flag className="h-5 w-5" />
+              Signalements par Type
+            </CardTitle>
+            <CardDescription>Distribution des signalements reçus</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {reportsByType && reportsByType.length > 0 ? (
+              <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                  <Pie
+                    data={reportsByType}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                    outerRadius={100}
+                    fill="hsl(var(--primary))"
+                    dataKey="value"
+                  >
+                    {reportsByType.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: 'hsl(var(--background))',
+                      border: '1px solid hsl(var(--border))',
+                      borderRadius: '8px'
+                    }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-[300px] flex items-center justify-center text-muted-foreground">
+                Aucun signalement
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Activity Peaks */}
+        <Card className="md:col-span-2">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <TrendingUp className="h-5 w-5" />
+              Activité de Modération
+            </CardTitle>
+            <CardDescription>Vue d'ensemble des actions de modération récentes</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-4 md:grid-cols-3">
+              <div className="space-y-2">
+                <div className="text-sm font-medium text-muted-foreground">Vérifications</div>
+                <div className="text-2xl font-bold">{stats?.pendingVerifications || 0}</div>
+                <div className="text-xs text-muted-foreground">En attente de validation</div>
+              </div>
+              <div className="space-y-2">
+                <div className="text-sm font-medium text-muted-foreground">Signalements</div>
+                <div className="text-2xl font-bold">{stats?.openReports || 0}</div>
+                <div className="text-xs text-muted-foreground">À traiter</div>
+              </div>
+              <div className="space-y-2">
+                <div className="text-sm font-medium text-muted-foreground">Alertes</div>
+                <div className="text-2xl font-bold">{stats?.activeAlerts || 0}</div>
+                <div className="text-xs text-muted-foreground">Actives</div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Menu, LayoutDashboard, Users, Briefcase, Mail, Bell, TestTube, Beaker, Shield, Star } from "lucide-react";
+import { Menu, LayoutDashboard, Users, Briefcase, Mail, Bell, TestTube, Beaker, Shield, ShieldCheck, Star } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
@@ -32,6 +32,7 @@ export function AdminSidebarMenu({ open, onOpenChange }: AdminSidebarMenuProps) 
         { to: "/admin/users", icon: Users, label: "Utilisateurs" },
         { to: "/admin/professionals", icon: Briefcase, label: "Professionnels" },
         { to: "/admin/moderation", icon: Shield, label: "Modération" },
+        { to: "/admin/roles", icon: ShieldCheck, label: "Rôles & Permissions" },
       ]
     },
     {

@@ -2620,6 +2620,17 @@ export type Database = {
         Returns: boolean
       }
       increment_pro_view: { Args: { pro_id: string }; Returns: undefined }
+      log_admin_action: {
+        Args: {
+          p_action: string
+          p_after?: Json
+          p_before?: Json
+          p_entity_id: string
+          p_entity_type: string
+          p_metadata?: Json
+        }
+        Returns: string
+      }
       longtransactionsenabled: { Args: never; Returns: boolean }
       nearby_profiles: {
         Args: { lat: number; lng: number; meters: number }
