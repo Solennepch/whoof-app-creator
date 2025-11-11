@@ -17,11 +17,18 @@ interface TestAccount {
 
 const TEST_ACCOUNTS: TestAccount[] = [
   {
+    email: "dev@whoof.app",
+    password: "DevMaster2025!",
+    displayName: "👑 Dev Master (ALL ACCESS)",
+    role: "admin",
+    isPro: true
+  },
+  {
     email: "test@whoof.app",
     password: "Test123!",
     displayName: "Solenne Pichon (Perso + Pro)",
     role: "user",
-    isPro: true // Has BOTH personal and pro profiles
+    isPro: true
   },
   {
     email: "test.user@whoof.app",
@@ -68,7 +75,6 @@ export default function TestAccounts() {
     setCurrentUser(user);
     
     if (user) {
-      // Check roles for display purposes only
       const { data: adminRole } = await supabase
         .from('user_roles')
         .select('role')
@@ -100,6 +106,23 @@ export default function TestAccounts() {
     }
   };
 
+  const createDevAccount = async () => {
+    setIsCreating(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('create-dev-account');
+
+      if (error) throw error;
+
+      toast.success("👑 Compte DEV créé avec tous les accès ! Email: dev@whoof.app");
+      setAccountsCreated(true);
+    } catch (error: any) {
+      console.error('Error creating dev account:', error);
+      toast.error(error.message || "Erreur lors de la création du compte dev");
+    } finally {
+      setIsCreating(false);
+    }
+  };
+
   const createTestAccounts = async () => {
     setIsCreating(true);
     try {
@@ -121,10 +144,8 @@ export default function TestAccounts() {
 
   const switchAccount = async (account: TestAccount) => {
     try {
-      // Sign out current user
       await supabase.auth.signOut();
       
-      // Sign in with test account
       const { error } = await supabase.auth.signInWithPassword({
         email: account.email,
         password: account.password
@@ -134,12 +155,11 @@ export default function TestAccounts() {
 
       toast.success(`Connecté en tant que ${account.displayName}`);
       
-      // Redirect based on role
       setTimeout(() => {
         if (account.isPro) {
           navigate("/pro/home");
         } else if (account.role === "admin") {
-          navigate("/admin/moderation");
+          navigate("/admin/dashboard");
         } else {
           navigate("/");
         }
@@ -159,7 +179,7 @@ export default function TestAccounts() {
   return (
     <div className="container mx-auto p-6 max-w-4xl">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Comptes de Test</h1>
+        <h1 className="text-3xl font-bold mb-2">Comptes de Test & Dev</h1>
         <p className="text-muted-foreground">
           Gérez et basculez entre les comptes de test pour tester différents rôles.
         </p>
@@ -208,20 +228,30 @@ export default function TestAccounts() {
               Première utilisation
             </CardTitle>
             <CardDescription>
-              ⚠️ Les comptes de test n'existent pas encore. Vous devez d'abord les créer avant de pouvoir vous connecter avec.
+              ⚠️ Créez d'abord votre compte dev pour accéder à toute l'application sans restrictions
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <Button onClick={createTestAccounts} disabled={isCreating} size="lg" className="w-full">
+          <CardContent className="space-y-3">
+            <Button 
+              onClick={createDevAccount} 
+              disabled={isCreating} 
+              size="lg" 
+              className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+            >
+              <Shield className={`h-4 w-4 mr-2 ${isCreating ? 'animate-spin' : ''}`} />
+              {isCreating ? 'Création...' : '👑 Créer mon compte DEV ultime'}
+            </Button>
+            <div className="text-center text-xs text-muted-foreground">ou</div>
+            <Button onClick={createTestAccounts} disabled={isCreating} size="lg" variant="outline" className="w-full">
               <RefreshCw className={`h-4 w-4 mr-2 ${isCreating ? 'animate-spin' : ''}`} />
-              {isCreating ? 'Création en cours...' : 'Créer les comptes de test'}
+              {isCreating ? 'Création en cours...' : 'Créer les comptes de test standards'}
             </Button>
           </CardContent>
         </Card>
       ) : (
-        <Card className="mb-6 border-green-500 bg-green-50">
+        <Card className="mb-6 border-green-500 bg-green-50 dark:bg-green-950/20">
           <CardContent className="pt-6">
-            <div className="flex items-center gap-2 text-green-700">
+            <div className="flex items-center gap-2 text-green-700 dark:text-green-400">
               <span className="text-lg">✅</span>
               <span className="font-medium">Comptes de test disponibles - Vous pouvez maintenant vous connecter</span>
             </div>
@@ -231,7 +261,7 @@ export default function TestAccounts() {
 
       <div className="grid gap-4">
         {TEST_ACCOUNTS.map((account) => (
-          <Card key={account.email}>
+          <Card key={account.email} className={account.email === 'dev@whoof.app' ? 'border-2 border-purple-500 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-950/20 dark:to-pink-950/20' : ''}>
             <CardHeader>
               <div className="flex items-start justify-between">
                 <div>
@@ -243,10 +273,11 @@ export default function TestAccounts() {
                   </CardTitle>
                   <CardDescription className="mt-1">{account.email}</CardDescription>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-2 flex-wrap">
+                  {account.email === 'dev@whoof.app' && <Badge className="bg-gradient-to-r from-purple-600 to-pink-600">👑 DEV</Badge>}
                   {account.role === 'admin' && <Badge variant="destructive">Admin</Badge>}
                   {account.isPro && <Badge variant="secondary">Pro</Badge>}
-                  {!account.isPro && account.role !== 'admin' && <Badge variant="outline">User</Badge>}
+                  {!account.isPro && account.role !== 'admin' && account.email !== 'dev@whoof.app' && <Badge variant="outline">User</Badge>}
                 </div>
               </div>
             </CardHeader>
@@ -274,6 +305,9 @@ export default function TestAccounts() {
           <CardTitle className="text-sm">Accès rapides par rôle</CardTitle>
         </CardHeader>
         <CardContent className="text-sm space-y-2">
+          <div className="bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/20 dark:to-pink-900/20 p-3 rounded-lg border-2 border-purple-300 dark:border-purple-700">
+            <span className="font-bold">👑 Dev Master:</span> Compte développeur ultime avec TOUS LES ACCÈS (admin + moderator + pro + premium). Permet de tester toutes les fonctionnalités sans restriction.
+          </div>
           <div>
             <span className="font-medium">Solenne Pichon:</span> Compte combo avec profil personnel ET professionnel. Utilisez le double-tap sur l'avatar ou "Changer de compte" pour basculer entre les deux modes.
           </div>
