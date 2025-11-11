@@ -47,6 +47,7 @@ const Moderation = lazy(() => import("./pages/admin/Moderation"));
 const ModerationV2 = lazy(() => import("./pages/admin/ModerationV2"));
 
 // Debug routes
+const Debug = lazy(() => import("./pages/Debug"));
 const DebugHealth = lazy(() => import("./pages/DebugHealth"));
 const TestAccounts = lazy(() => import("./pages/debug/TestAccounts"));
 
@@ -113,6 +114,7 @@ const App = () => {
                 </Route>
                 
                 {/* Debug routes - outside MainLayout */}
+                <Route path="/debug" element={<PageErrorBoundary><Debug /></PageErrorBoundary>} />
                 <Route path="/debug/health" element={<PageErrorBoundary><DebugHealth /></PageErrorBoundary>} />
                 <Route path="/debug/test-accounts" element={<PageErrorBoundary><TestAccounts /></PageErrorBoundary>} />
               </Routes>
