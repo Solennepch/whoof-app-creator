@@ -19,11 +19,8 @@ export function ProBottomNavigation() {
 
   return (
     <nav 
-      className="fixed bottom-0 left-0 right-0 z-50 md:hidden w-full overflow-hidden" 
+      className="fixed bottom-0 left-0 right-0 z-50 md:hidden w-full overflow-hidden bg-background border-t border-border" 
       style={{
-        backgroundColor: "hsl(var(--paper))",
-        opacity: 1,
-        borderTop: "1px solid hsl(var(--border))",
         paddingLeft: "env(safe-area-inset-left)",
         paddingRight: "env(safe-area-inset-right)",
         paddingBottom: "calc(8px + env(safe-area-inset-bottom))",
