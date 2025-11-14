@@ -131,6 +131,39 @@ export type Database = {
           },
         ]
       }
+      activity_feed: {
+        Row: {
+          activity_type: string
+          created_at: string | null
+          description: string | null
+          id: string
+          metadata: Json | null
+          title: string
+          user_id: string
+          visibility: string | null
+        }
+        Insert: {
+          activity_type: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          title: string
+          user_id: string
+          visibility?: string | null
+        }
+        Update: {
+          activity_type?: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          title?: string
+          user_id?: string
+          visibility?: string | null
+        }
+        Relationships: []
+      }
       admin_notes: {
         Row: {
           author_id: string
@@ -1648,6 +1681,59 @@ export type Database = {
           },
         ]
       }
+      quests: {
+        Row: {
+          created_at: string | null
+          description: string
+          icon: string | null
+          id: string
+          is_active: boolean | null
+          quest_order: number
+          required_challenges: Json
+          rewards: Json
+          season_id: string | null
+          story_context: string | null
+          title: string
+          unlock_condition: Json | null
+        }
+        Insert: {
+          created_at?: string | null
+          description: string
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          quest_order: number
+          required_challenges?: Json
+          rewards?: Json
+          season_id?: string | null
+          story_context?: string | null
+          title: string
+          unlock_condition?: Json | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          quest_order?: number
+          required_challenges?: Json
+          rewards?: Json
+          season_id?: string | null
+          story_context?: string | null
+          title?: string
+          unlock_condition?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quests_season_id_fkey"
+            columns: ["season_id"]
+            isOneToOne: false
+            referencedRelation: "seasons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       referrals: {
         Row: {
           created_at: string | null
@@ -1823,6 +1909,45 @@ export type Database = {
         }
         Relationships: []
       }
+      seasons: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          end_date: string
+          id: string
+          is_active: boolean | null
+          name: string
+          rewards: Json | null
+          season_number: number
+          start_date: string
+          theme: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          end_date: string
+          id?: string
+          is_active?: boolean | null
+          name: string
+          rewards?: Json | null
+          season_number: number
+          start_date: string
+          theme?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          end_date?: string
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          rewards?: Json | null
+          season_number?: number
+          start_date?: string
+          theme?: string | null
+        }
+        Relationships: []
+      }
       spatial_ref_sys: {
         Row: {
           auth_name: string | null
@@ -1873,6 +1998,53 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "badges"
             referencedColumns: ["code"]
+          },
+        ]
+      }
+      user_quest_progress: {
+        Row: {
+          completed_at: string | null
+          current_step: number | null
+          id: string
+          is_completed: boolean | null
+          quest_id: string
+          rewards_claimed: boolean | null
+          started_at: string | null
+          total_steps: number
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          current_step?: number | null
+          id?: string
+          is_completed?: boolean | null
+          quest_id: string
+          rewards_claimed?: boolean | null
+          started_at?: string | null
+          total_steps: number
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          current_step?: number | null
+          id?: string
+          is_completed?: boolean | null
+          quest_id?: string
+          rewards_claimed?: boolean | null
+          started_at?: string | null
+          total_steps?: number
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_quest_progress_quest_id_fkey"
+            columns: ["quest_id"]
+            isOneToOne: false
+            referencedRelation: "quests"
+            referencedColumns: ["id"]
           },
         ]
       }

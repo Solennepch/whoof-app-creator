@@ -13,6 +13,9 @@ import { ChallengeLeaderboard } from "@/components/events/ChallengeLeaderboard";
 import { ChallengeStats } from "@/components/events/ChallengeStats";
 import { DailyChallenges } from "@/components/events/DailyChallenges";
 import { ShareAchievement } from "@/components/events/ShareAchievement";
+import { SeasonCard } from "@/components/events/SeasonCard";
+import { QuestsList } from "@/components/events/QuestsList";
+import { ActivityFeed } from "@/components/events/ActivityFeed";
 import { useConfettiEvents } from "@/hooks/useConfettiEvents";
 import { useEffect } from "react";
 
@@ -56,6 +59,9 @@ export default function Events() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 pb-20">
       <div className="max-w-4xl mx-auto p-6 space-y-6">
+        {/* Season Card */}
+        <SeasonCard />
+
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -212,11 +218,29 @@ export default function Events() {
           </motion.div>
         )}
 
-        {/* Daily Challenges */}
+        {/* Activity Feed */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.35 }}
+        >
+          <ActivityFeed />
+        </motion.div>
+
+        {/* Quests */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
+        >
+          <QuestsList />
+        </motion.div>
+
+        {/* Daily Challenges */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.45 }}
         >
           <DailyChallenges />
         </motion.div>
@@ -234,7 +258,7 @@ export default function Events() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
+          transition={{ delay: 0.55 }}
         >
           <ChallengeLeaderboard />
         </motion.div>
@@ -243,7 +267,7 @@ export default function Events() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7 }}
+          transition={{ delay: 0.6 }}
         >
           <ChallengeHistory />
         </motion.div>
@@ -252,7 +276,7 @@ export default function Events() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8 }}
+          transition={{ delay: 0.65 }}
         >
           <Card>
             <CardHeader>
