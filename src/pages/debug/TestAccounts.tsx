@@ -51,12 +51,9 @@ export default function TestAccounts() {
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [userRoles, setUserRoles] = useState<{ isAdmin: boolean; isModerator: boolean }>({ isAdmin: false, isModerator: false });
   const [isCreating, setIsCreating] = useState(false);
-  const [accountsCreated, setAccountsCreated] = useState(false);
-  const [checkingAccounts, setCheckingAccounts] = useState(true);
 
   useEffect(() => {
     checkAuth();
-    checkIfAccountsExist();
     const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
       checkAuth();
     });
@@ -82,23 +79,6 @@ export default function TestAccounts() {
     }
   };
 
-  const checkIfAccountsExist = async () => {
-    setCheckingAccounts(true);
-    try {
-      const { data, error } = await supabase.functions.invoke('admin-test-accounts', {
-        body: { action: 'list' }
-      });
-
-      if (!error && data?.accounts && data.accounts.length >= 4) {
-        setAccountsCreated(true);
-      }
-    } catch (error) {
-      console.error('Error checking accounts:', error);
-    } finally {
-      setCheckingAccounts(false);
-    }
-  };
-
   const createDevAccount = async () => {
     setIsCreating(true);
     try {
@@ -107,7 +87,6 @@ export default function TestAccounts() {
       if (error) throw error;
 
       toast.success("👑 Compte DEV créé avec tous les accès ! Email: dev@whoof.app");
-      setAccountsCreated(true);
     } catch (error: any) {
       console.error('Error creating dev account:', error);
       toast.error(error.message || "Erreur lors de la création du compte dev");
@@ -126,7 +105,6 @@ export default function TestAccounts() {
       if (error) throw error;
 
       toast.success("Comptes de test créés ! Vous pouvez maintenant vous connecter.");
-      setAccountsCreated(true);
     } catch (error: any) {
       console.error('Error creating test accounts:', error);
       toast.error(error.message || "Erreur lors de la création des comptes");
@@ -139,12 +117,21 @@ export default function TestAccounts() {
     try {
       await supabase.auth.signOut();
       
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email: account.email,
         password: account.password
       });
 
-      if (error) throw error;
+      if (error) {
+        if (error.message.includes('Invalid login credentials')) {
+          toast.error(`Le compte ${account.displayName} n'existe pas encore. Créez-le avec les boutons ci-dessous.`, {
+            duration: 5000,
+          });
+        } else {
+          toast.error(error.message || "Erreur lors de la connexion");
+        }
+        return;
+      }
 
       toast.success(`Connecté en tant que ${account.displayName}`);
       
@@ -202,53 +189,29 @@ export default function TestAccounts() {
         </Card>
       )}
 
-      {checkingAccounts ? (
-        <Card className="mb-6">
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-center gap-2">
-              <RefreshCw className="h-4 w-4 animate-spin" />
-              <span>Vérification des comptes...</span>
-            </div>
-          </CardContent>
-        </Card>
-      ) : !accountsCreated ? (
-        <Card className="mb-6 border-primary bg-primary/5">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <RefreshCw className="h-5 w-5" />
-              Première utilisation
-            </CardTitle>
-            <CardDescription>
-              ⚠️ Créez d'abord votre compte dev pour accéder à toute l'application sans restrictions
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <Button 
-              onClick={createDevAccount} 
-              disabled={isCreating} 
-              size="lg" 
-              className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
-            >
-              <Shield className={`h-4 w-4 mr-2 ${isCreating ? 'animate-spin' : ''}`} />
-              {isCreating ? 'Création...' : '👑 Créer mon compte DEV ultime'}
-            </Button>
-            <div className="text-center text-xs text-muted-foreground">ou</div>
-            <Button onClick={createTestAccounts} disabled={isCreating} size="lg" variant="outline" className="w-full">
-              <RefreshCw className={`h-4 w-4 mr-2 ${isCreating ? 'animate-spin' : ''}`} />
-              {isCreating ? 'Création en cours...' : 'Créer les comptes de test standards'}
-            </Button>
-          </CardContent>
-        </Card>
-      ) : (
-        <Card className="mb-6 border-green-500 bg-green-50 dark:bg-green-950/20">
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-2 text-green-700 dark:text-green-400">
-              <span className="text-lg">✅</span>
-              <span className="font-medium">Comptes de test disponibles - Vous pouvez maintenant vous connecter</span>
-            </div>
-          </CardContent>
-        </Card>
-      )}
+      <Card className="mb-6 bg-muted/50">
+        <CardHeader>
+          <CardTitle className="text-sm">Création de comptes (si nécessaire)</CardTitle>
+          <CardDescription>
+            Si la connexion échoue, créez d'abord les comptes avec ces boutons :
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <Button 
+            onClick={createDevAccount} 
+            disabled={isCreating} 
+            size="sm" 
+            className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+          >
+            <Shield className={`h-4 w-4 mr-2 ${isCreating ? 'animate-spin' : ''}`} />
+            {isCreating ? 'Création...' : '👑 Créer compte DEV'}
+          </Button>
+          <Button onClick={createTestAccounts} disabled={isCreating} size="sm" variant="outline" className="w-full">
+            <RefreshCw className={`h-4 w-4 mr-2 ${isCreating ? 'animate-spin' : ''}`} />
+            {isCreating ? 'Création...' : 'Créer tous les comptes de test'}
+          </Button>
+        </CardContent>
+      </Card>
 
       <div className="grid gap-4">
         {TEST_ACCOUNTS.map((account) => (
@@ -279,10 +242,10 @@ export default function TestAccounts() {
                 </div>
                 <Button 
                   onClick={() => switchAccount(account)}
-                  disabled={currentUser?.email === account.email || !accountsCreated}
+                  disabled={currentUser?.email === account.email}
                 >
                   <LogIn className="h-4 w-4 mr-2" />
-                  {currentUser?.email === account.email ? 'Actuel' : !accountsCreated ? 'Créer d\'abord' : 'Se connecter'}
+                  {currentUser?.email === account.email ? 'Compte actuel' : 'Se connecter'}
                 </Button>
               </div>
             </CardContent>
