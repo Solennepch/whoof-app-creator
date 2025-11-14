@@ -55,13 +55,24 @@ serve(async (req) => {
         is_premium: true,
       }, { onConflict: 'id' });
 
-    // Assign all roles
-    const roles = ['admin', 'moderator', 'pro'];
-    for (const role of roles) {
-      await supabaseAdmin
-        .from('user_roles')
-        .upsert({ user_id: userId, role }, { onConflict: 'user_id,role' });
-    }
+    // Assign pro role only (admin/moderator removed)
+    await supabaseAdmin
+      .from('user_roles')
+      .upsert({ user_id: userId, role: 'pro' }, { onConflict: 'user_id,role' });
+
+    // Create a dog profile for testing
+    await supabaseAdmin
+      .from('dogs')
+      .upsert({
+        owner_id: userId,
+        name: 'Rex Dev',
+        breed: 'Golden Retriever',
+        age_years: 3,
+        size: 'large',
+        temperament: 'friendly',
+        birthdate: '2021-01-01',
+        avatar_url: 'https://api.dicebear.com/7.x/bottts/svg?seed=rexdev',
+      }, { onConflict: 'owner_id' });
 
     // Create pro profile
     const { error: proError } = await supabaseAdmin
@@ -69,11 +80,12 @@ serve(async (req) => {
       .upsert({
         user_id: userId,
         business_name: 'Dev Business',
-        description: 'Compte pro développeur',
-        category: 'veterinaire',
-        is_active: true,
-        is_verified: true,
-        subscription_tier: 'enterprise',
+        description: 'Compte pro développeur avec accès complet',
+        activity: 'veterinaire',
+        is_published: true,
+        verified: true,
+        city: 'Dev City',
+        tags: ['dev', 'all-access'],
       }, { onConflict: 'user_id' });
 
     console.log('Dev account created/updated:', { userId, profileError, proError });
@@ -86,8 +98,8 @@ serve(async (req) => {
           password,
           userId,
         },
-        roles,
-        message: 'Compte dev ultime créé avec tous les accès'
+        roles: ['pro'],
+        message: 'Compte dev créé avec accès utilisateur + pro complet'
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
