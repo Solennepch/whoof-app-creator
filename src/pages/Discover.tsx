@@ -33,13 +33,17 @@ export default function Discover() {
     setDiscoveryMode
   } = useAppStore();
 
-  // Initialize mode from navigation state
+  // Initialize mode from URL params or navigation state
   useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const urlMode = searchParams.get('mode');
     const stateMode = (location.state as any)?.mode;
-    if (stateMode && (stateMode === 'region' || stateMode === 'adoption')) {
-      setDiscoveryMode(stateMode);
+    const mode = urlMode || stateMode;
+    
+    if (mode && (mode === 'region' || mode === 'adoption')) {
+      setDiscoveryMode(mode);
     }
-  }, [location.state, setDiscoveryMode]);
+  }, [location.search, location.state, setDiscoveryMode]);
   
   // Local state
   const [currentIndex, setCurrentIndex] = useState(0);

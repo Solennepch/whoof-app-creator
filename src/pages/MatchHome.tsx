@@ -18,7 +18,7 @@ export default function MatchHome() {
         </div>
 
         <button
-          onClick={() => navigate('/discover', { state: { mode: 'region' } })}
+          onClick={() => navigate('/discover?mode=region')}
           className="w-full flex items-center justify-center gap-3 p-6 text-lg font-semibold rounded-2xl shadow-sm hover:shadow-md transition-all bg-white/90"
         >
           <Heart className="h-6 w-6" style={{ color: "var(--brand-plum)" }} />
@@ -26,7 +26,7 @@ export default function MatchHome() {
         </button>
 
         <button
-          onClick={() => navigate('/discover', { state: { mode: 'adoption' } })}
+          onClick={() => navigate('/discover?mode=adoption')}
           className="w-full flex items-center justify-center gap-3 p-6 text-lg font-semibold rounded-2xl shadow-sm hover:shadow-md transition-all bg-white/90"
         >
           <Home className="h-6 w-6" style={{ color: "var(--brand-raspberry)" }} />
