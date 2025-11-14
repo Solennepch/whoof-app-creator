@@ -2,6 +2,26 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
+import { addXPToGuild } from '@/services/guildService';
+
+// Get current special event multiplier
+const getXPMultiplier = async (): Promise<number> => {
+  try {
+    const { data: activeEvent } = await supabase
+      .from('special_events')
+      .select('xp_multiplier')
+      .eq('is_active', true)
+      .lte('start_date', new Date().toISOString())
+      .gte('end_date', new Date().toISOString())
+      .maybeSingle();
+
+    return activeEvent?.xp_multiplier || 1.0;
+  } catch (error) {
+    console.error('Error fetching XP multiplier:', error);
+    return 1.0;
+  }
+};
+
 export interface XPEvent {
   id: string;
   user_id: string;
@@ -134,20 +154,29 @@ export function useAddXPEvent() {
       refId?: string;
       metadata?: any;
     }) => {
+      // Get XP multiplier from special events
+      const multiplier = await getXPMultiplier();
+      const finalPoints = Math.floor(points * multiplier);
+
       const { data, error } = await supabase.rpc("add_xp_event", {
         p_user_id: userId,
         p_type: type,
-        p_points: points,
+        p_points: finalPoints,
         p_ref_id: refId,
         p_metadata: metadata || {},
       });
       
       if (error) throw error;
+
+      // Add XP to guild if user is in one
+      await addXPToGuild(userId, finalPoints);
+
       return data;
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["user-xp", variables.userId] });
       queryClient.invalidateQueries({ queryKey: ["xp-events", variables.userId] });
+      queryClient.invalidateQueries({ queryKey: ["user-guild", variables.userId] });
       toast.success(`+${variables.points} XP!`, {
         description: getXPEventDescription(variables.type),
       });
