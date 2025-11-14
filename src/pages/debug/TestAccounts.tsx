@@ -43,13 +43,6 @@ const TEST_ACCOUNTS: TestAccount[] = [
     displayName: "Rodolphe Pichon",
     role: "user",
     isPro: true
-  },
-  {
-    email: "test.admin@whoof.app",
-    password: "TestAdmin123!",
-    displayName: "Admin Whoof",
-    role: "admin",
-    isPro: false
   }
 ];
 
