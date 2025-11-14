@@ -65,23 +65,42 @@ export const trackChallengeProgress = async (
 
     // Envoyer notification de progression
     const progressPercentage = Math.floor((currentProgress / challenge.objectiveTarget) * 100);
+    const previousPercentage = Math.floor(((existing?.current_progress || 0) / challenge.objectiveTarget) * 100);
     
+    // Notification de completion
     if (isCompleted && !existing?.is_completed) {
       await sendNotification({
         userId,
         templateId: 'game_badge_unlocked',
         data: { badgeName: challenge.reward },
+        force: true, // Force l'envoi pour les achievements
       });
-    } else if (progressPercentage >= 50 && progressPercentage < 75) {
-      const messageIndex = Math.floor((progressPercentage / 100) * challenge.notificationMessages.length);
-      await sendNotification({
-        userId,
-        templateId: 'game_challenge_progress',
-        data: { 
-          percentage: progressPercentage,
-          message: challenge.notificationMessages[messageIndex] 
-        },
-      });
+    } 
+    // Notifications de progression aux jalons (25%, 50%, 75%)
+    else {
+      const milestones = [25, 50, 75];
+      const reachedMilestone = milestones.find(
+        milestone => progressPercentage >= milestone && previousPercentage < milestone
+      );
+
+      if (reachedMilestone) {
+        const messageIndex = Math.min(
+          Math.floor((reachedMilestone / 100) * challenge.notificationMessages.length),
+          challenge.notificationMessages.length - 1
+        );
+        
+        await sendNotification({
+          userId,
+          templateId: 'game_challenge_progress',
+          data: { 
+            percentage: progressPercentage,
+            challengeName: challenge.name,
+            current: currentProgress,
+            target: challenge.objectiveTarget,
+            message: challenge.notificationMessages[messageIndex] 
+          },
+        });
+      }
     }
 
     return {

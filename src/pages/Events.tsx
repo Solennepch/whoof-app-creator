@@ -8,6 +8,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { XpProgress, levelForXp } from "@/components/ui/XpProgress";
+import { ChallengeHistory } from "@/components/events/ChallengeHistory";
+import { ChallengeLeaderboard } from "@/components/events/ChallengeLeaderboard";
 
 export default function Events() {
   const { user } = useAuth();
@@ -188,11 +190,29 @@ export default function Events() {
           </motion.div>
         )}
 
-        {/* Badges Collection */}
+        {/* Leaderboard */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
+        >
+          <ChallengeLeaderboard />
+        </motion.div>
+
+        {/* Challenge History */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+        >
+          <ChallengeHistory />
+        </motion.div>
+
+        {/* Badges Collection */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
         >
           <Card>
             <CardHeader>
