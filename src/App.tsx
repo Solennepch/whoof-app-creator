@@ -201,7 +201,7 @@ const App = () => {
                 </Route>
                 
                 {/* Debug routes - accessible en dev ou pour les admins */}
-                <DebugRoutes />
+                {DebugRoutes()}
               </Routes>
             </Suspense>
             </GamificationProvider>
