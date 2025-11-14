@@ -12,10 +12,11 @@ import { fr } from "date-fns/locale";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { toast } from "sonner";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Balades() {
   const { user } = useAuth();
+  const { toast } = useToast();
   const { myWalks, friendsWalks, events, walksLoading, friendsWalksLoading, eventsLoading, createEvent, joinEvent, startWalk } = useWalks();
   const [isCreating, setIsCreating] = useState(false);
   const [newEventTitle, setNewEventTitle] = useState("");
@@ -24,7 +25,11 @@ export default function Balades() {
 
   const handleCreateEvent = async () => {
     if (!newEventTitle || !newEventDate || !newEventPlace) {
-      toast.error("Veuillez remplir tous les champs");
+      toast({
+        title: "Formulaire incomplet",
+        description: "Veuillez remplir tous les champs",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -54,6 +59,10 @@ export default function Balades() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 p-6">
         <div className="max-w-4xl mx-auto space-y-6">
+          <h1 className="text-xl font-semibold">Balades</h1>
+          <p className="text-sm text-muted-foreground">
+            Chargement des balades en cours…
+          </p>
           <Skeleton className="h-32 w-full" />
           <Skeleton className="h-64 w-full" />
         </div>
@@ -65,14 +74,57 @@ export default function Balades() {
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 pb-20">
       <div className="max-w-4xl mx-auto p-6 space-y-6">
         {/* Header */}
-        <div className="text-center space-y-2">
-          <h1 className="text-3xl font-bold text-foreground flex items-center justify-center gap-2">
-            <Calendar className="h-8 w-8 text-primary" />
-            Balades
-          </h1>
-          <p className="text-muted-foreground">
-            Organise des promenades avec d'autres amis à quatre pattes
-          </p>
+        <div className="mb-4 flex items-center justify-between gap-3">
+          <div>
+            <h1 className="text-xl font-semibold">Balades</h1>
+            <p className="text-xs text-muted-foreground">
+              Trouve ou crée des balades pour ton chien près de chez toi.
+            </p>
+          </div>
+          <Dialog open={isCreating} onOpenChange={setIsCreating}>
+            <DialogTrigger asChild>
+              <Button className="rounded-full px-4" size="sm">
+                + Créer une balade
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Organiser une balade</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="title">Titre</Label>
+                  <Input
+                    id="title"
+                    placeholder="Balade au parc..."
+                    value={newEventTitle}
+                    onChange={(e) => setNewEventTitle(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="date">Date et heure</Label>
+                  <Input
+                    id="date"
+                    type="datetime-local"
+                    value={newEventDate}
+                    onChange={(e) => setNewEventDate(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="place">Lieu</Label>
+                  <Input
+                    id="place"
+                    placeholder="Parc des Buttes-Chaumont..."
+                    value={newEventPlace}
+                    onChange={(e) => setNewEventPlace(e.target.value)}
+                  />
+                </div>
+                <Button onClick={handleCreateEvent} className="w-full">
+                  Créer la balade
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
 
         {/* Quick Action */}
@@ -113,54 +165,16 @@ export default function Balades() {
           <TabsContent value="events" className="space-y-4">
             <div className="flex justify-between items-center">
               <h2 className="text-xl font-semibold">Balades à venir</h2>
-              <Dialog open={isCreating} onOpenChange={setIsCreating}>
-                <DialogTrigger asChild>
-                  <Button>
-                    <Plus className="mr-2 h-4 w-4" />
-                    Organiser
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Organiser une balade</DialogTitle>
-                  </DialogHeader>
-                  <div className="space-y-4">
-                    <div>
-                      <Label htmlFor="title">Titre</Label>
-                      <Input
-                        id="title"
-                        placeholder="Balade au parc..."
-                        value={newEventTitle}
-                        onChange={(e) => setNewEventTitle(e.target.value)}
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="date">Date et heure</Label>
-                      <Input
-                        id="date"
-                        type="datetime-local"
-                        value={newEventDate}
-                        onChange={(e) => setNewEventDate(e.target.value)}
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="place">Lieu</Label>
-                      <Input
-                        id="place"
-                        placeholder="Parc des Buttes-Chaumont..."
-                        value={newEventPlace}
-                        onChange={(e) => setNewEventPlace(e.target.value)}
-                      />
-                    </div>
-                    <Button onClick={handleCreateEvent} className="w-full">
-                      Créer la balade
-                    </Button>
-                  </div>
-                </DialogContent>
-              </Dialog>
             </div>
 
-            {events && events.length > 0 ? (
+            {!eventsLoading && events && events.length === 0 && (
+              <div className="mb-4 rounded-2xl border border-dashed border-amber-200 bg-amber-50 px-4 py-3 text-xs text-amber-900">
+                Aucune balade prévue pour l'instant dans ta zone.  
+                Tu peux lancer la première et donner le ton aux autres maîtres 🐶
+              </div>
+            )}
+
+            {events && events.length > 0 && (
               <div className="space-y-3">
                 {events.map((event) => {
                   const isParticipant = event.participants?.some((p: any) => p.user_id === user?.id);
@@ -210,12 +224,6 @@ export default function Balades() {
                   );
                 })}
               </div>
-            ) : (
-              <Card className="p-8 text-center">
-                <Calendar className="h-12 w-12 mx-auto mb-3 text-muted-foreground" />
-                <p className="text-muted-foreground">Aucune balade prévue pour le moment</p>
-                <p className="text-sm text-muted-foreground mt-1">Organise la première !</p>
-              </Card>
             )}
           </TabsContent>
 
@@ -223,7 +231,14 @@ export default function Balades() {
           <TabsContent value="friends" className="space-y-4">
             <h2 className="text-xl font-semibold">Amis en balade maintenant</h2>
             
-            {friendsWalks && friendsWalks.length > 0 ? (
+            {!friendsWalksLoading && friendsWalks && friendsWalks.length === 0 && (
+              <div className="mb-4 rounded-2xl border border-dashed border-blue-200 bg-blue-50 px-4 py-3 text-xs text-blue-900">
+                Aucun ami en balade pour le moment.  
+                Invite tes amis à rejoindre Whoof pour suivre leurs balades 🤝
+              </div>
+            )}
+            
+            {friendsWalks && friendsWalks.length > 0 && (
               <div className="space-y-3">
                 {friendsWalks.map((walk: any) => (
                   <Card key={walk.id}>
@@ -244,11 +259,6 @@ export default function Balades() {
                   </Card>
                 ))}
               </div>
-            ) : (
-              <Card className="p-8 text-center">
-                <Users className="h-12 w-12 mx-auto mb-3 text-muted-foreground" />
-                <p className="text-muted-foreground">Aucun ami en balade pour le moment</p>
-              </Card>
             )}
           </TabsContent>
 
@@ -256,7 +266,14 @@ export default function Balades() {
           <TabsContent value="history" className="space-y-4">
             <h2 className="text-xl font-semibold">Mes balades récentes</h2>
             
-            {myWalks && myWalks.length > 0 ? (
+            {!walksLoading && myWalks && myWalks.length === 0 && (
+              <div className="mb-4 rounded-2xl border border-dashed border-purple-200 bg-purple-50 px-4 py-3 text-xs text-purple-900">
+                Tu n'as pas encore de balades enregistrées.  
+                Démarre ta première balade pour commencer ton historique 🐾
+              </div>
+            )}
+            
+            {myWalks && myWalks.length > 0 && (
               <div className="space-y-3">
                 {myWalks.slice(0, 10).map((walk) => (
                   <Card key={walk.id}>
@@ -287,12 +304,6 @@ export default function Balades() {
                   </Card>
                 ))}
               </div>
-            ) : (
-              <Card className="p-8 text-center">
-                <Clock className="h-12 w-12 mx-auto mb-3 text-muted-foreground" />
-                <p className="text-muted-foreground">Aucune balade enregistrée</p>
-                <p className="text-sm text-muted-foreground mt-1">Lance ta première balade !</p>
-              </Card>
             )}
           </TabsContent>
         </Tabs>
