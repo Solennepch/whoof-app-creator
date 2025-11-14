@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 
 // Stripe product IDs for pro tiers
@@ -38,10 +39,11 @@ interface SubscriptionStatus {
 
 // Get subscription status from backend
 export const useProSubscriptionStatus = () => {
+  const { session } = useAuth();
+  
   return useQuery({
     queryKey: ['pro-subscription-status'],
     queryFn: async () => {
-      const { data: { session } } = await supabase.auth.getSession();
       if (!session) return { subscribed: false, tier: null };
 
       const { data, error } = await supabase.functions.invoke('pro-subscription-status');
