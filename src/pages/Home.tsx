@@ -160,7 +160,7 @@ export default function Home() {
           <Button
             variant="outline"
             className="h-20 flex flex-col items-start justify-center rounded-2xl px-3 text-left"
-            onClick={() => navigate("/events")}
+            onClick={() => navigate("/social-events")}
           >
             <Calendar className="h-4 w-4 mb-1 text-muted-foreground" />
             <span className="text-xs text-muted-foreground">Événements</span>
