@@ -94,7 +94,7 @@ function ProfileContent() {
           
           <div className="flex gap-3 justify-center">
             <Button
-              onClick={() => navigate('/')}
+              onClick={() => navigate('/home')}
               variant="outline"
               className="rounded-2xl"
             >

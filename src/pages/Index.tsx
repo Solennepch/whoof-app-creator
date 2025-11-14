@@ -5,10 +5,34 @@ import logoWhoof from "@/assets/logo-whoof-v3.png";
 import { motion } from "framer-motion";
 import { ChallengeWidget } from "@/components/events/ChallengeWidget";
 import { useAuth } from "@/hooks/useAuth";
+import { useEffect } from "react";
 
 const Index = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+
+  // Redirect authenticated users to /home
+  useEffect(() => {
+    if (!loading && user) {
+      navigate('/home', { replace: true });
+    }
+  }, [user, loading, navigate]);
+
+  // Show loading state while checking auth
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
+        <div className="text-center">
+          <img 
+            src={logoWhoof} 
+            alt="Whoof Logo" 
+            className="h-24 w-24 sm:h-32 sm:w-32 mx-auto mb-4 animate-pulse"
+          />
+          <p className="text-muted-foreground">Chargement...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>

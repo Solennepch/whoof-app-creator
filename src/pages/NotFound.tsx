@@ -66,7 +66,7 @@ export default function NotFound() {
           
           <Button
             size="lg"
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/home')}
             className="w-full sm:w-auto"
           >
             <Home className="mr-2 h-5 w-5" />

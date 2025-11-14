@@ -248,7 +248,7 @@ function ProfileOnboardingContent() {
                 type="button"
                 variant="outline"
                 className="flex-1 rounded-2xl"
-                onClick={() => navigate('/')}
+                onClick={() => navigate('/home')}
                 disabled={isLoading}
               >
                 Plus tard
