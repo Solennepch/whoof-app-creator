@@ -78,7 +78,9 @@ const PageLoader = () => (
 );
 
 const App = () => {
-  const isDev = import.meta.env.MODE !== "production";
+  const isDev = import.meta.env.DEV;
+  
+  console.log('🔧 App - isDev:', isDev, '| MODE:', import.meta.env.MODE, '| Creating debug routes');
   
   return (
     <QueryClientProvider client={queryClient}>
@@ -91,15 +93,13 @@ const App = () => {
                 <Sonner />
                 <Suspense fallback={<PageLoader />}>
               <Routes>
-                {/* Debug routes - accessible en mode dev */}
-                {isDev && (
-                  <>
-                    <Route path="/debug" element={<PageErrorBoundary><Debug /></PageErrorBoundary>} />
-                    <Route path="/debug/health" element={<PageErrorBoundary><DebugHealth /></PageErrorBoundary>} />
-                    <Route path="/debug/test-accounts" element={<PageErrorBoundary><TestAccounts /></PageErrorBoundary>} />
-                    <Route path="/debug/feature-flags" element={<PageErrorBoundary><FeatureFlags /></PageErrorBoundary>} />
-                  </>
-                )}
+                {/* Debug routes - toujours accessibles temporairement pour debug */}
+                <>
+                  <Route path="/debug" element={<PageErrorBoundary><Debug /></PageErrorBoundary>} />
+                  <Route path="/debug/health" element={<PageErrorBoundary><DebugHealth /></PageErrorBoundary>} />
+                  <Route path="/debug/test-accounts" element={<PageErrorBoundary><TestAccounts /></PageErrorBoundary>} />
+                  <Route path="/debug/feature-flags" element={<PageErrorBoundary><FeatureFlags /></PageErrorBoundary>} />
+                </>
                 
                 <Route element={<MainLayout />}>
                   {/* Public routes */}

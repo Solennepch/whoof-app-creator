@@ -157,6 +157,19 @@ export default function Login() {
               Continuer avec Apple
             </Button>
           </div>
+          
+          {/* Debug Access Link - Only in dev mode */}
+          {import.meta.env.DEV && (
+            <div className="mt-6 pt-4 border-t border-border text-center">
+              <button
+                type="button"
+                onClick={() => navigate("/debug/test-accounts")}
+                className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+              >
+                🛠️ Accéder aux comptes de test (dev)
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
