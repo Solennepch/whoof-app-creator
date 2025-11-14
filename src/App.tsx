@@ -11,6 +11,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { PageErrorBoundary } from "@/components/common/PageErrorBoundary";
 import { queryClient } from "@/lib/queryClient";
 import { MainLayout } from "@/components/layout/MainLayout";
+import { useIsAdmin } from "@/hooks/useIsAdmin";
 
 // Eager loading for critical routes
 import Index from "./pages/Index";
@@ -79,8 +80,59 @@ const PageLoader = () => (
   </div>
 );
 
-const App = () => {
+const DebugRoutes = () => {
   const isDev = import.meta.env.MODE !== "production";
+  const { isAdmin, isLoading } = useIsAdmin();
+  
+  if (isLoading) {
+    return null;
+  }
+  
+  const canAccessDebug = isDev || isAdmin;
+  
+  if (!canAccessDebug) {
+    return null;
+  }
+  
+  return (
+    <>
+      <Route
+        path="/debug"
+        element={
+          <PageErrorBoundary>
+            <Debug />
+          </PageErrorBoundary>
+        }
+      />
+      <Route
+        path="/debug/health"
+        element={
+          <PageErrorBoundary>
+            <DebugHealth />
+          </PageErrorBoundary>
+        }
+      />
+      <Route
+        path="/debug/test-accounts"
+        element={
+          <PageErrorBoundary>
+            <TestAccounts />
+          </PageErrorBoundary>
+        }
+      />
+      <Route
+        path="/debug/feature-flags"
+        element={
+          <PageErrorBoundary>
+            <FeatureFlags />
+          </PageErrorBoundary>
+        }
+      />
+    </>
+  );
+};
+
+const App = () => {
   
   return (
     <QueryClientProvider client={queryClient}>
@@ -148,15 +200,8 @@ const App = () => {
                   <Route path="*" element={<PageErrorBoundary><NotFound /></PageErrorBoundary>} />
                 </Route>
                 
-                {/* Debug routes - outside MainLayout (dev only) */}
-                {isDev && (
-                  <>
-                    <Route path="/debug" element={<PageErrorBoundary><Debug /></PageErrorBoundary>} />
-                    <Route path="/debug/health" element={<PageErrorBoundary><DebugHealth /></PageErrorBoundary>} />
-                    <Route path="/debug/test-accounts" element={<PageErrorBoundary><TestAccounts /></PageErrorBoundary>} />
-                    <Route path="/debug/feature-flags" element={<PageErrorBoundary><FeatureFlags /></PageErrorBoundary>} />
-                  </>
-                )}
+                {/* Debug routes - accessible en dev ou pour les admins */}
+                <DebugRoutes />
               </Routes>
             </Suspense>
             </GamificationProvider>
