@@ -115,7 +115,11 @@ export default function TestAccounts() {
 
   const switchAccount = async (account: TestAccount) => {
     try {
+      // First sign out completely
       await supabase.auth.signOut();
+      
+      // Wait to ensure sign out is fully processed
+      await new Promise(resolve => setTimeout(resolve, 500));
       
       const { data, error } = await supabase.auth.signInWithPassword({
         email: account.email,
@@ -133,15 +137,13 @@ export default function TestAccounts() {
         return;
       }
 
+      // Wait for session to be fully established before navigating
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
       toast.success(`Connecté en tant que ${account.displayName}`);
       
-      setTimeout(() => {
-        if (account.isPro) {
-          navigate("/pro/home");
-        } else {
-          navigate("/home");
-        }
-      }, 500);
+      // Let useAuth handle navigation automatically
+      // This prevents conflicts between multiple navigation calls
     } catch (error: any) {
       console.error('Error switching account:', error);
       toast.error(error.message || "Erreur lors du changement de compte");
