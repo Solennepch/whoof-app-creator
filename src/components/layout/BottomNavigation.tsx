@@ -11,7 +11,7 @@ export function BottomNavigation() {
 
   const navItems = [
     { to: "/map", icon: Map, label: "Explore" },
-    { to: "/discover", icon: Heart, label: "Matche" },
+    { to: "/match", icon: Heart, label: "Matche" },
     { to: "/messages", icon: MessageCircle, label: "Messages" },
     { to: "/balades", icon: Calendar, label: "Balades" },
     { to: "/ranking", icon: Trophy, label: "Classement" },
