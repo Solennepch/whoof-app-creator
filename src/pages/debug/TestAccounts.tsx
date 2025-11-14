@@ -19,8 +19,8 @@ const TEST_ACCOUNTS: TestAccount[] = [
   {
     email: "dev@whoof.app",
     password: "DevMaster2025!",
-    displayName: "👑 Dev Master (ALL ACCESS)",
-    role: "admin",
+    displayName: "👑 Dev Master (Particulier + Pro)",
+    role: "user",
     isPro: true
   },
   {
@@ -33,14 +33,14 @@ const TEST_ACCOUNTS: TestAccount[] = [
   {
     email: "test.user@whoof.app",
     password: "TestUser123!",
-    displayName: "Anthony Groubé",
+    displayName: "Anthony Groubé (Particulier)",
     role: "user",
     isPro: false
   },
   {
     email: "test.pro@whoof.app",
     password: "TestPro123!",
-    displayName: "Rodolphe Pichon",
+    displayName: "Rodolphe Pichon (Pro)",
     role: "user",
     isPro: true
   }
@@ -257,18 +257,17 @@ export default function TestAccounts() {
               <div className="flex items-start justify-between">
                 <div>
                   <CardTitle className="flex items-center gap-2">
-                    {account.role === 'admin' && <Shield className="h-5 w-5 text-destructive" />}
+                    {account.email === 'dev@whoof.app' && <Shield className="h-5 w-5 text-purple-500" />}
                     {account.isPro && <Briefcase className="h-5 w-5 text-primary" />}
-                    {!account.isPro && account.role !== 'admin' && <User className="h-5 w-5 text-muted-foreground" />}
+                    {!account.isPro && <User className="h-5 w-5 text-muted-foreground" />}
                     {account.displayName}
                   </CardTitle>
                   <CardDescription className="mt-1">{account.email}</CardDescription>
                 </div>
                 <div className="flex gap-2 flex-wrap">
                   {account.email === 'dev@whoof.app' && <Badge className="bg-gradient-to-r from-purple-600 to-pink-600">👑 DEV</Badge>}
-                  {account.role === 'admin' && <Badge variant="destructive">Admin</Badge>}
                   {account.isPro && <Badge variant="secondary">Pro</Badge>}
-                  {!account.isPro && account.role !== 'admin' && account.email !== 'dev@whoof.app' && <Badge variant="outline">User</Badge>}
+                  {!account.isPro && <Badge variant="outline">Particulier</Badge>}
                 </div>
               </div>
             </CardHeader>
@@ -297,7 +296,7 @@ export default function TestAccounts() {
         </CardHeader>
         <CardContent className="text-sm space-y-2">
           <div className="bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/20 dark:to-pink-900/20 p-3 rounded-lg border-2 border-purple-300 dark:border-purple-700">
-            <span className="font-bold">👑 Dev Master:</span> Compte développeur ultime avec TOUS LES ACCÈS (admin + moderator + pro + premium). Permet de tester toutes les fonctionnalités sans restriction.
+            <span className="font-bold">👑 Dev Master:</span> Navigation complète avec accès particulier + professionnel. Permet de tester toutes les fonctionnalités des deux types de comptes.
           </div>
           <div>
             <span className="font-medium">Solenne Pichon:</span> Compte combo avec profil personnel ET professionnel. Utilisez le double-tap sur l'avatar ou "Changer de compte" pour basculer entre les deux modes.
@@ -307,9 +306,6 @@ export default function TestAccounts() {
           </div>
           <div>
             <span className="font-medium">Rodolphe Pichon:</span> Compte professionnel uniquement.
-          </div>
-          <div>
-            <span className="font-medium">Admin:</span> Compte administrateur avec accès à la modération et toutes les fonctionnalités.
           </div>
         </CardContent>
       </Card>
