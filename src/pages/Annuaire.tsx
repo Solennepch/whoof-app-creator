@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { MapPin, Phone, Navigation as NavigationIcon, ExternalLink, Map as MapIcon, Dog } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useToast } from "@/hooks/use-toast";
 
 const CATEGORIES = [
   { value: 'veterinaire', label: 'Vétérinaire' },
@@ -32,6 +33,7 @@ interface ProAccount {
 export default function Annuaire() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
+  const { toast } = useToast();
   const [pros, setPros] = useState<ProAccount[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -70,7 +72,12 @@ export default function Annuaire() {
       const data = await response.json();
       setPros(data);
     } catch (error) {
-      console.error('Error loading pros:', error);
+      console.error("Error loading pros:", error);
+      toast({
+        title: "Impossible de charger l'annuaire",
+        description: "Vérifie ta connexion ou réessaie dans quelques instants.",
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -90,7 +97,13 @@ export default function Annuaire() {
           });
         },
         (error) => {
-          console.error('Error getting location:', error);
+          console.error("Error getting location:", error);
+          toast({
+            title: "Géolocalisation désactivée",
+            description:
+              "On ne peut pas ajuster le rayon autour de toi sans ton autorisation. Tu peux l'activer dans les réglages de ton navigateur.",
+            variant: "destructive",
+          });
         }
       );
     }
@@ -121,8 +134,12 @@ export default function Annuaire() {
           <h1 className="text-3xl font-bold mb-2 text-foreground">
             Annuaire des professionnels
           </h1>
-          <p className="text-muted-foreground">
-            Trouvez les meilleurs professionnels près de chez vous
+          <p className="text-sm text-muted-foreground">
+            {isLoading
+              ? "Chargement des professionnels…"
+              : pros.length === 0
+                ? "Aucun professionnel trouvé pour le moment avec ces critères."
+                : `${pros.length} professionnel${pros.length > 1 ? "s" : ""} trouvé${pros.length > 1 ? "s" : ""} dans cette zone.`}
           </p>
         </div>
 
