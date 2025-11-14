@@ -462,21 +462,33 @@ export type Database = {
       direct_threads: {
         Row: {
           a: string
+          archived_by: string[] | null
           b: string
           created_at: string | null
+          deleted_by: string[] | null
           id: string
+          pinned_by: string[] | null
+          updated_at: string | null
         }
         Insert: {
           a: string
+          archived_by?: string[] | null
           b: string
           created_at?: string | null
+          deleted_by?: string[] | null
           id?: string
+          pinned_by?: string[] | null
+          updated_at?: string | null
         }
         Update: {
           a?: string
+          archived_by?: string[] | null
           b?: string
           created_at?: string | null
+          deleted_by?: string[] | null
           id?: string
+          pinned_by?: string[] | null
+          updated_at?: string | null
         }
         Relationships: [
           {
