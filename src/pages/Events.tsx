@@ -1,137 +1,238 @@
-import { useState } from "react";
-import { Calendar, MapPin, Users, Plus } from "lucide-react";
-import { IconContainer } from "@/components/ui/IconContainer";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-
-const mockEvents = [
-  {
-    title: "Balade au Parc Central",
-    date: "Sam 15 Juin • 10h00",
-    location: "Parc Central, Paris",
-    attendees: 12,
-    image: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=400&h=300&fit=crop",
-  },
-  {
-    title: "Cours d'agility débutant",
-    date: "Dim 16 Juin • 14h30",
-    location: "Club Canin Nord",
-    attendees: 8,
-    image: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=400&h=300&fit=crop",
-  },
-  {
-    title: "Rencontre Grands Chiens",
-    date: "Mer 19 Juin • 18h00",
-    location: "Bois de Vincennes",
-    attendees: 15,
-    image: "https://images.unsplash.com/photo-1534361960057-19889db9621e?w=400&h=300&fit=crop",
-  },
-];
+import { motion } from "framer-motion";
+import { Trophy, Calendar, Award, TrendingUp, Gift, Sparkles } from "lucide-react";
+import { useEvents } from "@/hooks/useEvents";
+import { useUserBadges, useUserXP } from "@/hooks/useGamification";
+import { useAuth } from "@/hooks/useAuth";
+import { Progress } from "@/components/ui/progress";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
+import { XpProgress, levelForXp } from "@/components/ui/XpProgress";
 
 export default function Events() {
-  const [open, setOpen] = useState(false);
+  const { user } = useAuth();
+  const { currentEvent, currentChallenge, challengeProgress, isLoading: eventsLoading } = useEvents();
+  const { data: badges, isLoading: badgesLoading } = useUserBadges(user?.id);
+  const { data: xpData, isLoading: xpLoading } = useUserXP(user?.id);
+
+  const isLoading = eventsLoading || badgesLoading || xpLoading;
+
+  const progress = challengeProgress?.currentProgress || 0;
+  const target = currentChallenge?.objectiveTarget || 1;
+  const percentage = Math.min((progress / target) * 100, 100);
+  const isCompleted = challengeProgress?.isCompleted || false;
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 p-6">
+        <div className="max-w-4xl mx-auto space-y-6">
+          <Skeleton className="h-32 w-full" />
+          <Skeleton className="h-64 w-full" />
+          <Skeleton className="h-48 w-full" />
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen pb-24" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
-      <div className="mx-auto max-w-4xl px-4 pt-20">
-        <div className="mb-6 flex items-center justify-between">
-          <div>
-            <h1 className="mb-2 text-3xl font-bold text-foreground">
-              Événements
-            </h1>
-            <p className="text-muted-foreground">Rejoins des rencontres près de chez toi</p>
-          </div>
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 pb-20">
+      <div className="max-w-4xl mx-auto p-6 space-y-6">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center space-y-2"
+        >
+          <h1 className="text-3xl font-bold text-foreground flex items-center justify-center gap-2">
+            <Sparkles className="h-8 w-8 text-primary" />
+            Événements & Challenges
+          </h1>
+          <p className="text-muted-foreground">
+            Participe aux événements et relève les challenges du mois
+          </p>
+        </motion.div>
 
-          <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-              <Button className="rounded-2xl" style={{ backgroundColor: "var(--brand-plum)" }}>
-                <Plus className="mr-2 h-4 w-4" />
-                Créer
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="rounded-3xl">
-              <DialogHeader>
-                <DialogTitle>Créer un événement</DialogTitle>
-              </DialogHeader>
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="title">Titre</Label>
-                  <Input id="title" placeholder="Ex: Balade au parc" className="rounded-2xl" />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="date">Date</Label>
-                    <Input id="date" type="date" className="rounded-2xl" />
+        {/* Current Event */}
+        {currentEvent && (
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.1 }}
+          >
+            <Card className="bg-gradient-to-br from-primary/10 via-accent/10 to-secondary/10 border-primary/30">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Calendar className="h-5 w-5 text-primary" />
+                  Événement du mois
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-start gap-4">
+                  <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-background text-4xl">
+                    {currentEvent.icon}
                   </div>
-                  <div>
-                    <Label htmlFor="time">Heure</Label>
-                    <Input id="time" type="time" className="rounded-2xl" />
+                  <div className="flex-1">
+                    <h3 className="text-xl font-semibold text-foreground mb-1">
+                      {currentEvent.name}
+                    </h3>
+                    <p className="text-muted-foreground mb-3">{currentEvent.description}</p>
+                    <div className="space-y-2">
+                      {currentEvent.activities.map((activity, idx) => (
+                        <div key={idx} className="flex items-center gap-2 text-sm">
+                          <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                          <span className="text-foreground">{activity}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
-                <div>
-                  <Label htmlFor="location">Lieu</Label>
-                  <Input id="location" placeholder="Adresse ou nom du lieu" className="rounded-2xl" />
-                </div>
-                <div>
-                  <Label htmlFor="description">Description</Label>
-                  <Textarea
-                    id="description"
-                    placeholder="Décris ton événement..."
-                    className="rounded-2xl"
-                    rows={3}
-                  />
-                </div>
-                <Button className="w-full rounded-2xl" style={{ backgroundColor: "var(--brand-plum)" }}>
-                  Publier l'événement
-                </Button>
-              </div>
-            </DialogContent>
-          </Dialog>
-        </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
 
-        {/* Events List */}
-        <div className="space-y-4">
-          {mockEvents.map((event, i) => (
-            <div
-              key={i}
-              className="flex gap-4 rounded-2xl bg-white p-4 shadow-soft ring-1 ring-black/5 transition hover:shadow-md"
-            >
-              <div className="flex flex-col gap-2">
-                <div
-                  className="h-24 w-32 flex-shrink-0 rounded-2xl bg-cover bg-center ring-1 ring-black/5"
-                  style={{ backgroundImage: `url(${event.image})` }}
-                />
-                <Button variant="outline" className="rounded-2xl w-32">
-                  Participer
-                </Button>
-              </div>
-
-              <div className="flex-1">
-                <h3 className="mb-2 text-lg font-semibold" style={{ color: "var(--ink)" }}>
-                  {event.title}
-                </h3>
-
-                <div className="space-y-1 text-sm" style={{ color: "var(--ink)", opacity: 0.7 }}>
-                  <div className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4" />
-                    {event.date}
+        {/* Current Challenge */}
+        {currentChallenge && (
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <Card className="bg-gradient-to-br from-accent/10 via-primary/10 to-secondary/10 border-accent/30">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Trophy className="h-5 w-5 text-accent" />
+                  Challenge du mois
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="flex items-start gap-4">
+                  <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-background text-4xl">
+                    {currentChallenge.badge}
                   </div>
-                  <div className="flex items-center gap-2">
-                    <MapPin className="h-4 w-4" />
-                    {event.location}
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Users className="h-4 w-4" />
-                    {event.attendees} participants
+                  <div className="flex-1">
+                    <h3 className="text-xl font-semibold text-foreground mb-1">
+                      {currentChallenge.name}
+                    </h3>
+                    <p className="text-muted-foreground">{currentChallenge.objective}</p>
                   </div>
                 </div>
-              </div>
-            </div>
-          ))}
-        </div>
+
+                {/* Progress Section */}
+                <div className="space-y-4 p-4 rounded-2xl bg-background/50">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <TrendingUp className="h-5 w-5 text-primary" />
+                      <span className="font-semibold text-foreground">Ta progression</span>
+                    </div>
+                    <Badge variant={isCompleted ? "default" : "secondary"}>
+                      {progress} / {target}
+                    </Badge>
+                  </div>
+
+                  <div className="relative">
+                    <Progress value={percentage} className="h-4" />
+                    {percentage > 0 && (
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: [1, 1.2, 1] }}
+                        transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 2 }}
+                        className="absolute -top-2 left-0 h-8 w-8 rounded-full bg-primary border-4 border-background flex items-center justify-center text-xs font-bold text-primary-foreground"
+                        style={{ left: `calc(${Math.min(percentage, 95)}% - 16px)` }}
+                      >
+                        {Math.round(percentage)}%
+                      </motion.div>
+                    )}
+                  </div>
+
+                  <div className="flex items-start gap-3 p-3 rounded-xl bg-accent/10 border border-accent/20">
+                    <Gift className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="font-medium text-foreground text-sm">Récompense</p>
+                      <p className="text-sm text-muted-foreground">{currentChallenge.reward}</p>
+                    </div>
+                  </div>
+
+                  {isCompleted && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="p-4 rounded-xl bg-primary/10 border border-primary/30 text-center"
+                    >
+                      <Trophy className="h-8 w-8 text-primary mx-auto mb-2 fill-primary" />
+                      <p className="font-semibold text-primary text-lg">Challenge complété ! 🎉</p>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        Félicitations, tu as obtenu ta récompense !
+                      </p>
+                    </motion.div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
+
+        {/* XP Progress */}
+        {xpData && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            <XpProgress
+              current={xpData.total_xp || 0}
+              min={0}
+              max={5400}
+              t={(k) => ({ level: "Niveau" }[k] || k)}
+            />
+          </motion.div>
+        )}
+
+        {/* Badges Collection */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+        >
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Award className="h-5 w-5 text-secondary" />
+                Mes badges ({badges?.length || 0})
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {badges && badges.length > 0 ? (
+                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4">
+                  {badges.map((userBadge) => (
+                    <motion.div
+                      key={userBadge.badge_code}
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      whileHover={{ scale: 1.05 }}
+                      className="flex flex-col items-center gap-2 p-3 rounded-xl bg-gradient-to-br from-primary/5 to-accent/5 border border-border/50 hover:border-primary/50 transition-all"
+                    >
+                      <div className="text-3xl">{userBadge.badge?.icon || "🏆"}</div>
+                      <p className="text-xs text-center font-medium text-foreground line-clamp-2">
+                        {userBadge.badge?.name || "Badge"}
+                      </p>
+                    </motion.div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <Trophy className="h-12 w-12 text-muted-foreground/50 mx-auto mb-3" />
+                  <p className="text-muted-foreground">
+                    Aucun badge pour le moment
+                  </p>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Relève des challenges pour gagner tes premiers badges !
+                  </p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </motion.div>
       </div>
     </div>
   );
