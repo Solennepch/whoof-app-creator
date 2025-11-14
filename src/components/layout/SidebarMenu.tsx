@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Building, Briefcase, Bug, Percent, User, Star, Gift, Crown, Shield, RefreshCw, Settings, Heart } from "lucide-react";
+import { Building, Briefcase, Bug, Percent, User, Star, Gift, Crown, RefreshCw, Settings, Heart } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
@@ -12,7 +12,6 @@ interface SidebarMenuProps {
 }
 
 export function SidebarMenu({ open, onOpenChange }: SidebarMenuProps) {
-  const [isAdmin, setIsAdmin] = useState(false);
   const [isPro, setIsPro] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [showAccountSwitcher, setShowAccountSwitcher] = useState(false);
@@ -26,16 +25,6 @@ export function SidebarMenu({ open, onOpenChange }: SidebarMenuProps) {
           setIsLoading(false);
           return;
         }
-
-        // Check admin role
-        const { data: adminRole } = await supabase
-          .from('user_roles')
-          .select('role')
-          .eq('user_id', user.id)
-          .eq('role', 'admin')
-          .maybeSingle();
-
-        setIsAdmin(!!adminRole);
 
         // Check pro status
         const { data: proProfile } = await supabase
@@ -63,19 +52,17 @@ export function SidebarMenu({ open, onOpenChange }: SidebarMenuProps) {
     return () => subscription.unsubscribe();
   }, [open]);
 
-  // Debug section - always first
+  // Debug section
   const debugItems: Array<{
     to: string;
     icon: React.ElementType;
     label: string;
     premium?: boolean;
   }> = [
-    { to: "/debug/accounts", icon: User, label: "🔧 Comptes Test" },
+    { to: "/debug/test-accounts", icon: User, label: "🔧 Comptes Test" },
+    { to: "/debug/health", icon: Bug, label: "🔧 Debug Health" },
+    { to: "/debug/feature-flags", icon: RefreshCw, label: "🔧 Feature Flags" },
   ];
-
-  if (isAdmin) {
-    debugItems.push({ to: "/debug/health", icon: Bug, label: "🔧 Debug Health" });
-  }
 
   // Main user menu items
   const menuItems: Array<{
@@ -93,15 +80,11 @@ export function SidebarMenu({ open, onOpenChange }: SidebarMenuProps) {
     { to: "/settings", icon: Settings, label: "Paramètres" },
   ];
 
-  // Add Pro/Admin access at the end
+  // Add Pro access at the end
   if (isPro) {
     menuItems.push({ to: "/pro/home", icon: Briefcase, label: "🔷 Espace Pro" });
   } else {
     menuItems.push({ to: "/pro/onboarding", icon: Briefcase, label: "Devenir Pro" });
-  }
-
-  if (isAdmin) {
-    menuItems.push({ to: "/admin", icon: Shield, label: "🛡️ Admin Panel" });
   }
 
   const allItems = [...debugItems, ...menuItems];

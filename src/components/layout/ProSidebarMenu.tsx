@@ -78,7 +78,8 @@ export function ProSidebarMenu({ open, onOpenChange }: ProSidebarMenuProps) {
   };
 
   const debugSection = [
-    { to: "/debug/accounts", icon: QrCode, label: "Comptes Test" },
+    { to: "/debug/test-accounts", icon: QrCode, label: "🔧 Comptes Test" },
+    { to: "/debug/health", icon: HelpCircle, label: "🔧 Debug Health" },
   ];
 
   const activitySection = [
