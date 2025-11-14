@@ -40,6 +40,25 @@ interface ProAccount {
 export default function AnnuaireMap() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  
+  // Early return si pas de token Mapbox
+  if (!mapboxToken) {
+    return (
+      <div className="min-h-screen pb-24 p-4" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
+        <div className="max-w-md mx-auto mt-20 text-center space-y-4">
+          <MapPin className="h-12 w-12 mx-auto text-muted-foreground" />
+          <h2 className="text-xl font-semibold">Carte indisponible</h2>
+          <p className="text-sm text-muted-foreground">
+            La configuration de la carte est incomplète pour le moment. 🗺️
+          </p>
+          <Button onClick={() => navigate('/annuaire')} variant="outline">
+            Retour à la liste
+          </Button>
+        </div>
+      </div>
+    );
+  }
+  
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const [pros, setPros] = useState<ProAccount[]>([]);

@@ -77,6 +77,27 @@ interface POI {
 
 
 export default function Map() {
+  const { toast } = useToast();
+  const navigate = useNavigate();
+  
+  // Early return si pas de token Mapbox
+  if (!mapboxToken) {
+    return (
+      <div className="min-h-screen pb-24 p-4" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
+        <Card className="p-6 text-center space-y-4">
+          <AlertTriangle className="h-12 w-12 mx-auto text-destructive" />
+          <h2 className="text-xl font-semibold">Carte indisponible</h2>
+          <p className="text-sm text-muted-foreground">
+            La configuration de la carte est incomplète pour le moment. 🗺️
+          </p>
+          <Button onClick={() => navigate(-1)} variant="outline">
+            Retour
+          </Button>
+        </Card>
+      </div>
+    );
+  }
+
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const markers = useRef<mapboxgl.Marker[]>([]);
@@ -92,8 +113,6 @@ export default function Map() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [radius, setRadius] = useState(25);
   const [mapError, setMapError] = useState<string | null>(null);
-  const { toast } = useToast();
-  const navigate = useNavigate();
 
   // Generate mock profiles for development
   const generateMockProfiles = (lng: number, lat: number, count: number = 8): NearbyProfile[] => {
