@@ -31,6 +31,11 @@ const Events = lazy(() => import("./pages/Events"));
 const Parrainage = lazy(() => import("./pages/Parrainage"));
 const Ranking = lazy(() => import("./pages/Ranking"));
 const AstroDog = lazy(() => import("./pages/AstroDog"));
+const Annuaire = lazy(() => import("./pages/Annuaire"));
+const AnnuaireDetail = lazy(() => import("./pages/AnnuaireDetail"));
+const AnnuaireMap = lazy(() => import("./pages/AnnuaireMap"));
+const Partenariats = lazy(() => import("./pages/Partenariats"));
+const PartenariatDetail = lazy(() => import("./pages/PartenariatDetail"));
 
 // Onboarding
 const Welcome = lazy(() => import("./pages/onboarding/Welcome"));
@@ -102,7 +107,12 @@ const App = () => {
                 <Route path="/events" element={<PageErrorBoundary><Events /></PageErrorBoundary>} />
                 <Route path="/parrainage" element={<PageErrorBoundary><Parrainage /></PageErrorBoundary>} />
                 <Route path="/ranking" element={<PageErrorBoundary><Ranking /></PageErrorBoundary>} />
-                <Route path="/astrodog" element={<PageErrorBoundary><AstroDog /></PageErrorBoundary>} />
+                <Route path="/astro-dog" element={<PageErrorBoundary><AstroDog /></PageErrorBoundary>} />
+                <Route path="/annuaire" element={<PageErrorBoundary><Annuaire /></PageErrorBoundary>} />
+                <Route path="/annuaire/map" element={<PageErrorBoundary><AnnuaireMap /></PageErrorBoundary>} />
+                <Route path="/annuaire/:id" element={<PageErrorBoundary><AnnuaireDetail /></PageErrorBoundary>} />
+                <Route path="/partenariats" element={<PageErrorBoundary><Partenariats /></PageErrorBoundary>} />
+                <Route path="/partenariats/:id" element={<PageErrorBoundary><PartenariatDetail /></PageErrorBoundary>} />
 
                 {/* Onboarding */}
                 <Route path="/onboarding/welcome" element={<PageErrorBoundary><Welcome /></PageErrorBoundary>} />
@@ -126,7 +136,6 @@ const App = () => {
                 <Route path="/pro/services" element={<PageErrorBoundary><ProServices /></PageErrorBoundary>} />
                 <Route path="/pro/settings" element={<PageErrorBoundary><ProSettings /></PageErrorBoundary>} />
 
-                  {/* Admin */}
                   {/* Fallback */}
                   <Route path="*" element={<PageErrorBoundary><NotFound /></PageErrorBoundary>} />
                 </Route>
