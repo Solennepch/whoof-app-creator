@@ -113,6 +113,7 @@ export default function Map() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [radius, setRadius] = useState(25);
   const [mapError, setMapError] = useState<string | null>(null);
+  const [geoDenied, setGeoDenied] = useState(false);
 
   // Generate mock profiles for development
   const generateMockProfiles = (lng: number, lat: number, count: number = 8): NearbyProfile[] => {
@@ -732,9 +733,11 @@ export default function Map() {
         (error) => {
           // Fallback to Paris if geolocation fails
           console.log('⚠️ Geolocation failed, using default location (Paris):', error.message);
+          setGeoDenied(true);
           toast({
-            title: "Localisation désactivée",
-            description: "Affichage de Paris par défaut. Activez la géolocalisation pour voir votre position.",
+            title: "Géolocalisation désactivée",
+            description: "On ne peut pas afficher ta position sans ton autorisation. Tu peux l'activer dans les réglages de ton navigateur.",
+            variant: "destructive",
           });
           initMap(userLocation);
         },
@@ -792,9 +795,10 @@ export default function Map() {
         },
         (error) => {
           console.error('Error getting location:', error);
+          setGeoDenied(true);
           toast({
-            title: "Erreur",
-            description: "Impossible d'obtenir votre position",
+            title: "Géolocalisation désactivée",
+            description: "On ne peut pas afficher ta position sans ton autorisation. Tu peux l'activer dans les réglages de ton navigateur.",
             variant: "destructive",
           });
         }
@@ -906,6 +910,17 @@ export default function Map() {
           </div>
         </div>
 
+        {/* Geolocation Denied Warning */}
+        {geoDenied && (
+          <div className="mx-auto max-w-6xl px-4 mb-3">
+            <div className="rounded-lg bg-amber-50 border border-amber-200 px-3 py-2 text-xs text-amber-900">
+              La carte fonctionne mieux avec ta localisation, mais tu peux tout à fait
+              utiliser WHOOF sans 😊  
+              Tu verras les balades et lieux autour de ta ville même sans ta position précise.
+            </div>
+          </div>
+        )}
+
         <div className="grid gap-4 md:gap-6 lg:grid-cols-3">
           {/* Interactive Map - Responsive height */}
           <div className="lg:col-span-2">
@@ -928,10 +943,18 @@ export default function Map() {
                 </Button>
               </Card>
             ) : (
-              <div 
-                ref={mapContainer} 
-                className="h-[400px] md:h-[500px] lg:h-[600px] rounded-2xl md:rounded-3xl shadow-soft ring-1 ring-black/5" 
-              />
+              <div className="relative">
+                {/* BETA Badge */}
+                <div className="absolute top-4 right-4 z-10">
+                  <span className="rounded-full bg-white/80 px-3 py-1 text-[10px] font-medium text-gray-700 shadow-sm backdrop-blur">
+                    Carte en BÊTA 🚧
+                  </span>
+                </div>
+                <div 
+                  ref={mapContainer} 
+                  className="h-[400px] md:h-[500px] lg:h-[600px] rounded-2xl md:rounded-3xl shadow-soft ring-1 ring-black/5" 
+                />
+              </div>
             )}
           </div>
 
