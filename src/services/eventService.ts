@@ -7,6 +7,7 @@ import {
   type ContextualEvent 
 } from '@/lib/events/contextualEvents';
 import { sendNotification } from './notificationService';
+import { trackChallengeCompletionActivity, trackMilestoneActivity } from './activityService';
 
 export interface ChallengeProgress {
   userId: string;
@@ -67,7 +68,7 @@ export const trackChallengeProgress = async (
     const progressPercentage = Math.floor((currentProgress / challenge.objectiveTarget) * 100);
     const previousPercentage = Math.floor(((existing?.current_progress || 0) / challenge.objectiveTarget) * 100);
     
-    // Notification de completion avec confettis
+    // Notification de completion avec confettis et activité
     if (isCompleted && !existing?.is_completed) {
       await sendNotification({
         userId,
@@ -75,6 +76,9 @@ export const trackChallengeProgress = async (
         data: { badgeName: challenge.reward },
         force: true, // Force l'envoi pour les achievements
       });
+      
+      // Créer une activité dans le feed
+      await trackChallengeCompletionActivity(userId, challenge.name, challenge.badge);
       
       // Déclencher les confettis côté client via event
       if (typeof window !== 'undefined') {
@@ -107,6 +111,11 @@ export const trackChallengeProgress = async (
             message: challenge.notificationMessages[messageIndex] 
           },
         });
+        
+        // Créer une activité pour les jalons importants (50% et 75%)
+        if (reachedMilestone >= 50) {
+          await trackMilestoneActivity(userId, reachedMilestone, challenge.name);
+        }
         
         // Déclencher confettis pour les milestones
         if (typeof window !== 'undefined' && reachedMilestone >= 50) {
