@@ -1,11 +1,22 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Trophy, Dog, User, Star, Sparkles } from "lucide-react";
+import { Trophy, Dog, User, Star, Sparkles, Calendar, Award, Gift } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useWeeklyLeaderboard, useUserXP } from "@/hooks/useGamification";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useEvents } from "@/hooks/useEvents";
+import { useAuth } from "@/hooks/useAuth";
+import { DailyChallenges } from "@/components/events/DailyChallenges";
+import { ChallengeHistory } from "@/components/events/ChallengeHistory";
+import { ChallengeLeaderboard } from "@/components/events/ChallengeLeaderboard";
+import { LeagueStandings } from "@/components/events/LeagueStandings";
+import { SeasonCard } from "@/components/events/SeasonCard";
+import { GamificationWrapper } from "@/components/gamification/GamificationWrapper";
 
 export default function Ranking() {
-  const [activeTab, setActiveTab] = useState("weekly");
+  const [activeTab, setActiveTab] = useState("ranking");
+  const { user } = useAuth();
+  const { currentChallenge, challengeProgress } = useEvents();
 
   const { data: session } = useQuery({
     queryKey: ["session"],
@@ -55,9 +66,28 @@ export default function Ranking() {
         {/* Header */}
         <div className="pt-20 pb-4">
           <h1 className="text-3xl font-bold text-center text-foreground">
-            Classement
+            Classement & Challenges
           </h1>
         </div>
+
+        {/* Season Card */}
+        <SeasonCard />
+
+        {/* Tabs */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="ranking">
+              <Trophy className="mr-2 h-4 w-4" />
+              Classement
+            </TabsTrigger>
+            <TabsTrigger value="challenges">
+              <Award className="mr-2 h-4 w-4" />
+              Challenges
+            </TabsTrigger>
+          </TabsList>
+
+          {/* Ranking Tab */}
+          <TabsContent value="ranking" className="space-y-5">
 
         {/* Sticky Summary Card */}
         {myRanking && myRank !== undefined && (
@@ -188,6 +218,27 @@ export default function Ranking() {
             })
           )}
         </ul>
+          </TabsContent>
+
+          {/* Challenges Tab */}
+          <TabsContent value="challenges" className="space-y-6">
+            <GamificationWrapper feature="showChallenges">
+              <DailyChallenges />
+            </GamificationWrapper>
+
+            <GamificationWrapper feature="showChallenges">
+              <ChallengeHistory />
+            </GamificationWrapper>
+
+            <GamificationWrapper feature="showLeaderboard">
+              <ChallengeLeaderboard />
+            </GamificationWrapper>
+
+            <GamificationWrapper feature="showLeaderboard">
+              <LeagueStandings />
+            </GamificationWrapper>
+          </TabsContent>
+        </Tabs>
       </main>
     </div>
   );
