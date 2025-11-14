@@ -20,13 +20,14 @@ export function SwipeTutorial({ show, onClose }: SwipeTutorialProps) {
             onClick={onClose}
           />
           <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="fixed inset-x-4 top-1/2 -translate-y-1/2 z-50 bg-white rounded-3xl shadow-2xl p-6 max-w-md mx-auto max-h-[85vh] overflow-y-auto"
-            style={{ marginBottom: 'env(safe-area-inset-bottom)' }}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 bg-white rounded-3xl shadow-2xl p-6 w-[calc(100%-2rem)] max-w-md"
+            style={{ maxHeight: 'calc(100vh - 140px)' }}
           >
-            <div className="text-center">
+            <div className="overflow-y-auto max-h-full">
+              <div className="text-center">
               <h2 className="text-2xl font-bold mb-2">Comment swiper ?</h2>
               <p className="text-muted-foreground text-sm mb-6">
                 Glisse la carte pour découvrir des copains
@@ -86,6 +87,7 @@ export function SwipeTutorial({ show, onClose }: SwipeTutorialProps) {
               >
                 J'ai compris !
               </Button>
+              </div>
             </div>
           </motion.div>
         </>
