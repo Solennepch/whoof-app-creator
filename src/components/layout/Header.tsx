@@ -5,16 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { SidebarMenu } from "./SidebarMenu";
 import { ProSidebarMenu } from "./ProSidebarMenu";
-import { AdminSidebarMenu } from "./AdminSidebarMenu";
 import { QuickSwitchButton } from "./QuickSwitchButton";
-import { AdminNotificationBell } from "@/components/admin/AdminNotificationBell";
 import logoWhoof from "@/assets/logo-whoof-v3.png";
 
 export function Header() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
   const isProRoute = location.pathname.startsWith('/pro');
-  const isAdminRoute = location.pathname.startsWith('/admin') || location.pathname.startsWith('/debug');
+  const isDebugRoute = location.pathname.startsWith('/debug');
 
   return (
     <>
@@ -50,20 +48,22 @@ export function Header() {
                     PRO
                   </Badge>
                 )}
+                {isDebugRoute && (
+                  <Badge variant="destructive" className="text-xs font-bold">
+                    DEBUG
+                  </Badge>
+                )}
               </div>
             </div>
 
             <div className="flex items-center gap-3">
-              {isAdminRoute && <AdminNotificationBell />}
-              {!isAdminRoute && <QuickSwitchButton />}
+              {!isDebugRoute && <QuickSwitchButton />}
             </div>
           </div>
         </div>
       </header>
 
-      {isAdminRoute ? (
-        <AdminSidebarMenu open={sidebarOpen} onOpenChange={setSidebarOpen} />
-      ) : isProRoute ? (
+      {isProRoute ? (
         <ProSidebarMenu open={sidebarOpen} onOpenChange={setSidebarOpen} />
       ) : (
         <SidebarMenu open={sidebarOpen} onOpenChange={setSidebarOpen} />
