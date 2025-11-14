@@ -3,6 +3,8 @@ import { DogCard } from "@/components/feed/DogCard";
 import { Sparkles, TrendingUp, Award, Briefcase } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { InteractiveTutorial } from "@/components/tutorial/InteractiveTutorial";
+import { TUTORIALS } from "@/config/tutorials";
 
 const mockDogs = [
   {
@@ -135,6 +137,12 @@ export default function Home() {
           ))}
         </div>
       </div>
+
+      {/* Interactive Tutorial */}
+      <InteractiveTutorial
+        tutorialId="welcome"
+        steps={TUTORIALS.welcome.steps}
+      />
     </div>
   );
 }

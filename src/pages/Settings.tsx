@@ -2,6 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import NotificationPreferences from "@/components/settings/NotificationPreferences";
 import { GamificationSettings } from "@/components/settings/GamificationSettings";
+import { NotificationPreferencesGamification } from "@/components/settings/NotificationPreferencesGamification";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -37,6 +38,8 @@ export default function Settings() {
           </Card>
 
           <NotificationPreferences />
+
+          <NotificationPreferencesGamification />
 
           <GamificationSettings />
         </div>

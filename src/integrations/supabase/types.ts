@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      ab_test_groups: {
+        Row: {
+          created_at: string | null
+          gamification_config: Json
+          id: string
+          is_active: boolean | null
+          test_name: string
+          traffic_percentage: number
+          variant_name: string
+        }
+        Insert: {
+          created_at?: string | null
+          gamification_config: Json
+          id?: string
+          is_active?: boolean | null
+          test_name: string
+          traffic_percentage?: number
+          variant_name: string
+        }
+        Update: {
+          created_at?: string | null
+          gamification_config?: Json
+          id?: string
+          is_active?: boolean | null
+          test_name?: string
+          traffic_percentage?: number
+          variant_name?: string
+        }
+        Relationships: []
+      }
       ab_test_results: {
         Row: {
           ab_test_id: string
@@ -848,6 +878,90 @@ export type Database = {
           },
         ]
       }
+      gamification_analytics: {
+        Row: {
+          created_at: string | null
+          event_type: string
+          feature: string
+          focus_mode_active: boolean | null
+          gamification_level: string | null
+          id: string
+          metadata: Json | null
+          session_id: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          event_type: string
+          feature: string
+          focus_mode_active?: boolean | null
+          gamification_level?: string | null
+          id?: string
+          metadata?: Json | null
+          session_id?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          event_type?: string
+          feature?: string
+          focus_mode_active?: boolean | null
+          gamification_level?: string | null
+          id?: string
+          metadata?: Json | null
+          session_id?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      gamification_preferences: {
+        Row: {
+          created_at: string | null
+          focus_mode_active: boolean | null
+          hide_badges: boolean | null
+          hide_challenges: boolean | null
+          hide_cosmetics: boolean | null
+          hide_daily_missions: boolean | null
+          hide_guilds: boolean | null
+          hide_leaderboards: boolean | null
+          hide_xp_progress: boolean | null
+          id: string
+          level: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          focus_mode_active?: boolean | null
+          hide_badges?: boolean | null
+          hide_challenges?: boolean | null
+          hide_cosmetics?: boolean | null
+          hide_daily_missions?: boolean | null
+          hide_guilds?: boolean | null
+          hide_leaderboards?: boolean | null
+          hide_xp_progress?: boolean | null
+          id?: string
+          level?: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          focus_mode_active?: boolean | null
+          hide_badges?: boolean | null
+          hide_challenges?: boolean | null
+          hide_cosmetics?: boolean | null
+          hide_daily_missions?: boolean | null
+          hide_guilds?: boolean | null
+          hide_leaderboards?: boolean | null
+          hide_xp_progress?: boolean | null
+          id?: string
+          level?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       guild_members: {
         Row: {
           guild_id: string
@@ -1122,6 +1236,54 @@ export type Database = {
           event_type?: string
           id?: string
           updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      notification_preferences_gamification: {
+        Row: {
+          created_at: string
+          id: string
+          notify_badge_earned: boolean
+          notify_challenge_available: boolean
+          notify_challenge_completed: boolean
+          notify_daily_missions: boolean
+          notify_guild_activity: boolean
+          notify_league_promotion: boolean
+          notify_level_up: boolean
+          notify_secret_achievement_hint: boolean
+          notify_xp_gains: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          notify_badge_earned?: boolean
+          notify_challenge_available?: boolean
+          notify_challenge_completed?: boolean
+          notify_daily_missions?: boolean
+          notify_guild_activity?: boolean
+          notify_league_promotion?: boolean
+          notify_level_up?: boolean
+          notify_secret_achievement_hint?: boolean
+          notify_xp_gains?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          notify_badge_earned?: boolean
+          notify_challenge_available?: boolean
+          notify_challenge_completed?: boolean
+          notify_daily_missions?: boolean
+          notify_guild_activity?: boolean
+          notify_league_promotion?: boolean
+          notify_level_up?: boolean
+          notify_secret_achievement_hint?: boolean
+          notify_xp_gains?: boolean
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
@@ -2185,6 +2347,63 @@ export type Database = {
         }
         Relationships: []
       }
+      tutorial_progress: {
+        Row: {
+          completed: boolean
+          completed_at: string | null
+          created_at: string
+          id: string
+          step_index: number
+          tutorial_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed?: boolean
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          step_index?: number
+          tutorial_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed?: boolean
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          step_index?: number
+          tutorial_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_ab_assignments: {
+        Row: {
+          assigned_at: string | null
+          id: string
+          test_name: string
+          user_id: string
+          variant_name: string
+        }
+        Insert: {
+          assigned_at?: string | null
+          id?: string
+          test_name: string
+          user_id: string
+          variant_name: string
+        }
+        Update: {
+          assigned_at?: string | null
+          id?: string
+          test_name?: string
+          user_id?: string
+          variant_name?: string
+        }
+        Relationships: []
+      }
       user_active_cosmetics: {
         Row: {
           active_avatar_frame: string | null
@@ -2288,6 +2507,48 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      user_engagement_metrics: {
+        Row: {
+          created_at: string | null
+          date: string
+          gamification_interactions: number | null
+          gamification_level: string
+          id: string
+          matches_count: number | null
+          messages_count: number | null
+          retention_score: number | null
+          session_duration_minutes: number | null
+          swipes_count: number | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          date?: string
+          gamification_interactions?: number | null
+          gamification_level: string
+          id?: string
+          matches_count?: number | null
+          messages_count?: number | null
+          retention_score?: number | null
+          session_duration_minutes?: number | null
+          swipes_count?: number | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          date?: string
+          gamification_interactions?: number | null
+          gamification_level?: string
+          id?: string
+          matches_count?: number | null
+          messages_count?: number | null
+          retention_score?: number | null
+          session_duration_minutes?: number | null
+          swipes_count?: number | null
+          user_id?: string
+        }
+        Relationships: []
       }
       user_quest_progress: {
         Row: {
@@ -2979,6 +3240,10 @@ export type Database = {
             }
             Returns: string
           }
+      assign_ab_test: {
+        Args: { p_test_name: string; p_user_id: string }
+        Returns: string
+      }
       check_and_award_badges: {
         Args: { p_user_id: string }
         Returns: {
@@ -3215,6 +3480,10 @@ export type Database = {
       }
       postgis_version: { Args: never; Returns: string }
       postgis_wagyu_version: { Args: never; Returns: string }
+      should_send_gamification_notification: {
+        Args: { p_notification_type: string; p_user_id: string }
+        Returns: boolean
+      }
       st_3dclosestpoint: {
         Args: { geom1: unknown; geom2: unknown }
         Returns: unknown
@@ -3795,6 +4064,15 @@ export type Database = {
       st_wrapx: {
         Args: { geom: unknown; move: number; wrap: number }
         Returns: unknown
+      }
+      track_gamification_event: {
+        Args: {
+          p_event_type: string
+          p_feature: string
+          p_metadata?: Json
+          p_user_id: string
+        }
+        Returns: undefined
       }
       unlockrows: { Args: { "": string }; Returns: number }
       updategeometrysrid: {

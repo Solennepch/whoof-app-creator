@@ -24,6 +24,8 @@ import { LeagueStandings } from "@/components/events/LeagueStandings";
 import { ReferralSystem } from "@/components/events/ReferralSystem";
 import { DailyMissionsWidget } from "@/components/events/DailyMissionsWidget";
 import { GamificationWrapper } from "@/components/gamification/GamificationWrapper";
+import { InteractiveTutorial } from "@/components/tutorial/InteractiveTutorial";
+import { TUTORIALS } from "@/config/tutorials";
 import { useConfettiEvents } from "@/hooks/useConfettiEvents";
 import { useEffect } from "react";
 
@@ -389,6 +391,12 @@ export default function Events() {
           </Card>
         </motion.div>
       </div>
+
+      {/* Interactive Tutorial for Gamification */}
+      <InteractiveTutorial
+        tutorialId="gamification"
+        steps={TUTORIALS.gamification.steps}
+      />
     </div>
   );
 }
