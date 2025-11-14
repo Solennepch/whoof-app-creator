@@ -93,7 +93,7 @@ export default function Ranking() {
                 <p className="text-2xl font-extrabold">#{myRank + 1}</p>
               </div>
               <div className="text-right">
-                <p className="text-xs leading-4 opacity-90">{activePeriod === "weekly" ? "Cette semaine" : "Ce mois"}</p>
+                <p className="text-xs leading-4 opacity-90">{activePeriod === "weekly" ? "Cette semaine" : "Ce mois-ci"}</p>
                 <p className="text-2xl font-extrabold">{myRanking.weekly_xp} XP</p>
                 <p className="text-xs leading-4 opacity-90">Niveau {myXP?.level || 1}</p>
               </div>
