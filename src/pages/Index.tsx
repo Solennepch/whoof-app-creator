@@ -3,14 +3,17 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import logoWhoof from "@/assets/logo-whoof-v3.png";
 import { motion } from "framer-motion";
+import { ChallengeWidget } from "@/components/events/ChallengeWidget";
+import { useAuth } from "@/hooks/useAuth";
 
 const Index = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   return (
     <div className="min-h-screen flex items-center justify-center" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
       <section className="relative overflow-hidden px-4 py-16">
-        <div className="relative mx-auto max-w-2xl">
+        <div className="relative mx-auto max-w-2xl space-y-6">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -54,6 +57,13 @@ const Index = () => {
                 Je veux adopter
               </Button>
             </div>
+
+            {/* Challenge Widget */}
+            {user && (
+              <div className="max-w-sm mx-auto mt-6">
+                <ChallengeWidget />
+              </div>
+            )}
             
             {/* Debug Access Link */}
             <div className="mt-8 pt-6 border-t border-primary/10">
