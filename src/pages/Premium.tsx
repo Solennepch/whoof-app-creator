@@ -1,12 +1,12 @@
-import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Crown, Check, Sparkles, Award, Zap, Map, Gift, Bell, MessageCircle } from "lucide-react";
-import { Link } from "react-router-dom";
-import { toast } from "sonner";
+import { Link, useNavigate } from "react-router-dom";
+import { usePremium } from "@/hooks/usePremium";
 
 export default function Premium() {
-  const [isPremium] = useState(false); // TODO: Connect to actual subscription state
+  const { data: isPremium } = usePremium();
+  const navigate = useNavigate();
 
   const features = [
     { icon: Award, text: "Badges exclusifs et avatars premium", color: "text-secondary" },
@@ -19,18 +19,12 @@ export default function Premium() {
 
   const handleStartTrial = () => {
     console.log('Analytics: start_trial_premium');
-    toast.success("Essai gratuit activé !", {
-      icon: <Gift className="w-4 h-4 text-primary" />,
-      description: "Profite de 14 jours de Premium gratuit"
-    });
+    navigate('/premium/pricing');
   };
 
   const handleSubscribe = () => {
     console.log('Analytics: subscribe_premium');
-    toast.success("Bienvenue dans Premium !", {
-      icon: <Sparkles className="w-4 h-4 text-accent" />,
-      description: "Ton abonnement a été activé avec succès"
-    });
+    navigate('/premium/pricing');
   };
 
   if (isPremium) {
