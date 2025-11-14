@@ -1,146 +1,205 @@
-import { useState } from "react";
-import { MessageCircle, Send, Search } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
-const conversations = [
-  {
-    id: 1,
-    name: "Charlie & Max",
-    lastMessage: "On se retrouve au parc demain ?",
-    time: "10:30",
-    image: "https://images.unsplash.com/photo-1597633425046-08f5110420b5?w=100&h=100&fit=crop",
-    unread: 2,
-  },
-  {
-    id: 2,
-    name: "Daisy & Luna",
-    lastMessage: "Super balade aujourd'hui ! 🌳",
-    time: "Hier",
-    image: "https://images.unsplash.com/photo-1505628346881-b72b27e84530?w=100&h=100&fit=crop",
-    unread: 0,
-  },
-  {
-    id: 3,
-    name: "Zeus & Rocky",
-    lastMessage: "Mon chien adore jouer avec le tien",
-    time: "2j",
-    image: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=100&h=100&fit=crop",
-    unread: 0,
-  },
-];
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { MessageSquare, Search, Pin, Archive, Trash2, MoreVertical } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { useMessages } from "@/hooks/useMessages";
+import { useAuth } from "@/hooks/useAuth";
+import { formatDistanceToNow } from "date-fns";
+import { fr } from "date-fns/locale";
+import { Skeleton } from "@/components/ui/skeleton";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export default function Messages() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [showArchived, setShowArchived] = useState(false);
+  const [deleteThreadId, setDeleteThreadId] = useState<string | null>(null);
+  
+  const { user } = useAuth();
+  const { threads, threadsLoading, togglePin, toggleArchive, deleteThread } = useMessages();
 
-  const filteredConversations = conversations.filter((conv) =>
-    conv.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Filter threads
+  const filteredThreads = threads?.filter((thread) => {
+    const matchesSearch = thread.otherUser?.display_name
+      ?.toLowerCase()
+      .includes(searchQuery.toLowerCase());
+    const isArchived = thread.archived_by?.includes(user?.id || "");
+    
+    return matchesSearch && (showArchived ? isArchived : !isArchived);
+  }) || [];
+
+  const handleDeleteConfirm = () => {
+    if (deleteThreadId) {
+      deleteThread(deleteThreadId);
+      setDeleteThreadId(null);
+    }
+  };
+
+  if (threadsLoading) {
+    return (
+      <div className="container mx-auto p-6 space-y-6 max-w-4xl">
+        <Skeleton className="h-12 w-64" />
+        <Skeleton className="h-12 w-full" />
+        <div className="space-y-3">
+          {[1, 2, 3].map((i) => (
+            <Skeleton key={i} className="h-20" />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen pb-24" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
-      <div className="mx-auto max-w-4xl pt-20">
-        {/* Header */}
-        <div className="border-b p-4" style={{ borderColor: "hsl(var(--border))" }}>
-          <h1 className="mb-4 text-2xl font-bold text-foreground">
-            Messages
-          </h1>
-          
-          {/* Search */}
-          <div className="relative">
-            <Search 
-              className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2" 
-              style={{ color: "hsl(var(--ink) / 0.4)" }}
-            />
-            <Input
-              type="text"
-              placeholder="Rechercher une conversation..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
-            />
-          </div>
+    <div className="container mx-auto p-6 space-y-6 max-w-4xl">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold mb-2">Messages</h1>
+          <p className="text-muted-foreground">
+            {filteredThreads.length} conversation(s)
+          </p>
         </div>
-
-        {/* Conversations List */}
-        <div className="space-y-3 px-4 pt-4">
-          {filteredConversations.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-12">
-              <MessageCircle 
-                className="mb-3 h-12 w-12" 
-                style={{ color: "hsl(var(--ink) / 0.2)" }}
-              />
-              <p className="text-sm" style={{ color: "hsl(var(--ink) / 0.6)" }}>
-                Aucune conversation trouvée
-              </p>
-            </div>
-          ) : (
-            filteredConversations.map((conv) => (
-              <button
-                key={conv.id}
-                className="flex w-full items-center gap-3 p-4 transition-all hover:shadow-md bg-white/90 rounded-2xl shadow-sm"
-              >
-                <Avatar className="h-14 w-14">
-                  <AvatarImage src={conv.image} alt={conv.name} />
-                  <AvatarFallback>{conv.name[0]}</AvatarFallback>
-                </Avatar>
-
-                <div className="flex-1 text-left">
-                  <div className="mb-1 flex items-center justify-between">
-                    <h3 className="font-semibold" style={{ color: "hsl(var(--ink))" }}>
-                      {conv.name}
-                    </h3>
-                    <span className="text-xs" style={{ color: "hsl(var(--ink) / 0.5)" }}>
-                      {conv.time}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <p 
-                      className="text-sm line-clamp-1" 
-                      style={{ color: "hsl(var(--ink) / 0.6)" }}
-                    >
-                      {conv.lastMessage}
-                    </p>
-                    {conv.unread > 0 && (
-                      <span
-                        className="ml-2 flex h-5 w-5 items-center justify-center rounded-full text-xs font-medium text-white"
-                        style={{ backgroundColor: "hsl(var(--brand-raspberry))" }}
-                      >
-                        {conv.unread}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </button>
-            ))
-          )}
-        </div>
-
-        {/* Empty State */}
-        {conversations.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-16">
-            <div
-              className="mb-4 flex h-20 w-20 items-center justify-center rounded-full"
-              style={{ backgroundColor: "hsl(var(--brand-raspberry) / 0.1)" }}
-            >
-              <MessageCircle 
-                className="h-10 w-10" 
-                style={{ color: "hsl(var(--brand-raspberry))" }}
-              />
-            </div>
-            <h2 className="mb-2 text-xl font-bold" style={{ color: "hsl(var(--ink))" }}>
-              Aucun message
-            </h2>
-            <p className="mb-6 text-center text-sm" style={{ color: "hsl(var(--ink) / 0.6)" }}>
-              Commencez à matcher pour discuter avec d'autres propriétaires de chiens !
-            </p>
-            <Button style={{ backgroundColor: "hsl(var(--brand-raspberry))" }}>
-              Découvrir des profils
-            </Button>
-          </div>
-        )}
+        <Button
+          variant="outline"
+          onClick={() => setShowArchived(!showArchived)}
+        >
+          <Archive className="h-4 w-4 mr-2" />
+          {showArchived ? "Actives" : "Archivées"}
+        </Button>
       </div>
+
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
+        <Input
+          placeholder="Rechercher une conversation..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="pl-10"
+        />
+      </div>
+
+      {filteredThreads.length === 0 && searchQuery && (
+        <Card className="p-8">
+          <div className="text-center text-muted-foreground">
+            <MessageSquare className="h-12 w-12 mx-auto mb-3 opacity-50" />
+            <p>Aucune conversation trouvée</p>
+          </div>
+        </Card>
+      )}
+
+      {threads?.length === 0 ? (
+        <Card className="p-12">
+          <div className="text-center">
+            <MessageSquare className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
+            <h3 className="text-xl font-semibold mb-2">Aucun message</h3>
+            <p className="text-muted-foreground mb-6">
+              Commencez une conversation avec d'autres propriétaires de chiens
+            </p>
+            <Button>Découvrir des profils</Button>
+          </div>
+        </Card>
+      ) : (
+        <div className="space-y-3">
+          {filteredThreads.map((thread) => {
+            const isPinned = thread.pinned_by?.includes(user?.id || "");
+            const isArchived = thread.archived_by?.includes(user?.id || "");
+
+            return (
+              <Card
+                key={thread.id}
+                className="p-4 cursor-pointer hover:border-primary transition-colors"
+              >
+                <div className="flex items-center gap-4">
+                  <Avatar className="h-12 w-12">
+                    <AvatarImage src={thread.otherUser?.avatar_url || ""} />
+                    <AvatarFallback>
+                      {thread.otherUser?.display_name?.[0] || "?"}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <h3 className="font-semibold">
+                        {thread.otherUser?.display_name || "Utilisateur"}
+                      </h3>
+                      {isPinned && (
+                        <Pin className="h-4 w-4 text-primary fill-current" />
+                      )}
+                      <span className="text-sm text-muted-foreground ml-auto">
+                        {thread.lastMessage?.created_at &&
+                          formatDistanceToNow(new Date(thread.lastMessage.created_at), {
+                            addSuffix: true,
+                            locale: fr,
+                          })}
+                      </span>
+                    </div>
+                    <p className="text-sm text-muted-foreground truncate">
+                      {thread.lastMessage?.body || "Aucun message"}
+                    </p>
+                  </div>
+                  
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon">
+                        <MoreVertical className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => togglePin(thread.id)}>
+                        <Pin className="h-4 w-4 mr-2" />
+                        {isPinned ? "Désépingler" : "Épingler"}
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => toggleArchive(thread.id)}>
+                        <Archive className="h-4 w-4 mr-2" />
+                        {isArchived ? "Désarchiver" : "Archiver"}
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => setDeleteThreadId(thread.id)}
+                        className="text-destructive"
+                      >
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        Supprimer
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              </Card>
+            );
+          })}
+        </div>
+      )}
+
+      <AlertDialog open={!!deleteThreadId} onOpenChange={() => setDeleteThreadId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Supprimer la conversation ?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Cette action ne peut pas être annulée. La conversation sera supprimée de votre liste.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Annuler</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteConfirm}>
+              Supprimer
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
