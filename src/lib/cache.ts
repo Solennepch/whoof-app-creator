@@ -55,8 +55,9 @@ class CacheClient {
   /**
    * Get value from cache (multi-tier strategy)
    * 1. Try IndexedDB first (local, ultra-fast)
-   * 2. Try Redis if IndexedDB miss (shared, fast)
-   * 3. Return null if both miss (caller will fetch from API)
+   * 2. Return null if miss (caller will fetch from API)
+   * 
+   * Note: Redis cache disabled until configured
    */
   async get<T>(key: string): Promise<T | null> {
     try {
@@ -66,22 +67,9 @@ class CacheClient {
         return localValue;
       }
 
-      // Level 2: Try Redis
-      const result = await this.callCacheFunction('get', key);
-      
-      if (result?.hit) {
-        console.log(`Redis HIT: ${key}`);
-        const value = result.value as T;
-        
-        // Populate IndexedDB with Redis value for next time
-        const ttl = this.getTTLForType(result.type || 'default');
-        await indexedDBCache.set(key, value, ttl);
-        
-        return value;
-      } else {
-        console.log(`Cache MISS (all levels): ${key}`);
-        return null;
-      }
+      // Redis cache disabled until UPSTASH credentials are configured
+      console.log(`Cache MISS: ${key}`);
+      return null;
     } catch (error) {
       console.error('Cache get error:', error);
       return null;
@@ -103,36 +91,32 @@ class CacheClient {
   }
 
   /**
-   * Set value in cache (write to both levels)
+   * Set value in cache (write to IndexedDB only)
+   * Redis cache disabled until configured
    */
   async set(key: string, value: any, options?: CacheOptions): Promise<void> {
     try {
       const ttl = options?.ttl || this.getTTLForType(options?.type || 'default');
 
-      // Write to both caches in parallel for speed
-      await Promise.all([
-        indexedDBCache.set(key, value, ttl),
-        this.callCacheFunction('set', key, value, options),
-      ]);
+      // Write to IndexedDB only (Redis disabled)
+      await indexedDBCache.set(key, value, ttl);
 
-      console.log(`Cache SET (all levels): ${key}`);
+      console.log(`IndexedDB SET: ${key} (TTL: ${ttl}s)`);
     } catch (error) {
       console.error('Cache set error:', error);
     }
   }
 
   /**
-   * Delete value from cache (remove from both levels)
+   * Delete value from cache (remove from IndexedDB only)
+   * Redis cache disabled until configured
    */
   async delete(key: string): Promise<void> {
     try {
-      // Delete from both caches in parallel
-      await Promise.all([
-        indexedDBCache.delete(key),
-        this.callCacheFunction('delete', key),
-      ]);
+      // Delete from IndexedDB only (Redis disabled)
+      await indexedDBCache.delete(key);
 
-      console.log(`Cache DELETE (all levels): ${key}`);
+      console.log(`IndexedDB DELETE: ${key}`);
     } catch (error) {
       console.error('Cache delete error:', error);
     }
