@@ -4,6 +4,7 @@ import { Bell, BellOff } from "lucide-react";
 import { subscribePush, unsubscribePush, getCurrentSubscription } from "@/lib/push/usePush";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
 
 const VAPID_PUBLIC_KEY = "BB5WgZcI90auEX1Z-A4u75PgAmPg5hr74vTKrcQutfBWDtQW7s8gUycLyI06dQ5elEIM5qSqIiYNbd8mSzYgWgg";
 
@@ -11,6 +12,7 @@ export function EnablePushButton() {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const { session } = useAuth();
 
   useEffect(() => {
     checkSubscription();
@@ -41,8 +43,6 @@ export function EnablePushButton() {
         const subscription = await unsubscribePush();
         
         if (subscription?.endpoint) {
-          const { data: { session } } = await supabase.auth.getSession();
-          
           await supabase.functions.invoke('push-unregister', {
             body: { endpoint: subscription.endpoint },
             headers: {
@@ -68,10 +68,7 @@ export function EnablePushButton() {
           });
           return;
         }
-
-        const { data: { session } } = await supabase.auth.getSession();
-        
-        const { error } = await supabase.functions.invoke('push-register', {
+        await supabase.functions.invoke('push-register', {
           body: {
             endpoint: subscription.endpoint,
             keys: subscription.keys,
@@ -80,10 +77,6 @@ export function EnablePushButton() {
             Authorization: `Bearer ${session?.access_token}`,
           },
         });
-
-        if (error) {
-          throw error;
-        }
 
         setIsSubscribed(true);
         toast({

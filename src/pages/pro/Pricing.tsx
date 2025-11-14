@@ -6,6 +6,7 @@ import { Check, Loader2, Star, TrendingUp, Crown } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 
 const PRO_TIERS = {
   basic: {
@@ -63,11 +64,11 @@ const PRO_TIERS = {
 export default function ProPricing() {
   const [loading, setLoading] = useState<string | null>(null);
   const navigate = useNavigate();
+  const { session } = useAuth();
 
   const handleSubscribe = async (priceId: string, tierName: string) => {
     setLoading(priceId);
     try {
-      const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
         toast.error("Vous devez être connecté");
         navigate("/login");

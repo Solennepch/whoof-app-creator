@@ -6,17 +6,12 @@ import { Crown, Zap, Heart, Star, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useUserXP } from "@/hooks/useGamification";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function Recompenses() {
   const navigate = useNavigate();
 
-  const { data: session } = useQuery({
-    queryKey: ["session"],
-    queryFn: async () => {
-      const { data } = await supabase.auth.getSession();
-      return data.session;
-    },
-  });
+  const { session } = useAuth();
 
   const { data: xpSummary } = useUserXP(session?.user?.id);
 

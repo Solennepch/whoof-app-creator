@@ -19,13 +19,7 @@ export default function Ranking() {
   const { user } = useAuth();
   const { currentChallenge, challengeProgress } = useEvents();
 
-  const { data: session } = useQuery({
-    queryKey: ["session"],
-    queryFn: async () => {
-      const { data } = await supabase.auth.getSession();
-      return data.session;
-    },
-  });
+  const { session } = useAuth();
 
   const { data: profile } = useQuery({
     queryKey: ["profile", session?.user?.id],

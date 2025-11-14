@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -44,6 +45,7 @@ const vaccinations = [
 
 function DogOnboardingContent() {
   const navigate = useNavigate();
+  const { session } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [selectedVaccinations, setSelectedVaccinations] = useState<string[]>([]);
@@ -70,8 +72,6 @@ function DogOnboardingContent() {
     setIsLoading(true);
 
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      
       if (!session) {
         toast.error("Session expirée, veuillez vous reconnecter");
         navigate('/login');

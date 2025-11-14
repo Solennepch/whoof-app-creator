@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -15,12 +16,11 @@ function ProfileMeContent() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const { session } = useAuth();
 
   useEffect(() => {
     async function checkAndRedirect() {
       try {
-        const { data: { session } } = await supabase.auth.getSession();
-        
         if (!session) {
           navigate('/login', { replace: true });
           return;
