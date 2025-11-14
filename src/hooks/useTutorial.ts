@@ -3,6 +3,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuth';
 import { useGamification } from '@/contexts/GamificationContext';
+import { useAddXPEvent, useCheckBadges } from './useGamification';
+import { toast } from 'sonner';
 
 interface TutorialStep {
   id: string;
@@ -26,6 +28,10 @@ export function useTutorial(tutorialId: string) {
   const queryClient = useQueryClient();
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [isActive, setIsActive] = useState(false);
+  
+  // Hooks for XP and badges
+  const addXPEvent = useAddXPEvent();
+  const checkBadges = useCheckBadges();
 
   // Load tutorial progress
   const { data: progress } = useQuery({
@@ -115,9 +121,45 @@ export function useTutorial(tutorialId: string) {
     updateProgressMutation.mutate({ stepIndex: -1, completed: true });
   };
 
-  const completeTutorial = () => {
+  const completeTutorial = async () => {
     setIsActive(false);
     updateProgressMutation.mutate({ stepIndex: currentStepIndex, completed: true });
+    
+    // Award XP for completing tutorial
+    if (user?.id) {
+      try {
+        await addXPEvent.mutateAsync({
+          userId: user.id,
+          type: 'tutorial_completed',
+          points: tutorialId === 'welcome' ? 100 : 150,
+          metadata: { tutorial_id: tutorialId },
+        });
+
+        // Check and award badges
+        await checkBadges.mutateAsync(user.id);
+
+        // Award specific tutorial badge
+        const badgeCode = tutorialId === 'welcome' ? 'TUTORIAL_WELCOME' : 'TUTORIAL_GAMIFICATION';
+        await supabase
+          .from('user_badges' as any)
+          .insert({
+            user_id: user.id,
+            badge_code: badgeCode,
+          })
+          .select()
+          .single();
+
+        // Check for master badge
+        await supabase.rpc('check_tutorial_badges' as any, { p_user_id: user.id });
+
+        toast.success(
+          '🎓 Tutoriel complété !',
+          { description: `Vous avez gagné ${tutorialId === 'welcome' ? 100 : 150} XP` }
+        );
+      } catch (error) {
+        console.error('Error awarding tutorial rewards:', error);
+      }
+    }
   };
 
   // Auto-start if not completed and not skipped
