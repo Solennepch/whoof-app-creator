@@ -19,6 +19,10 @@ import { ActivityFeed } from "@/components/events/ActivityFeed";
 import { SpecialEventWidget } from "@/components/events/SpecialEventWidget";
 import { GuildWidget } from "@/components/events/GuildWidget";
 import { CosmeticsShowcase } from "@/components/events/CosmeticsShowcase";
+import { SecretAchievements } from "@/components/events/SecretAchievements";
+import { LeagueStandings } from "@/components/events/LeagueStandings";
+import { ReferralSystem } from "@/components/events/ReferralSystem";
+import { DailyMissionsWidget } from "@/components/events/DailyMissionsWidget";
 import { useConfettiEvents } from "@/hooks/useConfettiEvents";
 import { useEffect } from "react";
 
@@ -300,6 +304,42 @@ export default function Events() {
           transition={{ delay: 0.75 }}
         >
           <CosmeticsShowcase />
+        </motion.div>
+
+        {/* Daily Missions */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8 }}
+        >
+          <DailyMissionsWidget />
+        </motion.div>
+
+        {/* League Standings */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.85 }}
+        >
+          <LeagueStandings />
+        </motion.div>
+
+        {/* Secret Achievements */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.9 }}
+        >
+          <SecretAchievements />
+        </motion.div>
+
+        {/* Referral System */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.95 }}
+        >
+          <ReferralSystem />
         </motion.div>
 
         {/* Badges Collection */}
