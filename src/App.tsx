@@ -80,6 +80,8 @@ const PageLoader = () => (
 );
 
 const App = () => {
+  const isDev = import.meta.env.MODE !== "production";
+  
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
@@ -146,11 +148,15 @@ const App = () => {
                   <Route path="*" element={<PageErrorBoundary><NotFound /></PageErrorBoundary>} />
                 </Route>
                 
-                {/* Debug routes - outside MainLayout */}
-                <Route path="/debug" element={<PageErrorBoundary><Debug /></PageErrorBoundary>} />
-                <Route path="/debug/health" element={<PageErrorBoundary><DebugHealth /></PageErrorBoundary>} />
-                <Route path="/debug/test-accounts" element={<PageErrorBoundary><TestAccounts /></PageErrorBoundary>} />
-                <Route path="/debug/feature-flags" element={<PageErrorBoundary><FeatureFlags /></PageErrorBoundary>} />
+                {/* Debug routes - outside MainLayout (dev only) */}
+                {isDev && (
+                  <>
+                    <Route path="/debug" element={<PageErrorBoundary><Debug /></PageErrorBoundary>} />
+                    <Route path="/debug/health" element={<PageErrorBoundary><DebugHealth /></PageErrorBoundary>} />
+                    <Route path="/debug/test-accounts" element={<PageErrorBoundary><TestAccounts /></PageErrorBoundary>} />
+                    <Route path="/debug/feature-flags" element={<PageErrorBoundary><FeatureFlags /></PageErrorBoundary>} />
+                  </>
+                )}
               </Routes>
             </Suspense>
             </GamificationProvider>
