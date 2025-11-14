@@ -413,6 +413,42 @@ export type Database = {
         }
         Relationships: []
       }
+      challenge_progress: {
+        Row: {
+          challenge_id: string
+          completed_at: string | null
+          created_at: string
+          current_progress: number
+          id: string
+          is_completed: boolean
+          target_progress: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          challenge_id: string
+          completed_at?: string | null
+          created_at?: string
+          current_progress?: number
+          id?: string
+          is_completed?: boolean
+          target_progress: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          challenge_id?: string
+          completed_at?: string | null
+          created_at?: string
+          current_progress?: number
+          id?: string
+          is_completed?: boolean
+          target_progress?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       direct_messages: {
         Row: {
           body: string
@@ -664,6 +700,33 @@ export type Database = {
           subject?: string
           updated_at?: string | null
           variables?: Json | null
+        }
+        Relationships: []
+      }
+      event_participation: {
+        Row: {
+          event_id: string
+          event_type: string
+          id: string
+          participated_at: string
+          participation_date: string
+          user_id: string
+        }
+        Insert: {
+          event_id: string
+          event_type: string
+          id?: string
+          participated_at?: string
+          participation_date?: string
+          user_id: string
+        }
+        Update: {
+          event_id?: string
+          event_type?: string
+          id?: string
+          participated_at?: string
+          participation_date?: string
+          user_id?: string
         }
         Relationships: []
       }
