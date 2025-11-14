@@ -59,46 +59,37 @@ export default function ProAgenda() {
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            {/* Example appointments */}
-            <div className="flex items-center gap-4 p-4 rounded-xl border">
-              <div className="flex flex-col items-center justify-center w-16 h-16 rounded-xl bg-primary/10">
-                <Clock className="h-5 w-5 text-primary mb-1" />
-                <span className="text-xs font-semibold">10:00</span>
-              </div>
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="font-semibold">Toilettage - Max</span>
-                  <Badge variant="outline">Confirmé</Badge>
+            {/* Empty state - à remplacer par vraies données plus tard */}
+            {false ? (
+              <>
+                {/* Example appointments */}
+                <div className="flex items-center gap-4 p-4 rounded-xl border">
+                  <div className="flex flex-col items-center justify-center w-16 h-16 rounded-xl bg-primary/10">
+                    <Clock className="h-5 w-5 text-primary mb-1" />
+                    <span className="text-xs font-semibold">10:00</span>
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="font-semibold">Toilettage - Max</span>
+                      <Badge variant="outline">Confirmé</Badge>
+                    </div>
+                    <p className="text-sm text-muted-foreground flex items-center gap-1">
+                      <Users className="h-3 w-3" />
+                      Client: Sophie Martin
+                    </p>
+                  </div>
+                  <Button variant="outline" size="sm">
+                    Détails
+                  </Button>
                 </div>
-                <p className="text-sm text-muted-foreground flex items-center gap-1">
-                  <Users className="h-3 w-3" />
-                  Client: Sophie Martin
-                </p>
+              </>
+            ) : (
+              <div className="text-center py-8">
+                <Calendar className="h-12 w-12 mx-auto mb-3 text-muted-foreground opacity-50" />
+                <p className="text-muted-foreground mb-1">Aucun rendez-vous aujourd'hui</p>
+                <p className="text-sm text-muted-foreground">Profite de cette journée calme ! 🐾</p>
               </div>
-              <Button variant="outline" size="sm">
-                Détails
-              </Button>
-            </div>
-
-            <div className="flex items-center gap-4 p-4 rounded-xl border">
-              <div className="flex flex-col items-center justify-center w-16 h-16 rounded-xl bg-primary/10">
-                <Clock className="h-5 w-5 text-primary mb-1" />
-                <span className="text-xs font-semibold">14:30</span>
-              </div>
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="font-semibold">Consultation - Luna</span>
-                  <Badge variant="outline" className="bg-amber-100">En attente</Badge>
-                </div>
-                <p className="text-sm text-muted-foreground flex items-center gap-1">
-                  <Users className="h-3 w-3" />
-                  Client: Thomas Dubois
-                </p>
-              </div>
-              <Button variant="outline" size="sm">
-                Détails
-              </Button>
-            </div>
+            )}
           </div>
         </CardContent>
       </Card>

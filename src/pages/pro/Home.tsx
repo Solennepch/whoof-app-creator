@@ -1,4 +1,4 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, Link } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -15,9 +15,10 @@ import {
   Gift,
   HelpCircle,
   TrendingUp,
-  MapPin
+  MapPin,
+  Calendar,
+  Users
 } from "lucide-react";
-import { Link } from "react-router-dom";
 
 export default function ProHome() {
   const { data: profile, isLoading } = useMyProProfile();
@@ -86,7 +87,58 @@ export default function ProHome() {
         </CardContent>
       </Card>
 
-      {/* Stats */}
+      {/* Stats - Priorités principales */}
+      <div className="grid gap-4 md:grid-cols-3">
+        <Card className="border-2">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">RDV aujourd'hui</CardTitle>
+            <Calendar className="h-5 w-5 text-primary" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold text-primary">2</div>
+            <p className="text-xs text-muted-foreground mt-1">
+              Rendez-vous prévus
+            </p>
+            <Button variant="link" className="p-0 h-auto mt-2" asChild>
+              <Link to="/pro/agenda">Voir l'agenda →</Link>
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card className="border-2">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Nouveaux messages</CardTitle>
+            <MessageSquare className="h-5 w-5 text-primary" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold text-primary">{stats?.unread || 0}</div>
+            <p className="text-xs text-muted-foreground mt-1">
+              Messages non lus
+            </p>
+            <Button variant="link" className="p-0 h-auto mt-2" asChild>
+              <Link to="/pro/messages">Lire les messages →</Link>
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card className="border-2">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Clients ce mois</CardTitle>
+            <Users className="h-5 w-5 text-primary" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold text-primary">3</div>
+            <p className="text-xs text-muted-foreground mt-1">
+              Nouveaux clients
+            </p>
+            <Button variant="link" className="p-0 h-auto mt-2" asChild>
+              <Link to="/pro/stats">Voir les stats →</Link>
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Secondary Stats */}
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
