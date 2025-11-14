@@ -39,7 +39,7 @@ const Index = () => {
                 size="lg" 
                 variant="like"
                 className="w-full h-16 text-base"
-                onClick={() => navigate('/discover')}
+                onClick={() => navigate('/discover', { state: { mode: 'region' } })}
               >
                 <Heart className="mr-2 h-6 w-6" />
                 Je cherche des copains
@@ -48,7 +48,7 @@ const Index = () => {
                 size="lg" 
                 variant="superlike"
                 className="w-full h-16 text-base"
-                onClick={() => navigate('/discover')}
+                onClick={() => navigate('/discover', { state: { mode: 'adoption' } })}
               >
                 <Home className="mr-2 h-6 w-6" />
                 Je veux adopter
