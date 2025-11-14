@@ -2347,6 +2347,36 @@ export type Database = {
         }
         Relationships: []
       }
+      tooltip_views: {
+        Row: {
+          created_at: string
+          dismissed_at: string | null
+          first_shown_at: string
+          id: string
+          tooltip_id: string
+          user_id: string
+          view_count: number
+        }
+        Insert: {
+          created_at?: string
+          dismissed_at?: string | null
+          first_shown_at?: string
+          id?: string
+          tooltip_id: string
+          user_id: string
+          view_count?: number
+        }
+        Update: {
+          created_at?: string
+          dismissed_at?: string | null
+          first_shown_at?: string
+          id?: string
+          tooltip_id?: string
+          user_id?: string
+          view_count?: number
+        }
+        Relationships: []
+      }
       tutorial_progress: {
         Row: {
           completed: boolean
@@ -3251,6 +3281,7 @@ export type Database = {
           newly_awarded: boolean
         }[]
       }
+      check_tutorial_badges: { Args: { p_user_id: string }; Returns: undefined }
       cleanup_old_notifications: { Args: never; Returns: undefined }
       disablelongtransactions: { Args: never; Returns: string }
       dropgeometrycolumn:

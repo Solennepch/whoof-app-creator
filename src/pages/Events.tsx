@@ -28,6 +28,7 @@ import { InteractiveTutorial } from "@/components/tutorial/InteractiveTutorial";
 import { TUTORIALS } from "@/config/tutorials";
 import { useConfettiEvents } from "@/hooks/useConfettiEvents";
 import { useEffect } from "react";
+import { ContextualTooltip } from "@/components/ui/ContextualTooltip";
 
 export default function Events() {
   const { user } = useAuth();
@@ -128,104 +129,120 @@ export default function Events() {
 
         {/* Current Challenge */}
         {currentChallenge && (
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2 }}
+          <ContextualTooltip
+            id="challenge-intro"
+            content="Relève des challenges mensuels pour gagner des récompenses exclusives et monter dans le classement !"
+            placement="top"
+            showFor={['moderate', 'complete']}
           >
-            <Card className="bg-gradient-to-br from-accent/10 via-primary/10 to-secondary/10 border-accent/30">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Trophy className="h-5 w-5 text-accent" />
-                  Challenge du mois
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="flex items-start gap-4">
-                  <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-background text-4xl">
-                    {currentChallenge.badge}
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-xl font-semibold text-foreground mb-1">
-                      {currentChallenge.name}
-                    </h3>
-                    <p className="text-muted-foreground">{currentChallenge.objective}</p>
-                  </div>
-                </div>
-
-                {/* Progress Section */}
-                <div className="space-y-4 p-4 rounded-2xl bg-background/50">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <TrendingUp className="h-5 w-5 text-primary" />
-                      <span className="font-semibold text-foreground">Ta progression</span>
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              <Card className="bg-gradient-to-br from-accent/10 via-primary/10 to-secondary/10 border-accent/30">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Trophy className="h-5 w-5 text-accent" />
+                    Challenge du mois
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="flex items-start gap-4">
+                    <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-background text-4xl">
+                      {currentChallenge.badge}
                     </div>
-                    <Badge variant={isCompleted ? "default" : "secondary"}>
-                      {progress} / {target}
-                    </Badge>
+                    <div className="flex-1">
+                      <h3 className="text-xl font-semibold text-foreground mb-1">
+                        {currentChallenge.name}
+                      </h3>
+                      <p className="text-muted-foreground">{currentChallenge.objective}</p>
+                    </div>
                   </div>
 
-                  <div className="relative">
-                    <Progress value={percentage} className="h-4" />
-                    {percentage > 0 && (
+                  {/* Progress Section */}
+                  <div className="space-y-4 p-4 rounded-2xl bg-background/50">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <TrendingUp className="h-5 w-5 text-primary" />
+                        <span className="font-semibold text-foreground">Ta progression</span>
+                      </div>
+                      <Badge variant={isCompleted ? "default" : "secondary"}>
+                        {progress} / {target}
+                      </Badge>
+                    </div>
+
+                    <div className="relative">
+                      <Progress value={percentage} className="h-4" />
+                      {percentage > 0 && (
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          animate={{ scale: [1, 1.2, 1] }}
+                          transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 2 }}
+                          className="absolute -top-2 left-0 h-8 w-8 rounded-full bg-primary border-4 border-background flex items-center justify-center text-xs font-bold text-primary-foreground"
+                          style={{ left: `calc(${Math.min(percentage, 95)}% - 16px)` }}
+                        >
+                          {Math.round(percentage)}%
+                        </motion.div>
+                      )}
+                    </div>
+
+                    <div className="flex items-start gap-3 p-3 rounded-xl bg-accent/10 border border-accent/20">
+                      <Gift className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
+                      <div className="flex-1">
+                        <p className="font-medium text-foreground text-sm">Récompense</p>
+                        <p className="text-sm text-muted-foreground">{currentChallenge.reward}</p>
+                      </div>
+                      <ShareAchievement
+                        title={currentChallenge.name}
+                        description={currentChallenge.objective}
+                        badge={currentChallenge.badge}
+                      />
+                    </div>
+
+                    {isCompleted && (
                       <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: [1, 1.2, 1] }}
-                        transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 2 }}
-                        className="absolute -top-2 left-0 h-8 w-8 rounded-full bg-primary border-4 border-background flex items-center justify-center text-xs font-bold text-primary-foreground"
-                        style={{ left: `calc(${Math.min(percentage, 95)}% - 16px)` }}
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="p-4 rounded-xl bg-primary/10 border border-primary/30 text-center"
                       >
-                        {Math.round(percentage)}%
+                        <Trophy className="h-8 w-8 text-primary mx-auto mb-2 fill-primary" />
+                        <p className="font-semibold text-primary text-lg">Challenge complété ! 🎉</p>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          Félicitations, tu as obtenu ta récompense !
+                        </p>
                       </motion.div>
                     )}
                   </div>
-
-                  <div className="flex items-start gap-3 p-3 rounded-xl bg-accent/10 border border-accent/20">
-                    <Gift className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
-                    <div className="flex-1">
-                      <p className="font-medium text-foreground text-sm">Récompense</p>
-                      <p className="text-sm text-muted-foreground">{currentChallenge.reward}</p>
-                    </div>
-                    <ShareAchievement
-                      title={currentChallenge.name}
-                      description={currentChallenge.objective}
-                      badge={currentChallenge.badge}
-                    />
-                  </div>
-
-                  {isCompleted && (
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      className="p-4 rounded-xl bg-primary/10 border border-primary/30 text-center"
-                    >
-                      <Trophy className="h-8 w-8 text-primary mx-auto mb-2 fill-primary" />
-                      <p className="font-semibold text-primary text-lg">Challenge complété ! 🎉</p>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        Félicitations, tu as obtenu ta récompense !
-                      </p>
-                    </motion.div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </ContextualTooltip>
         )}
 
         {/* XP Progress */}
         {xpData && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-          >
-            <XpProgress
-              current={xpData.total_xp || 0}
-              min={0}
-              max={5400}
-              t={(k) => ({ level: "Niveau" }[k] || k)}
-            />
-          </motion.div>
+          <GamificationWrapper feature="showXpProgress">
+            <ContextualTooltip
+              id="xp-progress"
+              content="Gagne de l'XP en complétant des actions dans l'app. Monte de niveau pour débloquer de nouvelles fonctionnalités !"
+              placement="top"
+              showFor={['moderate', 'complete']}
+            >
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+              >
+                <XpProgress
+                  current={xpData.total_xp || 0}
+                  min={0}
+                  max={5400}
+                  t={(k) => ({ level: "Niveau" }[k] || k)}
+                />
+              </motion.div>
+            </ContextualTooltip>
+          </GamificationWrapper>
         )}
 
         {/* Activity Feed */}

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { InteractiveTutorial } from "@/components/tutorial/InteractiveTutorial";
 import { TUTORIALS } from "@/config/tutorials";
+import { ContextualTooltip } from "@/components/ui/ContextualTooltip";
 
 const mockDogs = [
   {
@@ -133,7 +134,19 @@ export default function Home() {
         {/* Feed */}
         <div className="space-y-4">
           {mockDogs.map((dog, i) => (
-            <DogCard key={i} {...dog} />
+            i === 0 ? (
+              <ContextualTooltip
+                key={i}
+                id="first-swipe"
+                content="Swipe à droite pour liker, à gauche pour passer. C'est parti pour trouver des compagnons de balade !"
+                placement="top"
+                showFor={['minimal', 'moderate', 'complete']}
+              >
+                <DogCard {...dog} />
+              </ContextualTooltip>
+            ) : (
+              <DogCard key={i} {...dog} />
+            )
           ))}
         </div>
       </div>
