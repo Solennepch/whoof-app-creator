@@ -86,8 +86,21 @@ export default function Discover() {
     () => handleSwipe(true)   // right swipe
   );
 
-  // Show tutorial on first visit
+  // Show tutorial on first visit (only if not coming from explicit navigation)
   useEffect(() => {
+    // Don't redirect if we have a mode set (coming from MatchHome)
+    const searchParams = new URLSearchParams(location.search);
+    const urlMode = searchParams.get('mode');
+    const stateMode = (location.state as any)?.mode;
+    
+    if (urlMode || stateMode) {
+      // User explicitly chose a mode, skip onboarding check
+      if (!hasSeenTutorial) {
+        setShowTutorial(true);
+      }
+      return;
+    }
+    
     if (!onboardingCompleted && !hasSeenTutorial) {
       navigate("/onboarding/welcome");
       return;
@@ -96,7 +109,7 @@ export default function Discover() {
     if (!hasSeenTutorial) {
       setShowTutorial(true);
     }
-  }, [navigate, hasSeenTutorial, onboardingCompleted]);
+  }, [navigate, hasSeenTutorial, onboardingCompleted, location.search, location.state]);
 
   const handleTutorialClose = () => {
     setShowTutorial(false);
