@@ -13,19 +13,26 @@ export function useAuth() {
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
+        console.log('Auth state changed:', event, session?.user?.email);
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
 
-        // Handle auth events
-        if (event === 'SIGNED_IN') {
-          setTimeout(() => {
-            navigate("/profile/me");
-          }, 0);
+        // Handle auth events with proper timing
+        if (event === 'SIGNED_IN' && session) {
+          // Only navigate if not already on a protected route
+          const currentPath = window.location.pathname;
+          if (currentPath === '/login' || currentPath === '/signup' || currentPath === '/debug/test-accounts') {
+            setTimeout(() => {
+              navigate("/profile/me");
+            }, 100);
+          }
         } else if (event === 'SIGNED_OUT') {
+          // Clear any cached data
+          localStorage.removeItem('access_token');
           setTimeout(() => {
             navigate("/login");
-          }, 0);
+          }, 100);
         }
       }
     );
