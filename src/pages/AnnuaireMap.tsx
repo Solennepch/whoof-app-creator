@@ -71,7 +71,7 @@ export default function AnnuaireMap() {
   const lng = parseFloat(searchParams.get('lng') || '2.3522');
 
   useEffect(() => {
-    if (!mapContainer.current || map.current) return;
+    if (!mapContainer.current || map.current || !mapboxToken) return;
 
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
@@ -158,7 +158,12 @@ export default function AnnuaireMap() {
               Carte des professionnels
             </h1>
             <p className="text-sm text-muted-foreground">
-              {pros.length} professionnel{pros.length > 1 ? 's' : ''} trouvé{pros.length > 1 ? 's' : ''}
+              {isLoading
+                ? "Chargement des professionnels…"
+                : `${pros.length} professionnel${pros.length > 1 ? "s" : ""} trouvé${pros.length > 1 ? "s" : ""}`}
+            </p>
+            <p className="mt-1 text-[11px] text-muted-foreground">
+              Position des pros approximative — l'annuaire est en amélioration continue ✨
             </p>
           </div>
 
@@ -184,6 +189,15 @@ export default function AnnuaireMap() {
             </Button>
           </div>
         </div>
+
+        {/* Empty state si aucun pro dans la zone */}
+        {!isLoading && pros.length === 0 && (
+          <div className="mb-4 rounded-2xl border border-dashed border-amber-200 bg-amber-50 px-4 py-3 text-xs text-amber-900">
+            Aucun professionnel trouvé dans ce rayon pour l'instant.  
+            Tu peux revenir plus tard, élargir le rayon, ou explorer la carte autour
+            de ta ville 🐾
+          </div>
+        )}
 
         {/* Map */}
         <div className="h-[calc(100vh-12rem)] rounded-2xl overflow-hidden shadow-soft">
