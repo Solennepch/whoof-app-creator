@@ -1,11 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 
 export function usePremium() {
+  const { session } = useAuth();
+  
   return useQuery({
     queryKey: ['premium-status'],
     queryFn: async () => {
-      const { data: { session } } = await supabase.auth.getSession();
       if (!session?.user) return false;
 
       try {

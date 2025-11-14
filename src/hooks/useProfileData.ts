@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
 import { safeFetch } from '@/lib/safeFetch';
 import { cache } from '@/lib/cache';
 
@@ -37,6 +38,7 @@ function isValidUUID(str: string): boolean {
 
 export const useProfileData = (id?: string) => {
   const navigate = useNavigate();
+  const { user, session } = useAuth();
   const [dogs, setDogs] = useState<Dog[]>([]);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -59,9 +61,6 @@ export const useProfileData = (id?: string) => {
     setError(null);
 
     try {
-      // Wait for auth to be ready
-      const { data: { session } } = await supabase.auth.getSession();
-      
       // If no session and trying to access own profile, wait for auth to initialize
       if (!session && id === 'me') {
         setError(new Error('Veuillez vous connecter pour accéder à votre profil'));
@@ -69,7 +68,6 @@ export const useProfileData = (id?: string) => {
         return;
       }
 
-      const { data: { user } } = await supabase.auth.getUser();
       const currentUserId = user?.id;
       
       // Try to get from cache first
