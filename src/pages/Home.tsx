@@ -1,11 +1,14 @@
 import { IconContainer } from "@/components/ui/IconContainer";
 import { DogCard } from "@/components/feed/DogCard";
-import { Sparkles, TrendingUp, Award, Briefcase } from "lucide-react";
+import { Sparkles, TrendingUp, Award, Briefcase, MapPin, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { InteractiveTutorial } from "@/components/tutorial/InteractiveTutorial";
 import { TUTORIALS } from "@/config/tutorials";
 import { ContextualTooltip } from "@/components/ui/ContextualTooltip";
+import { useProfileData } from "@/hooks/useProfileData";
+import { useAuth } from "@/hooks/useAuth";
 
 const mockDogs = [
   {
@@ -48,6 +51,8 @@ const mockDogs = [
 
 export default function Home() {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const { dogs, isLoading: isDogsLoading } = useProfileData(user?.id || "");
 
   return (
     <div className="h-screen overflow-hidden flex flex-col" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
@@ -55,10 +60,37 @@ export default function Home() {
         {/* Header */}
         <div className="mb-6">
           <h1 className="mb-2 text-3xl font-bold text-foreground">
-            Fil d'actualité
+            Bienvenue 🐾
           </h1>
-          <p className="text-muted-foreground">Exemples de profils – les vrais profils arrivent en fonction de ta zone 🐶</p>
+          <p className="text-muted-foreground">Découvre les chiens près de toi et organise des balades</p>
         </div>
+
+        {/* Bloc "Aujourd'hui" */}
+        <section className="mb-6 rounded-2xl bg-white/70 px-4 py-3 shadow-sm backdrop-blur">
+          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+            Aujourd'hui
+          </p>
+          <div className="mt-1 text-sm text-muted-foreground">
+            Objectif : faire au moins une balade avec ton chien 🐾
+          </div>
+        </section>
+
+        {/* Alerte : pas de chien */}
+        {!isDogsLoading && dogs && dogs.length === 0 && (
+          <div className="mb-4 rounded-2xl border border-dashed border-amber-200 bg-amber-50 px-4 py-3 text-xs text-amber-900">
+            Tu n'as pas encore ajouté ton chien.
+            <br />
+            C'est la première étape pour débloquer les balades, le matching et les récompenses ✨
+            <Button
+              size="sm"
+              variant="outline"
+              className="mt-2 rounded-full border-amber-300 text-amber-900"
+              onClick={() => navigate("/onboarding/dog")}
+            >
+              Ajouter mon chien
+            </Button>
+          </div>
+        )}
 
         {/* Stats Cards */}
         <div className="mb-6 grid gap-4 sm:grid-cols-3">
@@ -105,6 +137,37 @@ export default function Home() {
           </div>
         </div>
 
+        {/* Actions rapides */}
+        <div className="mb-6 grid grid-cols-2 gap-2 sm:grid-cols-3">
+          <Button
+            className="h-20 flex flex-col items-start justify-center rounded-2xl px-3 text-left"
+            onClick={() => navigate("/balades")}
+          >
+            <span className="text-xs text-white/80">Balades</span>
+            <span className="text-sm font-semibold">Créer une balade</span>
+          </Button>
+
+          <Button
+            variant="outline"
+            className="h-20 flex flex-col items-start justify-center rounded-2xl px-3 text-left"
+            onClick={() => navigate("/map")}
+          >
+            <MapPin className="h-4 w-4 mb-1 text-muted-foreground" />
+            <span className="text-xs text-muted-foreground">Carte</span>
+            <span className="text-sm font-semibold">Voir autour de moi</span>
+          </Button>
+
+          <Button
+            variant="outline"
+            className="h-20 flex flex-col items-start justify-center rounded-2xl px-3 text-left"
+            onClick={() => navigate("/events")}
+          >
+            <Calendar className="h-4 w-4 mb-1 text-muted-foreground" />
+            <span className="text-xs text-muted-foreground">Événements</span>
+            <span className="text-sm font-semibold">Rejoindre un groupe</span>
+          </Button>
+        </div>
+
         {/* Professionnels Block */}
         <div className="mb-6 rounded-2xl bg-white p-6 shadow-soft ring-1 ring-black/5">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -132,6 +195,15 @@ export default function Home() {
         </div>
 
         {/* Feed */}
+        <div className="mb-4 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <h2 className="text-lg font-semibold">Chiens près de toi</h2>
+            <Badge variant="outline" className="text-[10px] uppercase tracking-wide">
+              Exemple
+            </Badge>
+          </div>
+        </div>
+
         <div className="space-y-4">
           {mockDogs.map((dog, i) => (
             i === 0 ? (
