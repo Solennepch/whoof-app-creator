@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { Tables } from "@/integrations/supabase/types";
 
 export interface Walk {
   id: string;
@@ -133,7 +134,7 @@ export function useWalks() {
       
       // Award XP for starting a walk
       try {
-        const { data: { session } } = await supabase.auth.getSession();
+        const session = queryClient.getQueryData<{ access_token: string }>(["auth-session"]);
         if (session) {
           await supabase.functions.invoke('walk-xp', {
             body: { action: 'start' }
@@ -171,7 +172,7 @@ export function useWalks() {
       
       // Award XP for completing a walk
       try {
-        const { data: { session } } = await supabase.auth.getSession();
+        const session = queryClient.getQueryData<{ access_token: string }>(["auth-session"]);
         if (session && walk.distance_km) {
           await supabase.functions.invoke('walk-xp', {
             body: { 

@@ -17,6 +17,7 @@ import { FiltersPanel, Filters } from "@/components/ui/FiltersPanel";
 import { useSwipeGestures } from "@/hooks/useSwipeGestures";
 import { useAppStore } from "@/store/useAppStore";
 import { regionProfiles, adoptionProfiles, type RegionProfile, type AdoptionProfile } from "@/config/profiles";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function Discover() {
   const navigate = useNavigate();
@@ -61,13 +62,7 @@ export default function Discover() {
     breeds: [],
   });
 
-  const { data: session } = useQuery({
-    queryKey: ["session"],
-    queryFn: async () => {
-      const { data } = await supabase.auth.getSession();
-      return data.session;
-    },
-  });
+  const { session } = useAuth();
 
   const { data: isPremium } = usePremium();
 

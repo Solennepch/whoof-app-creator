@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -10,11 +11,11 @@ import { toast } from "sonner";
 export default function PremiumPricing() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const { session } = useAuth();
 
   const handleSubscribe = async () => {
     setIsLoading(true);
     try {
-      const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
         toast.error('Vous devez être connecté');
         navigate('/login');
