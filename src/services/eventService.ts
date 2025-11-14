@@ -67,7 +67,7 @@ export const trackChallengeProgress = async (
     const progressPercentage = Math.floor((currentProgress / challenge.objectiveTarget) * 100);
     const previousPercentage = Math.floor(((existing?.current_progress || 0) / challenge.objectiveTarget) * 100);
     
-    // Notification de completion
+    // Notification de completion avec confettis
     if (isCompleted && !existing?.is_completed) {
       await sendNotification({
         userId,
@@ -75,6 +75,13 @@ export const trackChallengeProgress = async (
         data: { badgeName: challenge.reward },
         force: true, // Force l'envoi pour les achievements
       });
+      
+      // Déclencher les confettis côté client via event
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('challenge-completed', { 
+          detail: { challengeName: challenge.name, reward: challenge.reward } 
+        }));
+      }
     } 
     // Notifications de progression aux jalons (25%, 50%, 75%)
     else {
@@ -100,6 +107,13 @@ export const trackChallengeProgress = async (
             message: challenge.notificationMessages[messageIndex] 
           },
         });
+        
+        // Déclencher confettis pour les milestones
+        if (typeof window !== 'undefined' && reachedMilestone >= 50) {
+          window.dispatchEvent(new CustomEvent('milestone-reached', { 
+            detail: { percentage: reachedMilestone } 
+          }));
+        }
       }
     }
 

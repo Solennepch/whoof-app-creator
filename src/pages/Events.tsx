@@ -10,6 +10,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { XpProgress, levelForXp } from "@/components/ui/XpProgress";
 import { ChallengeHistory } from "@/components/events/ChallengeHistory";
 import { ChallengeLeaderboard } from "@/components/events/ChallengeLeaderboard";
+import { ChallengeStats } from "@/components/events/ChallengeStats";
+import { DailyChallenges } from "@/components/events/DailyChallenges";
+import { ShareAchievement } from "@/components/events/ShareAchievement";
+import { useConfettiEvents } from "@/hooks/useConfettiEvents";
+import { useEffect } from "react";
 
 export default function Events() {
   const { user } = useAuth();
@@ -17,12 +22,24 @@ export default function Events() {
   const { data: badges, isLoading: badgesLoading } = useUserBadges(user?.id);
   const { data: xpData, isLoading: xpLoading } = useUserXP(user?.id);
 
+  // Active les confettis pour les événements
+  useConfettiEvents();
+
   const isLoading = eventsLoading || badgesLoading || xpLoading;
 
   const progress = challengeProgress?.currentProgress || 0;
   const target = currentChallenge?.objectiveTarget || 1;
   const percentage = Math.min((progress / target) * 100, 100);
   const isCompleted = challengeProgress?.isCompleted || false;
+
+  // Déclencher confettis si challenge complété
+  useEffect(() => {
+    if (isCompleted && currentChallenge) {
+      window.dispatchEvent(new CustomEvent('challenge-completed', {
+        detail: { challengeName: currentChallenge.name, reward: currentChallenge.reward }
+      }));
+    }
+  }, [isCompleted, currentChallenge]);
 
   if (isLoading) {
     return (
@@ -149,10 +166,15 @@ export default function Events() {
 
                   <div className="flex items-start gap-3 p-3 rounded-xl bg-accent/10 border border-accent/20">
                     <Gift className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
-                    <div>
+                    <div className="flex-1">
                       <p className="font-medium text-foreground text-sm">Récompense</p>
                       <p className="text-sm text-muted-foreground">{currentChallenge.reward}</p>
                     </div>
+                    <ShareAchievement
+                      title={currentChallenge.name}
+                      description={currentChallenge.objective}
+                      badge={currentChallenge.badge}
+                    />
                   </div>
 
                   {isCompleted && (
@@ -190,11 +212,29 @@ export default function Events() {
           </motion.div>
         )}
 
-        {/* Leaderboard */}
+        {/* Daily Challenges */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
+        >
+          <DailyChallenges />
+        </motion.div>
+
+        {/* Stats */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+        >
+          <ChallengeStats />
+        </motion.div>
+
+        {/* Leaderboard */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
         >
           <ChallengeLeaderboard />
         </motion.div>
@@ -203,7 +243,7 @@ export default function Events() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
+          transition={{ delay: 0.7 }}
         >
           <ChallengeHistory />
         </motion.div>
@@ -212,7 +252,7 @@ export default function Events() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
+          transition={{ delay: 0.8 }}
         >
           <Card>
             <CardHeader>

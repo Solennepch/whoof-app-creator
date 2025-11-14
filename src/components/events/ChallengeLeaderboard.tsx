@@ -8,6 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useEvents } from "@/hooks/useEvents";
+import { useEffect } from "react";
 
 interface LeaderboardEntry {
   user_id: string;
@@ -133,6 +134,15 @@ export function ChallengeLeaderboard() {
   };
 
   const userPosition = leaderboard.findIndex((entry) => entry.user_id === user?.id);
+
+  // Déclencher confettis si top 3
+  useEffect(() => {
+    if (userPosition >= 0 && userPosition < 3) {
+      window.dispatchEvent(new CustomEvent('top-position', {
+        detail: { position: userPosition + 1 }
+      }));
+    }
+  }, [userPosition]);
 
   return (
     <Card>
