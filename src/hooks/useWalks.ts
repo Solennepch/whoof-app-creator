@@ -140,12 +140,15 @@ export function useWalks() {
             body: { action: 'start' }
           });
         }
-      } catch (error) {
-        console.error('Error awarding XP:', error);
-      }
+  } catch (error) {
+    console.error('Error awarding XP:', error);
+    // Silently fail XP award, don't disrupt user experience
+  }
     },
     onError: (error) => {
-      toast.error("Erreur lors du démarrage de la balade");
+      toast.error("Impossible de démarrer la balade", {
+        description: "Vérifie ta connexion ou réessaie dans quelques instants.",
+      });
       console.error(error);
     },
   });
@@ -184,7 +187,14 @@ export function useWalks() {
         }
       } catch (error) {
         console.error('Error awarding XP:', error);
+        // Silently fail XP award, don't disrupt user experience
       }
+    },
+    onError: (error) => {
+      toast.error("Impossible de terminer la balade", {
+        description: "Vérifie ta connexion ou réessaie dans quelques instants.",
+      });
+      console.error(error);
     },
   });
 
@@ -213,7 +223,13 @@ export function useWalks() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["walk_events"] });
-      toast.success("Événement créé !");
+      toast.success("Événement créé avec succès !");
+    },
+    onError: (error) => {
+      toast.error("Impossible de créer l'événement", {
+        description: "Vérifie les informations saisies et réessaie.",
+      });
+      console.error(error);
     },
   });
 
@@ -237,7 +253,13 @@ export function useWalks() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["walk_events"] });
-      toast.success("Vous participez à l'événement !");
+      toast.success("Tu participes maintenant à cet événement !");
+    },
+    onError: (error) => {
+      toast.error("Impossible de rejoindre l'événement", {
+        description: "Tu es peut-être déjà inscrit ou l'événement est complet.",
+      });
+      console.error(error);
     },
   });
 
