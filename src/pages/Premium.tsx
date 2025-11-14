@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { usePremium } from "@/hooks/usePremium";
 
 export default function Premium() {
-  const { data: isPremium } = usePremium();
+  const { data: isPremium, isLoading, error } = usePremium();
   const navigate = useNavigate();
 
   const features = [
@@ -26,6 +26,27 @@ export default function Premium() {
     console.log('Analytics: subscribe_premium');
     navigate('/premium/pricing');
   };
+
+  if (isLoading) {
+    return (
+      <div className="p-4">
+        <p className="text-sm text-muted-foreground">
+          Vérification de ton statut premium…
+        </p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-4">
+        <p className="text-sm text-red-500">
+          Impossible de vérifier ton statut premium pour le moment.  
+          Réessaie un peu plus tard.
+        </p>
+      </div>
+    );
+  }
 
   if (isPremium) {
     return (
