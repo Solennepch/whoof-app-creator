@@ -6,6 +6,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AccountProvider } from "@/contexts/AccountContext";
 import { NotificationSystemProvider } from "@/contexts/NotificationSystemContext";
+import { GamificationProvider } from "@/contexts/GamificationContext";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PageErrorBoundary } from "@/components/common/PageErrorBoundary";
 import { queryClient } from "@/lib/queryClient";
@@ -84,9 +85,10 @@ const App = () => {
         <BrowserRouter>
           <AccountProvider>
             <NotificationSystemProvider>
-              <Toaster />
-              <Sonner />
-              <Suspense fallback={<PageLoader />}>
+              <GamificationProvider>
+                <Toaster />
+                <Sonner />
+                <Suspense fallback={<PageLoader />}>
               <Routes>
                 <Route element={<MainLayout />}>
                   {/* Public routes */}
@@ -149,6 +151,7 @@ const App = () => {
                 <Route path="/debug/feature-flags" element={<PageErrorBoundary><FeatureFlags /></PageErrorBoundary>} />
               </Routes>
             </Suspense>
+            </GamificationProvider>
             </NotificationSystemProvider>
           </AccountProvider>
         </BrowserRouter>
