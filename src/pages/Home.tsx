@@ -142,7 +142,9 @@ export default function Home() {
                 placement="top"
                 showFor={['minimal', 'moderate', 'complete']}
               >
-                <DogCard {...dog} />
+                <div>
+                  <DogCard {...dog} />
+                </div>
               </ContextualTooltip>
             ) : (
               <DogCard key={i} {...dog} />

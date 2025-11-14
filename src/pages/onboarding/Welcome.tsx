@@ -95,7 +95,7 @@ export default function Welcome() {
         </Button>
 
         <button
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/home")}
           className="w-full mt-3 text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
           Plus tard

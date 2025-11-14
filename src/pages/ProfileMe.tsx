@@ -157,7 +157,7 @@ function ProfileMeContent() {
             </Button>
             
             <Button
-              onClick={() => navigate('/')}
+              onClick={() => navigate('/home')}
               variant="ghost"
               className="rounded-2xl"
             >
