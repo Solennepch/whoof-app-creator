@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { MapPin, Locate, MessageCircle, X, Shield, Filter } from "lucide-react";
+import { MapPin, Locate, MessageCircle, X, Shield, Filter, AlertTriangle, RefreshCw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from "@/components/ui/sheet";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -90,6 +91,7 @@ export default function Map() {
   const [pois, setPois] = useState<POI[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [radius, setRadius] = useState(25);
+  const [mapError, setMapError] = useState<string | null>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -622,9 +624,10 @@ export default function Map() {
     if (!mapboxToken) {
       console.error('Cannot initialize map: Mapbox token is missing');
       setIsLoading(false);
+      setMapError("Le service de cartographie n'est pas disponible pour le moment. Réessayez plus tard.");
       toast({
-        title: "Erreur de configuration",
-        description: "Le token Mapbox n'est pas configuré. Contactez l'administrateur.",
+        title: "Carte indisponible",
+        description: "Le service de cartographie n'est pas configuré.",
         variant: "destructive",
       });
       return;
@@ -688,9 +691,10 @@ export default function Map() {
       } catch (error) {
         console.error('Error initializing map:', error);
         setIsLoading(false);
+        setMapError("Impossible de charger la carte. Vérifiez votre connexion internet.");
         toast({
-          title: "Erreur",
-          description: "Impossible de charger la carte. Vérifiez votre connexion.",
+          title: "Erreur de chargement",
+          description: "La carte n'a pas pu être chargée. Vérifiez votre connexion.",
           variant: "destructive",
         });
       }
@@ -886,10 +890,30 @@ export default function Map() {
         <div className="grid gap-4 md:gap-6 lg:grid-cols-3">
           {/* Interactive Map - Responsive height */}
           <div className="lg:col-span-2">
-            <div 
-              ref={mapContainer} 
-              className="h-[400px] md:h-[500px] lg:h-[600px] rounded-2xl md:rounded-3xl shadow-soft ring-1 ring-black/5" 
-            />
+            {mapError ? (
+              <Card className="h-[400px] md:h-[500px] lg:h-[600px] rounded-2xl md:rounded-3xl shadow-soft ring-1 ring-black/5 flex flex-col items-center justify-center p-8 text-center">
+                <AlertTriangle className="h-12 w-12 text-muted-foreground mb-4" />
+                <h3 className="text-lg font-semibold mb-2">Carte indisponible</h3>
+                <p className="text-sm text-muted-foreground mb-6 max-w-md">
+                  {mapError}
+                </p>
+                <Button
+                  onClick={() => {
+                    setMapError(null);
+                    window.location.reload();
+                  }}
+                  className="rounded-xl"
+                >
+                  <RefreshCw className="h-4 w-4 mr-2" />
+                  Réessayer
+                </Button>
+              </Card>
+            ) : (
+              <div 
+                ref={mapContainer} 
+                className="h-[400px] md:h-[500px] lg:h-[600px] rounded-2xl md:rounded-3xl shadow-soft ring-1 ring-black/5" 
+              />
+            )}
           </div>
 
           {/* Sidebar - Hidden on mobile, shows as overlay via Sheet */}
