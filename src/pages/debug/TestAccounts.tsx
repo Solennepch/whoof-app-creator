@@ -139,7 +139,7 @@ export default function TestAccounts() {
         if (account.isPro) {
           navigate("/pro/home");
         } else {
-          navigate("/");
+          navigate("/home");
         }
       }, 500);
     } catch (error: any) {

@@ -91,7 +91,7 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
     if (account.type === 'pro') {
       navigate('/pro/home');
     } else {
-      navigate('/');
+      navigate('/home');
     }
 
     toast.success(`Vous utilisez Whoof en tant que ${account.name}`);
