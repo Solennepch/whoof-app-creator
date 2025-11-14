@@ -127,9 +127,21 @@ export function useWalks() {
       if (error) throw error;
       return data;
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: ["walks"] });
       toast.success("Balade démarrée !");
+      
+      // Award XP for starting a walk
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+          await supabase.functions.invoke('walk-xp', {
+            body: { action: 'start' }
+          });
+        }
+      } catch (error) {
+        console.error('Error awarding XP:', error);
+      }
     },
     onError: (error) => {
       toast.error("Erreur lors du démarrage de la balade");
@@ -153,9 +165,25 @@ export function useWalks() {
       if (error) throw error;
       return data;
     },
-    onSuccess: () => {
+    onSuccess: async (walk) => {
       queryClient.invalidateQueries({ queryKey: ["walks"] });
       toast.success("Balade terminée !");
+      
+      // Award XP for completing a walk
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session && walk.distance_km) {
+          await supabase.functions.invoke('walk-xp', {
+            body: { 
+              action: 'complete',
+              distance_km: walk.distance_km,
+              duration_minutes: walk.duration_minutes 
+            }
+          });
+        }
+      } catch (error) {
+        console.error('Error awarding XP:', error);
+      }
     },
   });
 

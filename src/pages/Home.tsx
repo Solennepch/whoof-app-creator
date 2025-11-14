@@ -57,7 +57,7 @@ export default function Home() {
           <h1 className="mb-2 text-3xl font-bold text-foreground">
             Fil d'actualité
           </h1>
-          <p className="text-muted-foreground">Découvre les toutous près de chez toi</p>
+          <p className="text-muted-foreground">Exemples de profils – les vrais profils arrivent en fonction de ta zone 🐶</p>
         </div>
 
         {/* Stats Cards */}

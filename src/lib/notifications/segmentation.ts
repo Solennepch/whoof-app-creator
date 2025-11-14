@@ -30,9 +30,17 @@ export const getUserSegment = async (userId: string): Promise<UserSegmentData> =
   const now = new Date();
   const daysSinceSignup = Math.floor((now.getTime() - createdAt.getTime()) / (1000 * 60 * 60 * 24));
 
-  // Pour l'instant, on considère que personne n'est premium
-  // TODO: Implémenter la vérification premium via Stripe
-  const isPremium = false;
+  // Check premium status via Stripe
+  let isPremium = false;
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) {
+      const { data } = await supabase.functions.invoke('check-subscription');
+      isPremium = data?.isPremium || false;
+    }
+  } catch (error) {
+    console.error('Error checking premium status:', error);
+  }
 
   // Récupérer la dernière activité (messages, swipes, balades)
   const [lastMessage, lastSwipe, lastWalk] = await Promise.all([
