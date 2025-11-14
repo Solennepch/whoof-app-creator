@@ -848,6 +848,86 @@ export type Database = {
           },
         ]
       }
+      guild_members: {
+        Row: {
+          guild_id: string
+          id: string
+          joined_at: string | null
+          role: string
+          user_id: string
+          xp_contributed: number | null
+        }
+        Insert: {
+          guild_id: string
+          id?: string
+          joined_at?: string | null
+          role?: string
+          user_id: string
+          xp_contributed?: number | null
+        }
+        Update: {
+          guild_id?: string
+          id?: string
+          joined_at?: string | null
+          role?: string
+          user_id?: string
+          xp_contributed?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "guild_members_guild_id_fkey"
+            columns: ["guild_id"]
+            isOneToOne: false
+            referencedRelation: "guilds"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      guilds: {
+        Row: {
+          banner_url: string | null
+          created_at: string | null
+          description: string | null
+          emblem_url: string | null
+          id: string
+          is_public: boolean | null
+          leader_id: string
+          level: number | null
+          max_members: number | null
+          name: string
+          total_xp: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          banner_url?: string | null
+          created_at?: string | null
+          description?: string | null
+          emblem_url?: string | null
+          id?: string
+          is_public?: boolean | null
+          leader_id: string
+          level?: number | null
+          max_members?: number | null
+          name: string
+          total_xp?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          banner_url?: string | null
+          created_at?: string | null
+          description?: string | null
+          emblem_url?: string | null
+          id?: string
+          is_public?: boolean | null
+          leader_id?: string
+          level?: number | null
+          max_members?: number | null
+          name?: string
+          total_xp?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       leaderboard_weekly: {
         Row: {
           city: string | null
@@ -1909,6 +1989,56 @@ export type Database = {
         }
         Relationships: []
       }
+      season_cosmetics: {
+        Row: {
+          animation_url: string | null
+          created_at: string | null
+          description: string | null
+          id: string
+          metadata: Json | null
+          name: string
+          preview_url: string | null
+          rarity: string
+          season_id: string
+          type: string
+          unlock_requirement: Json
+        }
+        Insert: {
+          animation_url?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          name: string
+          preview_url?: string | null
+          rarity?: string
+          season_id: string
+          type: string
+          unlock_requirement: Json
+        }
+        Update: {
+          animation_url?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          name?: string
+          preview_url?: string | null
+          rarity?: string
+          season_id?: string
+          type?: string
+          unlock_requirement?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "season_cosmetics_season_id_fkey"
+            columns: ["season_id"]
+            isOneToOne: false
+            referencedRelation: "seasons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       seasons: {
         Row: {
           created_at: string | null
@@ -1972,6 +2102,135 @@ export type Database = {
         }
         Relationships: []
       }
+      special_event_participation: {
+        Row: {
+          challenges_completed: Json | null
+          event_id: string
+          id: string
+          joined_at: string | null
+          rewards_claimed: Json | null
+          total_xp_earned: number | null
+          user_id: string
+        }
+        Insert: {
+          challenges_completed?: Json | null
+          event_id: string
+          id?: string
+          joined_at?: string | null
+          rewards_claimed?: Json | null
+          total_xp_earned?: number | null
+          user_id: string
+        }
+        Update: {
+          challenges_completed?: Json | null
+          event_id?: string
+          id?: string
+          joined_at?: string | null
+          rewards_claimed?: Json | null
+          total_xp_earned?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "special_event_participation_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "special_events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      special_events: {
+        Row: {
+          challenges: Json
+          created_at: string | null
+          description: string
+          end_date: string
+          icon: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          rewards: Json
+          start_date: string
+          theme: string | null
+          xp_multiplier: number
+        }
+        Insert: {
+          challenges?: Json
+          created_at?: string | null
+          description: string
+          end_date: string
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          rewards?: Json
+          start_date: string
+          theme?: string | null
+          xp_multiplier?: number
+        }
+        Update: {
+          challenges?: Json
+          created_at?: string | null
+          description?: string
+          end_date?: string
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          rewards?: Json
+          start_date?: string
+          theme?: string | null
+          xp_multiplier?: number
+        }
+        Relationships: []
+      }
+      user_active_cosmetics: {
+        Row: {
+          active_avatar_frame: string | null
+          active_badge: string | null
+          active_banner: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          active_avatar_frame?: string | null
+          active_badge?: string | null
+          active_banner?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          active_avatar_frame?: string | null
+          active_badge?: string | null
+          active_banner?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_active_cosmetics_active_avatar_frame_fkey"
+            columns: ["active_avatar_frame"]
+            isOneToOne: false
+            referencedRelation: "season_cosmetics"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_active_cosmetics_active_badge_fkey"
+            columns: ["active_badge"]
+            isOneToOne: false
+            referencedRelation: "season_cosmetics"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_active_cosmetics_active_banner_fkey"
+            columns: ["active_banner"]
+            isOneToOne: false
+            referencedRelation: "season_cosmetics"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_badges: {
         Row: {
           badge_code: string
@@ -1998,6 +2257,35 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "badges"
             referencedColumns: ["code"]
+          },
+        ]
+      }
+      user_cosmetics: {
+        Row: {
+          cosmetic_id: string
+          id: string
+          unlocked_at: string | null
+          user_id: string
+        }
+        Insert: {
+          cosmetic_id: string
+          id?: string
+          unlocked_at?: string | null
+          user_id: string
+        }
+        Update: {
+          cosmetic_id?: string
+          id?: string
+          unlocked_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_cosmetics_cosmetic_id_fkey"
+            columns: ["cosmetic_id"]
+            isOneToOne: false
+            referencedRelation: "season_cosmetics"
+            referencedColumns: ["id"]
           },
         ]
       }

@@ -16,6 +16,9 @@ import { ShareAchievement } from "@/components/events/ShareAchievement";
 import { SeasonCard } from "@/components/events/SeasonCard";
 import { QuestsList } from "@/components/events/QuestsList";
 import { ActivityFeed } from "@/components/events/ActivityFeed";
+import { SpecialEventWidget } from "@/components/events/SpecialEventWidget";
+import { GuildWidget } from "@/components/events/GuildWidget";
+import { CosmeticsShowcase } from "@/components/events/CosmeticsShowcase";
 import { useConfettiEvents } from "@/hooks/useConfettiEvents";
 import { useEffect } from "react";
 
@@ -272,11 +275,38 @@ export default function Events() {
           <ChallengeHistory />
         </motion.div>
 
-        {/* Badges Collection */}
+        {/* Special Event */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.65 }}
+        >
+          <SpecialEventWidget />
+        </motion.div>
+
+        {/* Guild */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7 }}
+        >
+          <GuildWidget />
+        </motion.div>
+
+        {/* Cosmetics */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.75 }}
+        >
+          <CosmeticsShowcase />
+        </motion.div>
+
+        {/* Badges Collection */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8 }}
         >
           <Card>
             <CardHeader>
