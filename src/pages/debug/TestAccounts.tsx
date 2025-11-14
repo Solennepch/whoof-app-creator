@@ -151,8 +151,6 @@ export default function TestAccounts() {
       setTimeout(() => {
         if (account.isPro) {
           navigate("/pro/home");
-        } else if (account.role === "admin") {
-          navigate("/admin/dashboard");
         } else {
           navigate("/");
         }

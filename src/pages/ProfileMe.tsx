@@ -149,7 +149,7 @@ function ProfileMeContent() {
 
           <div className="flex flex-col gap-3">
             <Button
-              onClick={() => navigate('/onboarding/profile')}
+              onClick={() => navigate('/settings')}
               className="rounded-2xl text-white font-semibold"
               style={{ backgroundColor: "var(--brand-plum)" }}
             >

@@ -96,11 +96,11 @@ export default function Signup() {
           data: {
             account_type: accountType,
             first_name: accountType === "user" ? firstName : undefined,
-            business_name: accountType === "pro" ? businessName : undefined,
-          },
-          emailRedirectTo: `${window.location.origin}/onboarding/profile`,
+          business_name: accountType === "pro" ? businessName : undefined,
         },
-      });
+        emailRedirectTo: `${window.location.origin}/onboarding/welcome`,
+      },
+    });
 
       if (authError) throw authError;
       if (!authData.user) throw new Error("User creation failed");
@@ -140,7 +140,7 @@ export default function Signup() {
         navigate("/pro/onboarding");
       } else {
         toast.success("Compte créé ! Vérifiez votre e-mail.");
-        navigate("/onboarding/profile");
+        navigate("/onboarding/welcome");
       }
     } catch (error: any) {
       console.error("Signup error:", error);
