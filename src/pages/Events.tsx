@@ -23,6 +23,7 @@ import { SecretAchievements } from "@/components/events/SecretAchievements";
 import { LeagueStandings } from "@/components/events/LeagueStandings";
 import { ReferralSystem } from "@/components/events/ReferralSystem";
 import { DailyMissionsWidget } from "@/components/events/DailyMissionsWidget";
+import { GamificationWrapper } from "@/components/gamification/GamificationWrapper";
 import { useConfettiEvents } from "@/hooks/useConfettiEvents";
 import { useEffect } from "react";
 
