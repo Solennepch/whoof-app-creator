@@ -16,6 +16,10 @@ import { MainLayout } from "@/components/layout/MainLayout";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import Debug from "./pages/Debug";
+import DebugHealth from "./pages/DebugHealth";
+import TestAccounts from "./pages/debug/TestAccounts";
+import FeatureFlags from "./pages/debug/FeatureFlags";
 
 // Lazy loading for non-critical routes
 const Home = lazy(() => import("./pages/Home"));
@@ -60,12 +64,6 @@ const ProPricing = lazy(() => import("./pages/pro/Pricing"));
 const ProReviews = lazy(() => import("./pages/pro/Reviews"));
 const ProServices = lazy(() => import("./pages/pro/Services"));
 const ProSettings = lazy(() => import("./pages/pro/Settings"));
-
-// Debug routes
-const Debug = lazy(() => import("./pages/Debug"));
-const DebugHealth = lazy(() => import("./pages/DebugHealth"));
-const TestAccounts = lazy(() => import("./pages/debug/TestAccounts"));
-const FeatureFlags = lazy(() => import("./pages/debug/FeatureFlags"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 // Loading fallback

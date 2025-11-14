@@ -7,7 +7,7 @@ export function MainLayout() {
   const location = useLocation();
   
   // Routes sans layout
-  const noLayoutRoutes = ["/", "/login", "/signup", "/onboarding/welcome", "/onboarding/dog", "/onboarding/preferences", "/onboarding/location"];
+  const noLayoutRoutes = ["/", "/login", "/signup", "/onboarding/welcome", "/onboarding/dog", "/onboarding/preferences", "/onboarding/location", "/debug", "/debug/health", "/debug/test-accounts", "/debug/feature-flags"];
   
   if (noLayoutRoutes.includes(location.pathname)) {
     return <Outlet />;
