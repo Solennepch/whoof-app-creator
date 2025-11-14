@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { usePremium } from "@/hooks/usePremium";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { PremiumBadge, PremiumTooltip } from "@/components/ui/PremiumBadge";
 import { ModeToggle } from "@/components/ui/ModeToggle";
 import { MatchCounter } from "@/components/ui/MatchCounter";
@@ -20,6 +20,7 @@ import { regionProfiles, adoptionProfiles, type RegionProfile, type AdoptionProf
 
 export default function Discover() {
   const navigate = useNavigate();
+  const location = useLocation();
   
   // Zustand store
   const { 
@@ -31,6 +32,14 @@ export default function Discover() {
     discoveryMode,
     setDiscoveryMode
   } = useAppStore();
+
+  // Initialize mode from navigation state
+  useEffect(() => {
+    const stateMode = (location.state as any)?.mode;
+    if (stateMode && (stateMode === 'region' || stateMode === 'adoption')) {
+      setDiscoveryMode(stateMode);
+    }
+  }, [location.state, setDiscoveryMode]);
   
   // Local state
   const [currentIndex, setCurrentIndex] = useState(0);
