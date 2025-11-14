@@ -53,18 +53,6 @@ const ProReviews = lazy(() => import("./pages/pro/Reviews"));
 const ProServices = lazy(() => import("./pages/pro/Services"));
 const ProSettings = lazy(() => import("./pages/pro/Settings"));
 
-// Admin routes
-const Moderation = lazy(() => import("./pages/admin/Moderation"));
-const AdminDashboard = lazy(() => import("./pages/admin/Dashboard"));
-const AdminUsers = lazy(() => import("./pages/admin/Users"));
-const AstroDogCMS = lazy(() => import("./pages/admin/AstroDogCMS"));
-const AdminProfessionals = lazy(() => import("./pages/admin/Professionals"));
-const AdminProfessionalDetail = lazy(() => import("./pages/admin/ProfessionalDetail"));
-const RolesManagement = lazy(() => import("./pages/admin/RolesManagement"));
-const AdminEmailTemplates = lazy(() => import("./pages/admin/EmailTemplates"));
-const AdminNotificationDashboard = lazy(() => import("./pages/admin/NotificationDashboard"));
-const AdminABTesting = lazy(() => import("./pages/admin/ABTesting"));
-
 // Debug routes
 const Debug = lazy(() => import("./pages/Debug"));
 const DebugHealth = lazy(() => import("./pages/DebugHealth"));
@@ -139,18 +127,6 @@ const App = () => {
                 <Route path="/pro/settings" element={<PageErrorBoundary><ProSettings /></PageErrorBoundary>} />
 
                   {/* Admin */}
-                  <Route path="/admin" element={<PageErrorBoundary><AdminDashboard /></PageErrorBoundary>} />
-                  <Route path="/admin/dashboard" element={<PageErrorBoundary><AdminDashboard /></PageErrorBoundary>} />
-                  <Route path="/admin/users" element={<PageErrorBoundary><AdminUsers /></PageErrorBoundary>} />
-                  <Route path="/admin/professionals" element={<PageErrorBoundary><AdminProfessionals /></PageErrorBoundary>} />
-                  <Route path="/admin/professionals/:id" element={<PageErrorBoundary><AdminProfessionalDetail /></PageErrorBoundary>} />
-                  <Route path="/admin/moderation" element={<PageErrorBoundary><Moderation /></PageErrorBoundary>} />
-                  <Route path="/admin/roles" element={<PageErrorBoundary><RolesManagement /></PageErrorBoundary>} />
-                  <Route path="/admin/astrodog-cms" element={<PageErrorBoundary><AstroDogCMS /></PageErrorBoundary>} />
-                  <Route path="/admin/email-templates" element={<PageErrorBoundary><AdminEmailTemplates /></PageErrorBoundary>} />
-                  <Route path="/admin/notification-dashboard" element={<PageErrorBoundary><AdminNotificationDashboard /></PageErrorBoundary>} />
-                  <Route path="/admin/ab-testing" element={<PageErrorBoundary><AdminABTesting /></PageErrorBoundary>} />
-
                   {/* Fallback */}
                   <Route path="*" element={<PageErrorBoundary><NotFound /></PageErrorBoundary>} />
                 </Route>

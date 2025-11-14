@@ -15,10 +15,6 @@ export interface Thread {
   a: string;
   b: string;
   created_at: string;
-  pinned_by?: string[];
-  archived_by?: string[];
-  deleted_by?: string[];
-  updated_at?: string;
   lastMessage?: Message;
   otherUser?: {
     id: string;
@@ -44,8 +40,7 @@ export function useMessages() {
           messages:direct_messages(*)
         `)
         .or(`a.eq.${user.id},b.eq.${user.id}`)
-        .not("deleted_by", "cs", `{${user.id}}`)
-        .order("updated_at", { ascending: false });
+        .order("created_at", { ascending: false });
 
       if (error) throw error;
 
@@ -67,17 +62,7 @@ export function useMessages() {
         })
       );
 
-      // Sort: pinned first, then by updated_at
-      return threadsWithProfiles.sort((a, b) => {
-        const aIsPinned = a.pinned_by?.includes(user.id);
-        const bIsPinned = b.pinned_by?.includes(user.id);
-        
-        if (aIsPinned && !bIsPinned) return -1;
-        if (!aIsPinned && bIsPinned) return 1;
-        
-        return new Date(b.updated_at || b.created_at).getTime() - 
-               new Date(a.updated_at || a.created_at).getTime();
-      }) as Thread[];
+      return threadsWithProfiles as Thread[];
     },
   });
 
@@ -164,117 +149,11 @@ export function useMessages() {
     },
   });
 
-  // Pin/Unpin thread
-  const togglePin = useMutation({
-    mutationFn: async (threadId: string) => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error("Not authenticated");
-
-      const { data: thread } = await supabase
-        .from("direct_threads")
-        .select("pinned_by")
-        .eq("id", threadId)
-        .single();
-
-      const pinnedBy = thread?.pinned_by || [];
-      const isPinned = pinnedBy.includes(user.id);
-      
-      const newPinnedBy = isPinned
-        ? pinnedBy.filter((id) => id !== user.id)
-        : [...pinnedBy, user.id];
-
-      const { error } = await supabase
-        .from("direct_threads")
-        .update({ pinned_by: newPinnedBy })
-        .eq("id", threadId);
-
-      if (error) throw error;
-      return { isPinned: !isPinned };
-    },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["threads"] });
-      toast.success(data.isPinned ? "Conversation épinglée" : "Conversation désépinglée");
-    },
-    onError: () => {
-      toast.error("Erreur lors de l'épinglage");
-    },
-  });
-
-  // Archive/Unarchive thread
-  const toggleArchive = useMutation({
-    mutationFn: async (threadId: string) => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error("Not authenticated");
-
-      const { data: thread } = await supabase
-        .from("direct_threads")
-        .select("archived_by")
-        .eq("id", threadId)
-        .single();
-
-      const archivedBy = thread?.archived_by || [];
-      const isArchived = archivedBy.includes(user.id);
-      
-      const newArchivedBy = isArchived
-        ? archivedBy.filter((id) => id !== user.id)
-        : [...archivedBy, user.id];
-
-      const { error } = await supabase
-        .from("direct_threads")
-        .update({ archived_by: newArchivedBy })
-        .eq("id", threadId);
-
-      if (error) throw error;
-      return { isArchived: !isArchived };
-    },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["threads"] });
-      toast.success(data.isArchived ? "Conversation archivée" : "Conversation désarchivée");
-    },
-    onError: () => {
-      toast.error("Erreur lors de l'archivage");
-    },
-  });
-
-  // Delete thread (soft delete)
-  const deleteThread = useMutation({
-    mutationFn: async (threadId: string) => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error("Not authenticated");
-
-      const { data: thread } = await supabase
-        .from("direct_threads")
-        .select("deleted_by")
-        .eq("id", threadId)
-        .single();
-
-      const deletedBy = thread?.deleted_by || [];
-      const newDeletedBy = [...deletedBy, user.id];
-
-      const { error } = await supabase
-        .from("direct_threads")
-        .update({ deleted_by: newDeletedBy })
-        .eq("id", threadId);
-
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["threads"] });
-      toast.success("Conversation supprimée");
-    },
-    onError: () => {
-      toast.error("Erreur lors de la suppression");
-    },
-  });
-
   return {
     threads,
     threadsLoading,
     useThreadMessages,
     sendMessage: sendMessage.mutate,
     isSending: sendMessage.isPending,
-    togglePin: togglePin.mutate,
-    toggleArchive: toggleArchive.mutate,
-    deleteThread: deleteThread.mutate,
   };
 }
