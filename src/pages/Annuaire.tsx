@@ -110,7 +110,7 @@ export default function Annuaire() {
     params.set('rayon', radius.toString());
     params.set('lat', lat.toString());
     params.set('lng', lng.toString());
-    navigate(`/annuaire/carte?${params.toString()}`);
+    navigate(`/annuaire/map?${params.toString()}`);
   };
 
   return (

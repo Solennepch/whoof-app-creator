@@ -67,7 +67,7 @@ export default function Premium() {
               </p>
             </div>
 
-            <Link to="/account/subscription">
+            <Link to="/settings">
               <Button
                 variant="outline"
                 className="w-full h-12 rounded-xl"

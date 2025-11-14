@@ -405,7 +405,7 @@ function DogOnboardingContent() {
                 type="button"
                 variant="outline"
                 className="flex-1 rounded-2xl"
-                onClick={() => navigate('/onboarding/profile')}
+                onClick={() => navigate('/settings')}
                 disabled={isLoading}
               >
                 Retour

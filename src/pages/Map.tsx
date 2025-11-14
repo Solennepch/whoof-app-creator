@@ -310,7 +310,7 @@ export default function Map() {
           action: data.chat_id ? (
             <Button
               size="sm"
-              onClick={() => navigate(`/chat?c=${data.chat_id}`)}
+              onClick={() => navigate(`/messages`)}
               className="rounded-full"
             >
               Ouvrir le chat

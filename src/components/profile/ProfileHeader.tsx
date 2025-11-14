@@ -78,7 +78,7 @@ export function ProfileHeader({ primaryDog, profile, completionPercentage }: Pro
         </div>
         
         <Button
-          onClick={() => navigate('/onboarding/profile')}
+          onClick={() => navigate('/profile/me')}
           variant="outline"
           className="rounded-full font-medium text-sm h-10 px-6 border-2"
           style={{ borderColor: "#111827" }}
