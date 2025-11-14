@@ -11,7 +11,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { PageErrorBoundary } from "@/components/common/PageErrorBoundary";
 import { queryClient } from "@/lib/queryClient";
 import { MainLayout } from "@/components/layout/MainLayout";
-import { useIsAdmin } from "@/hooks/useIsAdmin";
 
 // Eager loading for critical routes
 import Index from "./pages/Index";
@@ -80,59 +79,8 @@ const PageLoader = () => (
   </div>
 );
 
-const DebugRoutes = () => {
-  const isDev = import.meta.env.MODE !== "production";
-  const { isAdmin, isLoading } = useIsAdmin();
-  
-  if (isLoading) {
-    return null;
-  }
-  
-  const canAccessDebug = isDev || isAdmin;
-  
-  if (!canAccessDebug) {
-    return null;
-  }
-  
-  return (
-    <>
-      <Route
-        path="/debug"
-        element={
-          <PageErrorBoundary>
-            <Debug />
-          </PageErrorBoundary>
-        }
-      />
-      <Route
-        path="/debug/health"
-        element={
-          <PageErrorBoundary>
-            <DebugHealth />
-          </PageErrorBoundary>
-        }
-      />
-      <Route
-        path="/debug/test-accounts"
-        element={
-          <PageErrorBoundary>
-            <TestAccounts />
-          </PageErrorBoundary>
-        }
-      />
-      <Route
-        path="/debug/feature-flags"
-        element={
-          <PageErrorBoundary>
-            <FeatureFlags />
-          </PageErrorBoundary>
-        }
-      />
-    </>
-  );
-};
-
 const App = () => {
+  const isDev = import.meta.env.MODE !== "production";
   
   return (
     <QueryClientProvider client={queryClient}>
@@ -145,8 +93,15 @@ const App = () => {
                 <Sonner />
                 <Suspense fallback={<PageLoader />}>
               <Routes>
-                {/* Debug routes - accessible sans connexion */}
-                {DebugRoutes()}
+                {/* Debug routes - accessible en mode dev */}
+                {isDev && (
+                  <>
+                    <Route path="/debug" element={<PageErrorBoundary><Debug /></PageErrorBoundary>} />
+                    <Route path="/debug/health" element={<PageErrorBoundary><DebugHealth /></PageErrorBoundary>} />
+                    <Route path="/debug/test-accounts" element={<PageErrorBoundary><TestAccounts /></PageErrorBoundary>} />
+                    <Route path="/debug/feature-flags" element={<PageErrorBoundary><FeatureFlags /></PageErrorBoundary>} />
+                  </>
+                )}
                 
                 <Route element={<MainLayout />}>
                   {/* Public routes */}
