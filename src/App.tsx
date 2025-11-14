@@ -145,6 +145,9 @@ const App = () => {
                 <Sonner />
                 <Suspense fallback={<PageLoader />}>
               <Routes>
+                {/* Debug routes - accessible sans connexion */}
+                {DebugRoutes()}
+                
                 <Route element={<MainLayout />}>
                   {/* Public routes */}
                   <Route path="/" element={<Index />} />
@@ -199,9 +202,6 @@ const App = () => {
                   {/* Fallback */}
                   <Route path="*" element={<PageErrorBoundary><NotFound /></PageErrorBoundary>} />
                 </Route>
-                
-                {/* Debug routes - accessible en dev ou pour les admins */}
-                {DebugRoutes()}
               </Routes>
             </Suspense>
             </GamificationProvider>
