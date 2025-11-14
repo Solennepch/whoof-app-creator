@@ -54,6 +54,36 @@ export default function Recompenses() {
           totalRecommendations={0}
         />
 
+        {/* Empty State - First Time */}
+        {totalXP === 0 && (
+          <Card className="p-6 rounded-3xl shadow-soft bg-gradient-to-br from-[#7B61FF]/5 to-[#FF5DA2]/5 text-center">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-[#FFC14D] to-[#FF5DA2] flex items-center justify-center">
+              <Sparkles className="w-8 h-8 text-white" />
+            </div>
+            <h3 className="text-lg font-bold mb-2 text-foreground">
+              Commence ta première activité ! 🎯
+            </h3>
+            <p className="text-sm text-muted-foreground mb-4">
+              Tu n'as pas encore gagné d'XP. Lance une balade, participe à un événement ou complète ton profil pour débloquer des récompenses.
+            </p>
+            <div className="flex gap-2 justify-center">
+              <Button 
+                onClick={() => navigate('/balades')}
+                className="rounded-full"
+              >
+                Première balade
+              </Button>
+              <Button 
+                onClick={() => navigate('/events')}
+                variant="outline"
+                className="rounded-full"
+              >
+                Voir les events
+              </Button>
+            </div>
+          </Card>
+        )}
+
         {/* XP Rewards Section */}
         <Card className="p-6 rounded-3xl shadow-soft bg-white">
           <div className="flex items-center justify-between mb-4">
@@ -86,8 +116,9 @@ export default function Recompenses() {
                 className="rounded-full font-semibold text-white"
                 style={{ backgroundColor: "#FFC14D" }}
                 onClick={() => navigate('/premium')}
+                disabled={totalXP < 500}
               >
-                Échanger
+                {totalXP >= 500 ? 'Échanger' : 'Pas assez d\'XP'}
               </Button>
             </div>
 
@@ -105,8 +136,9 @@ export default function Recompenses() {
                 size="sm"
                 className="rounded-full font-semibold text-white"
                 style={{ backgroundColor: "#FF5DA2" }}
+                disabled={totalXP < 200}
               >
-                Échanger
+                {totalXP >= 200 ? 'Échanger' : 'Pas assez d\'XP'}
               </Button>
             </div>
 
@@ -124,8 +156,9 @@ export default function Recompenses() {
                 size="sm"
                 className="rounded-full font-semibold text-white"
                 style={{ backgroundColor: "#7B61FF" }}
+                disabled={totalXP < 100}
               >
-                Échanger
+                {totalXP >= 100 ? 'Échanger' : 'Pas assez d\'XP'}
               </Button>
             </div>
           </div>

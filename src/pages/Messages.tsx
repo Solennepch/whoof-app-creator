@@ -4,12 +4,14 @@ import { Input } from "@/components/ui/input";
 import { MessageSquare, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useMessages } from "@/hooks/useMessages";
 import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Messages() {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   
   const { threads, threadsLoading } = useMessages();
@@ -71,11 +73,13 @@ export default function Messages() {
         <Card className="p-12">
           <div className="text-center">
             <MessageSquare className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
-            <h3 className="text-xl font-semibold mb-2">Aucun message</h3>
+            <h3 className="text-xl font-semibold mb-2">Aucune conversation pour l'instant</h3>
             <p className="text-muted-foreground mb-6">
-              Commencez une conversation avec d'autres propriétaires de chiens
+              Tes prochains crushs canins apparaîtront ici 🐾
             </p>
-            <Button>Découvrir des profils</Button>
+            <Button onClick={() => navigate('/discover')}>
+              Découvrir des profils
+            </Button>
           </div>
         </Card>
       ) : (
