@@ -14,7 +14,8 @@ import { SeasonCard } from "@/components/events/SeasonCard";
 import { GamificationWrapper } from "@/components/gamification/GamificationWrapper";
 
 export default function Ranking() {
-  const [activeTab, setActiveTab] = useState("ranking");
+  const [activeTab, setActiveTab] = useState<"ranking" | "challenges">("ranking");
+  const [activePeriod, setActivePeriod] = useState<"weekly" | "monthly">("weekly");
   const { user } = useAuth();
   const { currentChallenge, challengeProgress } = useEvents();
 
@@ -74,7 +75,7 @@ export default function Ranking() {
         <SeasonCard />
 
         {/* Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as "ranking" | "challenges")} className="space-y-6">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="ranking">
               <Trophy className="mr-2 h-4 w-4" />
@@ -98,7 +99,7 @@ export default function Ranking() {
                 <p className="text-2xl font-extrabold">#{myRank + 1}</p>
               </div>
               <div className="text-right">
-                <p className="text-xs leading-4 opacity-90">{activeTab === "weekly" ? "Cette semaine" : "Ce mois"}</p>
+                <p className="text-xs leading-4 opacity-90">{activePeriod === "weekly" ? "Cette semaine" : "Ce mois"}</p>
                 <p className="text-2xl font-extrabold">{myRanking.weekly_xp} XP</p>
                 <p className="text-xs leading-4 opacity-90">Niveau {myXP?.level || 1}</p>
               </div>
@@ -115,9 +116,9 @@ export default function Ranking() {
         {/* Tabs */}
         <div className="grid grid-cols-2 p-1 rounded-full bg-white/70 shadow-sm backdrop-blur-sm">
           <button
-            onClick={() => setActiveTab("weekly")}
+            onClick={() => setActivePeriod("weekly")}
             className={`rounded-full py-2 text-sm font-medium transition-all ${
-              activeTab === "weekly" 
+              activePeriod === "weekly" 
                 ? "bg-white shadow text-[#111827]" 
                 : "text-gray-600"
             }`}
@@ -125,9 +126,9 @@ export default function Ranking() {
             Hebdo
           </button>
           <button
-            onClick={() => setActiveTab("monthly")}
+            onClick={() => setActivePeriod("monthly")}
             className={`rounded-full py-2 text-sm font-medium transition-all ${
-              activeTab === "monthly" 
+              activePeriod === "monthly" 
                 ? "bg-white shadow text-[#111827]" 
                 : "text-gray-600"
             }`}
