@@ -4,9 +4,17 @@ import { supabase } from "@/integrations/supabase/client";
 export function useIsAdmin() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const isDev = import.meta.env.DEV;
 
   useEffect(() => {
     const checkAdminStatus = async () => {
+      // En mode dev, on donne automatiquement les droits admin
+      if (isDev) {
+        setIsAdmin(true);
+        setIsLoading(false);
+        return;
+      }
+
       try {
         const { data: { user } } = await supabase.auth.getUser();
         
@@ -32,7 +40,7 @@ export function useIsAdmin() {
     };
 
     checkAdminStatus();
-  }, []);
+  }, [isDev]);
 
   return { isAdmin, isLoading };
 }
