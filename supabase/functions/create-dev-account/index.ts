@@ -43,25 +43,33 @@ serve(async (req) => {
 
     if (!userId) throw new Error('Failed to create/find dev user');
 
-    // Create profile
+    // Create complete profile with all features
     const { error: profileError } = await supabaseAdmin
       .from('profiles')
       .upsert({
         id: userId,
         display_name: '👑 Dev Master',
-        bio: 'Compte développeur avec accès complet',
+        bio: 'Compte développeur avec accès complet à toutes les fonctionnalités',
         avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=devmaster',
-        city: 'Dev City',
+        city: 'Paris',
         is_premium: true,
+        lat: 48.8566,
+        lng: 2.3522,
+        radius_km: 50,
+        onboarding_completed: true,
       }, { onConflict: 'id' });
 
-    // Assign pro role only (admin/moderator removed)
-    await supabaseAdmin
+    console.log('Profile created:', { profileError });
+
+    // Assign pro role for access to pro features
+    const { error: roleError } = await supabaseAdmin
       .from('user_roles')
       .upsert({ user_id: userId, role: 'pro' }, { onConflict: 'user_id,role' });
 
-    // Create a dog profile for testing
-    await supabaseAdmin
+    console.log('Role assigned:', { roleError });
+
+    // Create a complete dog profile for testing all dog-related features
+    const { error: dogError } = await supabaseAdmin
       .from('dogs')
       .upsert({
         owner_id: userId,
@@ -71,24 +79,61 @@ serve(async (req) => {
         size: 'large',
         temperament: 'friendly',
         birthdate: '2021-01-01',
+        zodiac_sign: 'capricorn',
         avatar_url: 'https://api.dicebear.com/7.x/bottts/svg?seed=rexdev',
+        vaccinations: ['rabies', 'dhpp'],
+        anecdote: 'Chien de test super sympa qui adore les balades!',
       }, { onConflict: 'owner_id' });
 
-    // Create pro profile
+    console.log('Dog created:', { dogError });
+
+    // Create complete pro profile for testing all pro features
     const { error: proError } = await supabaseAdmin
       .from('pro_profiles')
       .upsert({
         user_id: userId,
-        business_name: 'Dev Business',
-        description: 'Compte pro développeur avec accès complet',
+        business_name: '👑 Dev Business Pro',
+        description: 'Entreprise de test avec accès complet aux fonctionnalités professionnelles',
         activity: 'veterinaire',
         is_published: true,
         verified: true,
-        city: 'Dev City',
-        tags: ['dev', 'all-access'],
+        city: 'Paris',
+        lat: 48.8566,
+        lng: 2.3522,
+        radius_km: 50,
+        tags: ['dev', 'veterinaire', 'urgences', 'consultations'],
+        email: email,
+        phone: '+33 1 23 45 67 89',
+        website: 'https://dev.whoof.app',
+        logo_url: 'https://api.dicebear.com/7.x/shapes/svg?seed=devbusiness',
       }, { onConflict: 'user_id' });
 
-    console.log('Dev account created/updated:', { userId, profileError, proError });
+    console.log('Pro profile created:', { proError });
+
+    // Create some test data for better experience
+    // Add a pro service
+    if (!proError) {
+      const { data: proProfile } = await supabaseAdmin
+        .from('pro_profiles')
+        .select('id')
+        .eq('user_id', userId)
+        .single();
+
+      if (proProfile) {
+        await supabaseAdmin
+          .from('pro_services')
+          .upsert({
+            pro_profile_id: proProfile.id,
+            name: 'Consultation générale',
+            description: 'Service de test pour le compte dev',
+            price: 50,
+            duration: 30,
+            is_active: true,
+          }, { onConflict: 'pro_profile_id,name' });
+      }
+    }
+
+    console.log('Dev account fully configured:', { userId, profileError, roleError, dogError, proError });
 
     return new Response(
       JSON.stringify({
@@ -98,8 +143,16 @@ serve(async (req) => {
           password,
           userId,
         },
-        roles: ['pro'],
-        message: 'Compte dev créé avec accès utilisateur + pro complet'
+        features: {
+          userAccess: true,
+          proAccess: true,
+          debugAccess: true,
+          premiumAccess: true,
+          dogProfile: true,
+          proProfile: true,
+        },
+        message: '✅ Compte Dev Master créé avec accès COMPLET à toutes les fonctionnalités',
+        instructions: 'Vous pouvez maintenant accéder à toutes les pages : utilisateur, pro, et debug'
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
