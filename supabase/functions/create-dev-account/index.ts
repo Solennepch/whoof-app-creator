@@ -35,13 +35,30 @@ serve(async (req) => {
     let userId = authData?.user?.id;
 
     // If user exists, get their ID
-    if (authError?.message.includes('already registered')) {
-      const { data: users } = await supabaseAdmin.auth.admin.listUsers();
-      const existingUser = users.users.find(u => u.email === email);
-      userId = existingUser?.id;
+    if (authError && authError.message.includes('already registered')) {
+      console.log('User already exists, fetching existing user...');
+      const { data: listData, error: listError } = await supabaseAdmin.auth.admin.listUsers();
+      
+      if (listError) {
+        console.error('Error listing users:', listError);
+        throw new Error('Failed to list users');
+      }
+      
+      const existingUser = listData.users.find(u => u.email === email);
+      if (existingUser) {
+        userId = existingUser.id;
+        console.log('Found existing user:', userId);
+      } else {
+        throw new Error('User exists but could not be found in list');
+      }
+    } else if (authError) {
+      console.error('Auth error:', authError);
+      throw authError;
     }
 
-    if (!userId) throw new Error('Failed to create/find dev user');
+    if (!userId) {
+      throw new Error('Failed to create/find dev user: no userId');
+    }
 
     // Create complete profile with all features
     const { error: profileError } = await supabaseAdmin
