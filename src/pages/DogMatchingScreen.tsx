@@ -129,7 +129,7 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
 
       {/* Swipe buttons - fixed at bottom above global footer */}
       <div 
-        className="flex-shrink-0 py-4 flex justify-center gap-4 px-4 -mt-8"
+        className="relative z-20 flex-shrink-0 py-4 flex justify-center gap-4 px-4 -mt-8"
         style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}
       >
         {/* Rewind */}
