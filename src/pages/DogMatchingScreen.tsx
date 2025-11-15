@@ -94,9 +94,9 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
   }
 
   return (
-    <main className="flex flex-col w-full h-full overflow-hidden">
+    <div className="flex flex-col w-full min-h-[calc(100vh-8rem)]">
       {/* Local discover toolbar with filter */}
-      <div className="flex items-center justify-between px-4 py-3 bg-background border-b">
+      <div className="flex items-center justify-between px-4 py-3 bg-background border-b flex-shrink-0">
         <h2 className="text-lg font-semibold text-foreground">
           {mode === "local" ? "Chiens près de toi" : "Adopte ton compagnon"}
         </h2>
@@ -106,7 +106,7 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
       </div>
 
       {/* Dog card area - takes remaining space */}
-      <div className="relative flex-1 overflow-hidden bg-black">
+      <div className="relative flex-1 min-h-[400px] bg-black">
         {/* Full-width dog image */}
         <img
           src={currentDog.photoUrl}
@@ -150,7 +150,7 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
       </div>
 
       {/* Swipe buttons - fixed at bottom above global footer */}
-      <div className="flex-shrink-0 py-4 flex justify-center gap-4 px-4">
+      <div className="flex-shrink-0 py-4 flex justify-center gap-4 px-4 bg-background">
         {/* Rewind */}
         <button
           onClick={handleRewind}
@@ -192,6 +192,6 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
           <Send className="w-5 h-5 text-purple-500" />
         </button>
       </div>
-    </main>
+    </div>
   );
 }
