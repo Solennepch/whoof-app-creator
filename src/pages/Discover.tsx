@@ -11,6 +11,7 @@ type DogProfile = {
   photoUrl: string;
   shortDescription: string;
   badges?: string[];
+  ownerName?: string;
 };
 
 export default function Discover() {
@@ -37,6 +38,7 @@ export default function Discover() {
       photoUrl: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=800",
       shortDescription: "adore jouer avec les autres chiens",
       badges: ["Sociable", "OK chiens", "Énergique"],
+      ownerName: "Sophie",
     },
     {
       id: "2",
@@ -46,6 +48,7 @@ export default function Discover() {
       photoUrl: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=800",
       shortDescription: "parfait pour les balades tranquilles",
       badges: ["Calme", "OK enfants", "Marche en laisse"],
+      ownerName: "Thomas",
     },
     {
       id: "3",
@@ -55,6 +58,7 @@ export default function Discover() {
       photoUrl: "https://images.unsplash.com/photo-1552053831-71594a27632d?w=800",
       shortDescription: "partenaire idéale pour courir",
       badges: ["Sportive", "Randonnée", "Obéissante"],
+      ownerName: "Marie",
     },
   ];
 
