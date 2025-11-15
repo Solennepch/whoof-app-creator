@@ -1,45 +1,34 @@
 import { motion } from "framer-motion";
-import { Trophy, Calendar, Award, TrendingUp, Gift, Sparkles } from "lucide-react";
+import { Trophy, Sparkles, Gift, TrendingUp } from "lucide-react";
 import { useEvents } from "@/hooks/useEvents";
-import { useUserBadges, useUserXP } from "@/hooks/useGamification";
+import { useUserXP } from "@/hooks/useGamification";
 import { useAuth } from "@/hooks/useAuth";
 import { Progress } from "@/components/ui/progress";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { XpProgress, levelForXp } from "@/components/ui/XpProgress";
-import { ChallengeHistory } from "@/components/events/ChallengeHistory";
+import { XpProgress } from "@/components/ui/XpProgress";
 import { ChallengeLeaderboard } from "@/components/events/ChallengeLeaderboard";
 import { ChallengeStats } from "@/components/events/ChallengeStats";
-import { DailyChallenges } from "@/components/events/DailyChallenges";
 import { ShareAchievement } from "@/components/events/ShareAchievement";
 import { SeasonCard } from "@/components/events/SeasonCard";
-import { QuestsList } from "@/components/events/QuestsList";
-import { ActivityFeed } from "@/components/events/ActivityFeed";
 import { SpecialEventWidget } from "@/components/events/SpecialEventWidget";
-import { GuildWidget } from "@/components/events/GuildWidget";
-import { CosmeticsShowcase } from "@/components/events/CosmeticsShowcase";
-import { SecretAchievements } from "@/components/events/SecretAchievements";
-import { LeagueStandings } from "@/components/events/LeagueStandings";
-import { ReferralSystem } from "@/components/events/ReferralSystem";
 import { DailyMissionsWidget } from "@/components/events/DailyMissionsWidget";
 import { GamificationWrapper } from "@/components/gamification/GamificationWrapper";
 import { InteractiveTutorial } from "@/components/tutorial/InteractiveTutorial";
 import { TUTORIALS } from "@/config/tutorials";
 import { useConfettiEvents } from "@/hooks/useConfettiEvents";
 import { useEffect } from "react";
-import { ContextualTooltip } from "@/components/ui/ContextualTooltip";
 
 export default function Events() {
   const { user } = useAuth();
-  const { currentEvent, currentChallenge, challengeProgress, isLoading: eventsLoading } = useEvents();
-  const { data: badges, isLoading: badgesLoading } = useUserBadges(user?.id);
+  const { currentChallenge, challengeProgress, isLoading: eventsLoading } = useEvents();
   const { data: xpData, isLoading: xpLoading } = useUserXP(user?.id);
 
   // Active les confettis pour les événements
   useConfettiEvents();
 
-  const isLoading = eventsLoading || badgesLoading || xpLoading;
+  const isLoading = eventsLoading || xpLoading;
 
   const progress = challengeProgress?.currentProgress || 0;
   const target = currentChallenge?.objectiveTarget || 1;
@@ -68,7 +57,7 @@ export default function Events() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 pb-20">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 pb-24 md:pb-6">
       <div className="max-w-4xl mx-auto p-6 space-y-6">
         {/* Season Card */}
         <SeasonCard />
@@ -77,343 +66,197 @@ export default function Events() {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center space-y-2"
+          className="space-y-2"
         >
-          <h1 className="text-3xl font-bold text-foreground flex items-center justify-center gap-2">
+          <div className="flex items-center gap-3">
             <Sparkles className="h-8 w-8 text-primary" />
-            Événements & Challenges
-          </h1>
-          <p className="text-muted-foreground">
-            Participe aux événements et relève les challenges du mois
-          </p>
+            <div>
+              <h1 className="text-3xl font-bold text-foreground">Challenges & Saisons</h1>
+              <p className="text-sm text-muted-foreground">
+                Participe aux défis du moment avec ton chien et gagne de l'XP.
+              </p>
+            </div>
+          </div>
         </motion.div>
 
-        {/* Current Event */}
-        {currentEvent && (
+        {/* Hero - Challenge du mois */}
+        {currentChallenge && (
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.1 }}
           >
-            <Card className="bg-gradient-to-br from-primary/10 via-accent/10 to-secondary/10 border-primary/30">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Calendar className="h-5 w-5 text-primary" />
-                  Événement du mois
-                </CardTitle>
+            <Card className="bg-gradient-to-br from-orange-500/10 via-pink-500/10 to-background border-primary/30 shadow-lg">
+              <CardHeader className="pb-3">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-2">
+                    <Trophy className="h-6 w-6 text-primary" />
+                    <CardTitle className="text-xl">Challenge du mois</CardTitle>
+                  </div>
+                  <Badge className="bg-primary/20 text-primary border-primary/30">
+                    {currentChallenge.badge} {new Date().toLocaleDateString('fr-FR', { month: 'long' })}
+                  </Badge>
+                </div>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="flex items-start gap-4">
-                  <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-background text-4xl">
-                    {currentEvent.icon}
+                <div>
+                  <h3 className="font-semibold text-lg mb-1">
+                    {currentChallenge.name}
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    Objectif : {currentChallenge.objective}
+                  </p>
+                </div>
+
+                {/* Progression */}
+                <div className="space-y-2 bg-background/50 rounded-xl p-4">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="font-medium">
+                      Tu en es à : {progress} / {target}
+                    </span>
+                    <span className="text-primary font-bold">{Math.round(percentage)}%</span>
                   </div>
-                  <div className="flex-1">
-                    <h3 className="text-xl font-semibold text-foreground mb-1">
-                      {currentEvent.name}
-                    </h3>
-                    <p className="text-muted-foreground mb-3">{currentEvent.description}</p>
-                    <div className="space-y-2">
-                      {currentEvent.activities.map((activity, idx) => (
-                        <div key={idx} className="flex items-center gap-2 text-sm">
-                          <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-                          <span className="text-foreground">{activity}</span>
-                        </div>
-                      ))}
+                  <Progress value={percentage} className="h-3" />
+                  {!isCompleted && (
+                    <p className="text-xs text-muted-foreground">
+                      Encore {Math.max(0, target - progress)} {currentChallenge.objectiveType === 'walks' ? 'balades' : 'actions'} avant ton prochain palier de récompense 🎁
+                    </p>
+                  )}
+                  {isCompleted && (
+                    <div className="flex items-center gap-2 text-sm text-primary font-medium">
+                      <Sparkles className="h-4 w-4" />
+                      Challenge terminé ! 🎉
                     </div>
+                  )}
+                </div>
+
+                {/* Reward */}
+                <div className="flex items-center justify-between bg-gradient-to-r from-primary/5 to-accent/5 rounded-lg p-3">
+                  <div className="flex items-center gap-2">
+                    <Gift className="h-5 w-5 text-primary" />
+                    <span className="text-sm font-medium">Récompense :</span>
+                    <span className="text-sm text-muted-foreground">{currentChallenge.reward}</span>
                   </div>
+                </div>
+
+                <div className="pt-2">
+                  <ShareAchievement
+                    challengeName={currentChallenge.name}
+                    progress={progress}
+                    target={target}
+                  />
                 </div>
               </CardContent>
             </Card>
           </motion.div>
         )}
 
-        {/* Current Challenge */}
-        {currentChallenge && (
-          <ContextualTooltip
-            id="challenge-intro"
-            content="Relève des challenges mensuels pour gagner des récompenses exclusives et monter dans le classement !"
-            placement="top"
-            showFor={['moderate', 'complete']}
+        {!currentChallenge && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="rounded-3xl border-2 border-dashed border-primary/30 bg-gradient-to-br from-primary/5 via-accent/5 to-background p-8 text-center"
           >
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2 }}
-            >
-              <Card className="bg-gradient-to-br from-accent/10 via-primary/10 to-secondary/10 border-accent/30">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Trophy className="h-5 w-5 text-accent" />
-                    Challenge du mois
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="flex items-start gap-4">
-                    <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-background text-4xl">
-                      {currentChallenge.badge}
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="text-xl font-semibold text-foreground mb-1">
-                        {currentChallenge.name}
-                      </h3>
-                      <p className="text-muted-foreground">{currentChallenge.objective}</p>
-                    </div>
-                  </div>
-
-                  {/* Progress Section */}
-                  <div className="space-y-4 p-4 rounded-2xl bg-background/50">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <TrendingUp className="h-5 w-5 text-primary" />
-                        <span className="font-semibold text-foreground">Ta progression</span>
-                      </div>
-                      <Badge variant={isCompleted ? "default" : "secondary"}>
-                        {progress} / {target}
-                      </Badge>
-                    </div>
-
-                    <div className="relative">
-                      <Progress value={percentage} className="h-4" />
-                      {percentage > 0 && (
-                        <motion.div
-                          initial={{ scale: 0 }}
-                          animate={{ scale: [1, 1.2, 1] }}
-                          transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 2 }}
-                          className="absolute -top-2 left-0 h-8 w-8 rounded-full bg-primary border-4 border-background flex items-center justify-center text-xs font-bold text-primary-foreground"
-                          style={{ left: `calc(${Math.min(percentage, 95)}% - 16px)` }}
-                        >
-                          {Math.round(percentage)}%
-                        </motion.div>
-                      )}
-                    </div>
-
-                    <div className="flex items-start gap-3 p-3 rounded-xl bg-accent/10 border border-accent/20">
-                      <Gift className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
-                      <div className="flex-1">
-                        <p className="font-medium text-foreground text-sm">Récompense</p>
-                        <p className="text-sm text-muted-foreground">{currentChallenge.reward}</p>
-                      </div>
-                      <ShareAchievement
-                        title={currentChallenge.name}
-                        description={currentChallenge.objective}
-                        badge={currentChallenge.badge}
-                      />
-                    </div>
-
-                    {isCompleted && (
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        className="p-4 rounded-xl bg-primary/10 border border-primary/30 text-center"
-                      >
-                        <Trophy className="h-8 w-8 text-primary mx-auto mb-2 fill-primary" />
-                        <p className="font-semibold text-primary text-lg">Challenge complété ! 🎉</p>
-                        <p className="text-sm text-muted-foreground mt-1">
-                          Félicitations, tu as obtenu ta récompense !
-                        </p>
-                      </motion.div>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          </ContextualTooltip>
+            <Sparkles className="h-12 w-12 text-primary mx-auto mb-4" />
+            <h3 className="text-lg font-semibold mb-2">
+              ✨ Pas encore de challenge actif.
+            </h3>
+            <p className="text-sm text-muted-foreground mb-4">
+              Les prochains défis arrivent bientôt, continue tes balades pour gagner de l'XP !
+            </p>
+          </motion.div>
         )}
+
+        {/* Quêtes du jour */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="space-y-4"
+        >
+          <div>
+            <h2 className="text-xl font-semibold flex items-center gap-2 mb-1">
+              🐾 Quêtes du jour
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              Complète ces missions pour gagner des XP supplémentaires.
+            </p>
+          </div>
+          <GamificationWrapper featureName="dailyMissions">
+            <DailyMissionsWidget />
+          </GamificationWrapper>
+        </motion.div>
+
+        {/* Ta saison en cours */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="space-y-4"
+        >
+          <div>
+            <h2 className="text-xl font-semibold mb-1">Ta saison en cours</h2>
+          </div>
+          <ChallengeStats />
+        </motion.div>
 
         {/* XP Progress */}
         {xpData && (
-          <GamificationWrapper feature="showXpProgress">
-            <ContextualTooltip
-              id="xp-progress"
-              content="Gagne de l'XP en complétant des actions dans l'app. Monte de niveau pour débloquer de nouvelles fonctionnalités !"
-              placement="top"
-              showFor={['moderate', 'complete']}
-            >
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-              >
-                <XpProgress
-                  current={xpData.total_xp || 0}
-                  min={0}
-                  max={5400}
-                  t={(k) => ({ level: "Niveau" }[k] || k)}
-                />
-              </motion.div>
-            </ContextualTooltip>
-          </GamificationWrapper>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+          >
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <TrendingUp className="h-5 w-5 text-primary" />
+                  Ta progression XP
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <XpProgress xpData={xpData} />
+              </CardContent>
+            </Card>
+          </motion.div>
         )}
 
-        {/* Activity Feed */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.35 }}
-        >
-          <ActivityFeed />
-        </motion.div>
-
-        {/* Quests */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-        >
-          <QuestsList />
-        </motion.div>
-
-        {/* Daily Challenges */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.45 }}
-        >
-          <DailyChallenges />
-        </motion.div>
-
-        {/* Stats */}
+        {/* Mini Classement de la saison */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
+          className="space-y-4"
         >
-          <ChallengeStats />
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-semibold">Classement de la saison</h2>
+            <a href="/ranking" className="text-sm text-primary hover:underline">
+              Voir le classement complet →
+            </a>
+          </div>
+          <GamificationWrapper featureName="leaderboards">
+            <ChallengeLeaderboard />
+          </GamificationWrapper>
         </motion.div>
 
-        {/* Leaderboard */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.55 }}
-        >
-          <ChallengeLeaderboard />
-        </motion.div>
-
-        {/* Challenge History */}
+        {/* Challenges spéciaux */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
+          className="space-y-4"
         >
-          <ChallengeHistory />
-        </motion.div>
-
-        {/* Special Event */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.65 }}
-        >
-          <SpecialEventWidget />
-        </motion.div>
-
-        {/* Guild */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7 }}
-        >
-          <GuildWidget />
-        </motion.div>
-
-        {/* Cosmetics */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.75 }}
-        >
-          <CosmeticsShowcase />
-        </motion.div>
-
-        {/* Daily Missions */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8 }}
-        >
-          <DailyMissionsWidget />
-        </motion.div>
-
-        {/* League Standings */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.85 }}
-        >
-          <LeagueStandings />
-        </motion.div>
-
-        {/* Secret Achievements */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.9 }}
-        >
-          <SecretAchievements />
-        </motion.div>
-
-        {/* Referral System */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.95 }}
-        >
-          <ReferralSystem />
-        </motion.div>
-
-        {/* Badges Collection */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8 }}
-        >
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Award className="h-5 w-5 text-secondary" />
-                Mes badges ({badges?.length || 0})
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {badges && badges.length > 0 ? (
-                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4">
-                  {badges.map((userBadge) => (
-                    <motion.div
-                      key={userBadge.badge_code}
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      whileHover={{ scale: 1.05 }}
-                      className="flex flex-col items-center gap-2 p-3 rounded-xl bg-gradient-to-br from-primary/5 to-accent/5 border border-border/50 hover:border-primary/50 transition-all"
-                    >
-                      <div className="text-3xl">{userBadge.badge?.icon || "🏆"}</div>
-                      <p className="text-xs text-center font-medium text-foreground line-clamp-2">
-                        {userBadge.badge?.name || "Badge"}
-                      </p>
-                    </motion.div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-8">
-                  <Trophy className="h-12 w-12 text-muted-foreground/50 mx-auto mb-3" />
-                  <p className="text-muted-foreground">
-                    Aucun badge pour le moment
-                  </p>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    Relève des challenges pour gagner tes premiers badges !
-                  </p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+          <div>
+            <h2 className="text-xl font-semibold mb-1">Challenges spéciaux</h2>
+          </div>
+          <GamificationWrapper featureName="specialEvents">
+            <SpecialEventWidget />
+          </GamificationWrapper>
         </motion.div>
       </div>
 
-      {/* Interactive Tutorial for Gamification */}
-      <InteractiveTutorial
-        tutorialId="gamification"
-        steps={TUTORIALS.gamification.steps}
-      />
+      {/* Tutorial */}
+      <InteractiveTutorial steps={TUTORIALS.gamification} />
     </div>
   );
 }
