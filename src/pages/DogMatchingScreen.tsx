@@ -21,24 +21,24 @@ interface DogMatchingScreenProps {
 const DogBonesCrossIcon = ({ className }: { className?: string }) => (
   <svg
     viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
+    fill="currentColor"
     className={className}
   >
     {/* First bone - rotated 45deg */}
     <g transform="rotate(45 12 12)">
-      <circle cx="8" cy="12" r="2" />
-      <circle cx="16" cy="12" r="2" />
-      <rect x="9" y="11" width="6" height="2" />
+      <circle cx="7" cy="12" r="2.5" />
+      <circle cx="17" cy="12" r="2.5" />
+      <circle cx="7" cy="12" r="1.5" fill="white" opacity="0.3" />
+      <circle cx="17" cy="12" r="1.5" fill="white" opacity="0.3" />
+      <rect x="8.5" y="10.5" width="7" height="3" rx="1.5" />
     </g>
     {/* Second bone - rotated -45deg */}
     <g transform="rotate(-45 12 12)">
-      <circle cx="8" cy="12" r="2" />
-      <circle cx="16" cy="12" r="2" />
-      <rect x="9" y="11" width="6" height="2" />
+      <circle cx="7" cy="12" r="2.5" />
+      <circle cx="17" cy="12" r="2.5" />
+      <circle cx="7" cy="12" r="1.5" fill="white" opacity="0.3" />
+      <circle cx="17" cy="12" r="1.5" fill="white" opacity="0.3" />
+      <rect x="8.5" y="10.5" width="7" height="3" rx="1.5" />
     </g>
   </svg>
 );
