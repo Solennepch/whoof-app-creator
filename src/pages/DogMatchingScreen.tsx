@@ -171,7 +171,7 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
           onClick={handleNope}
           className="w-16 h-16 rounded-full bg-white backdrop-blur shadow-lg flex items-center justify-center"
         >
-          <DogBonesCrossIcon className="w-7 h-7 text-red-500" />
+          <DogBonesCrossIcon className="w-10 h-10 text-red-500" />
         </button>
 
         {/* Super-like - positioned slightly higher */}
