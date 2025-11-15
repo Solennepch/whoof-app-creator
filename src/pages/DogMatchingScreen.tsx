@@ -92,29 +92,33 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
           className="absolute inset-0 w-full h-full object-cover"
         />
 
+        {/* Tags at the top center */}
+        {currentDog.badges && (
+          <div className="absolute top-4 inset-x-0 flex justify-center px-4">
+            <div className="flex flex-wrap gap-2 justify-center">
+              {currentDog.badges.map((badge, idx) => (
+                <span
+                  key={idx}
+                  className="text-xs px-3 py-1 rounded-full bg-white/20 backdrop-blur text-white"
+                >
+                  {badge}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Bottom gradient overlay with info */}
         <div className="absolute inset-x-0 bottom-0 pt-24 pb-6 px-6 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
           <div className="text-left">
             <h2 className="text-4xl font-bold mb-2 text-white">
               {currentDog.name}, {currentDog.age} ans
             </h2>
-            <p className="text-lg text-white/90 mb-3">
+            <p className="text-lg text-white/90">
               {mode === "local" && currentDog.distanceKm
                 ? `à ${currentDog.distanceKm} km • ${currentDog.shortDescription}`
                 : `${currentDog.shelterName} • ${currentDog.shortDescription}`}
             </p>
-            {currentDog.badges && (
-              <div className="flex flex-wrap gap-2">
-                {currentDog.badges.map((badge, idx) => (
-                  <span
-                    key={idx}
-                    className="text-xs px-3 py-1 rounded-full bg-white/20 backdrop-blur text-white"
-                  >
-                    {badge}
-                  </span>
-                ))}
-              </div>
-            )}
           </div>
         </div>
 
