@@ -28,6 +28,7 @@ const Map = lazy(() => import("./pages/Map"));
 const Messages = lazy(() => import("./pages/Messages"));
 const Profile = lazy(() => import("./pages/Profile"));
 const ProfileMe = lazy(() => import("./pages/ProfileMe"));
+const MyProfile = lazy(() => import("./pages/MyProfile"));
 const Settings = lazy(() => import("./pages/Settings"));
 const MatchHome = lazy(() => import("./pages/MatchHome"));
 const LikesHistory = lazy(() => import("./pages/LikesHistory"));
@@ -113,6 +114,7 @@ const App = () => {
                 <Route path="/discover" element={<PageErrorBoundary><Discover /></PageErrorBoundary>} />
                 <Route path="/map" element={<PageErrorBoundary><Map /></PageErrorBoundary>} />
                 <Route path="/messages" element={<PageErrorBoundary><Messages /></PageErrorBoundary>} />
+                <Route path="/my-profile" element={<PageErrorBoundary><MyProfile /></PageErrorBoundary>} />
                 <Route path="/profile/me" element={<PageErrorBoundary><ProfileMe /></PageErrorBoundary>} />
                 <Route path="/profile/:id" element={<PageErrorBoundary><Profile /></PageErrorBoundary>} />
                 <Route path="/settings" element={<PageErrorBoundary><Settings /></PageErrorBoundary>} />
