@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Trophy, Dog, User, Star, Sparkles, Calendar, Award, Gift } from "lucide-react";
+import { Trophy, Dog, User, Star, Sparkles, Calendar, Award, Gift, TrendingUp, Crown } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useWeeklyLeaderboard, useUserXP } from "@/hooks/useGamification";
+import { levelForXp } from "@/components/ui/XpProgress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useEvents } from "@/hooks/useEvents";
 import { useAuth } from "@/hooks/useAuth";
@@ -12,6 +13,13 @@ import { ChallengeLeaderboard } from "@/components/events/ChallengeLeaderboard";
 import { LeagueStandings } from "@/components/events/LeagueStandings";
 import { SeasonCard } from "@/components/events/SeasonCard";
 import { GamificationWrapper } from "@/components/gamification/GamificationWrapper";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
+import { motion } from "framer-motion";
 
 export default function Ranking() {
   const [activeTab, setActiveTab] = useState<"ranking" | "challenges">("ranking");
@@ -59,10 +67,14 @@ export default function Ranking() {
 
       <main className="mx-auto max-w-[720px] px-4 pb-20 space-y-5 relative z-10">
         {/* Header */}
-        <div className="pt-20 pb-4">
-          <h1 className="text-3xl font-bold text-center text-foreground">
-            Classement & Challenges
+        <div className="pt-20 pb-4 text-center">
+          <Trophy className="w-12 h-12 mx-auto mb-3 text-primary" />
+          <h1 className="text-3xl font-bold text-foreground">
+            Classement
           </h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            Découvre où ton duo se situe cette semaine
+          </p>
         </div>
 
         {/* Season Card */}
@@ -82,137 +94,203 @@ export default function Ranking() {
           </TabsList>
 
           {/* Ranking Tab */}
-          <TabsContent value="ranking" className="space-y-5">
+          <TabsContent value="ranking" className="space-y-6">
+            {/* User Position Card */}
+            {myRanking && myXP && profile ? (
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-gradient-to-br from-primary/10 via-secondary/10 to-accent/10 rounded-[24px] p-6 shadow-soft border border-primary/20"
+              >
+                <div className="flex items-center gap-4 mb-4">
+                  <Avatar className="w-16 h-16 border-2 border-primary">
+                    <AvatarImage src={profile.avatar_url || undefined} />
+                    <AvatarFallback>
+                      <Dog className="w-8 h-8" />
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1">
+                    <div className="flex items-baseline gap-2 mb-1">
+                      <span className="text-3xl font-bold text-primary">#{myRank! + 1}</span>
+                      <span className="text-sm text-muted-foreground">sur {leaderboard?.length || 0}</span>
+                    </div>
+                    <div className="text-base font-semibold">{profile.display_name || "Toi"}</div>
+                    <div className="text-sm text-muted-foreground">
+                      Niveau {levelForXp(myXP.total_xp)} • {myXP.total_xp} XP
+                    </div>
+                  </div>
+                  <Trophy className="w-10 h-10 text-primary" />
+                </div>
+                
+                <div className="space-y-2">
+                  <div className="flex justify-between text-xs text-muted-foreground">
+                    <span>{myRanking.weekly_xp} XP cette semaine</span>
+                    <span>Prochain rang : {Math.max(0, (leaderboard?.[Math.max(0, myRank! - 1)]?.weekly_xp || 0) - myRanking.weekly_xp)} XP</span>
+                  </div>
+                  <Progress value={(myRanking.weekly_xp / ((leaderboard?.[Math.max(0, myRank! - 1)]?.weekly_xp || myRanking.weekly_xp) + 1)) * 100} className="h-2" />
+                  {myRank! > 0 && (
+                    <p className="text-xs text-muted-foreground">
+                      <TrendingUp className="w-3 h-3 inline mr-1" />
+                      Encore {Math.max(0, (leaderboard?.[myRank! - 1]?.weekly_xp || 0) - myRanking.weekly_xp)} XP pour gagner une place !
+                    </p>
+                  )}
+                </div>
+              </motion.div>
+            ) : !isLoading && (
+              <Card className="border-dashed">
+                <CardContent className="pt-6 text-center">
+                  <Trophy className="w-12 h-12 mx-auto mb-2 text-muted-foreground/50" />
+                  <p className="text-sm text-muted-foreground">Commence à gagner de l'XP pour apparaître dans le classement</p>
+                </CardContent>
+              </Card>
+            )}
 
-        {/* Sticky Summary Card */}
-        {myRanking && myRank !== undefined && (
-          <section className="sticky top-[56px] z-10 rounded-2xl p-4 bg-gradient-to-r from-[#7B61FF] to-[#FF5DA2] text-white shadow-lg">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs leading-4 opacity-90">Ta position</p>
-                <p className="text-2xl font-extrabold">#{myRank + 1}</p>
-              </div>
-              <div className="text-right">
-                <p className="text-xs leading-4 opacity-90">{activePeriod === "weekly" ? "Cette semaine" : "Ce mois-ci"}</p>
-                <p className="text-2xl font-extrabold">{myRanking.weekly_xp} XP</p>
-                <p className="text-xs leading-4 opacity-90">Niveau {myXP?.level || 1}</p>
-              </div>
+            {/* Period Tabs */}
+            <div className="flex gap-2 justify-center">
+              <Button
+                onClick={() => setActivePeriod("weekly")}
+                variant={activePeriod === "weekly" ? "default" : "outline"}
+                className="rounded-full px-6"
+                size="sm"
+              >
+                <Calendar className="w-4 h-4 mr-2" />
+                Hebdomadaire
+              </Button>
+              <Button
+                onClick={() => setActivePeriod("monthly")}
+                variant={activePeriod === "monthly" ? "default" : "outline"}
+                className="rounded-full px-6"
+                size="sm"
+              >
+                <Calendar className="w-4 h-4 mr-2" />
+                Mensuel
+              </Button>
             </div>
-            <div className="mt-3 h-2 rounded-full bg-white/30 overflow-hidden">
-              <div 
-                className="h-full bg-white/90 transition-all duration-300" 
-                style={{ width: `${Math.min((myRanking.weekly_xp / (leaderboard?.[0]?.weekly_xp || 1)) * 100, 100)}%` }}
-              />
-            </div>
-          </section>
-        )}
 
-        {/* Tabs */}
-        <div className="grid grid-cols-2 p-1 rounded-full bg-white/70 shadow-sm backdrop-blur-sm">
-          <button
-            onClick={() => setActivePeriod("weekly")}
-            className={`rounded-full py-2 text-sm font-medium transition-all ${
-              activePeriod === "weekly" 
-                ? "bg-white shadow text-[#111827]" 
-                : "text-gray-600"
-            }`}
-          >
-            Hebdo
-          </button>
-          <button
-            onClick={() => setActivePeriod("monthly")}
-            className={`rounded-full py-2 text-sm font-medium transition-all ${
-              activePeriod === "monthly" 
-                ? "bg-white shadow text-[#111827]" 
-                : "text-gray-600"
-            }`}
-          >
-            Mensuel
-          </button>
-        </div>
-
-        {/* Rankings List */}
-        <ul className="space-y-3">
-          {isLoading ? (
-            <div className="text-center py-8 text-white/60">
-              Chargement du classement...
-            </div>
-          ) : !leaderboard || leaderboard.length === 0 ? (
-            <div className="rounded-2xl p-8 bg-white text-center">
-              <p className="text-gray-600">
-                Aucun classement disponible pour le moment.
-              </p>
-              <p className="text-sm text-gray-500 mt-2">
-                Commencez à gagner des XP pour apparaître dans le classement !
-              </p>
-            </div>
-          ) : (
-            leaderboard.map((entry, index) => {
-              const isMe = entry.user_id === session?.user?.id;
-              const rankNum = index + 1;
+            {/* Leaderboard */}
+            <div className="space-y-3">
+              <h2 className="text-lg font-semibold px-2">🏆 Top 10</h2>
               
-              return (
-                <li key={entry.id}>
-                  <article 
-                    className={`rounded-2xl p-4 shadow-sm flex items-center justify-between transition-all ${
-                      isMe 
-                        ? "ring-4 ring-[#7B61FF] shadow-lg scale-[1.02]" 
-                        : "bg-white"
-                    }`}
-                    style={isMe ? {
-                      background: "linear-gradient(135deg, rgba(123, 97, 255, 0.15) 0%, rgba(255, 93, 162, 0.15) 100%)",
-                      backdropFilter: "blur(10px)"
-                    } : {}}
-                  >
-                    <div className="flex items-center gap-3 min-w-0">
-                      {/* Rank Badge */}
-                      {rankNum <= 3 ? (
-                        <div 
-                          className="w-9 h-9 rounded-full flex items-center justify-center shrink-0"
-                          style={{
-                            backgroundColor: rankNum === 1 ? "#FFC14D" : 
-                                           rankNum === 2 ? "#E5E7EB" : 
-                                           "#D1D5DB"
-                          }}
-                        >
-                          <Trophy 
-                            className="w-5 h-5"
-                            style={{
-                              color: rankNum === 1 ? "#ffffff" : 
-                                    rankNum === 2 ? "#6B7280" :
-                                    "#7B61FF"
-                            }}
-                          />
+              {isLoading ? (
+                // Loading skeleton
+                Array.from({ length: 5 }).map((_, i) => (
+                  <Card key={i}>
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-3">
+                        <Skeleton className="w-8 h-8 rounded-full" />
+                        <Skeleton className="w-12 h-12 rounded-full" />
+                        <div className="flex-1 space-y-2">
+                          <Skeleton className="h-4 w-3/4" />
+                          <Skeleton className="h-3 w-1/2" />
                         </div>
-                      ) : (
-                        <div className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-sm font-semibold text-[#111827] shrink-0">
-                          #{rankNum}
-                        </div>
-                      )}
-
-                      {/* User Info */}
-                      <div className="min-w-0">
-                        <p className="text-base font-semibold truncate text-[#111827] flex items-center gap-1">
-                          <User className="w-4 h-4 inline" />
-                          {entry.profile?.display_name || "Utilisateur"}
-                        </p>
-                        <p className="text-xs text-gray-500 truncate">{entry.city || "Ville inconnue"}</p>
+                        <Skeleton className="h-6 w-16" />
                       </div>
-                    </div>
+                    </CardContent>
+                  </Card>
+                ))
+              ) : leaderboard && leaderboard.length > 0 ? (
+                <>
+                  {leaderboard.slice(0, 10).map((entry, index) => {
+                    const isCurrentUser = entry.user_id === session?.user?.id;
+                    const rank = index + 1;
+                    const getMedalEmoji = (r: number) => {
+                      if (r === 1) return "🥇";
+                      if (r === 2) return "🥈";
+                      if (r === 3) return "🥉";
+                      return null;
+                    };
+                    const medal = getMedalEmoji(rank);
 
-                    {/* XP Count */}
-                    <div className="text-right shrink-0">
-                      <p className="text-xl font-bold leading-none" style={{ color: "#7B61FF" }}>
-                        {entry.weekly_xp}
-                      </p>
-                      <p className="text-[10px] uppercase tracking-wide text-gray-400">XP</p>
-                    </div>
-                  </article>
-                </li>
-              );
-            })
-          )}
-        </ul>
+                    return (
+                      <motion.div
+                        key={entry.user_id}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.05 }}
+                      >
+                        <Card className={`transition-all hover:shadow-md ${
+                          isCurrentUser ? "ring-2 ring-primary bg-primary/5" : ""
+                        } ${rank <= 3 ? "bg-gradient-to-r from-amber-50/50 to-transparent dark:from-amber-950/20" : ""}`}>
+                          <CardContent className="p-4">
+                            <div className="flex items-center gap-3">
+                              <div className="w-10 text-center">
+                                {medal ? (
+                                  <span className="text-3xl">{medal}</span>
+                                ) : (
+                                  <span className="text-lg font-bold text-muted-foreground">#{rank}</span>
+                                )}
+                              </div>
+                              
+                              <Avatar className="w-14 h-14 border-2 border-primary/20">
+                                <AvatarImage src={entry.profile?.avatar_url || undefined} />
+                                <AvatarFallback>
+                                  <Dog className="w-7 h-7" />
+                                </AvatarFallback>
+                              </Avatar>
+
+                              <div className="flex-1 min-w-0">
+                                <div className="font-semibold text-sm truncate flex items-center gap-2">
+                                  {entry.profile?.display_name || "Utilisateur"}
+                                  {isCurrentUser && <Badge variant="secondary" className="text-xs">Toi</Badge>}
+                                </div>
+                                <div className="text-xs text-muted-foreground">
+                                  📍 {entry.city || "Ville inconnue"}
+                                </div>
+                              </div>
+
+                              <div className="text-right">
+                                <div className="text-base font-bold text-primary">{entry.weekly_xp}</div>
+                                <div className="text-xs text-muted-foreground">XP</div>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </motion.div>
+                    );
+                  })}
+
+                  {/* Premium Teaser */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.6 }}
+                  >
+                    <Card className="bg-gradient-to-br from-amber-100 to-amber-50 dark:from-amber-950/30 dark:to-amber-900/20 border-amber-200 dark:border-amber-800">
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2 text-base">
+                          <Crown className="w-5 h-5 text-amber-600" />
+                          <span>Classement Premium</span>
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-sm text-muted-foreground mb-4">
+                          Accède au classement illimité, vois toutes les stats détaillées, et découvre les duos les plus actifs de ta ville.
+                        </p>
+                        <Button className="w-full rounded-full" variant="default">
+                          <Crown className="w-4 h-4 mr-2" />
+                          Débloquer Premium
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                </>
+              ) : (
+                // Empty state
+                <Card>
+                  <CardContent className="py-12 text-center">
+                    <Trophy className="w-16 h-16 mx-auto mb-4 text-muted-foreground/50" />
+                    <h3 className="text-lg font-semibold mb-2">Aucun XP pour le moment</h3>
+                    <p className="text-sm text-muted-foreground mb-6">
+                      Commence une balade pour entrer dans le classement.
+                    </p>
+                    <Button className="rounded-full">
+                      <Dog className="w-4 h-4 mr-2" />
+                      Commencer une balade
+                    </Button>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
           </TabsContent>
 
           {/* Challenges Tab */}
