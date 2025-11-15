@@ -47,6 +47,7 @@ const Partenariats = lazy(() => import("./pages/Partenariats"));
 const PartenariatDetail = lazy(() => import("./pages/PartenariatDetail"));
 const BonsPlans = lazy(() => import("./pages/BonsPlans"));
 const DevenirPro = lazy(() => import("./pages/DevenirPro"));
+const DogProfile = lazy(() => import("./pages/DogProfile"));
 
 // Onboarding
 const Welcome = lazy(() => import("./pages/onboarding/Welcome"));
@@ -119,6 +120,7 @@ const App = () => {
                 <Route path="/my-profile" element={<PageErrorBoundary><MyProfile /></PageErrorBoundary>} />
                 <Route path="/profile/me" element={<PageErrorBoundary><ProfileMe /></PageErrorBoundary>} />
                 <Route path="/profile/:id" element={<PageErrorBoundary><Profile /></PageErrorBoundary>} />
+                <Route path="/dog/:id" element={<PageErrorBoundary><DogProfile /></PageErrorBoundary>} />
                 <Route path="/settings" element={<PageErrorBoundary><Settings /></PageErrorBoundary>} />
                 <Route path="/match" element={<PageErrorBoundary><MatchHome /></PageErrorBoundary>} />
                 <Route path="/likes" element={<PageErrorBoundary><LikesHistory /></PageErrorBoundary>} />
