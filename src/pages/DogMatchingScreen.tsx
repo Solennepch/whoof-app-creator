@@ -108,7 +108,7 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
                 {currentDog.badges.map((badge, idx) => (
                   <span
                     key={idx}
-                    className="text-xs px-3 py-1 rounded-full bg-white/20 backdrop-blur text-white"
+                    className="text-sm font-semibold px-4 py-2 rounded-full bg-white/90 backdrop-blur shadow-lg text-gray-900 border border-white/50"
                   >
                     {badge}
                   </span>
