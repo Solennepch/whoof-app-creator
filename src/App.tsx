@@ -108,9 +108,6 @@ const App = () => {
                   <Route path="/debug/feature-flags" element={<PageErrorBoundary><FeatureFlags /></PageErrorBoundary>} />
                 </>
                 
-                {/* Full-screen routes (no MainLayout) */}
-                <Route path="/discover" element={<PageErrorBoundary><Discover /></PageErrorBoundary>} />
-                
                 <Route element={<MainLayout />}>
                   {/* Public routes */}
                   <Route path="/" element={<Index />} />
@@ -119,6 +116,7 @@ const App = () => {
 
                   {/* Main app routes with error boundaries */}
                   <Route path="/home" element={<PageErrorBoundary><Home /></PageErrorBoundary>} />
+                <Route path="/discover" element={<PageErrorBoundary><Discover /></PageErrorBoundary>} />
                 <Route path="/map" element={<PageErrorBoundary><Map /></PageErrorBoundary>} />
                 <Route path="/messages" element={<PageErrorBoundary><Messages /></PageErrorBoundary>} />
                 <Route path="/messages/:threadId" element={<PageErrorBoundary><MessageThread /></PageErrorBoundary>} />

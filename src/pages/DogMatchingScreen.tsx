@@ -78,13 +78,9 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
     alert("Open dog profile");
   };
 
-  const handleSwipeLeft = () => handleNope();
-  const handleSwipeRight = () => handleLike();
-  const handleSwipeUp = () => handleOpenProfile();
-
   if (!hasMore || !currentDog) {
     return (
-      <div className="h-screen w-full flex flex-col items-center justify-center bg-background text-foreground p-6">
+      <div className="flex h-full w-full flex-col items-center justify-center bg-background text-foreground p-6 min-h-[50vh]">
         <h2 className="text-2xl font-bold mb-4">
           {mode === "local" ? "Plus de profils près de toi 🐾" : "Tu as vu tous les profils 💚"}
         </h2>
@@ -98,9 +94,9 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
   }
 
   return (
-    <div className="h-screen w-full flex flex-col bg-black text-white">
+    <div className="flex h-full w-full flex-col bg-black text-white overflow-y-auto">
       {/* Top bar */}
-      <div className="safe-top flex items-center justify-between px-4 py-3 z-20">
+      <header className="flex items-center justify-between px-4 py-3 z-20">
         <button className="w-10 h-10 rounded-full bg-white/20 backdrop-blur flex items-center justify-center">
           <ArrowLeft className="w-5 h-5" />
         </button>
@@ -110,10 +106,10 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
         <button className="w-10 h-10 rounded-full bg-white/20 backdrop-blur flex items-center justify-center">
           <Filter className="w-5 h-5" />
         </button>
-      </div>
+      </header>
 
       {/* Main card area */}
-      <div className="flex-1 relative overflow-hidden">
+      <div className="relative flex-1 overflow-hidden">
         {/* Full screen photo */}
         <img
           src={currentDog.photoUrl}
@@ -122,7 +118,7 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
         />
 
         {/* Bottom gradient overlay with info */}
-        <div className="absolute inset-x-0 bottom-0 pt-24 pb-40 px-6 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
+        <div className="absolute inset-x-0 bottom-0 pt-24 pb-6 px-6 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
           <div className="text-left">
             <h2 className="text-4xl font-bold mb-2">
               {currentDog.name}, {currentDog.age} ans
@@ -150,14 +146,14 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
         {/* Floating profile button */}
         <button
           onClick={handleOpenProfile}
-          className="absolute right-6 bottom-48 w-14 h-14 rounded-full bg-white/90 backdrop-blur shadow-lg flex items-center justify-center"
+          className="absolute right-6 bottom-6 w-14 h-14 rounded-full bg-white/90 backdrop-blur shadow-lg flex items-center justify-center"
         >
           <ArrowUp className="w-6 h-6 text-black" />
         </button>
       </div>
 
-      {/* Bottom buttons row (Tinder style) */}
-      <div className="absolute inset-x-0 bottom-4 flex items-end justify-center gap-4 px-4">
+      {/* Bottom buttons row (Tinder style) - NOT absolute */}
+      <div className="mt-auto mb-20 flex items-end justify-center gap-4 px-4">
         {/* Rewind */}
         <button
           onClick={handleRewind}
@@ -201,70 +197,4 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
       </div>
     </div>
   );
-}
-
-// Demo wrapper with mocked data
-export function DemoDogMatchingScreen() {
-  const localDogs: DogProfile[] = [
-    {
-      id: "1",
-      name: "Nala",
-      age: 2,
-      distanceKm: 1.2,
-      photoUrl: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=800",
-      shortDescription: "adore jouer avec les autres chiens",
-      badges: ["Sociable", "OK chiens", "Énergique"],
-    },
-    {
-      id: "2",
-      name: "Rocky",
-      age: 5,
-      distanceKm: 3.4,
-      photoUrl: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=800",
-      shortDescription: "parfait pour les balades tranquilles",
-      badges: ["Calme", "OK enfants", "Marche en laisse"],
-    },
-    {
-      id: "3",
-      name: "Luna",
-      age: 3,
-      distanceKm: 0.8,
-      photoUrl: "https://images.unsplash.com/photo-1552053831-71594a27632d?w=800",
-      shortDescription: "partenaire idéale pour courir",
-      badges: ["Sportive", "Randonnée", "Obéissante"],
-    },
-  ];
-
-  const adoptionDogs: DogProfile[] = [
-    {
-      id: "4",
-      name: "Moka",
-      age: 4,
-      shelterName: "SPA de Lyon",
-      photoUrl: "https://images.unsplash.com/photo-1561037404-61cd46aa615b?w=800",
-      shortDescription: "8 mois au refuge",
-      badges: ["Adoption urgente", "Très affectueux", "Stérilisé"],
-    },
-    {
-      id: "5",
-      name: "Pixel",
-      age: 1,
-      shelterName: "SPA de Marseille",
-      photoUrl: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=800",
-      shortDescription: "besoin de douceur",
-      badges: ["Timide", "Progrès en cours", "OK congénères"],
-    },
-    {
-      id: "6",
-      name: "Gaston",
-      age: 9,
-      shelterName: "SPA de Toulouse",
-      photoUrl: "https://images.unsplash.com/photo-1477884213360-7e9d7dcc1e48?w=800",
-      shortDescription: "chien senior",
-      badges: ["Senior", "Très calme", "Propre"],
-    },
-  ];
-
-  // Change this to test different modes
-  return <DogMatchingScreen mode="local" dogs={localDogs} />;
 }
