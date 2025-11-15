@@ -47,13 +47,13 @@ const getTagCategory = (label: string): TagCategory => {
 const getCategoryColors = (category: TagCategory) => {
   switch (category) {
     case "personality":
-      return "bg-pink-500/90 text-white";
+      return "bg-pink-500 text-white";
     case "size":
-      return "bg-purple-500/90 text-white";
+      return "bg-purple-500 text-white";
     case "special":
-      return "bg-blue-500/90 text-white";
+      return "bg-blue-500 text-white";
     default:
-      return "bg-white/20 text-white";
+      return "bg-gray-500 text-white";
   }
 };
 
