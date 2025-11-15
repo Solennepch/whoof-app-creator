@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Filter, ArrowUp, RotateCcw, Star, Heart, Send } from "lucide-react";
 import bonesCrossedIcon from "@/assets/bones-crossed.png";
+import { TagChip } from "@/components/ui/TagChip";
 
 type DogProfile = {
   id: string;
@@ -97,12 +98,7 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
           <div className="absolute top-4 inset-x-0 flex justify-center px-4">
             <div className="flex flex-wrap gap-2 justify-center">
               {currentDog.badges.map((badge, idx) => (
-                <span
-                  key={idx}
-                  className="text-xs px-3 py-1 rounded-full bg-white/20 backdrop-blur text-white"
-                >
-                  {badge}
-                </span>
+                <TagChip key={idx} label={badge} />
               ))}
             </div>
           </div>
