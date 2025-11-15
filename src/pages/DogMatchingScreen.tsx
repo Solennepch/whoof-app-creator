@@ -119,13 +119,6 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
           </div>
         </div>
 
-        {/* Floating profile button */}
-        <button
-          onClick={handleOpenProfile}
-          className="absolute right-4 bottom-6 z-10 w-14 h-14 rounded-full bg-white/90 backdrop-blur shadow-lg flex items-center justify-center"
-        >
-          <ArrowUp className="w-6 h-6 text-black" />
-        </button>
       </div>
 
       {/* Swipe buttons - fixed at bottom above global footer */}
@@ -150,10 +143,10 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
           <img src={bonesCrossedIcon} alt="Nope" className="w-10 h-10" />
         </button>
 
-        {/* Super-like - positioned slightly higher */}
+        {/* Super-like - positioned higher to bridge sections */}
         <button
           onClick={handleSuperLike}
-          className="w-12 h-12 rounded-full gradient-hero shadow-lg flex items-center justify-center -mt-4"
+          className="w-12 h-12 rounded-full gradient-hero shadow-lg flex items-center justify-center -mt-8"
         >
           <Star className="w-6 h-6 text-white fill-white" />
         </button>
