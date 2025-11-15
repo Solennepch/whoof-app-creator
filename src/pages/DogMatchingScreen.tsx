@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowLeft, Filter, ArrowUp, RotateCcw, Star, Heart, Send } from "lucide-react";
+import { Filter, ArrowUp, RotateCcw, Star, Heart, Send } from "lucide-react";
 
 type DogProfile = {
   id: string;
@@ -94,33 +94,30 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
   }
 
   return (
-    <div className="flex h-full w-full flex-col bg-black text-white overflow-y-auto">
-      {/* Top bar */}
-      <header className="flex items-center justify-between px-4 py-3 z-20">
-        <button className="w-10 h-10 rounded-full bg-white/20 backdrop-blur flex items-center justify-center">
-          <ArrowLeft className="w-5 h-5" />
-        </button>
-        <h1 className="text-lg font-semibold">
+    <main className="flex flex-col w-full h-full overflow-hidden">
+      {/* Local discover toolbar with filter */}
+      <div className="flex items-center justify-between px-4 py-3 bg-background border-b">
+        <h2 className="text-lg font-semibold text-foreground">
           {mode === "local" ? "Chiens près de toi" : "Adopte ton compagnon"}
-        </h1>
-        <button className="w-10 h-10 rounded-full bg-white/20 backdrop-blur flex items-center justify-center">
-          <Filter className="w-5 h-5" />
+        </h2>
+        <button className="w-10 h-10 rounded-full bg-muted hover:bg-accent flex items-center justify-center">
+          <Filter className="w-5 h-5 text-foreground" />
         </button>
-      </header>
+      </div>
 
-      {/* Main card area */}
-      <div className="relative flex-1 overflow-hidden">
-        {/* Full screen photo */}
+      {/* Dog card area */}
+      <div className="relative flex-1 overflow-hidden bg-black">
+        {/* Full-width dog image */}
         <img
           src={currentDog.photoUrl}
           alt={currentDog.name}
-          className="w-full h-full object-cover absolute inset-0"
+          className="absolute inset-0 w-full h-full object-cover"
         />
 
         {/* Bottom gradient overlay with info */}
         <div className="absolute inset-x-0 bottom-0 pt-24 pb-6 px-6 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
           <div className="text-left">
-            <h2 className="text-4xl font-bold mb-2">
+            <h2 className="text-4xl font-bold mb-2 text-white">
               {currentDog.name}, {currentDog.age} ans
             </h2>
             <p className="text-lg text-white/90 mb-3">
@@ -133,7 +130,7 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
                 {currentDog.badges.map((badge, idx) => (
                   <span
                     key={idx}
-                    className="text-xs px-3 py-1 rounded-full bg-white/20 backdrop-blur"
+                    className="text-xs px-3 py-1 rounded-full bg-white/20 backdrop-blur text-white"
                   >
                     {badge}
                   </span>
@@ -146,14 +143,14 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
         {/* Floating profile button */}
         <button
           onClick={handleOpenProfile}
-          className="absolute right-6 bottom-6 w-14 h-14 rounded-full bg-white/90 backdrop-blur shadow-lg flex items-center justify-center"
+          className="absolute right-4 bottom-40 z-10 w-14 h-14 rounded-full bg-white/90 backdrop-blur shadow-lg flex items-center justify-center"
         >
           <ArrowUp className="w-6 h-6 text-black" />
         </button>
       </div>
 
-      {/* Bottom buttons row (Tinder style) - NOT absolute */}
-      <div className="mt-auto mb-20 flex items-end justify-center gap-4 px-4">
+      {/* Swipe buttons - above global footer */}
+      <div className="mt-auto mb-20 flex justify-center gap-4 px-4">
         {/* Rewind */}
         <button
           onClick={handleRewind}
@@ -195,6 +192,6 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
           <Send className="w-5 h-5 text-purple-500" />
         </button>
       </div>
-    </div>
+    </main>
   );
 }
