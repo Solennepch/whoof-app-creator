@@ -96,7 +96,7 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
   return (
     <div className="flex flex-col w-full min-h-[calc(100vh-8rem)]">
       {/* Local discover toolbar with filter */}
-      <div className="flex items-center justify-between px-4 py-3 bg-background border-b flex-shrink-0">
+      <div className="flex items-center justify-between px-4 py-3 gradient-hero border-b flex-shrink-0">
         <h2 className="text-lg font-semibold text-foreground">
           {mode === "local" ? "Chiens près de toi" : "Adopte ton compagnon"}
         </h2>
@@ -150,7 +150,7 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
       </div>
 
       {/* Swipe buttons - fixed at bottom above global footer */}
-      <div className="flex-shrink-0 py-4 flex justify-center gap-4 px-4 bg-background">
+      <div className="flex-shrink-0 py-4 flex justify-center gap-4 px-4 gradient-hero">
         {/* Rewind */}
         <button
           onClick={handleRewind}
