@@ -7,7 +7,7 @@ import { Progress } from "@/components/ui/progress";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { XpProgress } from "@/components/ui/XpProgress";
+import { XpProgress, levelForXp } from "@/components/ui/XpProgress";
 import { ChallengeLeaderboard } from "@/components/events/ChallengeLeaderboard";
 import { ChallengeStats } from "@/components/events/ChallengeStats";
 import { ShareAchievement } from "@/components/events/ShareAchievement";
@@ -34,6 +34,13 @@ export default function Events() {
   const target = currentChallenge?.objectiveTarget || 1;
   const percentage = Math.min((progress / target) * 100, 100);
   const isCompleted = challengeProgress?.isCompleted || false;
+
+  // Calculer les données pour XpProgress
+  const currentXP = xpData?.total_xp || 0;
+  const currentLevel = levelForXp(currentXP);
+  const xpThresholds = [0, 500, 1200, 2200, 3600, 5400];
+  const minXP = xpThresholds[currentLevel - 1] || 0;
+  const maxXP = xpThresholds[currentLevel] || 6000;
 
   // Déclencher confettis si challenge complété
   useEffect(() => {
@@ -141,9 +148,9 @@ export default function Events() {
 
                 <div className="pt-2">
                   <ShareAchievement
-                    challengeName={currentChallenge.name}
-                    progress={progress}
-                    target={target}
+                    title={`Challenge: ${currentChallenge.name}`}
+                    description={`${progress}/${target} - ${currentChallenge.objective}`}
+                    badge={currentChallenge.badge}
                   />
                 </div>
               </CardContent>
@@ -182,7 +189,7 @@ export default function Events() {
               Complète ces missions pour gagner des XP supplémentaires.
             </p>
           </div>
-          <GamificationWrapper featureName="dailyMissions">
+          <GamificationWrapper feature="showDailyMissions">
             <DailyMissionsWidget />
           </GamificationWrapper>
         </motion.div>
@@ -215,7 +222,7 @@ export default function Events() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <XpProgress xpData={xpData} />
+                <XpProgress current={currentXP} min={minXP} max={maxXP} />
               </CardContent>
             </Card>
           </motion.div>
@@ -234,7 +241,7 @@ export default function Events() {
               Voir le classement complet →
             </a>
           </div>
-          <GamificationWrapper featureName="leaderboards">
+          <GamificationWrapper feature="showLeaderboard">
             <ChallengeLeaderboard />
           </GamificationWrapper>
         </motion.div>
@@ -249,14 +256,14 @@ export default function Events() {
           <div>
             <h2 className="text-xl font-semibold mb-1">Challenges spéciaux</h2>
           </div>
-          <GamificationWrapper featureName="specialEvents">
+          <GamificationWrapper feature="showChallenges">
             <SpecialEventWidget />
           </GamificationWrapper>
         </motion.div>
       </div>
 
       {/* Tutorial */}
-      <InteractiveTutorial steps={TUTORIALS.gamification} />
+      <InteractiveTutorial tutorialId="gamification" steps={TUTORIALS.gamification.steps} />
     </div>
   );
 }
