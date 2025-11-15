@@ -46,6 +46,7 @@ const AnnuaireMap = lazy(() => import("./pages/AnnuaireMap"));
 const Partenariats = lazy(() => import("./pages/Partenariats"));
 const PartenariatDetail = lazy(() => import("./pages/PartenariatDetail"));
 const BonsPlans = lazy(() => import("./pages/BonsPlans"));
+const DevenirPro = lazy(() => import("./pages/DevenirPro"));
 
 // Onboarding
 const Welcome = lazy(() => import("./pages/onboarding/Welcome"));
@@ -135,6 +136,7 @@ const App = () => {
                 <Route path="/partenariats" element={<PageErrorBoundary><Partenariats /></PageErrorBoundary>} />
                 <Route path="/partenariats/:id" element={<PageErrorBoundary><PartenariatDetail /></PageErrorBoundary>} />
                 <Route path="/bons-plans" element={<PageErrorBoundary><BonsPlans /></PageErrorBoundary>} />
+                <Route path="/devenir-pro" element={<PageErrorBoundary><DevenirPro /></PageErrorBoundary>} />
 
                 {/* Onboarding */}
                 <Route path="/onboarding/welcome" element={<PageErrorBoundary><Welcome /></PageErrorBoundary>} />
