@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
-import { Building, Briefcase, Bug, Percent, User, Star, Gift, Crown, RefreshCw, Settings, Heart } from "lucide-react";
-import { NavLink } from "react-router-dom";
+import { Building, Briefcase, Bug, Percent, User, Star, Gift, Crown, RefreshCw, Settings, Heart, MapPin } from "lucide-react";
+import { NavLink, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { AccountSwitcher } from "./AccountSwitcher";
 import { useAccounts } from "@/contexts/AccountContext";
+
+const isDev = import.meta.env.MODE !== "production";
 
 interface SidebarMenuProps {
   open: boolean;
@@ -16,6 +18,7 @@ export function SidebarMenu({ open, onOpenChange }: SidebarMenuProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [showAccountSwitcher, setShowAccountSwitcher] = useState(false);
   const { accounts } = useAccounts();
+  const location = useLocation();
 
   useEffect(() => {
     const checkUserRoles = async () => {
@@ -52,42 +55,56 @@ export function SidebarMenu({ open, onOpenChange }: SidebarMenuProps) {
     return () => subscription.unsubscribe();
   }, [open]);
 
-  // Debug section
+  // Debug section (dev only)
   const debugItems: Array<{
     to: string;
     icon: React.ElementType;
     label: string;
-    premium?: boolean;
   }> = [
-    { to: "/debug/test-accounts", icon: User, label: "🔧 Comptes Test" },
-    { to: "/debug/health", icon: Bug, label: "🔧 Debug Health" },
-    { to: "/debug/feature-flags", icon: RefreshCw, label: "🔧 Feature Flags" },
+    { to: "/debug/test-accounts", icon: User, label: "Comptes Test" },
+    { to: "/debug/health", icon: Bug, label: "Debug Health" },
+    { to: "/debug/feature-flags", icon: RefreshCw, label: "Feature Flags" },
   ];
 
-  // Main user menu items
-  const menuItems: Array<{
+  // Section 1: Ton compte
+  const accountItems: Array<{
     to: string;
     icon: React.ElementType;
     label: string;
     premium?: boolean;
   }> = [
-    { to: "/profile/me", icon: User, label: "Mon Profil" },
-    { to: "/likes", icon: Heart, label: "Mes Likes", premium: true },
+    { to: "/profile/me", icon: User, label: "Mon profil" },
+    { to: "/likes", icon: Heart, label: "Mes likes", premium: true },
     { to: "/recompenses", icon: Gift, label: "Récompenses" },
     { to: "/astro-dog", icon: Star, label: "Astro Dog" },
+  ];
+
+  // Section 2: Découvrir & sortir
+  const discoverItems: Array<{
+    to: string;
+    icon: React.ElementType;
+    label: string;
+  }> = [
+    { to: "/social-events", icon: MapPin, label: "Balades & événements" },
     { to: "/annuaire", icon: Building, label: "Annuaire Pro" },
-    { to: "/partenariats", icon: Percent, label: "Bons Plans" },
+    { to: "/partenariats", icon: Percent, label: "Bons plans" },
+  ];
+
+  // Section 3: Application
+  const appItems: Array<{
+    to: string;
+    icon: React.ElementType;
+    label: string;
+  }> = [
     { to: "/settings", icon: Settings, label: "Paramètres" },
   ];
 
-  // Add Pro access at the end
+  // Add Pro access dynamically
   if (isPro) {
-    menuItems.push({ to: "/pro/home", icon: Briefcase, label: "🔷 Espace Pro" });
+    appItems.push({ to: "/pro/home", icon: Briefcase, label: "Espace Pro" });
   } else {
-    menuItems.push({ to: "/pro/onboarding", icon: Briefcase, label: "Devenir Pro" });
+    appItems.push({ to: "/pro/onboarding", icon: Gift, label: "Devenir Pro" });
   }
-
-  const allItems = [...debugItems, ...menuItems];
 
   return (
     <>
@@ -115,26 +132,102 @@ export function SidebarMenu({ open, onOpenChange }: SidebarMenuProps) {
           {isLoading ? (
             <div className="text-sm text-muted-foreground">Chargement...</div>
           ) : (
-            allItems.map((item) => (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                onClick={() => onOpenChange(false)}
-                className={({ isActive }) =>
-                  `flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium transition ${
-                    isActive
-                      ? "bg-primary/10 text-primary"
-                      : "text-muted-foreground hover:bg-muted"
-                  }`
-                }
-              >
-                <item.icon className="h-5 w-5" />
-                <span>{item.label}</span>
-                {'premium' in item && item.premium && (
-                  <Crown className="h-3 w-3 ml-auto text-accent" />
-                )}
-              </NavLink>
-            ))
+            <div className="flex flex-col gap-4">
+              {/* Debug section (dev only) */}
+              {isDev && (
+                <div className="space-y-1">
+                  {debugItems.map((item) => {
+                    const isActive = location.pathname === item.to;
+                    return (
+                      <NavLink
+                        key={item.label}
+                        to={item.to}
+                        onClick={() => onOpenChange(false)}
+                        className={`flex items-center gap-3 rounded-xl px-2 py-2 text-sm transition-colors hover:bg-muted ${
+                          isActive ? 'bg-muted text-primary font-medium' : ''
+                        }`}
+                      >
+                        <item.icon className="h-4 w-4" />
+                        <span>{item.label}</span>
+                      </NavLink>
+                    );
+                  })}
+                  <div className="my-2 h-px bg-muted" />
+                </div>
+              )}
+
+              {/* Section 1: Ton compte */}
+              <div className="space-y-1">
+                <p className="px-2 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+                  Ton compte
+                </p>
+                {accountItems.map((item) => {
+                  const isActive = location.pathname === item.to;
+                  return (
+                    <NavLink
+                      key={item.label}
+                      to={item.to}
+                      onClick={() => onOpenChange(false)}
+                      className={`flex items-center justify-between gap-3 rounded-xl px-2 py-2 text-sm transition-colors hover:bg-muted ${
+                        isActive ? 'bg-muted text-primary font-medium' : ''
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <item.icon className="h-4 w-4" />
+                        <span>{item.label}</span>
+                      </div>
+                      {item.premium && <Crown className="h-3 w-3 text-amber-400" />}
+                    </NavLink>
+                  );
+                })}
+              </div>
+
+              {/* Section 2: Découvrir */}
+              <div className="space-y-1">
+                <p className="px-2 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+                  Découvrir
+                </p>
+                {discoverItems.map((item) => {
+                  const isActive = location.pathname === item.to;
+                  return (
+                    <NavLink
+                      key={item.label}
+                      to={item.to}
+                      onClick={() => onOpenChange(false)}
+                      className={`flex items-center gap-3 rounded-xl px-2 py-2 text-sm transition-colors hover:bg-muted ${
+                        isActive ? 'bg-muted text-primary font-medium' : ''
+                      }`}
+                    >
+                      <item.icon className="h-4 w-4" />
+                      <span>{item.label}</span>
+                    </NavLink>
+                  );
+                })}
+              </div>
+
+              {/* Section 3: Application */}
+              <div className="space-y-1">
+                <p className="px-2 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+                  Application
+                </p>
+                {appItems.map((item) => {
+                  const isActive = location.pathname === item.to;
+                  return (
+                    <NavLink
+                      key={item.label}
+                      to={item.to}
+                      onClick={() => onOpenChange(false)}
+                      className={`flex items-center gap-3 rounded-xl px-2 py-2 text-sm transition-colors hover:bg-muted ${
+                        isActive ? 'bg-muted text-primary font-medium' : ''
+                      }`}
+                    >
+                      <item.icon className="h-4 w-4" />
+                      <span>{item.label}</span>
+                    </NavLink>
+                  );
+                })}
+              </div>
+            </div>
           )}
         </div>
       </SheetContent>
