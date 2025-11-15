@@ -5,7 +5,10 @@ export default function MatchHome() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-6 gap-6 bg-background">
+    <div 
+      className="min-h-screen flex flex-col items-center justify-center p-6 gap-6"
+      style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}
+    >
       <div className="text-center space-y-4 max-w-md">
         <h1 className="text-3xl font-bold text-foreground">Trouve ton match 🐾</h1>
         <p className="text-muted-foreground">
