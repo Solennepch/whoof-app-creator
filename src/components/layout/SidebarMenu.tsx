@@ -73,7 +73,7 @@ export function SidebarMenu({ open, onOpenChange }: SidebarMenuProps) {
     label: string;
     premium?: boolean;
   }> = [
-    { to: "/profile/me", icon: User, label: "Mon profil" },
+    { to: "/my-profile", icon: User, label: "Mon profil" },
     { to: "/likes", icon: Heart, label: "Mes likes", premium: true },
     { to: "/recompenses", icon: Gift, label: "Récompenses" },
     { to: "/astro-dog", icon: Star, label: "Astro Dog" },
