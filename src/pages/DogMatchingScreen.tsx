@@ -12,6 +12,7 @@ type DogProfile = {
   photoUrl: string;
   shortDescription: string;
   badges?: string[];
+  ownerName?: string;
 };
 
 interface DogMatchingScreenProps {
@@ -108,7 +109,7 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
         <div className="absolute inset-x-0 bottom-0 pt-24 pb-6 px-6 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
           <div className="text-left">
             <h2 className="text-4xl font-bold mb-2 text-white">
-              {currentDog.name}, {currentDog.age} ans
+              {currentDog.name}{currentDog.ownerName && ` & ${currentDog.ownerName}`}
             </h2>
             <p className="text-lg text-white/90">
               {mode === "local" && currentDog.distanceKm
