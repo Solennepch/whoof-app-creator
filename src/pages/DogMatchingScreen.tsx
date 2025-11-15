@@ -106,12 +106,12 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
         )}
 
         {/* Bottom gradient overlay with info */}
-        <div className="absolute inset-x-0 bottom-0 pt-24 pb-6 px-6 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
+        <div className="absolute inset-x-0 bottom-0 pt-24 pb-6 px-6 bg-gradient-to-t from-black/80 via-black/40 to-transparent backdrop-blur-sm">
           <div className="text-left">
-            <h2 className="text-4xl font-bold mb-2 text-white">
+            <h2 className="text-4xl font-bold mb-2 text-white drop-shadow-lg">
               {currentDog.name}{currentDog.ownerName && ` & ${currentDog.ownerName}`}
             </h2>
-            <p className="text-lg text-white/90">
+            <p className="text-lg text-white/90 drop-shadow-md">
               {mode === "local" && currentDog.distanceKm
                 ? `à ${currentDog.distanceKm} km • ${currentDog.shortDescription}`
                 : `${currentDog.shelterName} • ${currentDog.shortDescription}`}
