@@ -1,272 +1,162 @@
-import { Card, CardContent } from "@/components/ui/card";
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Progress } from "@/components/ui/progress";
-import { GamificationSection } from "@/components/profile/GamificationSection";
-import { Crown, Zap, Heart, Star, Sparkles } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Gift, Sparkles, Trophy, Crown, Dog, Star, CheckCircle2, Lock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useUserXP } from "@/hooks/useGamification";
+import { useUserXP, useUserBadges, useAllBadges } from "@/hooks/useGamification";
 import { useAuth } from "@/hooks/useAuth";
+import { useProfileData } from "@/hooks/useProfileData";
+import { levelForXp } from "@/components/ui/XpProgress";
+import { motion } from "framer-motion";
+
+const DAILY_QUESTS = [
+  { id: "walk_20min", title: "Faire une balade de 20 min", xp: 20, icon: "🎯" },
+  { id: "say_hello", title: "Dire bonjour à 1 chien", xp: 15, icon: "👋" },
+  { id: "post_photo", title: "Poster une photo", xp: 10, icon: "📸" },
+  { id: "steps_3000", title: "3 000 pas avec ton chien", xp: 25, icon: "🚶" },
+];
+
+const REWARD_CHESTS = [
+  { id: "bronze", name: "Coffre Bronze", xp: 100, reward: "1 badge aléatoire", icon: "🎁", color: "from-amber-600/20 to-amber-800/20" },
+  { id: "silver", name: "Coffre Argent", xp: 150, reward: "1 badge + bonus", icon: "✨", color: "from-gray-400/20 to-gray-600/20" },
+  { id: "gold", name: "Coffre Or", xp: 250, reward: "Badge rare + skin", icon: "👑", color: "from-yellow-400/20 to-yellow-600/20", premium: true },
+];
 
 export default function Recompenses() {
   const navigate = useNavigate();
   const { session } = useAuth();
+  const [completedQuests, setCompletedQuests] = useState<string[]>([]);
   
-  const { data: xpSummary, isLoading, error } = useUserXP(session?.user?.id);
+  const { data: xpSummary, isLoading: xpLoading } = useUserXP(session?.user?.id);
+  const { data: userBadges, isLoading: badgesLoading } = useUserBadges(session?.user?.id);
+  const { data: allBadges, isLoading: allBadgesLoading } = useAllBadges();
+  const { profile, dogs } = useProfileData(session?.user?.id);
+  const primaryDog = dogs?.[0];
 
-  const currentLevel = xpSummary?.level || 1;
+  const currentLevel = levelForXp(xpSummary?.total_xp || 0);
   const totalXP = xpSummary?.total_xp || 0;
-  const nextLevelXP = (currentLevel + 1) * 200;
-  const progressToNext = totalXP % 200;
+  const xpTable = [0, 500, 1200, 2200, 3600, 5400];
+  const nextLevelXP = xpTable[currentLevel] || (currentLevel * 1200);
   const remainingToNext = nextLevelXP - totalXP;
-  const progressPercent = (progressToNext / 200) * 100;
+  const progressPercent = ((totalXP - (xpTable[currentLevel - 1] || 0)) / (nextLevelXP - (xpTable[currentLevel - 1] || 0))) * 100;
 
-  // Loading state
+  const isLoading = xpLoading || badgesLoading || allBadgesLoading;
+
   if (isLoading) {
     return (
-      <div className="min-h-screen pb-24 relative overflow-hidden" style={{ 
-        background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)"
-      }}>
-        <main className="mx-auto max-w-[720px] px-4 pt-20 pb-6 space-y-6 relative z-10">
-          <header className="space-y-1">
-            <h1 className="text-lg font-semibold">Récompenses</h1>
-            <p className="text-xs text-muted-foreground">
-              Chargement de tes points et de tes niveaux…
-            </p>
-          </header>
-          <div className="grid gap-3">
-            <Skeleton className="h-24 rounded-2xl" />
-            <Skeleton className="h-40 rounded-2xl" />
-            <Skeleton className="h-32 rounded-2xl" />
-          </div>
+      <div className="min-h-screen pb-24" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
+        <main className="mx-auto max-w-[720px] px-4 pt-20 space-y-6">
+          <Skeleton className="h-32 rounded-[24px]" />
         </main>
       </div>
     );
   }
 
-  // Error state
-  if (error) {
+  if (!xpSummary || totalXP === 0) {
     return (
-      <div className="min-h-screen pb-24 relative overflow-hidden" style={{ 
-        background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)"
-      }}>
-        <main className="mx-auto max-w-[720px] px-4 pt-20 pb-6 space-y-6 relative z-10">
-          <h1 className="text-lg font-semibold">Récompenses</h1>
-          <Card className="rounded-2xl border-destructive/50">
-            <CardContent className="py-6 text-center">
-              <p className="text-sm text-destructive mb-2">
-                Impossible de charger tes récompenses pour le moment.
-              </p>
-              <p className="text-xs text-muted-foreground">
-                Vérifie ta connexion ou réessaie un peu plus tard.
-              </p>
-            </CardContent>
-          </Card>
+      <div className="min-h-screen pb-24" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
+        <main className="mx-auto max-w-[720px] px-4 pt-20 space-y-6">
+          <div className="text-center space-y-2">
+            <Gift className="w-12 h-12 mx-auto text-primary" />
+            <h1 className="text-3xl font-bold">Récompenses</h1>
+          </div>
+          <Card><CardContent className="py-12 text-center">
+            <Sparkles className="w-16 h-16 mx-auto mb-4 text-muted-foreground/50" />
+            <h3 className="text-lg font-semibold mb-2">Aucune récompense</h3>
+            <p className="text-sm text-muted-foreground mb-6">Fais ta première balade !</p>
+            <Button onClick={() => navigate("/balades")} className="rounded-full">Commencer</Button>
+          </CardContent></Card>
         </main>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen pb-24 relative overflow-hidden" style={{ 
-      background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)"
-    }}>
-      {/* Animated Stars Background */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <Star className="absolute top-20 left-10 w-6 h-6 text-white animate-pulse" style={{ animationDelay: "0s" }} />
-        <Sparkles className="absolute top-40 right-20 w-5 h-5 text-white animate-pulse" style={{ animationDelay: "0.5s" }} />
-        <Star className="absolute top-60 left-1/4 w-4 h-4 text-white animate-pulse" style={{ animationDelay: "1s" }} />
-        <Star className="absolute top-32 right-10 w-7 h-7 text-white animate-pulse" style={{ animationDelay: "1.5s" }} />
-        <Sparkles className="absolute top-80 left-1/3 w-6 h-6 text-white animate-pulse" style={{ animationDelay: "2s" }} />
-        <Star className="absolute top-96 right-1/4 w-5 h-5 text-white animate-pulse" style={{ animationDelay: "2.5s" }} />
-        <Sparkles className="absolute bottom-40 left-20 w-4 h-4 text-white animate-pulse" style={{ animationDelay: "3s" }} />
-        <Star className="absolute bottom-60 right-16 w-6 h-6 text-white animate-pulse" style={{ animationDelay: "3.5s" }} />
-      </div>
+    <div className="min-h-screen pb-24" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
+      <main className="mx-auto max-w-[720px] px-4 pt-20 pb-6 space-y-6">
+        <div className="text-center space-y-2 mb-6">
+          <Gift className="w-12 h-12 mx-auto text-primary" />
+          <h1 className="text-3xl font-bold">Récompenses</h1>
+          <p className="text-sm text-muted-foreground">Gagne des XP et débloque des badges</p>
+        </div>
 
-      <main className="mx-auto max-w-[720px] px-4 pt-20 pb-6 space-y-6 relative z-10">
-        {/* Header */}
-        <header className="space-y-1 mb-6">
-          <h1 className="text-lg font-semibold">Récompenses</h1>
-          <p className="text-xs text-muted-foreground">
-            Plus tu sors ton chien, plus vous gagnez de l'XP, des niveaux et des badges.
-          </p>
-        </header>
-
-        {/* Empty State - First Time */}
-        {(!xpSummary || totalXP === 0) && (
-          <Card className="border-dashed rounded-2xl">
-            <CardContent className="py-6 text-center">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-amber-400 to-pink-500 flex items-center justify-center">
-                <Sparkles className="w-8 h-8 text-white" />
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+          <Card className="bg-gradient-to-br from-primary/10 to-accent/10 rounded-[24px] border-primary/20">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-4 mb-6">
+                <Avatar className="w-20 h-20 border-2 border-primary">
+                  <AvatarImage src={primaryDog?.avatar_url || profile?.avatar_url || undefined} />
+                  <AvatarFallback><Dog className="w-10 h-10" /></AvatarFallback>
+                </Avatar>
+                <div className="flex-1">
+                  <div className="text-lg font-bold">{primaryDog?.name || profile?.display_name || "Ton duo"} 🐶✨</div>
+                  <div className="text-sm text-muted-foreground">Niveau {currentLevel} • {totalXP} XP</div>
+                </div>
+                <Trophy className="w-10 h-10 text-primary" />
               </div>
-              <h3 className="text-base font-semibold mb-2">
-                Tu n'as pas encore gagné d'XP… mais ça va venir très vite ✨
-              </h3>
-              <p className="text-sm text-muted-foreground mb-4">
-                Lance ta première balade, participe à un événement ou rencontre un nouveau duo chien·humain pour commencer à gagner des points.
-              </p>
-              <Button
-                size="sm"
-                className="rounded-full"
-                onClick={() => navigate("/balades")}
-              >
-                Commencer une balade
-              </Button>
+              <div className="space-y-2">
+                <div className="flex justify-between text-xs text-muted-foreground">
+                  <span>Niveau {currentLevel + 1}</span>
+                  <span>{Math.max(0, remainingToNext)} XP</span>
+                </div>
+                <Progress value={Math.min(100, progressPercent)} className="h-3" />
+              </div>
             </CardContent>
           </Card>
-        )}
+        </motion.div>
 
-        {/* Content when user has XP */}
-        {xpSummary && totalXP > 0 && (
-          <>
-            {/* BLOC 1 — NIVEAU / PROGRESSION */}
-            <Card className="rounded-2xl border-none bg-gradient-to-r from-amber-100 via-pink-100 to-indigo-100 shadow-sm">
-              <CardContent className="py-4">
-                <div className="flex items-center justify-between gap-3 mb-3">
-                  <div>
-                    <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                      Ton duo aujourd'hui
-                    </p>
-                    <p className="text-xl font-extrabold">
-                      Niveau {currentLevel}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {totalXP} XP cumulés
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-[11px] text-muted-foreground">
-                      Prochain niveau à{" "}
-                      <span className="font-semibold">
-                        {nextLevelXP} XP
-                      </span>
-                    </p>
-                  </div>
-                </div>
+        <Card className="rounded-[24px]">
+          <CardHeader><CardTitle className="flex items-center gap-2"><Trophy className="w-5 h-5" />Badges</CardTitle></CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-3 gap-3">
+              {allBadges?.slice(0, 9).map(badge => {
+                const unlocked = userBadges?.some(ub => ub.badge_code === badge.code);
+                return (
+                  <Card key={badge.code} className={unlocked ? "bg-amber-50 border-amber-200" : "opacity-40"}>
+                    <CardContent className="p-3 text-center">
+                      <div className="text-3xl">{badge.icon || "🏆"}</div>
+                      <div className="text-xs font-semibold truncate">{badge.name}</div>
+                      {!unlocked && <Lock className="w-3 h-3 mx-auto mt-1" />}
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          </CardContent>
+        </Card>
 
-                {/* Progression vers le prochain niveau */}
-                <div className="space-y-1">
-                  <Progress
-                    value={progressPercent}
-                    className="h-2 rounded-full"
-                  />
-                  <p className="text-[11px] text-muted-foreground">
-                    Plus que{" "}
-                    <span className="font-semibold">
-                      {remainingToNext} XP
-                    </span>{" "}
-                    pour passer au niveau suivant 🐾
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
+        <Card className="rounded-[24px]">
+          <CardHeader><CardTitle className="flex items-center gap-2"><Sparkles className="w-5 h-5" />Quêtes 🐾</CardTitle></CardHeader>
+          <CardContent className="space-y-3">
+            {DAILY_QUESTS.map(quest => {
+              const done = completedQuests.includes(quest.id);
+              return (
+                <Card key={quest.id} className={done ? "bg-green-50" : ""} onClick={() => setCompletedQuests(p => p.includes(quest.id) ? p.filter(i => i !== quest.id) : [...p, quest.id])}>
+                  <CardContent className="p-4 flex items-center gap-3 cursor-pointer">
+                    <Checkbox checked={done} className="rounded-full" />
+                    <div className="text-2xl">{quest.icon}</div>
+                    <div className="flex-1 text-sm">{quest.title}</div>
+                    <Badge>+{quest.xp} XP</Badge>
+                    {done && <CheckCircle2 className="w-5 h-5 text-green-600" />}
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </CardContent>
+        </Card>
 
-            {/* BLOC 2 — Section originale gamification */}
-            <GamificationSection 
-              level={currentLevel}
-              currentXP={totalXP}
-              maxXP={nextLevelXP}
-              totalRecommendations={0}
-            />
-
-            {/* BLOC 3 — XP Rewards Section */}
-            <section className="space-y-3">
-              <h2 className="text-sm font-medium">Convertir mes XP</h2>
-              <Card className="p-6 rounded-3xl shadow-soft bg-white">
-                <div className="grid gap-4">
-                  <div className="flex items-center justify-between p-4 rounded-2xl border-2 border-dashed border-[#7B61FF] bg-gradient-to-br from-[#7B61FF]/5 to-transparent hover:scale-[1.02] transition-all">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#7B61FF] to-[#FF5DA2] flex items-center justify-center">
-                        <Crown className="w-5 h-5 text-white" />
-                      </div>
-                      <div>
-                        <h4 className="font-semibold text-sm text-foreground">1 mois Premium</h4>
-                        <p className="text-xs text-muted-foreground">800 XP</p>
-                      </div>
-                    </div>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      className="rounded-full"
-                      disabled={totalXP < 800}
-                    >
-                      Échanger
-                    </Button>
-                  </div>
-
-                  <div className="flex items-center justify-between p-4 rounded-2xl border-2 border-dashed border-[#FF5DA2] bg-gradient-to-br from-[#FF5DA2]/5 to-transparent hover:scale-[1.02] transition-all">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#FF5DA2] to-[#FFC14D] flex items-center justify-center">
-                        <Heart className="w-5 h-5 text-white" />
-                      </div>
-                      <div>
-                        <h4 className="font-semibold text-sm text-foreground">5 Super Likes</h4>
-                        <p className="text-xs text-muted-foreground">400 XP</p>
-                      </div>
-                    </div>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      className="rounded-full"
-                      disabled={totalXP < 400}
-                    >
-                      Échanger
-                    </Button>
-                  </div>
-
-                  <div className="flex items-center justify-between p-4 rounded-2xl border-2 border-dashed border-[#FFC14D] bg-gradient-to-br from-[#FFC14D]/5 to-transparent hover:scale-[1.02] transition-all">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#FFC14D] to-[#FF5DA2] flex items-center justify-center">
-                        <Zap className="w-5 h-5 text-white" />
-                      </div>
-                      <div>
-                        <h4 className="font-semibold text-sm text-foreground">Boost de visibilité</h4>
-                        <p className="text-xs text-muted-foreground">500 XP</p>
-                      </div>
-                    </div>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      className="rounded-full"
-                      disabled={totalXP < 500}
-                    >
-                      Échanger
-                    </Button>
-                  </div>
-                </div>
-              </Card>
-            </section>
-
-            {/* BLOC 4 — Available Rewards Info */}
-            <section className="space-y-3">
-              <h2 className="text-sm font-medium">Comment gagner plus d'XP</h2>
-              <Card className="p-6 rounded-3xl shadow-soft bg-gradient-to-br from-amber-50 to-indigo-50">
-                <h3 className="font-semibold mb-3 flex items-center gap-2 text-foreground">
-                  <Star className="w-4 h-4 text-[#FFC14D]" />
-                  <span>Gagne de l'XP en participant :</span>
-                </h3>
-                <ul className="space-y-2 text-sm text-muted-foreground">
-                  <li className="flex items-start gap-2">
-                    <span className="text-[#7B61FF]">•</span>
-                    <span><strong>+50 XP</strong> : Complète ton profil à 100%</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-[#7B61FF]">•</span>
-                    <span><strong>+100 XP</strong> : Participe à ta première balade de groupe</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-[#7B61FF]">•</span>
-                    <span><strong>+200 XP</strong> : Organise un événement avec 5+ participants</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-[#7B61FF]">•</span>
-                    <span><strong>+150 XP</strong> : Envoie 5 messages positifs à d'autres maîtres</span>
-                  </li>
-                </ul>
-              </Card>
-            </section>
-          </>
-        )}
+        <Card className="bg-gradient-to-br from-amber-100 to-amber-50 rounded-[24px]">
+          <CardHeader><CardTitle className="flex items-center gap-2"><Crown className="w-5 h-5 text-amber-600" />Premium 👑</CardTitle></CardHeader>
+          <CardContent>
+            <p className="text-sm mb-4">Débloque coffres OR et badges rares</p>
+            <Button className="w-full rounded-full" onClick={() => navigate("/premium")}><Crown className="w-4 h-4 mr-2" />Débloquer</Button>
+          </CardContent>
+        </Card>
       </main>
     </div>
   );
