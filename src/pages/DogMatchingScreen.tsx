@@ -106,8 +106,8 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
         )}
 
         {/* Bottom gradient overlay with info */}
-        <div className="absolute inset-x-0 bottom-0 pt-32 pb-6 px-6 bg-gradient-to-t from-black/90 via-black/60 to-transparent backdrop-blur-md">
-          <div className="text-left">
+        <div className="absolute inset-x-0 bottom-0 pt-20 pb-6 px-6 bg-gradient-to-t from-black/90 via-black/50 to-transparent">
+          <div className="text-left backdrop-blur-md bg-black/20 rounded-lg p-4">
             <h2 className="text-4xl font-bold mb-2 text-white drop-shadow-2xl">
               {currentDog.name}{currentDog.ownerName && ` & ${currentDog.ownerName}`}
             </h2>
