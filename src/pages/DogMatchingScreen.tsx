@@ -152,7 +152,7 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
         {/* Super-like - positioned slightly higher */}
         <button
           onClick={handleSuperLike}
-          className="w-12 h-12 rounded-full gradient-hero shadow-lg flex items-center justify-center -mt-10"
+          className="w-12 h-12 rounded-full gradient-hero shadow-lg flex items-center justify-center -mt-4"
         >
           <Star className="w-6 h-6 text-white fill-white" />
         </button>
