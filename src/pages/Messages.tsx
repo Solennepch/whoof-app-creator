@@ -51,7 +51,11 @@ export default function Messages() {
   }
 
   return (
-    <div className="container mx-auto p-4 md:p-6 space-y-6 max-w-4xl pb-24 md:pb-6">
+    <div 
+      className="min-h-screen"
+      style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}
+    >
+      <div className="container mx-auto p-4 md:p-6 space-y-6 max-w-4xl pb-24 md:pb-6">
       <div className="flex items-center gap-3">
         <MessageCircle className="h-8 w-8 text-primary" />
         <div>
@@ -172,6 +176,7 @@ export default function Messages() {
           })}
         </div>
       )}
+    </div>
     </div>
   );
 }
