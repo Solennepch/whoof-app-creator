@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Filter, ArrowUp, RotateCcw, Star, Heart, Send } from "lucide-react";
+import bonesCrossedIcon from "@/assets/bones-crossed.png";
 
 type DogProfile = {
   id: string;
@@ -16,32 +17,6 @@ interface DogMatchingScreenProps {
   mode: "local" | "adoption";
   dogs: DogProfile[];
 }
-
-// Custom SVG for crossed dog bones
-const DogBonesCrossIcon = ({ className }: { className?: string }) => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="currentColor"
-    className={className}
-  >
-    {/* First bone - rotated 45deg */}
-    <g transform="rotate(45 12 12)">
-      <circle cx="7" cy="12" r="2.5" />
-      <circle cx="17" cy="12" r="2.5" />
-      <circle cx="7" cy="12" r="1.5" fill="white" opacity="0.3" />
-      <circle cx="17" cy="12" r="1.5" fill="white" opacity="0.3" />
-      <rect x="8.5" y="10.5" width="7" height="3" rx="1.5" />
-    </g>
-    {/* Second bone - rotated -45deg */}
-    <g transform="rotate(-45 12 12)">
-      <circle cx="7" cy="12" r="2.5" />
-      <circle cx="17" cy="12" r="2.5" />
-      <circle cx="7" cy="12" r="1.5" fill="white" opacity="0.3" />
-      <circle cx="17" cy="12" r="1.5" fill="white" opacity="0.3" />
-      <rect x="8.5" y="10.5" width="7" height="3" rx="1.5" />
-    </g>
-  </svg>
-);
 
 export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -171,7 +146,7 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
           onClick={handleNope}
           className="w-16 h-16 rounded-full bg-white backdrop-blur shadow-lg flex items-center justify-center"
         >
-          <DogBonesCrossIcon className="w-10 h-10 text-red-500" />
+          <img src={bonesCrossedIcon} alt="Nope" className="w-10 h-10" />
         </button>
 
         {/* Super-like - positioned slightly higher */}
