@@ -1,21 +1,21 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
-import { MessageSquare, Search } from "lucide-react";
+import { MessageCircle, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState, useEffect } from "react";
+import { Badge } from "@/components/ui/badge";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMessages } from "@/hooks/useMessages";
 import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
 
 export default function Messages() {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
-  const { toast } = useToast();
   
   const { threads, threadsLoading } = useMessages();
 
@@ -30,17 +30,20 @@ export default function Messages() {
 
   if (threadsLoading) {
     return (
-      <div className="container mx-auto p-6 space-y-6 max-w-4xl">
-        <div>
-          <h1 className="text-3xl font-bold mb-2">Messages</h1>
-          <p className="text-sm text-muted-foreground">
-            Chargement de tes conversations…
-          </p>
+      <div className="container mx-auto p-4 md:p-6 space-y-6 max-w-4xl">
+        <div className="flex items-center gap-3">
+          <MessageCircle className="h-8 w-8 text-primary" />
+          <div>
+            <h1 className="text-3xl font-bold">Messages</h1>
+            <p className="text-sm text-muted-foreground">
+              Chargement de tes conversations…
+            </p>
+          </div>
         </div>
-        <Skeleton className="h-12 w-full" />
+        <Skeleton className="h-12 w-full rounded-full" />
         <div className="space-y-3">
           {[1, 2, 3].map((i) => (
-            <Skeleton key={i} className="h-20" />
+            <Skeleton key={i} className="h-20 rounded-2xl" />
           ))}
         </div>
       </div>
@@ -48,98 +51,123 @@ export default function Messages() {
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-6 max-w-4xl">
-      <div className="flex items-center justify-between">
+    <div className="container mx-auto p-4 md:p-6 space-y-6 max-w-4xl pb-24 md:pb-6">
+      <div className="flex items-center gap-3">
+        <MessageCircle className="h-8 w-8 text-primary" />
         <div>
-          <h1 className="text-3xl font-bold mb-2">Messages</h1>
-          <p className="text-muted-foreground">
-            {filteredThreads.length} conversation(s)
+          <h1 className="text-3xl font-bold">Messages</h1>
+          <p className="text-sm text-muted-foreground">
+            {threads?.length === 0 
+              ? "Discute avec les duos que tu rencontres 🌟" 
+              : `Toutes tes discussions avec les duos WHOOF`
+            }
           </p>
         </div>
       </div>
 
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
+        <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
         <Input
-          placeholder="Rechercher une conversation..."
+          placeholder="Rechercher un duo…"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-10"
+          className="pl-12 h-12 rounded-full border-border bg-background"
         />
       </div>
 
       {filteredThreads.length === 0 && searchQuery && (
-        <Card className="p-8">
-          <div className="text-center text-muted-foreground">
-            <MessageSquare className="h-12 w-12 mx-auto mb-3 opacity-50" />
-            <p>Aucune conversation trouvée</p>
-          </div>
-        </Card>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="rounded-2xl border border-border bg-card p-8 text-center"
+        >
+          <MessageCircle className="h-12 w-12 mx-auto mb-3 text-muted-foreground opacity-50" />
+          <p className="text-muted-foreground">Aucune conversation trouvée</p>
+        </motion.div>
       )}
 
       {threads?.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-amber-200 bg-amber-50 px-6 py-8 text-center">
-          <MessageSquare className="h-12 w-12 mx-auto mb-3 text-amber-700 opacity-70" />
-          <h3 className="text-base font-semibold mb-2 text-amber-900">
-            Aucune conversation pour l'instant
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="rounded-3xl border-2 border-dashed border-primary/30 bg-gradient-to-br from-primary/5 via-accent/5 to-background p-8 text-center"
+        >
+          <MessageCircle className="h-16 w-16 mx-auto mb-4 text-primary" />
+          <h3 className="text-lg font-semibold mb-2">
+            💬 Pas encore de messages…
           </h3>
-          <p className="text-sm text-amber-800 mb-4">
-            Tes prochains crushs canins apparaîtront ici 🐾
+          <p className="text-sm text-muted-foreground mb-6 max-w-md mx-auto">
+            Aie un match, participe à une balade,
             <br />
-            Découvre des chiens autour de toi et envoie un premier message.
+            ou écris à un duo que tu trouves sympa 🐶✨
           </p>
           <Button
-            size="sm"
+            size="lg"
             className="rounded-full"
             onClick={() => navigate('/discover')}
           >
-            Découvrir des profils
+            Découvrir des duos
           </Button>
-        </div>
+        </motion.div>
       ) : (
-        <div className="space-y-3">
-          {filteredThreads.map((thread) => {
+        <div className="space-y-2">
+          {filteredThreads.map((thread, index) => {
             const hasUnread = false; // TODO: implémenter la logique unread quand disponible
             
             return (
-              <Card
+              <motion.div
                 key={thread.id}
-                className={cn(
-                  "border-none shadow-sm cursor-pointer hover:border-primary/50 hover:shadow-md transition-all",
-                  hasUnread && "bg-primary/5"
-                )}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.05 }}
               >
-                <CardContent className="flex items-center gap-3 py-3">
-                  <Avatar className="h-12 w-12">
-                    <AvatarImage src={thread.otherUser?.avatar_url || ""} />
-                    <AvatarFallback>
-                      {thread.otherUser?.display_name?.[0]?.toUpperCase() || "?"}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <h3 className="font-semibold text-sm truncate">
-                        {thread.otherUser?.display_name || "Utilisateur"}
-                      </h3>
-                      <span className="text-xs text-muted-foreground ml-auto whitespace-nowrap">
-                        {thread.lastMessage?.created_at &&
-                          formatDistanceToNow(new Date(thread.lastMessage.created_at), {
-                            addSuffix: true,
-                            locale: fr,
-                          })}
-                      </span>
-                    </div>
-                    <p className="text-xs text-muted-foreground truncate">
-                      {thread.lastMessage?.body || "Aucun message pour l'instant…"}
-                    </p>
-                  </div>
-                  {hasUnread && (
-                    <div className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-semibold text-primary-foreground">
-                      1
-                    </div>
+                <Card
+                  className={cn(
+                    "border-0 shadow-sm cursor-pointer hover:shadow-md transition-all rounded-2xl overflow-hidden",
+                    hasUnread && "bg-primary/5 ring-2 ring-primary/20"
                   )}
-                </CardContent>
-              </Card>
+                  onClick={() => navigate(`/messages/${thread.id}`)}
+                >
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-3">
+                      <Avatar className="h-14 w-14 ring-2 ring-border/50">
+                        <AvatarImage src={thread.otherUser?.avatar_url || undefined} />
+                        <AvatarFallback className="text-lg">
+                          {thread.otherUser?.display_name?.[0] || '🐶'}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between gap-2 mb-1">
+                          <p className="font-semibold text-base truncate">
+                            {thread.otherUser?.display_name || 'Utilisateur inconnu'}
+                          </p>
+                          <div className="flex items-center gap-2">
+                            {hasUnread && (
+                              <Badge 
+                                variant="destructive" 
+                                className="h-5 w-5 p-0 flex items-center justify-center rounded-full text-xs"
+                              >
+                                2
+                              </Badge>
+                            )}
+                            <span className="text-xs text-muted-foreground whitespace-nowrap">
+                              {thread.lastMessage?.created_at
+                                ? formatDistanceToNow(new Date(thread.lastMessage.created_at), {
+                                    addSuffix: false,
+                                    locale: fr,
+                                  }).replace('environ ', '')
+                                : ''}
+                            </span>
+                          </div>
+                        </div>
+                        <p className="text-sm text-muted-foreground truncate">
+                          {thread.lastMessage?.body ? `🐾 "${thread.lastMessage.body}"` : 'Aucun message'}
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
             );
           })}
         </div>
