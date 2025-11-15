@@ -105,7 +105,7 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
         </button>
       </div>
 
-      {/* Dog card area */}
+      {/* Dog card area - takes remaining space */}
       <div className="relative flex-1 overflow-hidden bg-black">
         {/* Full-width dog image */}
         <img
@@ -143,19 +143,19 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
         {/* Floating profile button */}
         <button
           onClick={handleOpenProfile}
-          className="absolute right-4 bottom-40 z-10 w-14 h-14 rounded-full bg-white/90 backdrop-blur shadow-lg flex items-center justify-center"
+          className="absolute right-4 bottom-6 z-10 w-14 h-14 rounded-full bg-white/90 backdrop-blur shadow-lg flex items-center justify-center"
         >
           <ArrowUp className="w-6 h-6 text-black" />
         </button>
       </div>
 
-      {/* Swipe buttons - above global footer */}
-      <div className="mt-auto mb-20 flex justify-center gap-4 px-4">
+      {/* Swipe buttons - fixed at bottom above global footer */}
+      <div className="flex-shrink-0 py-4 flex justify-center gap-4 px-4">
         {/* Rewind */}
         <button
           onClick={handleRewind}
           disabled={currentIndex === 0}
-          className="w-12 h-12 rounded-full bg-white/90 backdrop-blur shadow-lg flex items-center justify-center disabled:opacity-50"
+          className="w-12 h-12 rounded-full bg-white backdrop-blur shadow-lg flex items-center justify-center disabled:opacity-50 disabled:bg-gray-300"
         >
           <RotateCcw className="w-5 h-5 text-yellow-500" />
         </button>
@@ -163,7 +163,7 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
         {/* Nope - Dog bones crossed */}
         <button
           onClick={handleNope}
-          className="w-16 h-16 rounded-full bg-white/90 backdrop-blur shadow-lg flex items-center justify-center"
+          className="w-16 h-16 rounded-full bg-white backdrop-blur shadow-lg flex items-center justify-center"
         >
           <DogBonesCrossIcon className="w-7 h-7 text-red-500" />
         </button>
@@ -171,7 +171,7 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
         {/* Super-like - positioned slightly higher */}
         <button
           onClick={handleSuperLike}
-          className="w-12 h-12 rounded-full bg-white/90 backdrop-blur shadow-lg flex items-center justify-center mb-4"
+          className="w-12 h-12 rounded-full bg-white backdrop-blur shadow-lg flex items-center justify-center -mt-4"
         >
           <Star className="w-6 h-6 text-blue-500 fill-blue-500" />
         </button>
@@ -179,7 +179,7 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
         {/* Like */}
         <button
           onClick={handleLike}
-          className="w-16 h-16 rounded-full bg-white/90 backdrop-blur shadow-lg flex items-center justify-center"
+          className="w-16 h-16 rounded-full bg-white backdrop-blur shadow-lg flex items-center justify-center"
         >
           <Heart className="w-7 h-7 text-green-500 fill-green-500" />
         </button>
@@ -187,7 +187,7 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
         {/* Boost / Send */}
         <button
           onClick={handleBoost}
-          className="w-12 h-12 rounded-full bg-white/90 backdrop-blur shadow-lg flex items-center justify-center"
+          className="w-12 h-12 rounded-full bg-white backdrop-blur shadow-lg flex items-center justify-center"
         >
           <Send className="w-5 h-5 text-purple-500" />
         </button>
