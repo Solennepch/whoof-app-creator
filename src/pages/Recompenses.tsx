@@ -6,13 +6,15 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Gift, Sparkles, Trophy, Crown, Dog, Star, CheckCircle2, Lock } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Gift, Sparkles, Trophy, Crown, Dog, Star, CheckCircle2, Lock, ShoppingBag } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useUserXP, useUserBadges, useAllBadges } from "@/hooks/useGamification";
 import { useAuth } from "@/hooks/useAuth";
 import { useProfileData } from "@/hooks/useProfileData";
 import { levelForXp } from "@/components/ui/XpProgress";
 import { motion } from "framer-motion";
+import { toast } from "sonner";
 
 const DAILY_QUESTS = [
   { id: "walk_20min", title: "Faire une balade de 20 min", xp: 20, icon: "🎯" },
@@ -27,10 +29,19 @@ const REWARD_CHESTS = [
   { id: "gold", name: "Coffre Or", xp: 250, reward: "Badge rare + skin", icon: "👑", color: "from-yellow-400/20 to-yellow-600/20", premium: true },
 ];
 
+const XP_REWARDS = [
+  { id: "croquettes", name: "Bon d'achat croquettes", xp: 500, icon: "🦴", description: "15€ de réduction" },
+  { id: "medaille", name: "Médaille personnalisée", xp: 800, icon: "🏅", description: "Gravure offerte" },
+  { id: "promo_boutique", name: "Code promo boutique", xp: 300, icon: "🛍️", description: "-20% sur tout" },
+  { id: "seance_photo", name: "Séance photo pro", xp: 1200, icon: "📸", description: "30min avec ton chien" },
+  { id: "accessoire", name: "Accessoire premium", xp: 600, icon: "🎀", description: "Collier ou laisse" },
+];
+
 export default function Recompenses() {
   const navigate = useNavigate();
   const { session } = useAuth();
   const [completedQuests, setCompletedQuests] = useState<string[]>([]);
+  const [selectedReward, setSelectedReward] = useState<string>("");
   
   const { data: xpSummary, isLoading: xpLoading } = useUserXP(session?.user?.id);
   const { data: userBadges, isLoading: badgesLoading } = useUserBadges(session?.user?.id);
@@ -41,6 +52,24 @@ export default function Recompenses() {
   const profile = profileData.profile;
   const dogs = profileData.dogs;
   const primaryDog = dogs?.[0];
+
+  const handleConvertXP = () => {
+    if (!selectedReward) {
+      toast.error("Sélectionne une récompense d'abord !");
+      return;
+    }
+    
+    const reward = XP_REWARDS.find(r => r.id === selectedReward);
+    if (!reward) return;
+    
+    if (totalXP < reward.xp) {
+      toast.error(`Il te faut ${reward.xp - totalXP} XP de plus !`);
+      return;
+    }
+    
+    toast.success(`🎉 Récompense débloquée : ${reward.name} !`);
+    setSelectedReward("");
+  };
 
   const currentLevel = levelForXp(xpSummary?.total_xp || 0);
   const totalXP = xpSummary?.total_xp || 0;
@@ -110,6 +139,61 @@ export default function Recompenses() {
                 </div>
                 <Progress value={Math.min(100, progressPercent)} className="h-3" />
               </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+          <Card className="rounded-[24px] border-2 border-primary/20">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <ShoppingBag className="w-5 h-5 text-primary" />
+                Convertir mes XP
+              </CardTitle>
+              <p className="text-sm text-muted-foreground">Échange tes XP contre des vraies récompenses</p>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <Select value={selectedReward} onValueChange={setSelectedReward}>
+                <SelectTrigger className="w-full rounded-xl h-12 bg-background/50 backdrop-blur">
+                  <SelectValue placeholder="Choisis une récompense..." />
+                </SelectTrigger>
+                <SelectContent className="rounded-xl bg-card border-2 border-border z-50">
+                  {XP_REWARDS.map(reward => {
+                    const canAfford = totalXP >= reward.xp;
+                    return (
+                      <SelectItem 
+                        key={reward.id} 
+                        value={reward.id}
+                        className="rounded-lg my-1"
+                      >
+                        <div className="flex items-center gap-3 py-1">
+                          <span className="text-2xl">{reward.icon}</span>
+                          <div className="flex-1">
+                            <div className="font-semibold">{reward.name}</div>
+                            <div className="text-xs text-muted-foreground">{reward.description}</div>
+                          </div>
+                          <div className={`text-sm font-bold ${canAfford ? 'text-green-600' : 'text-red-500'}`}>
+                            {reward.xp} XP
+                          </div>
+                        </div>
+                      </SelectItem>
+                    );
+                  })}
+                </SelectContent>
+              </Select>
+
+              {selectedReward && (
+                <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}>
+                  <Button 
+                    onClick={handleConvertXP}
+                    className="w-full rounded-xl h-12 font-semibold"
+                    disabled={!selectedReward || totalXP < (XP_REWARDS.find(r => r.id === selectedReward)?.xp || 0)}
+                  >
+                    <Gift className="mr-2 h-5 w-5" />
+                    Convertir mes XP
+                  </Button>
+                </motion.div>
+              )}
             </CardContent>
           </Card>
         </motion.div>
