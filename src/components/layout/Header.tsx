@@ -34,8 +34,8 @@ export function Header() {
             </div>
             
             {/* Centre: Whoof Apps + badges */}
-            <div className="flex items-center justify-center gap-2">
-              <span className="text-xl font-bold text-foreground">
+            <div className="flex items-center justify-center gap-2 whitespace-nowrap">
+              <span className="text-xl font-bold text-foreground whitespace-nowrap">
                 Whoof Apps
               </span>
               {isProRoute && (
