@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -33,10 +33,11 @@ export default function Recompenses() {
   const [completedQuests, setCompletedQuests] = useState<string[]>([]);
   
   // Redirection si non authentifié
-  if (!authLoading && !session) {
-    navigate("/login");
-    return null;
-  }
+  useEffect(() => {
+    if (!authLoading && !session) {
+      navigate("/login");
+    }
+  }, [authLoading, session, navigate]);
   
   const { data: xpSummary, isLoading: xpLoading } = useUserXP(session?.user?.id);
   const { data: userBadges, isLoading: badgesLoading } = useUserBadges(session?.user?.id);
