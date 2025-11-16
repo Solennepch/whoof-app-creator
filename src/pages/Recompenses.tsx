@@ -134,8 +134,8 @@ export default function Recompenses() {
               </div>
               <div className="space-y-2">
                 <div className="flex justify-between text-xs text-muted-foreground">
-                  <span>Niveau {currentLevel + 1}</span>
-                  <span>{Math.max(0, remainingToNext)} XP</span>
+                  <span>Prochain niveau : {currentLevel + 1}</span>
+                  <span>{Math.max(0, remainingToNext)} XP restants</span>
                 </div>
                 <Progress value={Math.min(100, progressPercent)} className="h-3" />
               </div>
