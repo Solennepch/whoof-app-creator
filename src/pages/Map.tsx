@@ -606,13 +606,13 @@ export default function Map() {
         el.style.background = 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)';
         el.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="white" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>';
       } else if (poi.type === 'boutique') {
-        // Boutique - Panier d'achat ROUGE
-        el.style.background = 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
+        // Boutique - Panier d'achat JAUNE
+        el.style.background = 'linear-gradient(135deg, #eab308 0%, #ca8a04 100%)';
         el.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>';
       } else if (poi.type === 'pension') {
-        // Pension - Œil VERT
+        // Pension - Lit VERT
         el.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
-        el.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>';
+        el.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4"/></svg>';
       } else if (poi.type === 'photographe') {
         // Photographe - Appareil photo VIOLET
         el.style.background = 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)';
