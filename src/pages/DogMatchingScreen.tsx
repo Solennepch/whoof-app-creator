@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { Filter, RotateCcw, Star, Heart, Send, Lock } from "lucide-react";
+import { Filter, RotateCcw, Star, Heart, Send } from "lucide-react";
 import bonesCrossedIcon from "@/assets/bones-crossed.png";
 import { TagChip } from "@/components/ui/TagChip";
 import { usePremium } from "@/hooks/usePremium";
 import { PremiumDialog } from "@/components/PremiumDialog";
 import { FiltersPanel, Filters } from "@/components/ui/FiltersPanel";
+import { SuperLikeAnimation } from "@/components/match/SuperLikeAnimation";
+import { toast } from "sonner";
 
 type DogProfile = {
   id: string;
@@ -27,6 +29,8 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showPremiumDialog, setShowPremiumDialog] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+  const [showSuperLikeAnimation, setShowSuperLikeAnimation] = useState(false);
+  const [history, setHistory] = useState<number[]>([]);
   const [weeklySuperlikes, setWeeklySuperlikes] = useState(() => {
     const stored = localStorage.getItem('weeklySuperlikes');
     if (!stored) return { count: 0, weekStart: new Date().toISOString() };
@@ -45,19 +49,23 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
   const currentDog = dogs[currentIndex];
   const hasMore = currentIndex < dogs.length;
   const canUseSuperlike = isPremium || weeklySuperlikes.count < 1;
+  const canRewind = isPremium && history.length > 0;
 
   const handleRewind = () => {
     if (!isPremium) {
       setShowPremiumDialog(true);
       return;
     }
-    if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
+    if (history.length > 0) {
+      const previousIndex = history[history.length - 1];
+      setHistory(history.slice(0, -1));
+      setCurrentIndex(previousIndex);
+      toast.success("Retour au profil précédent");
     }
   };
 
   const handleNope = () => {
-    console.log("nope");
+    setHistory([...history, currentIndex]);
     setCurrentIndex(currentIndex + 1);
   };
 
@@ -66,7 +74,9 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
       setShowPremiumDialog(true);
       return;
     }
-    console.log("super-like");
+    
+    // Show animation
+    setShowSuperLikeAnimation(true);
     
     // Increment superlike count for non-premium users
     if (!isPremium) {
@@ -75,16 +85,22 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
       localStorage.setItem('weeklySuperlikes', JSON.stringify(newData));
     }
     
+    // TODO: Store super like in database
+    console.log("Super Like envoyé à", currentDog.name);
+    
+    setHistory([...history, currentIndex]);
     setCurrentIndex(currentIndex + 1);
   };
 
   const handleLike = () => {
-    console.log("like");
+    setHistory([...history, currentIndex]);
     setCurrentIndex(currentIndex + 1);
+    toast.success(`❤️ Like envoyé à ${currentDog.name}`);
   };
 
   const handleBoost = () => {
-    alert("Envoyer une invitation / contacter");
+    toast.info("Invitation envoyée !");
+    // TODO: Implement invitation logic
   };
 
   const handleOpenProfile = () => {
@@ -173,13 +189,14 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
         {/* Rewind - Premium only */}
         <button
           onClick={handleRewind}
+          disabled={!canRewind}
           className={`w-12 h-12 rounded-full backdrop-blur shadow-lg flex items-center justify-center transition-all ${
-            isPremium
-              ? "bg-white hover:scale-105"
-              : "bg-gray-200 opacity-50 cursor-pointer"
+            canRewind
+              ? "bg-white hover:scale-105 cursor-pointer"
+              : "bg-gray-200 opacity-50 cursor-not-allowed"
           }`}
         >
-          <RotateCcw className={`w-5 h-5 ${isPremium ? "text-yellow-500" : "text-gray-400"}`} />
+          <RotateCcw className={`w-5 h-5 ${canRewind ? "text-yellow-500" : "text-gray-400"}`} />
         </button>
 
         {/* Nope - Dog bones crossed - Always active */}
@@ -226,6 +243,11 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
       </div>
 
       <PremiumDialog open={showPremiumDialog} onOpenChange={setShowPremiumDialog} />
+      <SuperLikeAnimation 
+        show={showSuperLikeAnimation} 
+        onComplete={() => setShowSuperLikeAnimation(false)}
+        dogName={currentDog?.name}
+      />
       <FiltersPanel 
         show={showFilters} 
         onClose={() => setShowFilters(false)} 
