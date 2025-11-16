@@ -165,208 +165,32 @@ export default function Map() {
     });
   };
 
-  // Generate mock POIs for development
+  // Generate mock POIs for development - UN EXEMPLE DE CHAQUE TYPE
   const generateMockPOIs = (lng: number, lat: number): POI[] => {
-    const vets = [
-      { name: 'Clinique Vétérinaire du Centre', address: '12 Rue de la Paix' },
-      { name: 'Cabinet Dr. Martin', address: '45 Avenue des Champs' },
-      { name: 'Vétérinaire de Garde 24/7', address: '78 Boulevard Saint-Michel' }
-    ];
-    const petSitters = [
-      { name: 'Dog Walker Pro', address: '23 Rue du Parc' },
-      { name: 'Pet Care Services', address: '56 Avenue Voltaire' },
-      { name: 'Garderie Toutous Heureux', address: '89 Rue Lafayette' }
-    ];
-    const restaurants = [
-      { name: 'Le Bistrot des Chiens', address: '34 Place du Marché' },
-      { name: 'Café Canin', address: '67 Rue de Rivoli' },
-      { name: 'Restaurant La Patte d\'Or', address: '90 Boulevard Haussmann' }
-    ];
-    const groomers = [
-      { name: 'Toutou Beauté', address: '8 Rue Saint-Antoine' },
-      { name: 'Spa Canin Élégance', address: '23 Boulevard Voltaire' },
-      { name: 'Toilettage Premium', address: '56 Rue de la Roquette' }
-    ];
-    const educators = [
-      { name: 'École Canine Pro', address: '56 Rue du Faubourg' },
-      { name: 'Centre Éducation Positive', address: '31 Avenue de la Liberté' },
-      { name: 'Dressage Expert', address: '12 Rue des Écoles' }
-    ];
-    const shelters = [
-      { name: 'SPA de Paris', address: '78 Avenue de la Porte' },
-      { name: 'Refuge Les Amis des Bêtes', address: '19 Boulevard Raspail' },
-      { name: 'Seconde Chance', address: '45 Rue de Charenton' }
-    ];
-    const shops = [
-      { name: 'Animalerie Paradise', address: '34 Rue de Rivoli' },
-      { name: 'Pet Shop Deluxe', address: '67 Avenue Parmentier' },
-      { name: 'Boutique Toutou & Cie', address: '23 Rue du Commerce' }
-    ];
-    const kennels = [
-      { name: 'Pension Canine Le Bonheur', address: '89 Rue de Charonne' },
-      { name: 'Hôtel pour Chiens', address: '5 Rue Saint-Maur' },
-      { name: 'Pension Les Jardins', address: '78 Avenue Daumesnil' }
-    ];
-    const photographers = [
-      { name: 'Studio Photo Animalier', address: '21 Rue des Martyrs' },
-      { name: 'Photos Passion Chiens', address: '50 Rue de Belleville' },
-      { name: 'Portraits Canins', address: '34 Rue Oberkampf' }
-    ];
-    const friendsWalking = [
-      { name: 'Max en balade', address: 'Parc des Buttes-Chaumont' },
-      { name: 'Luna se promène', address: 'Jardin du Luxembourg' },
-      { name: 'Charlie en balade', address: 'Bois de Vincennes' }
-    ];
-
     const allPOIs: POI[] = [];
-    let poiId = 0;
+    const radius = 0.012; // Distance uniforme pour tous les POIs
+    
+    // Définir un seul exemple de chaque type avec son angle
+    const poiTypes = [
+      { type: 'friend_walking', name: 'Max en balade', address: 'Parc des Buttes-Chaumont', angle: 0 },
+      { type: 'veterinaire', name: 'Clinique Vétérinaire', address: '12 Rue de la Paix', angle: Math.PI / 4 },
+      { type: 'toiletteur', name: 'Toutou Beauté', address: '8 Rue Saint-Antoine', angle: Math.PI / 2 },
+      { type: 'educateur', name: 'École Canine Pro', address: '56 Rue du Faubourg', angle: 3 * Math.PI / 4 },
+      { type: 'pet_sitter', name: 'Dog Walker Pro', address: '23 Rue du Parc', angle: Math.PI },
+      { type: 'refuge', name: 'SPA de Paris', address: '78 Avenue de la Porte', angle: 5 * Math.PI / 4 },
+      { type: 'boutique', name: 'Animalerie Paradise', address: '34 Rue de Rivoli', angle: 3 * Math.PI / 2 },
+      { type: 'pension', name: 'Pension Canine', address: '89 Rue de Charonne', angle: 7 * Math.PI / 4 },
+      { type: 'photographe', name: 'Studio Photo', address: '21 Rue des Martyrs', angle: Math.PI / 6 },
+    ];
 
-    // Add friends walking
-    friendsWalking.forEach((friend, i) => {
-      const angle = (i / friendsWalking.length) * Math.PI * 2 + Math.PI / 4;
-      const radius = 0.008;
+    poiTypes.forEach((poi, i) => {
       allPOIs.push({
-        id: `friend-${poiId++}`,
-        type: 'friend_walking',
-        name: friend.name,
-        address: friend.address,
-        lat: lat + radius * Math.sin(angle),
-        lng: lng + radius * Math.cos(angle),
-        rating: 5
-      });
-    });
-
-    // Add vets
-    vets.forEach((vet, i) => {
-      const angle = (i / vets.length) * Math.PI * 2;
-      const radius = 0.015;
-      allPOIs.push({
-        id: `vet-${poiId++}`,
-        type: 'veterinaire',
-        name: vet.name,
-        address: vet.address,
-        lat: lat + radius * Math.sin(angle),
-        lng: lng + radius * Math.cos(angle),
-        rating: 4 + Math.random()
-      });
-    });
-
-    // Add groomers
-    groomers.forEach((groomer, i) => {
-      const angle = (i / groomers.length) * Math.PI * 2 + Math.PI / 8;
-      const radius = 0.013;
-      allPOIs.push({
-        id: `groomer-${poiId++}`,
-        type: 'toiletteur',
-        name: groomer.name,
-        address: groomer.address,
-        lat: lat + radius * Math.sin(angle),
-        lng: lng + radius * Math.cos(angle),
-        rating: 4 + Math.random()
-      });
-    });
-
-    // Add educators
-    educators.forEach((edu, i) => {
-      const angle = (i / educators.length) * Math.PI * 2 + Math.PI / 5;
-      const radius = 0.016;
-      allPOIs.push({
-        id: `edu-${poiId++}`,
-        type: 'educateur',
-        name: edu.name,
-        address: edu.address,
-        lat: lat + radius * Math.sin(angle),
-        lng: lng + radius * Math.cos(angle),
-        rating: 4 + Math.random()
-      });
-    });
-
-    // Add pet sitters
-    petSitters.forEach((ps, i) => {
-      const angle = (i / petSitters.length) * Math.PI * 2 + Math.PI / 3;
-      const radius = 0.012;
-      allPOIs.push({
-        id: `ps-${poiId++}`,
-        type: 'pet_sitter',
-        name: ps.name,
-        address: ps.address,
-        lat: lat + radius * Math.sin(angle),
-        lng: lng + radius * Math.cos(angle),
-        rating: 4 + Math.random()
-      });
-    });
-
-    // Add shelters
-    shelters.forEach((shelter, i) => {
-      const angle = (i / shelters.length) * Math.PI * 2 + Math.PI / 2;
-      const radius = 0.020;
-      allPOIs.push({
-        id: `shelter-${poiId++}`,
-        type: 'refuge',
-        name: shelter.name,
-        address: shelter.address,
-        lat: lat + radius * Math.sin(angle),
-        lng: lng + radius * Math.cos(angle),
-        rating: 4 + Math.random()
-      });
-    });
-
-    // Add shops
-    shops.forEach((shop, i) => {
-      const angle = (i / shops.length) * Math.PI * 2 + Math.PI / 7;
-      const radius = 0.014;
-      allPOIs.push({
-        id: `shop-${poiId++}`,
-        type: 'boutique',
-        name: shop.name,
-        address: shop.address,
-        lat: lat + radius * Math.sin(angle),
-        lng: lng + radius * Math.cos(angle),
-        rating: 4 + Math.random()
-      });
-    });
-
-    // Add kennels
-    kennels.forEach((kennel, i) => {
-      const angle = (i / kennels.length) * Math.PI * 2 + Math.PI / 9;
-      const radius = 0.019;
-      allPOIs.push({
-        id: `kennel-${poiId++}`,
-        type: 'pension',
-        name: kennel.name,
-        address: kennel.address,
-        lat: lat + radius * Math.sin(angle),
-        lng: lng + radius * Math.cos(angle),
-        rating: 4 + Math.random()
-      });
-    });
-
-    // Add photographers
-    photographers.forEach((photo, i) => {
-      const angle = (i / photographers.length) * Math.PI * 2 + Math.PI / 11;
-      const radius = 0.011;
-      allPOIs.push({
-        id: `photo-${poiId++}`,
-        type: 'photographe',
-        name: photo.name,
-        address: photo.address,
-        lat: lat + radius * Math.sin(angle),
-        lng: lng + radius * Math.cos(angle),
-        rating: 4 + Math.random()
-      });
-    });
-
-    // Add restaurants
-    restaurants.forEach((rest, i) => {
-      const angle = (i / restaurants.length) * Math.PI * 2 + Math.PI / 6;
-      const radius = 0.018;
-      allPOIs.push({
-        id: `rest-${poiId++}`,
-        type: 'restaurant',
-        name: rest.name,
-        address: rest.address,
-        lat: lat + radius * Math.sin(angle),
-        lng: lng + radius * Math.cos(angle),
+        id: `poi-${i}`,
+        type: poi.type as any,
+        name: poi.name,
+        address: poi.address,
+        lat: lat + radius * Math.sin(poi.angle),
+        lng: lng + radius * Math.cos(poi.angle),
         rating: 4 + Math.random()
       });
     });
