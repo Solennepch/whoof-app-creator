@@ -114,9 +114,9 @@ export default function Ranking() {
         <Star className="absolute bottom-60 right-16 w-6 h-6 text-white/30 animate-pulse" style={{ animationDelay: "3.5s" }} />
       </div>
 
-      <main className="mx-auto max-w-[720px] px-4 pb-20 space-y-5 relative z-10">
+      <main className="mx-auto max-w-[720px] px-4 pb-20 space-y-4 relative z-10">
         {/* Header */}
-        <div className="pt-20 pb-4 text-center">
+        <div className="pt-20 pb-2 text-center">
           <h1 className="text-3xl font-bold text-foreground">
             Classement
           </h1>
@@ -129,7 +129,7 @@ export default function Ranking() {
         <SeasonCard />
 
         {/* Tabs */}
-        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as "ranking" | "challenges" | "events")} className="space-y-6">
+        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as "ranking" | "challenges" | "events")} className="space-y-4">
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="ranking">
               <Trophy className="mr-2 h-4 w-4" />
