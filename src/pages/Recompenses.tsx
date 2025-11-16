@@ -29,8 +29,14 @@ const REWARD_CHESTS = [
 
 export default function Recompenses() {
   const navigate = useNavigate();
-  const { session } = useAuth();
+  const { session, loading: authLoading } = useAuth();
   const [completedQuests, setCompletedQuests] = useState<string[]>([]);
+  
+  // Redirection si non authentifié
+  if (!authLoading && !session) {
+    navigate("/login");
+    return null;
+  }
   
   const { data: xpSummary, isLoading: xpLoading } = useUserXP(session?.user?.id);
   const { data: userBadges, isLoading: badgesLoading } = useUserBadges(session?.user?.id);
@@ -45,7 +51,7 @@ export default function Recompenses() {
   const remainingToNext = nextLevelXP - totalXP;
   const progressPercent = ((totalXP - (xpTable[currentLevel - 1] || 0)) / (nextLevelXP - (xpTable[currentLevel - 1] || 0))) * 100;
 
-  const isLoading = xpLoading || badgesLoading || allBadgesLoading;
+  const isLoading = authLoading || xpLoading || badgesLoading || allBadgesLoading;
 
   if (isLoading) {
     return (
