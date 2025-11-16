@@ -152,7 +152,7 @@ export default function Map() {
       const isOnline = i % 3 !== 0; // 2/3 en ligne, 1/3 hors ligne
       
       // Quelques profils sont déjà des amis (matchés)
-      const isFriend = i === 0 || i === 3; // Luna et Daisy sont déjà amies
+      const isFriend = i === 0 || i === 1 || i === 3; // Luna, Charlie et Daisy sont déjà amis
 
       return {
         id: `mock-${i}`,
