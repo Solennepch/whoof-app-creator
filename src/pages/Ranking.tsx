@@ -263,7 +263,7 @@ export default function Ranking() {
                         transition={{ delay: index * 0.05 }}
                       >
                         <Card className={`transition-all hover:shadow-md ${
-                          isCurrentUser ? "ring-2 ring-primary bg-primary/5" : ""
+                          isCurrentUser ? "ring-2 ring-primary bg-primary/10 shadow-lg" : ""
                         } ${rank <= 3 ? "bg-gradient-to-r from-amber-50/50 to-transparent dark:from-amber-950/20" : ""}`}>
                           <CardContent className="p-4">
                             <div className="flex items-center gap-3">
