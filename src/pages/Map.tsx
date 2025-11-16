@@ -1067,9 +1067,9 @@ export default function Map() {
                       return a.isOnline ? -1 : 1;
                     });
                     
-                    // Afficher les premiers en ligne + quelques hors ligne
+                    // Afficher les premiers en ligne + quelques hors ligne (qui sont forcément des amis)
                     const onlineProfiles = sortedProfiles.filter(p => p.isOnline).slice(0, 4);
-                    const offlineProfiles = sortedProfiles.filter(p => !p.isOnline).slice(0, 2);
+                    const offlineProfiles = sortedProfiles.filter(p => !p.isOnline).slice(0, 2).map(p => ({ ...p, isFriend: true }));
                     const displayProfiles = [...onlineProfiles, ...offlineProfiles];
                     
                     console.log('Display profiles with friend status:', displayProfiles.map(p => ({ name: p.display_name, isFriend: p.isFriend, isOnline: p.isOnline })));
