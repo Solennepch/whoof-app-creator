@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { Trophy, Dog, User, Star, Sparkles, Calendar, Award, Gift, TrendingUp, Crown } from "lucide-react";
@@ -21,12 +21,13 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { motion } from "framer-motion";
-import { mockLeaderboardData } from "@/config/mockLeaderboard";
+import { generateMockLeaderboard, TOTAL_LEADERBOARD_USERS } from "@/config/mockLeaderboard";
 
 export default function Ranking() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<"ranking" | "challenges" | "events">("ranking");
   const [activePeriod, setActivePeriod] = useState<"weekly" | "monthly">("weekly");
+  const [displayCount, setDisplayCount] = useState(30);
   const { user } = useAuth();
   const { currentChallenge, challengeProgress } = useEvents();
 
@@ -55,12 +56,46 @@ export default function Ranking() {
   const { data: realLeaderboard, isLoading } = useWeeklyLeaderboard(profile?.city);
   const { data: realXP } = useUserXP(session?.user?.id);
 
+  // Generate full mock leaderboard
+  const fullLeaderboard = useMemo(() => generateMockLeaderboard(), []);
+  
   // Use mock data if no real data exists
-  const leaderboard = realLeaderboard && realLeaderboard.length > 0 ? realLeaderboard : mockLeaderboardData;
+  const leaderboard = realLeaderboard && realLeaderboard.length > 0 ? realLeaderboard : fullLeaderboard;
   const myXP = realXP || { total_xp: 2450, weekly_xp: 850 };
 
   const myRank = leaderboard?.findIndex(entry => entry.user_id === session?.user?.id);
   const myRanking = myRank !== undefined && myRank !== -1 ? leaderboard?.[myRank] : null;
+
+  // Calculate which users to display
+  const displayedUsers = useMemo(() => {
+    if (!leaderboard) return [];
+    
+    // If user rank is in top 30 or not found, show top users
+    if (myRank === undefined || myRank === -1 || myRank < 30) {
+      return leaderboard.slice(0, displayCount);
+    }
+    
+    // If user is beyond top 30, show context around their position
+    const contextSize = 14;
+    const start = Math.max(0, myRank - contextSize);
+    const end = Math.min(leaderboard.length, myRank + contextSize + 1);
+    
+    // Also include top 3 for reference
+    const top3 = leaderboard.slice(0, 3);
+    const contextUsers = leaderboard.slice(start, end);
+    
+    // Combine and remove duplicates
+    const combined = [...top3, ...contextUsers];
+    const uniqueUsers = combined.filter((user, index, self) =>
+      index === self.findIndex(u => u.user_id === user.user_id)
+    );
+    
+    return uniqueUsers.slice(0, displayCount);
+  }, [leaderboard, myRank, displayCount]);
+
+  const loadMore = () => {
+    setDisplayCount(prev => Math.min(prev + 30, TOTAL_LEADERBOARD_USERS));
+  };
 
   return (
     <div className="min-h-screen pb-20 relative overflow-hidden" style={{ 
@@ -128,7 +163,7 @@ export default function Ranking() {
                   <div className="flex-1">
                     <div className="flex items-baseline gap-2 mb-1">
                       <span className="text-3xl font-bold text-primary">#{myRank! + 1}</span>
-                      <span className="text-sm text-muted-foreground">sur {leaderboard?.length || 0}</span>
+                      <span className="text-sm text-muted-foreground">sur {TOTAL_LEADERBOARD_USERS}</span>
                     </div>
                     <div className="text-base font-semibold">{profile.display_name || "Toi"}</div>
                     <div className="text-sm text-muted-foreground">
@@ -185,7 +220,9 @@ export default function Ranking() {
 
             {/* Leaderboard */}
             <div className="space-y-3">
-              <h2 className="text-lg font-semibold px-2">🏆 Top 10</h2>
+              <h2 className="text-lg font-semibold px-2">
+                🏆 {myRank !== undefined && myRank >= 30 ? "Ton classement" : "Top 30"}
+              </h2>
               
               {isLoading ? (
                 // Loading skeleton
@@ -204,11 +241,11 @@ export default function Ranking() {
                     </CardContent>
                   </Card>
                 ))
-              ) : leaderboard && leaderboard.length > 0 ? (
+              ) : displayedUsers && displayedUsers.length > 0 ? (
                 <>
-                  {leaderboard.slice(0, 10).map((entry, index) => {
+                  {displayedUsers.map((entry, index) => {
                     const isCurrentUser = entry.user_id === session?.user?.id;
-                    const rank = index + 1;
+                    const rank = entry.rank;
                     const getMedalEmoji = (r: number) => {
                       if (r === 1) return "🥇";
                       if (r === 2) return "🥈";
@@ -264,6 +301,19 @@ export default function Ranking() {
                       </motion.div>
                     );
                   })}
+
+                  {/* Load More Button */}
+                  {displayCount < TOTAL_LEADERBOARD_USERS && (
+                    <div className="flex justify-center pt-4">
+                      <Button
+                        onClick={loadMore}
+                        variant="outline"
+                        className="rounded-full"
+                      >
+                        Charger plus ({displayCount} / {TOTAL_LEADERBOARD_USERS})
+                      </Button>
+                    </div>
+                  )}
 
                   {/* Premium Teaser */}
                   <motion.div
