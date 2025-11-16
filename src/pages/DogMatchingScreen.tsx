@@ -4,6 +4,7 @@ import bonesCrossedIcon from "@/assets/bones-crossed.png";
 import { TagChip } from "@/components/ui/TagChip";
 import { usePremium } from "@/hooks/usePremium";
 import { PremiumDialog } from "@/components/PremiumDialog";
+import { FiltersPanel, Filters } from "@/components/ui/FiltersPanel";
 
 type DogProfile = {
   id: string;
@@ -25,6 +26,7 @@ interface DogMatchingScreenProps {
 export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showPremiumDialog, setShowPremiumDialog] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
   const [weeklySuperlikes, setWeeklySuperlikes] = useState(() => {
     const stored = localStorage.getItem('weeklySuperlikes');
     if (!stored) return { count: 0, weekStart: new Date().toISOString() };
@@ -89,6 +91,11 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
     alert("Open dog profile");
   };
 
+  const handleApplyFilters = (filters: Filters) => {
+    console.log("Filtres appliqués:", filters);
+    // TODO: Appliquer les filtres à la liste des chiens
+  };
+
   if (!hasMore || !currentDog) {
     return (
       <div className="flex h-full w-full flex-col items-center justify-center bg-background text-foreground p-6 min-h-[50vh]">
@@ -114,7 +121,10 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
         <h2 className="text-lg font-bold text-gradient font-poppins">
           {mode === "local" ? "Chiens près de toi" : "Adopte ton compagnon"}
         </h2>
-        <button className="w-10 h-10 rounded-full bg-muted hover:bg-accent flex items-center justify-center">
+        <button 
+          onClick={() => setShowFilters(true)}
+          className="w-10 h-10 rounded-full bg-muted hover:bg-accent flex items-center justify-center"
+        >
           <Filter className="w-5 h-5 text-foreground" />
         </button>
       </div>
@@ -216,6 +226,11 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
       </div>
 
       <PremiumDialog open={showPremiumDialog} onOpenChange={setShowPremiumDialog} />
+      <FiltersPanel 
+        show={showFilters} 
+        onClose={() => setShowFilters(false)} 
+        onApply={handleApplyFilters}
+      />
     </div>
   );
 }
