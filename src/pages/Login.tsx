@@ -161,20 +161,13 @@ export default function Login() {
           
           {/* Debug Access Link - Only in dev mode */}
           {import.meta.env.DEV && (
-            <div className="mt-6 pt-4 border-t border-border text-center space-y-2">
+            <div className="mt-6 pt-4 border-t border-border text-center">
               <button
                 type="button"
                 onClick={() => navigate("/debug/test-accounts")}
-                className="text-xs text-muted-foreground hover:text-foreground transition-colors block w-full"
+                className="text-xs text-muted-foreground hover:text-foreground transition-colors"
               >
                 🛠️ Accéder aux comptes de test (dev)
-              </button>
-              <button
-                type="button"
-                onClick={() => navigate("/recompenses")}
-                className="text-xs text-primary hover:text-primary/80 transition-colors block w-full font-medium"
-              >
-                🎁 Test direct: Accéder aux Récompenses
               </button>
             </div>
           )}
