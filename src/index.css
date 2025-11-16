@@ -327,12 +327,21 @@ All colors MUST be HSL.
 
   /* Hide Mapbox attributions and logo */
   .mapboxgl-ctrl-attrib,
-  .mapboxgl-ctrl-logo {
+  .mapboxgl-ctrl-logo,
+  .mapboxgl-ctrl-bottom-left,
+  .mapboxgl-ctrl-bottom-right {
     display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
   }
 
   /* Hide compass/rotation control */
   .mapboxgl-ctrl-compass {
+    display: none !important;
+  }
+
+  /* Additional Mapbox logo hiding */
+  a.mapboxgl-ctrl-logo {
     display: none !important;
   }
 }
