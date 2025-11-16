@@ -761,8 +761,8 @@ export default function Map() {
   };
 
   return (
-    <div className="min-h-screen pb-24 md:pb-6" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
-      <div className="mx-auto max-w-6xl px-4 pt-16 md:pt-6">
+    <div className="h-screen overflow-hidden pb-20 md:pb-6 flex flex-col" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
+      <div className="mx-auto max-w-6xl px-4 pt-16 md:pt-6 flex-1 flex flex-col overflow-hidden">
         {/* Header */}
         <div className="mb-2 md:mb-6 flex items-center justify-between gap-2">
           <div className="min-w-0">
@@ -894,11 +894,11 @@ export default function Map() {
           </div>
         )}
 
-        <div className="grid gap-4 md:gap-6 lg:grid-cols-3">
+        <div className="flex flex-col lg:grid gap-4 md:gap-6 lg:grid-cols-3 flex-1 overflow-hidden">
           {/* Interactive Map - Responsive height */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2 flex flex-col">
             {mapError ? (
-              <Card className="h-[400px] md:h-[500px] lg:h-[600px] rounded-2xl md:rounded-3xl shadow-soft ring-1 ring-black/5 flex flex-col items-center justify-center p-8 text-center">
+              <Card className="h-[calc(100vh-280px)] md:h-[calc(100vh-300px)] rounded-2xl md:rounded-3xl shadow-soft ring-1 ring-black/5 flex flex-col items-center justify-center p-8 text-center">
                 <AlertTriangle className="h-12 w-12 text-muted-foreground mb-4" />
                 <h3 className="text-lg font-semibold mb-2">Carte indisponible</h3>
                 <p className="text-sm text-muted-foreground mb-6 max-w-md">
@@ -923,9 +923,9 @@ export default function Map() {
                     Carte en BÊTA 🚧
                   </span>
                 </div>
-                <div 
+                 <div 
                   ref={mapContainer} 
-                  className="h-[400px] md:h-[500px] lg:h-[600px] rounded-2xl md:rounded-3xl shadow-soft ring-1 ring-black/5" 
+                  className="h-[calc(100vh-280px)] md:h-[calc(100vh-300px)] rounded-2xl md:rounded-3xl shadow-soft ring-1 ring-black/5" 
                 />
               </div>
             )}
@@ -1038,8 +1038,8 @@ export default function Map() {
             </div>
           </div>
 
-          {/* Mobile: Nearby profiles as a floating card */}
-          <div className="lg:hidden fixed bottom-20 left-4 right-4 z-40">
+          {/* Mobile: Nearby profiles section */}
+          <div className="lg:hidden mt-4 mx-4">
             <div className="rounded-2xl bg-white p-3 shadow-vibrant ring-1 ring-black/10 backdrop-blur-sm">
               <h3 className="mb-3 text-sm font-semibold" style={{ color: "var(--ink)" }}>
                 🐾 {nearbyProfiles.length} profils à proximité
