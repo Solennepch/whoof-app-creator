@@ -166,7 +166,7 @@ export default function Ranking() {
                       <span className="text-3xl font-bold text-primary">#{myRank! + 1}</span>
                       <span className="text-sm text-muted-foreground">sur {TOTAL_LEADERBOARD_USERS} Whoofers*</span>
                     </div>
-                    <div className="text-base font-semibold">{profile.display_name || "Toi"}</div>
+                    <div className="text-base font-semibold">Matcha & Solenne</div>
                     <div className="text-sm text-muted-foreground">
                       {myRanking.weekly_km} km • {myRanking.weekly_walks} balades
                     </div>
@@ -284,7 +284,7 @@ export default function Ranking() {
 
                               <div className="flex-1 min-w-0">
                                 <div className="font-semibold text-sm truncate flex items-center gap-2">
-                                  {entry.profile?.display_name || "Utilisateur"}
+                                  {isCurrentUser ? "Matcha" : entry.display_name || "Utilisateur"}
                                   {isCurrentUser && <Badge variant="secondary" className="text-xs">Toi</Badge>}
                                 </div>
                                 <div className="text-xs text-muted-foreground">
