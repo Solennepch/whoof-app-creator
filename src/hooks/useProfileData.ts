@@ -47,8 +47,9 @@ export const useProfileData = (id?: string) => {
   const [isPro, setIsPro] = useState(false);
 
   const fetchProfileData = async () => {
+    // Permettre l'accès sans id pour certaines pages
     if (!id) {
-      navigate('/profile/me', { replace: true });
+      setIsLoading(false);
       return;
     }
 
