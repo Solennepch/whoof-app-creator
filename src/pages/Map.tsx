@@ -1006,7 +1006,12 @@ export default function Map() {
                       return a.isOnline ? -1 : 1;
                     });
                     
-                    return sortedProfiles.slice(0, 5).map((profile) => (
+                    // Afficher les premiers en ligne + quelques hors ligne
+                    const onlineProfiles = sortedProfiles.filter(p => p.isOnline).slice(0, 4);
+                    const offlineProfiles = sortedProfiles.filter(p => !p.isOnline).slice(0, 2);
+                    const displayProfiles = [...onlineProfiles, ...offlineProfiles];
+                    
+                    return displayProfiles.map((profile) => (
                     <button
                       key={profile.id}
                       onClick={() => handleSelectProfile(profile)}
