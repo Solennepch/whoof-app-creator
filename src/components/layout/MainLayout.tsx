@@ -20,7 +20,7 @@ export function MainLayout() {
     <div className="min-h-screen flex flex-col">
       {!isDebugRoute && <Header />}
       
-      <main className="flex-1 pb-20 md:pb-0 overflow-hidden">
+      <main className="flex-1 pb-20 md:pb-0">
         <Outlet />
       </main>
       
