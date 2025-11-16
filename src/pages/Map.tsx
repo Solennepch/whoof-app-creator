@@ -550,7 +550,7 @@ export default function Map() {
 
   // Add POI markers to map
   const addMarkersToMap = (pois: POI[]) => {
-    if (!map.current) return;
+    if (!map.current || !map.current.loaded()) return;
 
     // Clear existing markers
     markers.current.forEach(marker => marker.remove());
@@ -771,10 +771,10 @@ export default function Map() {
 
   // Update markers when filters change
   useEffect(() => {
-    if (map.current && pois.length > 0) {
+    if (map.current && map.current.loaded() && pois.length > 0) {
       addMarkersToMap(pois);
     }
-  }, [selectedCategory, radius, pois]);
+  }, [selectedCategory, radius]);
 
   const handleGoToUser = () => {
     if (map.current) {
