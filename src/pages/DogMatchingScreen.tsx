@@ -25,10 +25,24 @@ interface DogMatchingScreenProps {
 export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showPremiumDialog, setShowPremiumDialog] = useState(false);
+  const [weeklySuperlikes, setWeeklySuperlikes] = useState(() => {
+    const stored = localStorage.getItem('weeklySuperlikes');
+    if (!stored) return { count: 0, weekStart: new Date().toISOString() };
+    const data = JSON.parse(stored);
+    // Reset if it's a new week
+    const weekStart = new Date(data.weekStart);
+    const now = new Date();
+    const daysSinceStart = Math.floor((now.getTime() - weekStart.getTime()) / (1000 * 60 * 60 * 24));
+    if (daysSinceStart >= 7) {
+      return { count: 0, weekStart: now.toISOString() };
+    }
+    return data;
+  });
   const { data: isPremium = false } = usePremium();
 
   const currentDog = dogs[currentIndex];
   const hasMore = currentIndex < dogs.length;
+  const canUseSuperlike = isPremium || weeklySuperlikes.count < 1;
 
   const handleRewind = () => {
     if (!isPremium) {
@@ -46,11 +60,19 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
   };
 
   const handleSuperLike = () => {
-    if (!isPremium) {
+    if (!canUseSuperlike) {
       setShowPremiumDialog(true);
       return;
     }
     console.log("super-like");
+    
+    // Increment superlike count for non-premium users
+    if (!isPremium) {
+      const newData = { ...weeklySuperlikes, count: weeklySuperlikes.count + 1 };
+      setWeeklySuperlikes(newData);
+      localStorage.setItem('weeklySuperlikes', JSON.stringify(newData));
+    }
+    
     setCurrentIndex(currentIndex + 1);
   };
 
@@ -141,14 +163,14 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
         {/* Rewind - Premium only */}
         <button
           onClick={handleRewind}
-          className="w-12 h-12 rounded-full bg-white backdrop-blur shadow-lg flex items-center justify-center hover:scale-105 transition-transform relative"
+          disabled={!isPremium}
+          className={`w-12 h-12 rounded-full backdrop-blur shadow-lg flex items-center justify-center transition-all ${
+            isPremium
+              ? "bg-white hover:scale-105"
+              : "bg-gray-200 opacity-50 cursor-not-allowed"
+          }`}
         >
-          <RotateCcw className="w-5 h-5 text-yellow-500" />
-          {!isPremium && (
-            <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
-              <Lock className="w-2.5 h-2.5 text-white" />
-            </div>
-          )}
+          <RotateCcw className={`w-5 h-5 ${isPremium ? "text-yellow-500" : "text-gray-400"}`} />
         </button>
 
         {/* Nope - Dog bones crossed - Always active */}
@@ -159,17 +181,17 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
           <img src={bonesCrossedIcon} alt="Nope" className="w-10 h-10" />
         </button>
 
-        {/* Super-like - Premium only - positioned higher to bridge sections */}
+        {/* Super-like - 1 free per week, unlimited for premium */}
         <button
           onClick={handleSuperLike}
-          className="w-12 h-12 rounded-full shadow-lg flex items-center justify-center -mt-8 transition-all gradient-hero hover:scale-105 relative"
+          disabled={!canUseSuperlike}
+          className={`w-12 h-12 rounded-full shadow-lg flex items-center justify-center -mt-8 transition-all ${
+            canUseSuperlike
+              ? "gradient-hero hover:scale-105"
+              : "bg-gray-200 opacity-50 cursor-not-allowed"
+          }`}
         >
-          <Star className="w-6 h-6 text-white fill-white" />
-          {!isPremium && (
-            <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-white flex items-center justify-center">
-              <Lock className="w-2.5 h-2.5 text-primary" />
-            </div>
-          )}
+          <Star className={`w-6 h-6 ${canUseSuperlike ? "text-white fill-white" : "text-gray-400 fill-gray-400"}`} />
         </button>
 
         {/* Like - Always active */}
