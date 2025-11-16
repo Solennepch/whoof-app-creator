@@ -617,7 +617,7 @@ export default function Map() {
         
         userEl.appendChild(innerCircle);
 
-        const userPopup = new mapboxgl.Popup({ closeOnClick: true }).setHTML('<div style="padding: 4px; font-weight: 600;">Vous êtes ici 📍</div>');
+        const userPopup = new mapboxgl.Popup({ closeOnClick: true, className: 'cute-popup' }).setHTML('<div style="padding: 8px 16px; font-weight: 600; border-radius: 20px; background: linear-gradient(135deg, #7B61FF 0%, #FF5DA2 100%); color: white; box-shadow: 0 4px 12px rgba(123, 97, 255, 0.3); font-size: 14px;">Vous êtes ici 📍</div>');
         
         new mapboxgl.Marker(userEl)
           .setLngLat(coords)
