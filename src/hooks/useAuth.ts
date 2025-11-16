@@ -18,30 +18,11 @@ export function useAuth() {
         setUser(session?.user ?? null);
         setLoading(false);
 
-        // Handle auth events with proper timing
-        if (event === 'SIGNED_IN' && session) {
-          // Check if there's a saved redirect URL
-          const redirectUrl = sessionStorage.getItem('redirectAfterLogin');
-          
-          if (redirectUrl) {
-            // Clear the saved URL and redirect to it
-            sessionStorage.removeItem('redirectAfterLogin');
-            setTimeout(() => {
-              navigate(redirectUrl);
-            }, 100);
-          } else {
-            // Ne pas rediriger automatiquement - laisser l'utilisateur sur la page actuelle
-            // ou laisser la navigation naturelle se faire
-            const currentPath = window.location.pathname;
-            if (currentPath === '/login' || currentPath === '/signup') {
-              setTimeout(() => {
-                navigate("/profile/me");
-              }, 100);
-            }
-          }
-        } else if (event === 'SIGNED_OUT') {
+        // Handle auth events - minimal redirections
+        if (event === 'SIGNED_OUT') {
           // Clear any cached data
           localStorage.removeItem('access_token');
+          sessionStorage.removeItem('redirectAfterLogin');
           setTimeout(() => {
             navigate("/login");
           }, 100);

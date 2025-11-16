@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
@@ -10,10 +10,17 @@ import logoWhoof from "@/assets/logo-whoof-v3.png";
 
 export default function Login() {
   const navigate = useNavigate();
-  const { signIn, signInWithGoogle } = useAuth();
+  const { signIn, signInWithGoogle, session, loading } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  // Rediriger si déjà connecté
+  useEffect(() => {
+    if (!loading && session) {
+      navigate("/profile/me");
+    }
+  }, [loading, session, navigate]);
 
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
