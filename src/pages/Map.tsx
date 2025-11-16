@@ -22,7 +22,7 @@ import dog3 from "@/assets/dogs/dog-3.jpg";
 import dog4 from "@/assets/dogs/dog-4.jpg";
 import dog5 from "@/assets/dogs/dog-5.jpg";
 import dog6 from "@/assets/dogs/dog-6.jpg";
-import logoWhoof from "@/assets/logo-whoof-app-new.png";
+import logoWhoof from "@/assets/logo-whoof-v3.png";
 
 // Initialize Mapbox token
 const mapboxToken = getMapboxToken();
