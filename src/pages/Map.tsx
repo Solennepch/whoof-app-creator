@@ -486,6 +486,60 @@ export default function Map() {
     });
   };
 
+  // Add profile markers to map (dog profiles)
+  const addProfileMarkersToMap = (profiles: NearbyProfile[]) => {
+    if (!map.current || !map.current.loaded()) return;
+
+    profiles.forEach(profile => {
+      const el = document.createElement('div');
+      el.className = 'profile-marker';
+      el.style.width = '48px';
+      el.style.height = '48px';
+      el.style.borderRadius = '50%';
+      el.style.border = '3px solid white';
+      el.style.boxShadow = '0 3px 10px rgba(0,0,0,0.25)';
+      el.style.cursor = 'pointer';
+      el.style.overflow = 'hidden';
+      el.style.position = 'relative';
+      el.style.backgroundImage = `url(${profile.avatar_url})`;
+      el.style.backgroundSize = 'cover';
+      el.style.backgroundPosition = 'center';
+      
+      // Indicateur en ligne/hors ligne
+      if (profile.isOnline) {
+        const onlineIndicator = document.createElement('div');
+        onlineIndicator.style.position = 'absolute';
+        onlineIndicator.style.bottom = '0';
+        onlineIndicator.style.right = '0';
+        onlineIndicator.style.width = '14px';
+        onlineIndicator.style.height = '14px';
+        onlineIndicator.style.borderRadius = '50%';
+        onlineIndicator.style.background = '#10b981';
+        onlineIndicator.style.border = '2px solid white';
+        el.appendChild(onlineIndicator);
+      }
+
+      el.addEventListener('click', () => {
+        handleSelectProfile(profile);
+      });
+
+      const popup = new mapboxgl.Popup({ offset: 25, closeButton: false }).setHTML(`
+        <div style="padding: 8px; min-width: 150px;">
+          <div style="font-weight: 600; margin-bottom: 4px;">${profile.display_name}</div>
+          <div style="font-size: 12px; color: #666; margin-bottom: 4px;">${profile.breed || ''}</div>
+          ${profile.isOnline ? '<div style="font-size: 11px; color: #10b981;">● En ligne</div>' : '<div style="font-size: 11px; color: #9ca3af;">○ Hors ligne</div>'}
+        </div>
+      `);
+
+      const marker = new mapboxgl.Marker({ element: el, anchor: 'center' })
+        .setLngLat([profile.lng || 0, profile.lat || 0])
+        .setPopup(popup)
+        .addTo(map.current!);
+
+      markers.current.push(marker);
+    });
+  };
+
   // Initialize map and fetch profiles
   useEffect(() => {
     if (!mapContainer.current || map.current) return;
@@ -545,11 +599,19 @@ export default function Map() {
           console.log('✅ Map loaded successfully with Mapbox');
           
           try {
-            // Fetch and display POIs only
+            // Fetch and display POIs and profiles
             setIsLoading(true);
+            
+            // Generate POIs
             const generatedPOIs = generateMockPOIs(coords[0], coords[1]);
             setPois(generatedPOIs);
             addMarkersToMap(generatedPOIs);
+            
+            // Generate and display profiles
+            const profiles = generateMockProfiles(coords[0], coords[1]);
+            setNearbyProfiles(profiles);
+            addProfileMarkersToMap(profiles);
+            
             setIsLoading(false);
           } catch (error) {
             console.error('Error loading markers:', error);
