@@ -121,21 +121,6 @@ export function StartWalkDialog({
             </div>
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label htmlFor="notify-nearby" className="text-base">
-                  Notifier les Whoofers à proximité
-                </Label>
-                <p className="text-sm text-muted-foreground">
-                  Apparaître dans le bloc "chiens à proximité" des autres utilisateurs
-                </p>
-              </div>
-              <Switch
-                id="notify-nearby"
-                checked={notifyNearby}
-                onCheckedChange={setNotifyNearby}
-              />
-            </div>
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
                 <Label htmlFor="live-tracking" className="text-base">
                   Suivi en direct
                 </Label>
@@ -147,6 +132,21 @@ export function StartWalkDialog({
                 id="live-tracking"
                 checked={liveTracking}
                 onCheckedChange={setLiveTracking}
+              />
+            </div>
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label htmlFor="notify-nearby" className="text-base">
+                  Notifier les Whoofers à proximité
+                </Label>
+                <p className="text-sm text-muted-foreground">
+                  Apparaître dans le bloc "chiens à proximité" des autres utilisateurs
+                </p>
+              </div>
+              <Switch
+                id="notify-nearby"
+                checked={notifyNearby}
+                onCheckedChange={setNotifyNearby}
               />
             </div>
           </div>
