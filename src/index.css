@@ -331,8 +331,8 @@ All colors MUST be HSL.
     display: none !important;
   }
 
-  /* Hide pitch/tilt controls */
-  .mapboxgl-ctrl-pitch {
+  /* Hide compass/rotation control */
+  .mapboxgl-ctrl-compass {
     display: none !important;
   }
 }
