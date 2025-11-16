@@ -8,13 +8,13 @@ const ownerNames = ["Emma", "Max", "Sophie", "Pierre", "Julie", "Thomas", "Marie
 export const generateMockLeaderboard = () => {
   const users = [];
   
-  // First place: Max
+  // First place: Scoubidou
   users.push({
     user_id: "user-max",
     weekly_km: 45.0,
     weekly_walks: 14,
     rank: 1,
-    display_name: "Max",
+    display_name: "Scoubidou",
     avatar_url: "/src/assets/dogs/dog-1.jpg",
     city: "Lyon"
   });
