@@ -690,14 +690,14 @@ export default function Map() {
         // Add navigation controls
         map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
-        // User marker (violet) - position actuelle avec icône utilisateur
+        // User marker - position actuelle avec icône utilisateur et dégradé Whoof Apps
         const userEl = document.createElement('div');
         userEl.style.width = '40px';
         userEl.style.height = '40px';
         userEl.style.borderRadius = '50%';
-        userEl.style.background = 'linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%)';
+        userEl.style.background = 'linear-gradient(135deg, hsl(334 100% 68%) 0%, hsl(250 100% 69%) 100%)';
         userEl.style.border = '3px solid white';
-        userEl.style.boxShadow = '0 4px 12px rgba(139, 92, 246, 0.4)';
+        userEl.style.boxShadow = '0 4px 16px rgba(255, 94, 190, 0.4)';
         userEl.style.cursor = 'pointer';
         userEl.style.display = 'flex';
         userEl.style.alignItems = 'center';
