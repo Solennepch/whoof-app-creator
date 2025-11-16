@@ -95,9 +95,15 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
   };
 
   const handleLike = () => {
+    if (mode === "adoption") {
+      // TODO: Rediriger vers la page SPA correspondante
+      toast.success(`Tu seras bientôt redirigé vers la SPA de ${currentDog.name}`);
+      console.log("Redirection vers SPA:", currentDog.shelterName);
+    } else {
+      toast.success(`❤️ Like envoyé à ${currentDog.name}`);
+    }
     setHistory([...history, currentIndex]);
     setCurrentIndex(currentIndex + 1);
-    toast.success(`❤️ Like envoyé à ${currentDog.name}`);
   };
 
   const handleBoost = () => {
@@ -208,30 +214,36 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
           <img src={bonesCrossedIcon} alt="Nope" className="w-8 h-8" />
         </button>
 
-        {/* Super-like - 1 free per week, unlimited for premium */}
-        <button
-          onClick={handleSuperLike}
-          className={`w-12 h-12 rounded-full shadow-lg flex items-center justify-center -mt-8 transition-all ${
-            canUseSuperlike
-              ? "gradient-hero hover:scale-105"
-              : "bg-gray-200 opacity-50 cursor-pointer"
-          }`}
-        >
-          <Star className={`w-6 h-6 ${canUseSuperlike ? "text-white fill-white" : "text-gray-400 fill-gray-400"}`} />
-        </button>
+        {/* Super-like - Only in local mode */}
+        {mode === "local" && (
+          <button
+            onClick={handleSuperLike}
+            className={`w-12 h-12 rounded-full shadow-lg flex items-center justify-center -mt-8 transition-all ${
+              canUseSuperlike
+                ? "gradient-hero hover:scale-105"
+                : "bg-gray-200 opacity-50 cursor-pointer"
+            }`}
+          >
+            <Star className={`w-6 h-6 ${canUseSuperlike ? "text-white fill-white" : "text-gray-400 fill-gray-400"}`} />
+          </button>
+        )}
 
-        {/* Like - Always active */}
+        {/* Like / SPA button */}
         <button
           onClick={handleLike}
           className="w-16 h-16 rounded-full bg-white backdrop-blur shadow-lg flex items-center justify-center hover:scale-105 transition-transform"
         >
-          <Heart 
-            className="w-8 h-8" 
-            style={{
-              fill: '#FF1493',
-              stroke: '#FF1493'
-            }}
-          />
+          {mode === "adoption" ? (
+            <span className="text-lg font-bold text-primary">SPA</span>
+          ) : (
+            <Heart 
+              className="w-8 h-8" 
+              style={{
+                fill: '#FF1493',
+                stroke: '#FF1493'
+              }}
+            />
+          )}
         </button>
 
         {/* Boost / Send - Always active */}
