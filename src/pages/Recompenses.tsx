@@ -31,6 +31,7 @@ const REWARD_CHESTS = [
 
 const XP_REWARDS = [
   { id: "croquettes", name: "Bon d'achat croquettes", xp: 500, icon: "🦴", description: "15€ de réduction" },
+  { id: "friandises", name: "Paquet de friandises", xp: 400, icon: "🍖", description: "Sans céréales" },
   { id: "medaille", name: "Médaille personnalisée", xp: 800, icon: "🏅", description: "Gravure offerte" },
   { id: "promo_boutique", name: "Code promo boutique", xp: 300, icon: "🛍️", description: "-20% sur tout" },
   { id: "seance_photo", name: "Séance photo pro", xp: 1200, icon: "📸", description: "30min avec ton chien" },
