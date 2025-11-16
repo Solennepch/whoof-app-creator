@@ -598,8 +598,8 @@ export default function Map() {
         el.style.background = 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)';
         el.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>';
       } else if (poi.type === 'pet-sitter' || poi.type === 'pet_sitter') {
-        // Pet-sitter - Maison ORANGE
-        el.style.background = 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)';
+        // Pet-sitter - Maison ORANGE VIF
+        el.style.background = 'linear-gradient(135deg, #ff6b35 0%, #f7931e 100%)';
         el.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l9-9 9 9"/><path d="M5 10v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V10"/><path d="M9 21v-6a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v6"/></svg>';
       } else if (poi.type === 'refuge') {
         // Refuge - Cœur BLEU
