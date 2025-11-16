@@ -23,6 +23,7 @@ import dog4 from "@/assets/dogs/dog-4.jpg";
 import dog5 from "@/assets/dogs/dog-5.jpg";
 import dog6 from "@/assets/dogs/dog-6.jpg";
 import logoWhoof from "@/assets/logo-whoof-official.png";
+import myDogPhoto from "@/assets/my-dog-finnish-lapphund.jpg";
 
 // Initialize Mapbox token
 const mapboxToken = getMapboxToken();
@@ -589,21 +590,32 @@ export default function Map() {
           });
         }, 100);
 
-        // User marker - position actuelle avec logo Whoof Apps
+        // User marker - position actuelle avec photo du chien
         const userEl = document.createElement('div');
-        userEl.style.width = '44px';
-        userEl.style.height = '44px';
+        userEl.style.width = '50px';
+        userEl.style.height = '50px';
         userEl.style.borderRadius = '50%';
-        userEl.style.background = 'white';
-        userEl.style.border = '2px solid white';
-        userEl.style.boxShadow = '0 4px 16px rgba(255, 94, 190, 0.4)';
+        userEl.style.background = 'linear-gradient(135deg, #7B61FF 0%, #FF5DA2 100%)';
+        userEl.style.padding = '3px';
+        userEl.style.boxShadow = '0 4px 16px rgba(255, 94, 190, 0.5), 0 0 20px rgba(123, 97, 255, 0.3)';
         userEl.style.cursor = 'pointer';
         userEl.style.display = 'flex';
         userEl.style.alignItems = 'center';
         userEl.style.justifyContent = 'center';
         userEl.style.overflow = 'hidden';
-        // Logo Whoof Apps
-        userEl.innerHTML = `<img src="${logoWhoof}" alt="Whoof" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" />`;
+        
+        // Inner circle with white background for the dog photo
+        const innerCircle = document.createElement('div');
+        innerCircle.style.width = '100%';
+        innerCircle.style.height = '100%';
+        innerCircle.style.borderRadius = '50%';
+        innerCircle.style.overflow = 'hidden';
+        innerCircle.style.background = 'white';
+        
+        // Berger finnois de laponie photo
+        innerCircle.innerHTML = `<img src="${myDogPhoto}" alt="Mon chien" style="width: 100%; height: 100%; object-fit: cover;" />`;
+        
+        userEl.appendChild(innerCircle);
 
         new mapboxgl.Marker(userEl)
           .setLngLat(coords)
