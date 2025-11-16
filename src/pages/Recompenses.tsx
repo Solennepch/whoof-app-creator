@@ -32,10 +32,11 @@ export default function Recompenses() {
   const { session, loading: authLoading } = useAuth();
   const [completedQuests, setCompletedQuests] = useState<string[]>([]);
   
-  // Redirection si non authentifié
+  // Redirection si non authentifié - sauvegarde l'URL de destination
   useEffect(() => {
     if (!authLoading && !session) {
-      navigate("/login");
+      sessionStorage.setItem('redirectAfterLogin', '/recompenses');
+      navigate("/login", { replace: true });
     }
   }, [authLoading, session, navigate]);
   

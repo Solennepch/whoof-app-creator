@@ -20,9 +20,18 @@ export function useAuth() {
 
         // Handle auth events with proper timing
         if (event === 'SIGNED_IN' && session) {
-          // Only navigate if not already on a protected route
+          // Check if there's a saved redirect URL
+          const redirectUrl = sessionStorage.getItem('redirectAfterLogin');
           const currentPath = window.location.pathname;
-          if (currentPath === '/login' || currentPath === '/signup' || currentPath === '/debug/test-accounts') {
+          
+          if (redirectUrl) {
+            // Clear the saved URL and redirect to it
+            sessionStorage.removeItem('redirectAfterLogin');
+            setTimeout(() => {
+              navigate(redirectUrl);
+            }, 100);
+          } else if (currentPath === '/login' || currentPath === '/signup' || currentPath === '/debug/test-accounts') {
+            // Default redirect to profile
             setTimeout(() => {
               navigate("/profile/me");
             }, 100);
