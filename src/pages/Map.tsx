@@ -117,17 +117,18 @@ export default function Map() {
   const [geoDenied, setGeoDenied] = useState(false);
 
   // Generate mock profiles for development
-  const generateMockProfiles = (lng: number, lat: number, count: number = 8): NearbyProfile[] => {
+  const generateMockProfiles = (lng: number, lat: number, count: number = 12): NearbyProfile[] => {
     const dogNames = [
       'Max', 'Luna', 'Charlie', 'Bella', 'Rocky', 'Daisy', 
-      'Cooper', 'Milo', 'Lola', 'Zeus', 'Nala', 'Oscar'
+      'Cooper', 'Milo', 'Lola', 'Zeus', 'Nala', 'Oscar',
+      'Bailey', 'Simba', 'Coco', 'Duke'
     ];
     const breeds = [
       'Golden Retriever', 'Labrador', 'Berger Allemand', 'Bouledogue Français',
-      'Beagle', 'Husky', 'Border Collie', 'Caniche'
+      'Beagle', 'Husky', 'Border Collie', 'Caniche', 'Jack Russell', 'Teckel'
     ];
     const sizes = ['Petit', 'Moyen', 'Grand'];
-    const temperaments = ['Calme', 'Joueur', 'Énergique', 'Amical'];
+    const temperaments = ['Calme', 'Joueur', 'Énergique', 'Amical', 'Sociable', 'Affectueux'];
     const walkMoods = [
       '🏃 Envie de courir',
       '🌳 Balade au parc',
@@ -140,11 +141,14 @@ export default function Map() {
 
     return Array.from({ length: count }, (_, i) => {
       // Random offset within ~2km radius
-      const angle = Math.random() * Math.PI * 2;
-      const radius = (Math.random() * 0.02) + 0.005; // 0.5-2km roughly
+      const angle = (i / count) * Math.PI * 2 + Math.random() * 0.5; // Distribution circulaire
+      const radius = (Math.random() * 0.015) + 0.005; // 0.5-1.5km roughly
       const randomLng = lng + radius * Math.cos(angle);
       const randomLat = lat + radius * Math.sin(angle);
       const distance_m = radius * 111000; // rough conversion to meters
+      
+      // Alternance entre en ligne et hors ligne
+      const isOnline = i % 3 !== 0; // 2/3 en ligne, 1/3 hors ligne
 
       return {
         id: `mock-${i}`,
@@ -158,9 +162,9 @@ export default function Map() {
         breed: breeds[i % breeds.length],
         size: sizes[i % sizes.length],
         temperament: temperaments[i % temperaments.length],
-        verified: Math.random() > 0.5,
-        isOnline: Math.random() > 0.3, // 70% en ligne
-        walkMood: Math.random() > 0.2 ? walkMoods[i % walkMoods.length] : undefined
+        verified: i % 2 === 0, // Alternance vérifiés/non vérifiés
+        isOnline: isOnline,
+        walkMood: isOnline && Math.random() > 0.3 ? walkMoods[i % walkMoods.length] : undefined
       };
     });
   };
