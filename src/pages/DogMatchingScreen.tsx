@@ -128,7 +128,7 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
   }
 
   return (
-    <div className="flex flex-col w-full min-h-[calc(100vh-8rem)]">
+    <div className="flex flex-col w-full min-h-[calc(100vh-8rem)] overflow-hidden">
       {/* Local discover toolbar with filter */}
       <div 
         className="flex items-center justify-between px-4 py-3 border-b flex-shrink-0"
