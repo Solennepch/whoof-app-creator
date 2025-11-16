@@ -23,7 +23,7 @@ import { useToast } from "@/hooks/use-toast";
 type WalkState = 'inactive' | 'active' | 'paused';
 
 interface StartWalkDialogProps {
-  onStartWalk: (notifyFriends: boolean, liveTracking: boolean) => void;
+  onStartWalk: (notifyFriends: boolean, liveTracking: boolean, notifyNearby: boolean) => void;
   onPauseWalk: () => void;
   onResumeWalk: () => void;
   onStopWalk: () => void;
@@ -39,10 +39,11 @@ export function StartWalkDialog({
   const [open, setOpen] = useState(false);
   const [notifyFriends, setNotifyFriends] = useState(true);
   const [liveTracking, setLiveTracking] = useState(false);
+  const [notifyNearby, setNotifyNearby] = useState(true);
   const [walkState, setWalkState] = useState<WalkState>('inactive');
 
   const handleStart = () => {
-    onStartWalk(notifyFriends, liveTracking);
+    onStartWalk(notifyFriends, liveTracking, notifyNearby);
     setWalkState('active');
     setOpen(false);
     
@@ -120,11 +121,26 @@ export function StartWalkDialog({
             </div>
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
+                <Label htmlFor="notify-nearby" className="text-base">
+                  Notifier les Whoofers à proximité
+                </Label>
+                <p className="text-sm text-muted-foreground">
+                  Apparaître dans le bloc "chiens à proximité" des autres utilisateurs
+                </p>
+              </div>
+              <Switch
+                id="notify-nearby"
+                checked={notifyNearby}
+                onCheckedChange={setNotifyNearby}
+              />
+            </div>
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
                 <Label htmlFor="live-tracking" className="text-base">
                   Suivi en direct
                 </Label>
                 <p className="text-sm text-muted-foreground">
-                  Partage ta position en temps réel
+                  Seuls tes amis ont accès à ton suivi en direct
                 </p>
               </div>
               <Switch
