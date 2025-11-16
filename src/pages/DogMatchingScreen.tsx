@@ -246,7 +246,16 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
           className="w-16 h-16 rounded-full bg-white backdrop-blur shadow-lg flex items-center justify-center hover:scale-105 transition-transform"
         >
           {mode === "adoption" ? (
-            <span className="text-lg font-bold text-primary">SPA</span>
+            <div className="relative flex items-center justify-center">
+              <Heart 
+                className="w-10 h-10" 
+                style={{
+                  fill: '#FF1493',
+                  stroke: '#FF1493'
+                }}
+              />
+              <span className="absolute text-xs font-bold text-white">SPA</span>
+            </div>
           ) : (
             <Heart 
               className="w-8 h-8" 
