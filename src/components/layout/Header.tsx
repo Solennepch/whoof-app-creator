@@ -20,8 +20,9 @@ export function Header() {
         className="sticky top-0 z-50 shadow-soft backdrop-blur-sm bg-background border-b border-border"
       >
         <div className="mx-auto max-w-7xl px-4">
-          <div className="flex h-16 items-center justify-between">
-            <div className="flex items-center gap-3">
+          <div className="grid grid-cols-3 h-16 items-center">
+            {/* Gauche: Menu burger */}
+            <div className="flex items-center justify-start">
               <Button
                 variant="ghost"
                 size="icon"
@@ -30,36 +31,38 @@ export function Header() {
               >
                 <Menu className="h-5 w-5 text-foreground" />
               </Button>
-              
-              <div className="flex items-center gap-2">
-                <img 
-                  src={logoWhoof} 
-                  alt="Whoof Apps Logo" 
-                  className="h-10 w-10"
-                />
-                <span className="text-xl font-bold text-foreground">
-                  Whoof Apps
-                </span>
-                {isProRoute && (
-                  <Badge 
-                    className="text-white font-bold text-xs"
-                    style={{ background: "linear-gradient(90deg, #7B61FF, #FF5DA2)" }}
-                  >
-                    PRO
-                  </Badge>
-                )}
-                {isDebugRoute && (
-                  <Badge variant="destructive" className="text-xs font-bold">
-                    DEBUG
-                  </Badge>
-                )}
-              </div>
+            </div>
+            
+            {/* Centre: Whoof Apps + badges */}
+            <div className="flex items-center justify-center gap-2">
+              <span className="text-xl font-bold text-foreground">
+                Whoof Apps
+              </span>
+              {isProRoute && (
+                <Badge 
+                  className="text-white font-bold text-xs"
+                  style={{ background: "linear-gradient(90deg, #7B61FF, #FF5DA2)" }}
+                >
+                  PRO
+                </Badge>
+              )}
+              {isDebugRoute && (
+                <Badge variant="destructive" className="text-xs font-bold">
+                  DEBUG
+                </Badge>
+              )}
             </div>
 
-            <div className="flex items-center gap-3">
+            {/* Droite: Logo + QuickSwitch */}
+            <div className="flex items-center justify-end gap-3">
               {!isDebugRoute && (
                 <QuickSwitchButton />
               )}
+              <img 
+                src={logoWhoof} 
+                alt="Whoof Apps Logo" 
+                className="h-10 w-10"
+              />
             </div>
           </div>
         </div>
