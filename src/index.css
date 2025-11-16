@@ -324,4 +324,10 @@ All colors MUST be HSL.
   .hide-scrollbar::-webkit-scrollbar {
     display: none;
   }
+
+  /* Hide Mapbox attributions and logo */
+  .mapboxgl-ctrl-attrib,
+  .mapboxgl-ctrl-logo {
+    display: none !important;
+  }
 }

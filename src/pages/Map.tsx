@@ -888,8 +888,8 @@ export default function Map() {
             ) : (
               <div className="relative">
                 {/* BETA Badge */}
-                <div className="absolute top-4 right-4 z-10">
-                  <span className="rounded-full bg-white/80 px-3 py-1 text-[10px] font-medium text-gray-700 shadow-sm backdrop-blur">
+                <div className="absolute top-4 left-4 z-10">
+                  <span className="rounded-full bg-white/90 px-3 py-1 text-[10px] font-medium text-gray-700 shadow-sm backdrop-blur">
                     Carte en BÊTA 🚧
                   </span>
                 </div>
