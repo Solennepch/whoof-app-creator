@@ -81,7 +81,6 @@ export default function Ranking() {
       <main className="mx-auto max-w-[720px] px-4 pb-20 space-y-5 relative z-10">
         {/* Header */}
         <div className="pt-20 pb-4 text-center">
-          <Trophy className="w-12 h-12 mx-auto mb-3 text-primary" />
           <h1 className="text-3xl font-bold text-foreground">
             Classement
           </h1>
