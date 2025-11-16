@@ -200,8 +200,8 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
           <Heart 
             className="w-8 h-8" 
             style={{
-              fill: '#FFB6C1',
-              stroke: '#FFB6C1'
+              fill: '#FF1493',
+              stroke: '#FF1493'
             }}
           />
         </button>
