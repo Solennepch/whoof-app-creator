@@ -197,19 +197,13 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
           onClick={handleLike}
           className="w-16 h-16 rounded-full bg-white backdrop-blur shadow-lg flex items-center justify-center hover:scale-105 transition-transform"
         >
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="heartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#FFE4C4" />
-                <stop offset="30%" stopColor="#FFD1E8" />
-                <stop offset="100%" stopColor="#E6DBFF" />
-              </linearGradient>
-            </defs>
-            <path
-              d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
-              fill="url(#heartGradient)"
-            />
-          </svg>
+          <Heart 
+            className="w-8 h-8" 
+            style={{
+              fill: '#FFB6C1',
+              stroke: '#FFB6C1'
+            }}
+          />
         </button>
 
         {/* Boost / Send - Always active */}
