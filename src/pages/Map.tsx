@@ -617,10 +617,17 @@ export default function Map() {
         
         userEl.appendChild(innerCircle);
 
+        const userPopup = new mapboxgl.Popup({ closeOnClick: true }).setHTML('<div style="padding: 4px; font-weight: 600;">Vous êtes ici 📍</div>');
+        
         new mapboxgl.Marker(userEl)
           .setLngLat(coords)
-          .setPopup(new mapboxgl.Popup().setHTML('<div style="padding: 4px; font-weight: 600;">Vous êtes ici 📍</div>'))
+          .setPopup(userPopup)
           .addTo(map.current);
+
+        // Close popup when clicking elsewhere on the map
+        map.current.on('click', () => {
+          userPopup.remove();
+        });
 
         console.log('✅ User marker added at', coords);
 
