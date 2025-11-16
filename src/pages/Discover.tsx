@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import DogMatchingScreen from "./DogMatchingScreen";
+import { regionProfiles, adoptionProfiles } from "@/config/profiles";
 
 type DogProfile = {
   id: string;
@@ -29,68 +30,26 @@ export default function Discover() {
     }
   }, [location.search]);
 
-  const localDogs: DogProfile[] = [
-    {
-      id: "1",
-      name: "Nala",
-      age: 2,
-      distanceKm: 1.2,
-      photoUrl: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=800",
-      shortDescription: "adore jouer avec les autres chiens",
-      badges: ["Sociable", "OK chiens", "Énergique"],
-      ownerName: "Sophie",
-    },
-    {
-      id: "2",
-      name: "Rocky",
-      age: 5,
-      distanceKm: 3.4,
-      photoUrl: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=800",
-      shortDescription: "parfait pour les balades tranquilles",
-      badges: ["Calme", "OK enfants", "Marche en laisse"],
-      ownerName: "Thomas",
-    },
-    {
-      id: "3",
-      name: "Luna",
-      age: 3,
-      distanceKm: 0.8,
-      photoUrl: "https://images.unsplash.com/photo-1552053831-71594a27632d?w=800",
-      shortDescription: "partenaire idéale pour courir",
-      badges: ["Sportive", "Randonnée", "Obéissante"],
-      ownerName: "Marie",
-    },
-  ];
+  const localDogs: DogProfile[] = regionProfiles.map((profile, index) => ({
+    id: `local-${index + 1}`,
+    name: profile.name,
+    age: parseInt(profile.age),
+    distanceKm: Math.round((Math.random() * 4 + 0.5) * 10) / 10,
+    photoUrl: profile.image,
+    shortDescription: profile.bio,
+    badges: profile.reasons,
+    ownerName: ["Sophie", "Thomas", "Marie", "Lucas", "Emma", "Hugo", "Léa", "Noah", "Chloé", "Louis"][index % 10],
+  }));
 
-  const adoptionDogs: DogProfile[] = [
-    {
-      id: "4",
-      name: "Moka",
-      age: 4,
-      shelterName: "SPA de Lyon",
-      photoUrl: "https://images.unsplash.com/photo-1561037404-61cd46aa615b?w=800",
-      shortDescription: "8 mois au refuge",
-      badges: ["Adoption urgente", "Très affectueux", "Stérilisé"],
-    },
-    {
-      id: "5",
-      name: "Pixel",
-      age: 1,
-      shelterName: "SPA de Marseille",
-      photoUrl: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=800",
-      shortDescription: "besoin de douceur",
-      badges: ["Timide", "Progrès en cours", "OK congénères"],
-    },
-    {
-      id: "6",
-      name: "Gaston",
-      age: 9,
-      shelterName: "SPA de Toulouse",
-      photoUrl: "https://images.unsplash.com/photo-1477884213360-7e9d7dcc1e48?w=800",
-      shortDescription: "chien senior",
-      badges: ["Senior", "Très calme", "Propre"],
-    },
-  ];
+  const adoptionDogs: DogProfile[] = adoptionProfiles.map((profile, index) => ({
+    id: `adoption-${index + 1}`,
+    name: profile.name,
+    age: parseInt(profile.age.split(" ")[0]),
+    shelterName: profile.shelter,
+    photoUrl: profile.image,
+    shortDescription: profile.bio,
+    badges: profile.reasons,
+  }));
 
   const dogs = mode === "local" ? localDogs : adoptionDogs;
 
