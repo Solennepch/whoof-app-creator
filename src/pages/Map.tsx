@@ -22,6 +22,7 @@ import dog3 from "@/assets/dogs/dog-3.jpg";
 import dog4 from "@/assets/dogs/dog-4.jpg";
 import dog5 from "@/assets/dogs/dog-5.jpg";
 import dog6 from "@/assets/dogs/dog-6.jpg";
+import logoWhoof from "@/assets/logo-whoof-app-new.png";
 
 // Initialize Mapbox token
 const mapboxToken = getMapboxToken();
@@ -577,20 +578,21 @@ export default function Map() {
         // Add navigation controls
         map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
-        // User marker - position actuelle avec icône utilisateur et dégradé Whoof Apps
+        // User marker - position actuelle avec logo Whoof Apps
         const userEl = document.createElement('div');
-        userEl.style.width = '40px';
-        userEl.style.height = '40px';
+        userEl.style.width = '44px';
+        userEl.style.height = '44px';
         userEl.style.borderRadius = '50%';
-        userEl.style.background = 'linear-gradient(135deg, hsl(334 100% 68%) 0%, hsl(250 100% 69%) 100%)';
+        userEl.style.background = 'white';
         userEl.style.border = '3px solid white';
         userEl.style.boxShadow = '0 4px 16px rgba(255, 94, 190, 0.4)';
         userEl.style.cursor = 'pointer';
         userEl.style.display = 'flex';
         userEl.style.alignItems = 'center';
         userEl.style.justifyContent = 'center';
-        // Icône utilisateur explicite
-        userEl.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="white" stroke="white" stroke-width="0"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-4.43-.82-6.14-2.88C7.55 15.8 9.68 15 12 15s4.45.8 6.14 2.12C16.43 19.18 14.03 20 12 20z"/></svg>';
+        userEl.style.padding = '4px';
+        // Logo Whoof Apps
+        userEl.innerHTML = `<img src="${logoWhoof}" alt="Whoof" style="width: 100%; height: 100%; object-fit: contain;" />`;
 
         new mapboxgl.Marker(userEl)
           .setLngLat(coords)
