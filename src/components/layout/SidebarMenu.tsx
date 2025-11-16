@@ -6,6 +6,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { AccountSwitcher } from "./AccountSwitcher";
 import { useAccounts } from "@/contexts/AccountContext";
 import { DevPremiumToggle } from "./DevPremiumToggle";
+import { FocusModeToggle } from "./FocusModeToggle";
 
 const isDev = import.meta.env.MODE !== "production";
 
@@ -117,8 +118,9 @@ export function SidebarMenu({ open, onOpenChange }: SidebarMenuProps) {
         </SheetHeader>
 
         {/* Dev Premium Toggle */}
-        <div className="mt-4 px-2">
+        <div className="mt-4 px-2 space-y-2">
           <DevPremiumToggle />
+          <FocusModeToggle variant="full" />
         </div>
 
         <div className="mt-6 flex flex-col gap-2">

@@ -14,7 +14,7 @@ export function BottomNavigation() {
     { to: "/match", icon: Heart, label: "Matche" },
     { to: "/messages", icon: MessageCircle, label: "Messages" },
     { to: "/balades", icon: Calendar, label: "Balades" },
-    { to: "/ranking", icon: Trophy, label: "Classement" },
+    { to: "/events", icon: Trophy, label: "Défis" },
   ];
 
   return (
