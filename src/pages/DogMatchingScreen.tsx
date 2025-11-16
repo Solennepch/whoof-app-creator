@@ -128,7 +128,7 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
   }
 
   return (
-    <div className="flex flex-col w-full min-h-[calc(100vh-8rem)] overflow-hidden">
+    <div className="flex flex-col w-full h-[calc(100vh-64px)] md:h-[calc(100vh-64px)] overflow-hidden">
       {/* Local discover toolbar with filter */}
       <div 
         className="flex items-center justify-between px-4 py-3 border-b flex-shrink-0"
@@ -146,7 +146,7 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
       </div>
 
       {/* Dog card area - takes remaining space */}
-      <div className="relative flex-1 min-h-[400px] bg-black">
+      <div className="relative flex-1 bg-black overflow-hidden">
         {/* Full-width dog image */}
         <img
           src={currentDog.photoUrl}
