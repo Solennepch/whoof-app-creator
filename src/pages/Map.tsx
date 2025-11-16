@@ -761,8 +761,8 @@ export default function Map() {
   };
 
   return (
-    <div className="h-screen overflow-hidden flex flex-col relative" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
-      <div className="mx-auto max-w-6xl w-full px-4 pt-16 md:pt-6 pb-[180px] md:pb-6 flex-1 flex flex-col overflow-hidden gap-3 md:gap-6">
+    <div className="h-screen overflow-hidden flex flex-col" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
+      <div className="mx-auto max-w-6xl w-full h-full flex flex-col px-4 pt-16 md:pt-6 md:pb-6 gap-3 md:gap-6">
         {/* Header - Compact on mobile */}
         <div className="flex items-center justify-between gap-2 shrink-0">
           <div className="min-w-0">
@@ -891,11 +891,11 @@ export default function Map() {
           </div>
         )}
 
-        <div className="flex flex-col lg:grid gap-3 md:gap-6 lg:grid-cols-3 flex-1 overflow-hidden min-h-0">
+        <div className="flex flex-col lg:grid gap-3 md:gap-6 lg:grid-cols-3 flex-1 min-h-0 pb-[150px] lg:pb-0">
           {/* Interactive Map */}
-          <div className="lg:col-span-2 flex flex-col overflow-hidden h-full">
+          <div className="lg:col-span-2 flex flex-col h-full">
             {mapError ? (
-              <Card className="flex-1 min-h-0 rounded-2xl md:rounded-3xl shadow-soft ring-1 ring-black/5 flex flex-col items-center justify-center p-8 text-center">
+              <Card className="h-full rounded-2xl md:rounded-3xl shadow-soft ring-1 ring-black/5 flex flex-col items-center justify-center p-8 text-center">
                 <AlertTriangle className="h-12 w-12 text-muted-foreground mb-4" />
                 <h3 className="text-lg font-semibold mb-2">Carte indisponible</h3>
                 <p className="text-sm text-muted-foreground mb-6 max-w-md">
