@@ -7,6 +7,7 @@ import { PremiumDialog } from "@/components/PremiumDialog";
 import { FiltersPanel, Filters } from "@/components/ui/FiltersPanel";
 import { SuperLikeAnimation } from "@/components/match/SuperLikeAnimation";
 import { toast } from "sonner";
+import { FullScreenPage } from "@/components/layout/FullScreenPage";
 
 type DogProfile = {
   id: string;
@@ -128,7 +129,8 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
   }
 
   return (
-    <div className="flex flex-col w-full min-h-[calc(100vh-8rem)]">
+    <FullScreenPage>
+      <div className="flex flex-col w-full flex-1">
       {/* Local discover toolbar with filter */}
       <div 
         className="flex items-center justify-between px-4 py-3 border-b flex-shrink-0"
@@ -253,6 +255,7 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
         onClose={() => setShowFilters(false)} 
         onApply={handleApplyFilters}
       />
-    </div>
+      </div>
+    </FullScreenPage>
   );
 }
