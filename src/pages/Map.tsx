@@ -399,10 +399,10 @@ export default function Map() {
     filteredPOIs.forEach(poi => {
       const el = document.createElement('div');
       el.className = 'poi-marker';
-      el.style.width = '36px';
-      el.style.height = '36px';
+      el.style.width = '44px';
+      el.style.height = '44px';
       el.style.borderRadius = '50%';
-      el.style.border = '3px solid white';
+      el.style.border = '2px solid white';
       el.style.boxShadow = '0 2px 8px rgba(0,0,0,0.3)';
       el.style.transition = 'box-shadow 0.2s ease, filter 0.2s ease';
       el.style.display = 'flex';
@@ -499,10 +499,10 @@ export default function Map() {
     profiles.forEach(profile => {
       const el = document.createElement('div');
       el.className = 'profile-marker';
-      el.style.width = '48px';
-      el.style.height = '48px';
+      el.style.width = '44px';
+      el.style.height = '44px';
       el.style.borderRadius = '50%';
-      el.style.border = '3px solid white';
+      el.style.border = '2px solid white';
       el.style.boxShadow = '0 3px 10px rgba(0,0,0,0.25)';
       el.style.cursor = 'pointer';
       el.style.overflow = 'hidden';
@@ -584,7 +584,7 @@ export default function Map() {
         userEl.style.height = '44px';
         userEl.style.borderRadius = '50%';
         userEl.style.background = 'white';
-        userEl.style.border = '1px solid white';
+        userEl.style.border = '2px solid white';
         userEl.style.boxShadow = '0 4px 16px rgba(255, 94, 190, 0.4)';
         userEl.style.cursor = 'pointer';
         userEl.style.display = 'flex';
