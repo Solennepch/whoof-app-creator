@@ -22,7 +22,6 @@ export function useAuth() {
         if (event === 'SIGNED_IN' && session) {
           // Check if there's a saved redirect URL
           const redirectUrl = sessionStorage.getItem('redirectAfterLogin');
-          const currentPath = window.location.pathname;
           
           if (redirectUrl) {
             // Clear the saved URL and redirect to it
@@ -30,11 +29,15 @@ export function useAuth() {
             setTimeout(() => {
               navigate(redirectUrl);
             }, 100);
-          } else if (currentPath === '/login' || currentPath === '/signup' || currentPath === '/debug/test-accounts') {
-            // Default redirect to profile
-            setTimeout(() => {
-              navigate("/profile/me");
-            }, 100);
+          } else {
+            // Ne pas rediriger automatiquement - laisser l'utilisateur sur la page actuelle
+            // ou laisser la navigation naturelle se faire
+            const currentPath = window.location.pathname;
+            if (currentPath === '/login' || currentPath === '/signup') {
+              setTimeout(() => {
+                navigate("/profile/me");
+              }, 100);
+            }
           }
         } else if (event === 'SIGNED_OUT') {
           // Clear any cached data
