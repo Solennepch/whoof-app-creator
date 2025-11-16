@@ -1,5 +1,5 @@
 // Mock data for leaderboard demonstration
-const TOTAL_USERS = 1354;
+const TOTAL_USERS = 1743;
 
 const dogNames = ["Rex", "Luna", "Max", "Bella", "Rocky", "Coco", "Duke", "Milo", "Zeus", "Oscar", "Charlie", "Nala", "Thor", "Daisy", "Leo", "Ruby", "Simba", "Lola"];
 const ownerNames = ["Emma", "Max", "Sophie", "Pierre", "Julie", "Thomas", "Marie", "Alexandre", "Camille", "Lucas", "Léa", "Antoine", "Chloé", "Nicolas", "Sarah", "Hugo", "Laura", "Vincent"];
