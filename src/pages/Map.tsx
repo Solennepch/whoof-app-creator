@@ -586,9 +586,9 @@ export default function Map() {
         el.style.background = 'linear-gradient(135deg, #92400e 0%, #78350f 100%)';
         el.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="white" stroke="white" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="14" r="2"/><circle cx="16" cy="14" r="2"/><path d="M12 20c-3.5 0-6-2.5-6-5.5V10c0-3.3 2.7-6 6-6s6 2.7 6 6v4.5c0 3-2.5 5.5-6 5.5z"/><path d="M5 10c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/><path d="M19 10c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/></svg>';
       } else if (poi.type === 'veterinaire') {
-        // Vétérinaire - Croix médicale VERTE
+        // Vétérinaire - Croix de pharmacie VERTE
         el.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
-        el.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 2v20"/><path d="M2 11h20"/></svg>';
+        el.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="white" stroke="none"><rect x="9" y="3" width="6" height="18" rx="1"/><rect x="3" y="9" width="18" height="6" rx="1"/></svg>';
       } else if (poi.type === 'toiletteur') {
         // Toiletteur - 3 Bulles de bain ROSE
         el.style.background = 'linear-gradient(135deg, #ec4899 0%, #db2777 100%)';
