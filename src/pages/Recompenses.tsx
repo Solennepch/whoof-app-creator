@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Gift, Sparkles, Trophy, Crown, Dog, Star, CheckCircle2, Lock, ShoppingBag } from "lucide-react";
+import { Gift, Sparkles, Trophy, Crown, Dog, Star, CheckCircle2, Lock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useUserXP, useUserBadges, useAllBadges } from "@/hooks/useGamification";
 import { useAuth } from "@/hooks/useAuth";
@@ -114,7 +114,6 @@ export default function Recompenses() {
     <div className="min-h-screen pb-24" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
       <main className="mx-auto max-w-[720px] px-4 pt-20 pb-6 space-y-6">
         <div className="text-center space-y-2 mb-6">
-          <Gift className="w-12 h-12 mx-auto text-primary" />
           <h1 className="text-3xl font-bold">Récompenses</h1>
           <p className="text-sm text-muted-foreground">Gagne des XP et débloque des badges</p>
         </div>
@@ -148,7 +147,7 @@ export default function Recompenses() {
           <Card className="rounded-[24px] border-2 border-primary/20">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <ShoppingBag className="w-5 h-5 text-primary" />
+                <Gift className="w-5 h-5 text-primary" />
                 Convertir mes XP
               </CardTitle>
               <p className="text-sm text-muted-foreground">Échange tes XP contre des vraies récompenses</p>
