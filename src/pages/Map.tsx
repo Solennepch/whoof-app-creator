@@ -761,8 +761,8 @@ export default function Map() {
   };
 
   return (
-    <div className="h-screen overflow-hidden flex flex-col" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
-      <div className="mx-auto max-w-6xl w-full px-4 pt-16 md:pt-6 pb-20 md:pb-6 flex-1 flex flex-col overflow-hidden gap-3 md:gap-6">
+    <div className="h-screen overflow-hidden flex flex-col relative" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
+      <div className="mx-auto max-w-6xl w-full px-4 pt-16 md:pt-6 pb-[180px] md:pb-6 flex-1 flex flex-col overflow-hidden gap-3 md:gap-6">
         {/* Header - Compact on mobile */}
         <div className="flex items-center justify-between gap-2 shrink-0">
           <div className="min-w-0">
@@ -893,7 +893,7 @@ export default function Map() {
 
         <div className="flex flex-col lg:grid gap-3 md:gap-6 lg:grid-cols-3 flex-1 overflow-hidden min-h-0">
           {/* Interactive Map */}
-          <div className="lg:col-span-2 flex flex-col min-h-0 flex-1">
+          <div className="lg:col-span-2 flex flex-col overflow-hidden h-full">
             {mapError ? (
               <Card className="flex-1 min-h-0 rounded-2xl md:rounded-3xl shadow-soft ring-1 ring-black/5 flex flex-col items-center justify-center p-8 text-center">
                 <AlertTriangle className="h-12 w-12 text-muted-foreground mb-4" />
@@ -913,7 +913,7 @@ export default function Map() {
                 </Button>
               </Card>
             ) : (
-              <div className="relative">
+              <div className="relative h-full">
                 {/* BETA Badge */}
                 <div className="absolute top-4 left-4 z-10">
                   <span className="rounded-full bg-white/90 px-3 py-1 text-[10px] font-medium text-gray-700 shadow-sm backdrop-blur">
@@ -922,7 +922,7 @@ export default function Map() {
                 </div>
                 <div 
                   ref={mapContainer} 
-                  className="flex-1 min-h-0 rounded-2xl md:rounded-3xl shadow-soft ring-1 ring-black/5" 
+                  className="h-full w-full rounded-2xl md:rounded-3xl shadow-soft ring-1 ring-black/5" 
                 />
               </div>
             )}
@@ -1035,8 +1035,8 @@ export default function Map() {
             </div>
           </div>
 
-          {/* Mobile: Nearby profiles section - Static at bottom */}
-          <div className="lg:hidden shrink-0">
+          {/* Mobile: Nearby profiles section - Fixed at bottom with clear separation */}
+          <div className="lg:hidden fixed bottom-20 left-0 right-0 px-4 z-30">
             <div className="rounded-2xl bg-white p-2 shadow-vibrant ring-1 ring-black/10">
               <h3 className="mb-2 text-xs font-semibold px-1" style={{ color: "var(--ink)" }}>
                 🐾 {nearbyProfiles.length} profils à proximité
