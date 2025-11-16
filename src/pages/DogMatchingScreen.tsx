@@ -77,7 +77,7 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
         className="flex items-center justify-between px-4 py-3 border-b flex-shrink-0"
         style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}
       >
-        <h2 className="text-lg font-semibold text-foreground">
+        <h2 className="text-lg font-bold text-gradient font-poppins">
           {mode === "local" ? "Chiens près de toi" : "Adopte ton compagnon"}
         </h2>
         <button className="w-10 h-10 rounded-full bg-muted hover:bg-accent flex items-center justify-center">

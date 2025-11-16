@@ -125,6 +125,14 @@ All colors MUST be HSL.
   body {
     font-family: 'Poppins', sans-serif;
   }
+  
+  /* Text gradient utility */
+  .text-gradient {
+    background: var(--gradient-signature);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
 }
 
 @layer utilities {
