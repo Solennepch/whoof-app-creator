@@ -580,11 +580,11 @@ export default function Map() {
 
         // User marker - position actuelle avec logo Whoof Apps
         const userEl = document.createElement('div');
-        userEl.style.width = '56px';
-        userEl.style.height = '56px';
+        userEl.style.width = '44px';
+        userEl.style.height = '44px';
         userEl.style.borderRadius = '50%';
         userEl.style.background = 'white';
-        userEl.style.border = '2px solid white';
+        userEl.style.border = '1px solid white';
         userEl.style.boxShadow = '0 4px 16px rgba(255, 94, 190, 0.4)';
         userEl.style.cursor = 'pointer';
         userEl.style.display = 'flex';
