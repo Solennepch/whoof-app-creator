@@ -116,12 +116,6 @@ All colors MUST be HSL.
     @apply bg-background text-foreground antialiased;
   }
   
-  /* Désactive le scroll quand le contenu tient dans l'écran */
-  html.no-scroll,
-  body.no-scroll {
-    overflow: hidden !important;
-  }
-  
   /* Typographie Whoof - Poppins */
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Poppins', sans-serif;
