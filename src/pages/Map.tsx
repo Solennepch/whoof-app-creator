@@ -571,8 +571,15 @@ export default function Map() {
           attributionControl: false, // Disable attribution control
         });
 
-        // Add navigation controls
-        map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
+        // Add navigation controls (zoom + compass only, no pitch)
+        map.current.addControl(
+          new mapboxgl.NavigationControl({
+            showCompass: true,
+            showZoom: true,
+            visualizePitch: false
+          }), 
+          'top-right'
+        );
 
         // User marker - position actuelle avec logo Whoof Apps
         const userEl = document.createElement('div');
