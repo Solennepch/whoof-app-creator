@@ -121,7 +121,7 @@ export const adoptionProfiles: AdoptionProfile[] = [
     age: "3 ans",
     image: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=800&h=800&fit=crop",
     bio: "Petite mais dynamique ! Bella adore jouer et a besoin d'activité quotidienne ⚡",
-    reasons: ["Énergique", "Petit gabarit", "Joueuse", "Aime les balades", "Recommandé"],
+    reasons: ["Énergique", "Petit gabarit", "Joueuse", "Aime les balades"],
     shelter: "SPA Marseille",
   },
   {
@@ -130,7 +130,7 @@ export const adoptionProfiles: AdoptionProfile[] = [
     age: "4 ans",
     image: "https://images.unsplash.com/photo-1633722715463-d30f4f325e24?w=800&h=800&fit=crop",
     bio: "Doux géant qui adore les câlins et les enfants. Cherche une famille active 💛",
-    reasons: ["Doux", "Grand gabarit", "Familial", "Compatible enfants", "Recommandé"],
+    reasons: ["Doux", "Grand gabarit", "Familial", "Compatible enfants"],
     shelter: "SPA Bordeaux",
   },
   {
@@ -166,7 +166,7 @@ export const adoptionProfiles: AdoptionProfile[] = [
     age: "4 ans",
     image: "https://images.unsplash.com/photo-1583511655826-05700d52f4d9?w=800&h=800&fit=crop",
     bio: "Petit caractère mais grand cœur ! Parfait pour la vie urbaine 🏙️",
-    reasons: ["Compact", "Petit gabarit", "Urbain", "Calme", "Recommandé"],
+    reasons: ["Compact", "Petit gabarit", "Urbain", "Calme"],
     shelter: "SPA Lille",
   },
   {
@@ -184,7 +184,7 @@ export const adoptionProfiles: AdoptionProfile[] = [
     age: "4 ans",
     image: "https://images.unsplash.com/photo-1587330979470-3595ac045ab3?w=800&h=800&fit=crop",
     bio: "Protecteur et loyal, idéal pour une famille expérimentée avec jardin 🛡️",
-    reasons: ["Protecteur", "Grand gabarit", "Besoin d'espace", "Loyal", "Recommandé"],
+    reasons: ["Protecteur", "Grand gabarit", "Besoin d'espace", "Loyal"],
     shelter: "SPA Strasbourg",
   },
 ];
