@@ -11,6 +11,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { PageErrorBoundary } from "@/components/common/PageErrorBoundary";
 import { queryClient } from "@/lib/queryClient";
 import { MainLayout } from "@/components/layout/MainLayout";
+import { useScrollLock } from "@/hooks/useScrollLock";
 
 // Eager loading for critical routes
 import Index from "./pages/Index";
@@ -84,6 +85,12 @@ const PageLoader = () => (
   </div>
 );
 
+// Composant qui utilise le hook de scroll lock (doit être dans le Router)
+const ScrollLockManager = () => {
+  useScrollLock();
+  return null;
+};
+
 const App = () => {
   const isDev = import.meta.env.DEV;
   
@@ -93,6 +100,7 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <BrowserRouter>
+          <ScrollLockManager />
           <AccountProvider>
             <NotificationSystemProvider>
               <GamificationProvider>
