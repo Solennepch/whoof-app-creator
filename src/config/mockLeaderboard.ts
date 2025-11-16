@@ -27,7 +27,7 @@ export const generateMockLeaderboard = () => {
     rank: 2,
     display_name: "Matcha & Solenne",
     avatar_url: "/src/assets/matcha-avatar.png",
-    city: "Lyon"
+    city: "Paris"
   });
 
   // Generate other users
