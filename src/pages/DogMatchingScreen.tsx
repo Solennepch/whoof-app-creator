@@ -163,11 +163,10 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
         {/* Rewind - Premium only */}
         <button
           onClick={handleRewind}
-          disabled={!isPremium}
           className={`w-12 h-12 rounded-full backdrop-blur shadow-lg flex items-center justify-center transition-all ${
             isPremium
               ? "bg-white hover:scale-105"
-              : "bg-gray-200 opacity-50 cursor-not-allowed"
+              : "bg-gray-200 opacity-50 cursor-pointer"
           }`}
         >
           <RotateCcw className={`w-5 h-5 ${isPremium ? "text-yellow-500" : "text-gray-400"}`} />
