@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import { Trophy, Dog, User, Star, Sparkles, Calendar, Award, Gift, TrendingUp, Crown } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useWeeklyLeaderboard, useUserXP } from "@/hooks/useGamification";
@@ -22,10 +23,17 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { motion } from "framer-motion";
 
 export default function Ranking() {
-  const [activeTab, setActiveTab] = useState<"ranking" | "challenges">("ranking");
+  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState<"ranking" | "challenges" | "events">("ranking");
   const [activePeriod, setActivePeriod] = useState<"weekly" | "monthly">("weekly");
   const { user } = useAuth();
   const { currentChallenge, challengeProgress } = useEvents();
+
+  useEffect(() => {
+    if (activeTab === "events") {
+      navigate("/events");
+    }
+  }, [activeTab, navigate]);
 
   const { session } = useAuth();
 
@@ -81,8 +89,8 @@ export default function Ranking() {
         <SeasonCard />
 
         {/* Tabs */}
-        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as "ranking" | "challenges")} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2">
+        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as "ranking" | "challenges" | "events")} className="space-y-6">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="ranking">
               <Trophy className="mr-2 h-4 w-4" />
               Classement
@@ -90,6 +98,10 @@ export default function Ranking() {
             <TabsTrigger value="challenges">
               <Award className="mr-2 h-4 w-4" />
               Challenges
+            </TabsTrigger>
+            <TabsTrigger value="events">
+              <Calendar className="mr-2 h-4 w-4" />
+              Events
             </TabsTrigger>
           </TabsList>
 
