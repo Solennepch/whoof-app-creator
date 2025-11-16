@@ -570,11 +570,13 @@ export default function Map() {
       el.style.borderRadius = '50%';
       el.style.border = '3px solid white';
       el.style.boxShadow = '0 2px 8px rgba(0,0,0,0.3)';
+      el.style.transition = 'box-shadow 0.2s ease, filter 0.2s ease';
       el.style.display = 'flex';
       el.style.alignItems = 'center';
       el.style.justifyContent = 'center';
       el.style.cursor = 'pointer';
-      el.style.transition = 'transform 0.2s';
+      el.style.transformOrigin = 'center center';
+      el.style.willChange = 'box-shadow, filter';
       el.style.position = 'relative';
       el.style.pointerEvents = 'auto';
 
@@ -621,12 +623,14 @@ export default function Map() {
         el.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 2-2.3 2.3a3 3 0 0 0 0 4.2l1.8 1.8a3 3 0 0 0 4.2 0L22 8"/><path d="M15 15 3.3 3.3a4.2 4.2 0 0 0 0 6l7.3 7.3c.7.7 2 .7 2.8 0L15 15Zm0 0 7 7"/><path d="m2.1 21.8 6.4-6.3"/><path d="m19 5-7 7"/></svg>';
       }
 
-      // Ajouter les événements de survol de manière stable
+      // Ajouter les événements de survol sans déplacer le marqueur
       el.onmouseenter = () => {
-        el.style.transform = 'scale(1.1)';
+        el.style.boxShadow = '0 4px 16px rgba(0,0,0,0.5)';
+        el.style.filter = 'brightness(1.1)';
       };
       el.onmouseleave = () => {
-        el.style.transform = 'scale(1)';
+        el.style.boxShadow = '0 2px 8px rgba(0,0,0,0.3)';
+        el.style.filter = 'brightness(1)';
       };
 
       const popup = new mapboxgl.Popup({ offset: 25, closeButton: false }).setHTML(`
