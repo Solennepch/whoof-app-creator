@@ -162,11 +162,11 @@ export default function Ranking() {
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1">
-                    <div className="flex items-baseline gap-2 mb-1">
+                    <div className="flex items-baseline gap-2 mb-1 whitespace-nowrap">
                       <span className="text-3xl font-bold text-primary">#{myRank! + 1}</span>
                       <span className="text-sm text-muted-foreground">sur {TOTAL_LEADERBOARD_USERS} Whoofers*</span>
                     </div>
-                    <div className="text-base font-semibold">Matcha & Solenne</div>
+                    <div className="text-base font-semibold whitespace-nowrap">Matcha & Solenne</div>
                     <div className="text-sm text-muted-foreground">
                       {myRanking.weekly_km} km • {myRanking.weekly_walks} balades
                     </div>
