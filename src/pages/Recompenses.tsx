@@ -35,7 +35,11 @@ export default function Recompenses() {
   const { data: xpSummary, isLoading: xpLoading } = useUserXP(session?.user?.id);
   const { data: userBadges, isLoading: badgesLoading } = useUserBadges(session?.user?.id);
   const { data: allBadges, isLoading: allBadgesLoading } = useAllBadges();
-  const { profile, dogs } = useProfileData(session?.user?.id);
+  
+  // Ne pas utiliser useProfileData si on n'a pas de session, évite les redirections
+  const profileData = useProfileData(session?.user?.id || undefined);
+  const profile = profileData.profile;
+  const dogs = profileData.dogs;
   const primaryDog = dogs?.[0];
 
   const currentLevel = levelForXp(xpSummary?.total_xp || 0);
