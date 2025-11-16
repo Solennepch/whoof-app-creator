@@ -34,7 +34,7 @@ const XP_REWARDS = [
   { id: "friandises", name: "Paquet de friandises", xp: 400, icon: "🍖", description: "Sans céréales" },
   { id: "medaille", name: "Médaille personnalisée", xp: 800, icon: "🏅", description: "Gravure offerte" },
   { id: "promo_boutique", name: "Code promo boutique", xp: 300, icon: "🛍️", description: "-20% sur tout" },
-  { id: "don_refuge", name: "Don de 5kg de croquettes pour refuge", xp: 450, icon: "❤️", description: "Aide un refuge" },
+  { id: "don_refuge", name: "Don de 5kg de croquettes", xp: 450, icon: "❤️", description: "Pour un refuge" },
   { id: "seance_photo", name: "Séance photo pro", xp: 1200, icon: "📸", description: "30min avec ton chien" },
   { id: "accessoire", name: "Accessoire premium", xp: 600, icon: "🎀", description: "Collier ou laisse" },
 ];
