@@ -422,8 +422,8 @@ export default function Map() {
         el.style.background = 'linear-gradient(135deg, #ec4899 0%, #db2777 100%)';
         el.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="15" r="5"/><circle cx="8" cy="7" r="3.5"/><circle cx="17" cy="8" r="2.5"/></svg>';
       } else if (poi.type === 'educateur') {
-        // Éducateur - Chapeau de graduation VIOLET
-        el.style.background = 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)';
+        // Éducateur - Chapeau de graduation BLEU FONCÉ
+        el.style.background = 'linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%)';
         el.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>';
       } else if (poi.type === 'pet-sitter' || poi.type === 'pet_sitter') {
         // Pet-sitter - Maison ORANGE VIF
