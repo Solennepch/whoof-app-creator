@@ -909,15 +909,22 @@ export default function Map() {
                     Aucun profil à proximité
                   </div>
                 ) : (
-                  nearbyProfiles.map((profile) => (
-                    <div
-                      key={profile.id}
-                      className="flex items-center justify-between rounded-2xl p-3 transition hover:bg-muted/50 cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary"
-                      onClick={() => handleSelectProfile(profile)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          e.preventDefault();
-                          handleSelectProfile(profile);
+                  (() => {
+                    // Trier: en ligne d'abord, puis hors ligne
+                    const sortedProfiles = [...nearbyProfiles].sort((a, b) => {
+                      if (a.isOnline === b.isOnline) return 0;
+                      return a.isOnline ? -1 : 1;
+                    });
+                    
+                    return sortedProfiles.map((profile) => (
+                      <div
+                        key={profile.id}
+                        className="flex items-center justify-between rounded-2xl p-3 transition hover:bg-muted/50 cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary"
+                        onClick={() => handleSelectProfile(profile)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            handleSelectProfile(profile);
                         }
                       }}
                       tabIndex={0}
@@ -957,7 +964,8 @@ export default function Map() {
                         <MapPin className="h-4 w-4" />
                       </Button>
                     </div>
-                  ))
+                    ));
+                  })()
                 )}
               </div>
             </div>
@@ -991,7 +999,14 @@ export default function Map() {
                     Aucun profil trouvé
                   </div>
                 ) : (
-                  nearbyProfiles.slice(0, 5).map((profile) => (
+                  (() => {
+                    // Trier: en ligne d'abord, puis hors ligne
+                    const sortedProfiles = [...nearbyProfiles].sort((a, b) => {
+                      if (a.isOnline === b.isOnline) return 0;
+                      return a.isOnline ? -1 : 1;
+                    });
+                    
+                    return sortedProfiles.slice(0, 5).map((profile) => (
                     <button
                       key={profile.id}
                       onClick={() => handleSelectProfile(profile)}
@@ -1022,7 +1037,8 @@ export default function Map() {
                         </p>
                       </div>
                     </button>
-                  ))
+                    ));
+                  })()
                 )}
               </div>
             </div>
