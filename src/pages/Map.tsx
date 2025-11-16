@@ -575,6 +575,8 @@ export default function Map() {
       el.style.justifyContent = 'center';
       el.style.cursor = 'pointer';
       el.style.transition = 'transform 0.2s';
+      el.style.position = 'relative';
+      el.style.pointerEvents = 'auto';
 
       // Style based on POI type
       if (poi.type === 'friend_walking') {
@@ -619,12 +621,13 @@ export default function Map() {
         el.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 2-2.3 2.3a3 3 0 0 0 0 4.2l1.8 1.8a3 3 0 0 0 4.2 0L22 8"/><path d="M15 15 3.3 3.3a4.2 4.2 0 0 0 0 6l7.3 7.3c.7.7 2 .7 2.8 0L15 15Zm0 0 7 7"/><path d="m2.1 21.8 6.4-6.3"/><path d="m19 5-7 7"/></svg>';
       }
 
-      el.addEventListener('mouseenter', () => {
+      // Ajouter les événements de survol de manière stable
+      el.onmouseenter = () => {
         el.style.transform = 'scale(1.1)';
-      });
-      el.addEventListener('mouseleave', () => {
+      };
+      el.onmouseleave = () => {
         el.style.transform = 'scale(1)';
-      });
+      };
 
       const popup = new mapboxgl.Popup({ offset: 25, closeButton: false }).setHTML(`
         <div style="padding: 8px;">
@@ -636,10 +639,16 @@ export default function Map() {
         </div>
       `);
 
-      const marker = new mapboxgl.Marker(el)
+      // Vérifier que la carte et son conteneur existent
+      if (!map.current || !map.current.getContainer()) {
+        console.warn('Map container not available, skipping marker creation');
+        return;
+      }
+
+      const marker = new mapboxgl.Marker({ element: el, anchor: 'center' })
         .setLngLat([poi.lng, poi.lat])
         .setPopup(popup)
-        .addTo(map.current!);
+        .addTo(map.current);
 
       markers.current.push(marker);
     });
