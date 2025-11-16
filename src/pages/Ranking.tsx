@@ -276,7 +276,7 @@ export default function Ranking() {
                               </div>
                               
                               <Avatar className="w-14 h-14 border-2 border-primary/20">
-                                <AvatarImage src={entry.profile?.avatar_url || undefined} />
+                                <AvatarImage src={entry.avatar_url || undefined} />
                                 <AvatarFallback>
                                   <Dog className="w-7 h-7" />
                                 </AvatarFallback>
