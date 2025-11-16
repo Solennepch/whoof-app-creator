@@ -7,7 +7,6 @@ import { SidebarMenu } from "./SidebarMenu";
 import { ProSidebarMenu } from "./ProSidebarMenu";
 import { QuickSwitchButton } from "./QuickSwitchButton";
 import { FocusModeToggle } from "./FocusModeToggle";
-import { DevPremiumToggle } from "./DevPremiumToggle";
 import logoWhoof from "@/assets/logo-whoof-v3.png";
 
 export function Header() {
@@ -61,7 +60,6 @@ export function Header() {
             <div className="flex items-center gap-3">
               {!isDebugRoute && (
                 <>
-                  <DevPremiumToggle />
                   <FocusModeToggle />
                   <QuickSwitchButton />
                 </>

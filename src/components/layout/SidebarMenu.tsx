@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { AccountSwitcher } from "./AccountSwitcher";
 import { useAccounts } from "@/contexts/AccountContext";
+import { DevPremiumToggle } from "./DevPremiumToggle";
 
 const isDev = import.meta.env.MODE !== "production";
 
@@ -114,6 +115,11 @@ export function SidebarMenu({ open, onOpenChange }: SidebarMenuProps) {
         <SheetHeader>
           <SheetTitle>Menu</SheetTitle>
         </SheetHeader>
+
+        {/* Dev Premium Toggle */}
+        <div className="mt-4 px-2">
+          <DevPremiumToggle />
+        </div>
 
         <div className="mt-6 flex flex-col gap-2">
           {accounts.length > 1 && (
