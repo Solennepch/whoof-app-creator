@@ -63,6 +63,7 @@ interface NearbyProfile {
   verified?: boolean;
   isOnline?: boolean;
   walkMood?: string;
+  isFriend?: boolean;
 }
 
 interface POI {
@@ -149,6 +150,9 @@ export default function Map() {
       
       // Alternance entre en ligne et hors ligne
       const isOnline = i % 3 !== 0; // 2/3 en ligne, 1/3 hors ligne
+      
+      // Quelques profils sont déjà des amis (matchés)
+      const isFriend = i === 0 || i === 3; // Luna et Daisy sont déjà amies
 
       return {
         id: `mock-${i}`,
@@ -164,7 +168,8 @@ export default function Map() {
         temperament: temperaments[i % temperaments.length],
         verified: i % 2 === 0, // Alternance vérifiés/non vérifiés
         isOnline: isOnline,
-        walkMood: isOnline && Math.random() > 0.3 ? walkMoods[i % walkMoods.length] : undefined
+        walkMood: isOnline && Math.random() > 0.3 ? walkMoods[i % walkMoods.length] : undefined,
+        isFriend: isFriend
       };
     });
   };
@@ -933,6 +938,13 @@ export default function Map() {
                     >
                       <div className="flex items-center gap-3">
                         <div className="relative">
+                          {profile.isFriend && (
+                            <div className="absolute -top-1 -left-1 z-10 h-4 w-4 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center shadow-md ring-1 ring-white">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="white" stroke="none">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                              </svg>
+                            </div>
+                          )}
                           <div
                             className="h-10 w-10 rounded-full ring-2"
                             style={{
@@ -1018,6 +1030,13 @@ export default function Map() {
                       className="shrink-0 flex flex-col items-center gap-1.5 p-2 rounded-xl hover:bg-accent/10 transition-smooth"
                     >
                       <div className="relative">
+                        {profile.isFriend && (
+                          <div className="absolute -top-1 -right-1 z-10 h-5 w-5 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center shadow-md ring-2 ring-white">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="white" stroke="none">
+                              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                            </svg>
+                          </div>
+                        )}
                         <div
                           className="h-12 w-12 rounded-full ring-2 shadow-sm"
                           style={{
