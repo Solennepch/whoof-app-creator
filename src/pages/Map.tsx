@@ -182,6 +182,36 @@ export default function Map() {
       { name: 'Café Canin', address: '67 Rue de Rivoli' },
       { name: 'Restaurant La Patte d\'Or', address: '90 Boulevard Haussmann' }
     ];
+    const groomers = [
+      { name: 'Toutou Beauté', address: '8 Rue Saint-Antoine' },
+      { name: 'Spa Canin Élégance', address: '23 Boulevard Voltaire' },
+      { name: 'Toilettage Premium', address: '56 Rue de la Roquette' }
+    ];
+    const educators = [
+      { name: 'École Canine Pro', address: '56 Rue du Faubourg' },
+      { name: 'Centre Éducation Positive', address: '31 Avenue de la Liberté' },
+      { name: 'Dressage Expert', address: '12 Rue des Écoles' }
+    ];
+    const shelters = [
+      { name: 'SPA de Paris', address: '78 Avenue de la Porte' },
+      { name: 'Refuge Les Amis des Bêtes', address: '19 Boulevard Raspail' },
+      { name: 'Seconde Chance', address: '45 Rue de Charenton' }
+    ];
+    const shops = [
+      { name: 'Animalerie Paradise', address: '34 Rue de Rivoli' },
+      { name: 'Pet Shop Deluxe', address: '67 Avenue Parmentier' },
+      { name: 'Boutique Toutou & Cie', address: '23 Rue du Commerce' }
+    ];
+    const kennels = [
+      { name: 'Pension Canine Le Bonheur', address: '89 Rue de Charonne' },
+      { name: 'Hôtel pour Chiens', address: '5 Rue Saint-Maur' },
+      { name: 'Pension Les Jardins', address: '78 Avenue Daumesnil' }
+    ];
+    const photographers = [
+      { name: 'Studio Photo Animalier', address: '21 Rue des Martyrs' },
+      { name: 'Photos Passion Chiens', address: '50 Rue de Belleville' },
+      { name: 'Portraits Canins', address: '34 Rue Oberkampf' }
+    ];
     const friendsWalking = [
       { name: 'Max en balade', address: 'Parc des Buttes-Chaumont' },
       { name: 'Luna se promène', address: 'Jardin du Luxembourg' },
@@ -221,6 +251,36 @@ export default function Map() {
       });
     });
 
+    // Add groomers
+    groomers.forEach((groomer, i) => {
+      const angle = (i / groomers.length) * Math.PI * 2 + Math.PI / 8;
+      const radius = 0.013;
+      allPOIs.push({
+        id: `groomer-${poiId++}`,
+        type: 'toiletteur',
+        name: groomer.name,
+        address: groomer.address,
+        lat: lat + radius * Math.sin(angle),
+        lng: lng + radius * Math.cos(angle),
+        rating: 4 + Math.random()
+      });
+    });
+
+    // Add educators
+    educators.forEach((edu, i) => {
+      const angle = (i / educators.length) * Math.PI * 2 + Math.PI / 5;
+      const radius = 0.016;
+      allPOIs.push({
+        id: `edu-${poiId++}`,
+        type: 'educateur',
+        name: edu.name,
+        address: edu.address,
+        lat: lat + radius * Math.sin(angle),
+        lng: lng + radius * Math.cos(angle),
+        rating: 4 + Math.random()
+      });
+    });
+
     // Add pet sitters
     petSitters.forEach((ps, i) => {
       const angle = (i / petSitters.length) * Math.PI * 2 + Math.PI / 3;
@@ -230,6 +290,66 @@ export default function Map() {
         type: 'pet_sitter',
         name: ps.name,
         address: ps.address,
+        lat: lat + radius * Math.sin(angle),
+        lng: lng + radius * Math.cos(angle),
+        rating: 4 + Math.random()
+      });
+    });
+
+    // Add shelters
+    shelters.forEach((shelter, i) => {
+      const angle = (i / shelters.length) * Math.PI * 2 + Math.PI / 2;
+      const radius = 0.020;
+      allPOIs.push({
+        id: `shelter-${poiId++}`,
+        type: 'refuge',
+        name: shelter.name,
+        address: shelter.address,
+        lat: lat + radius * Math.sin(angle),
+        lng: lng + radius * Math.cos(angle),
+        rating: 4 + Math.random()
+      });
+    });
+
+    // Add shops
+    shops.forEach((shop, i) => {
+      const angle = (i / shops.length) * Math.PI * 2 + Math.PI / 7;
+      const radius = 0.014;
+      allPOIs.push({
+        id: `shop-${poiId++}`,
+        type: 'boutique',
+        name: shop.name,
+        address: shop.address,
+        lat: lat + radius * Math.sin(angle),
+        lng: lng + radius * Math.cos(angle),
+        rating: 4 + Math.random()
+      });
+    });
+
+    // Add kennels
+    kennels.forEach((kennel, i) => {
+      const angle = (i / kennels.length) * Math.PI * 2 + Math.PI / 9;
+      const radius = 0.019;
+      allPOIs.push({
+        id: `kennel-${poiId++}`,
+        type: 'pension',
+        name: kennel.name,
+        address: kennel.address,
+        lat: lat + radius * Math.sin(angle),
+        lng: lng + radius * Math.cos(angle),
+        rating: 4 + Math.random()
+      });
+    });
+
+    // Add photographers
+    photographers.forEach((photo, i) => {
+      const angle = (i / photographers.length) * Math.PI * 2 + Math.PI / 11;
+      const radius = 0.011;
+      allPOIs.push({
+        id: `photo-${poiId++}`,
+        type: 'photographe',
+        name: photo.name,
+        address: photo.address,
         lat: lat + radius * Math.sin(angle),
         lng: lng + radius * Math.cos(angle),
         rating: 4 + Math.random()
