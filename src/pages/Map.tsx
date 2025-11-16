@@ -590,9 +590,9 @@ export default function Map() {
         userEl.style.display = 'flex';
         userEl.style.alignItems = 'center';
         userEl.style.justifyContent = 'center';
-        userEl.style.padding = '4px';
+        userEl.style.overflow = 'hidden';
         // Logo Whoof Apps
-        userEl.innerHTML = `<img src="${logoWhoof}" alt="Whoof" style="width: 100%; height: 100%; object-fit: contain;" />`;
+        userEl.innerHTML = `<img src="${logoWhoof}" alt="Whoof" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" />`;
 
         new mapboxgl.Marker(userEl)
           .setLngLat(coords)
