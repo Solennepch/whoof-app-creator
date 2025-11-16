@@ -1,83 +1,44 @@
 // Mock data for leaderboard demonstration
-export const mockLeaderboardData = [
-  {
-    user_id: "129989e7-4b4c-4c67-ab79-980fb8c04d4a", // Matcha (current user)
+const TOTAL_USERS = 1354;
+
+const dogNames = ["Rex", "Luna", "Max", "Bella", "Rocky", "Coco", "Duke", "Milo", "Zeus", "Oscar", "Charlie", "Nala", "Thor", "Daisy", "Leo", "Ruby", "Simba", "Lola"];
+const ownerNames = ["Emma", "Max", "Sophie", "Pierre", "Julie", "Thomas", "Marie", "Alexandre", "Camille", "Lucas", "Léa", "Antoine", "Chloé", "Nicolas", "Sarah", "Hugo", "Laura", "Vincent"];
+
+// Generate all users
+export const generateMockLeaderboard = () => {
+  const users = [];
+  
+  // Current user (Matcha)
+  users.push({
+    user_id: "129989e7-4b4c-4c67-ab79-980fb8c04d4a",
     weekly_xp: 850,
     rank: 1,
     display_name: "⭐ Emma Martin (Premium)",
     avatar_url: "/src/assets/matcha-avatar.png",
     city: "Lyon"
-  },
-  {
-    user_id: "user-2",
-    weekly_xp: 720,
-    rank: 2,
-    display_name: "Max & Rex",
-    avatar_url: "/src/assets/dogs/dog-1.jpg",
-    city: "Lyon"
-  },
-  {
-    user_id: "user-3",
-    weekly_xp: 650,
-    rank: 3,
-    display_name: "Sophie & Luna",
-    avatar_url: "/src/assets/dogs/dog-2.jpg",
-    city: "Lyon"
-  },
-  {
-    user_id: "user-4",
-    weekly_xp: 580,
-    rank: 4,
-    display_name: "Pierre & Rocky",
-    avatar_url: "/src/assets/dogs/dog-3.jpg",
-    city: "Lyon"
-  },
-  {
-    user_id: "user-5",
-    weekly_xp: 520,
-    rank: 5,
-    display_name: "Julie & Bella",
-    avatar_url: "/src/assets/dogs/dog-4.jpg",
-    city: "Lyon"
-  },
-  {
-    user_id: "user-6",
-    weekly_xp: 480,
-    rank: 6,
-    display_name: "Thomas & Duke",
-    avatar_url: "/src/assets/dogs/dog-5.jpg",
-    city: "Lyon"
-  },
-  {
-    user_id: "user-7",
-    weekly_xp: 420,
-    rank: 7,
-    display_name: "Marie & Coco",
-    avatar_url: "/src/assets/dogs/dog-6.jpg",
-    city: "Lyon"
-  },
-  {
-    user_id: "user-8",
-    weekly_xp: 380,
-    rank: 8,
-    display_name: "Alexandre & Zeus",
-    avatar_url: "/src/assets/dogs/dog-1.jpg",
-    city: "Lyon"
-  },
-  {
-    user_id: "user-9",
-    weekly_xp: 340,
-    rank: 9,
-    display_name: "Camille & Milo",
-    avatar_url: "/src/assets/dogs/dog-2.jpg",
-    city: "Lyon"
-  },
-  {
-    user_id: "user-10",
-    weekly_xp: 300,
-    rank: 10,
-    display_name: "Lucas & Oscar",
-    avatar_url: "/src/assets/dogs/dog-3.jpg",
-    city: "Lyon"
+  });
+
+  // Generate other users
+  for (let i = 2; i <= TOTAL_USERS; i++) {
+    const ownerName = ownerNames[Math.floor(Math.random() * ownerNames.length)];
+    const dogName = dogNames[Math.floor(Math.random() * dogNames.length)];
+    const dogImage = `/src/assets/dogs/dog-${(i % 6) + 1}.jpg`;
+    
+    // XP decreases with rank
+    const baseXP = 850;
+    const xp = Math.max(10, baseXP - (i - 1) * Math.floor(Math.random() * 5 + 3));
+    
+    users.push({
+      user_id: `user-${i}`,
+      weekly_xp: xp,
+      rank: i,
+      display_name: `${ownerName} & ${dogName}`,
+      avatar_url: dogImage,
+      city: "Lyon"
+    });
   }
-];
+
+  return users;
+};
+
+export const TOTAL_LEADERBOARD_USERS = TOTAL_USERS;
