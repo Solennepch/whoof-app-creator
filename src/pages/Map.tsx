@@ -152,7 +152,7 @@ export default function Map() {
       const isOnline = i % 3 !== 0; // 2/3 en ligne, 1/3 hors ligne
       
       // Quelques profils sont déjà des amis (matchés)
-      const isFriend = i === 0 || i === 1 || i === 3; // Luna, Charlie et Daisy sont déjà amis
+      const isFriend = i === 1 || i === 2 || i === 5; // Luna (1), Charlie (2) et Daisy (5) sont déjà amis
 
       return {
         id: `mock-${i}`,
@@ -1022,6 +1022,8 @@ export default function Map() {
                     const onlineProfiles = sortedProfiles.filter(p => p.isOnline).slice(0, 4);
                     const offlineProfiles = sortedProfiles.filter(p => !p.isOnline).slice(0, 2);
                     const displayProfiles = [...onlineProfiles, ...offlineProfiles];
+                    
+                    console.log('Display profiles with friend status:', displayProfiles.map(p => ({ name: p.display_name, isFriend: p.isFriend, isOnline: p.isOnline })));
                     
                     return displayProfiles.map((profile) => (
                     <button
