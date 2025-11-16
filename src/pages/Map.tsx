@@ -690,22 +690,7 @@ export default function Map() {
         // Add navigation controls
         map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
-        // User marker (violet) - position actuelle
-        const userEl = document.createElement('div');
-        userEl.style.width = '40px';
-        userEl.style.height = '40px';
-        userEl.style.borderRadius = '50%';
-        userEl.style.background = 'linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%)';
-        userEl.style.border = '3px solid white';
-        userEl.style.boxShadow = '0 4px 12px rgba(139, 92, 246, 0.4)';
-        userEl.style.cursor = 'pointer';
-
-        new mapboxgl.Marker(userEl)
-          .setLngLat(coords)
-          .setPopup(new mapboxgl.Popup().setHTML('<div style="padding: 4px; font-weight: 600;">Vous êtes ici 📍</div>'))
-          .addTo(map.current);
-
-        console.log('✅ User marker added at', coords);
+        console.log('✅ Map initialized');
 
         // Wait for map style to load before adding sources
         map.current.on('load', async () => {
