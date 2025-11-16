@@ -3,6 +3,7 @@ import { Filter, ArrowUp, RotateCcw, Star, Heart, Send, Lock } from "lucide-reac
 import bonesCrossedIcon from "@/assets/bones-crossed.png";
 import { TagChip } from "@/components/ui/TagChip";
 import { usePremium } from "@/hooks/usePremium";
+import { PremiumDialog } from "@/components/PremiumDialog";
 
 type DogProfile = {
   id: string;
@@ -23,6 +24,7 @@ interface DogMatchingScreenProps {
 
 export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [showPremiumDialog, setShowPremiumDialog] = useState(false);
   const { data: isPremium = false } = usePremium();
 
   const currentDog = dogs[currentIndex];
@@ -30,7 +32,7 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
 
   const handleRewind = () => {
     if (!isPremium) {
-      alert("Cette fonctionnalité nécessite un compte Premium 👑");
+      setShowPremiumDialog(true);
       return;
     }
     if (currentIndex > 0) {
@@ -45,7 +47,7 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
 
   const handleSuperLike = () => {
     if (!isPremium) {
-      alert("Cette fonctionnalité nécessite un compte Premium 👑");
+      setShowPremiumDialog(true);
       return;
     }
     console.log("super-like");
@@ -194,6 +196,8 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
           <Send className="w-5 h-5 text-purple-500" />
         </button>
       </div>
+
+      <PremiumDialog open={showPremiumDialog} onOpenChange={setShowPremiumDialog} />
     </div>
   );
 }
