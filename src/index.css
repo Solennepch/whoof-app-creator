@@ -330,4 +330,9 @@ All colors MUST be HSL.
   .mapboxgl-ctrl-logo {
     display: none !important;
   }
+
+  /* Hide pitch/tilt controls */
+  .mapboxgl-ctrl-pitch {
+    display: none !important;
+  }
 }
