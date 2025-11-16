@@ -22,7 +22,14 @@ export const generateMockLeaderboard = () => {
   // Generate other users
   for (let i = 2; i <= TOTAL_USERS; i++) {
     const dogName = dogNames[Math.floor(Math.random() * dogNames.length)];
-    const dogImage = `/src/assets/dogs/dog-${(i % 6) + 1}.jpg`;
+    
+    // Assign fixed photos for top 10
+    let dogImage;
+    if (i <= 10) {
+      dogImage = `/src/assets/dogs/dog-${((i - 2) % 6) + 1}.jpg`;
+    } else {
+      dogImage = `/src/assets/dogs/dog-${(i % 6) + 1}.jpg`;
+    }
     
     // Km and walks decrease with rank
     const baseKm = 42.5;
