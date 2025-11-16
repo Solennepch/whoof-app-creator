@@ -10,27 +10,16 @@ export function useAuth() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Set up auth state listener FIRST
+    // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
         console.log('Auth state changed:', event, session?.user?.email);
         setSession(session);
         setUser(session?.user ?? null);
-        setLoading(false);
-
-        // Handle auth events - minimal redirections
-        if (event === 'SIGNED_OUT') {
-          // Clear any cached data
-          localStorage.removeItem('access_token');
-          sessionStorage.removeItem('redirectAfterLogin');
-          setTimeout(() => {
-            navigate("/login");
-          }, 100);
-        }
       }
     );
 
-    // THEN check for existing session
+    // Check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
@@ -38,7 +27,7 @@ export function useAuth() {
     });
 
     return () => subscription.unsubscribe();
-  }, [navigate]);
+  }, []);
 
   const signUp = async (email: string, password: string) => {
     const redirectUrl = `${window.location.origin}/profile/me`;
