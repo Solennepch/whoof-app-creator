@@ -876,6 +876,18 @@ export default function Map() {
                 console.log('Starting walk:', { notifyFriends, liveTracking });
                 // TODO: Implement walk start logic
               }}
+              onPauseWalk={() => {
+                console.log('Pausing walk');
+                // TODO: Implement walk pause logic
+              }}
+              onResumeWalk={() => {
+                console.log('Resuming walk');
+                // TODO: Implement walk resume logic
+              }}
+              onStopWalk={() => {
+                console.log('Stopping walk');
+                // TODO: Implement walk stop logic
+              }}
             />
             
             <Popover>
