@@ -21,6 +21,7 @@ import dog3 from "@/assets/dogs/dog-3.jpg";
 import dog4 from "@/assets/dogs/dog-4.jpg";
 import dog5 from "@/assets/dogs/dog-5.jpg";
 import dog6 from "@/assets/dogs/dog-6.jpg";
+import { FullScreenPage } from "@/components/layout/FullScreenPage";
 
 // Initialize Mapbox token
 const mapboxToken = getMapboxToken();
@@ -83,7 +84,8 @@ export default function Map() {
   // Early return si pas de token Mapbox
   if (!mapboxToken) {
     return (
-      <div className="min-h-screen pb-24 p-4" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
+      <FullScreenPage>
+        <div className="flex-1 pb-20 p-4" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
         <Card className="p-6 text-center space-y-4">
           <AlertTriangle className="h-12 w-12 mx-auto text-destructive" />
           <h2 className="text-xl font-semibold">Carte indisponible</h2>
@@ -94,7 +96,8 @@ export default function Map() {
             Retour
           </Button>
         </Card>
-      </div>
+        </div>
+      </FullScreenPage>
     );
   }
 
@@ -807,7 +810,8 @@ export default function Map() {
   };
 
   return (
-    <div className="min-h-screen pb-24 md:pb-6" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
+    <FullScreenPage>
+      <div className="flex-1 pb-20 md:pb-6 overflow-y-auto" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
       <div className="mx-auto max-w-6xl px-4 pt-16 md:pt-6">
         {/* Header */}
         <div className="mb-2 md:mb-6 flex items-center justify-between gap-2">
@@ -1226,6 +1230,7 @@ export default function Map() {
           )}
         </SheetContent>
       </Sheet>
-    </div>
+      </div>
+    </FullScreenPage>
   );
 }
