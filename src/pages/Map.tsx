@@ -428,176 +428,13 @@ export default function Map() {
     }
   };
 
-  // Add markers to map with clustering
-  const addMarkersToMap = (profiles: NearbyProfile[], pois: POI[], userCoords: [number, number]) => {
+  // Add POI markers to map
+  const addMarkersToMap = (pois: POI[]) => {
     if (!map.current) return;
 
     // Clear existing markers
     markers.current.forEach(marker => marker.remove());
     markers.current = [];
-
-    // Prepare GeoJSON data for clustering
-    const geojsonData: any = {
-      type: 'FeatureCollection',
-      features: profiles.map((profile, index) => {
-        let coords: [number, number];
-
-        // If no coordinates, position in circle around user
-        if (!profile.lng || !profile.lat) {
-          const angle = (index / profiles.length) * Math.PI * 2;
-          const radius = 0.02;
-          coords = [
-            userCoords[0] + radius * Math.cos(angle),
-            userCoords[1] + radius * Math.sin(angle)
-          ];
-        } else {
-          coords = [profile.lng, profile.lat];
-        }
-
-        return {
-          type: 'Feature',
-          geometry: {
-            type: 'Point',
-            coordinates: coords
-          },
-          properties: {
-            ...profile,
-            coords
-          }
-        };
-      })
-    };
-
-    // Add source and layers for clustering
-    if (!map.current.getSource('profiles')) {
-      map.current.addSource('profiles', {
-        type: 'geojson',
-        data: geojsonData,
-        cluster: true,
-        clusterMaxZoom: 14,
-        clusterRadius: 50
-      });
-
-      // Cluster circles
-      map.current.addLayer({
-        id: 'clusters',
-        type: 'circle',
-        source: 'profiles',
-        filter: ['has', 'point_count'],
-        paint: {
-          'circle-color': [
-            'step',
-            ['get', 'point_count'],
-            '#EC4899',
-            10,
-            '#BE185D',
-            30,
-            '#9F1239'
-          ],
-          'circle-radius': [
-            'step',
-            ['get', 'point_count'],
-            20,
-            10,
-            30,
-            30,
-            40
-          ],
-          'circle-stroke-width': 3,
-          'circle-stroke-color': '#fff'
-        }
-      });
-
-      // Cluster count labels
-      map.current.addLayer({
-        id: 'cluster-count',
-        type: 'symbol',
-        source: 'profiles',
-        filter: ['has', 'point_count'],
-        layout: {
-          'text-field': '{point_count_abbreviated}',
-          'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-          'text-size': 14
-        },
-        paint: {
-          'text-color': '#ffffff'
-        }
-      });
-
-      // Unclustered points
-      map.current.addLayer({
-        id: 'unclustered-point',
-        type: 'circle',
-        source: 'profiles',
-        filter: ['!', ['has', 'point_count']],
-        paint: {
-          'circle-color': '#EC4899',
-          'circle-radius': 18,
-          'circle-stroke-width': 3,
-          'circle-stroke-color': '#fff'
-        }
-      });
-
-      // Click on cluster to zoom
-      map.current.on('click', 'clusters', (e) => {
-        const features = map.current!.queryRenderedFeatures(e.point, {
-          layers: ['clusters']
-        });
-        const clusterId = features[0].properties.cluster_id;
-        (map.current!.getSource('profiles') as mapboxgl.GeoJSONSource).getClusterExpansionZoom(
-          clusterId,
-          (err, zoom) => {
-            if (err) return;
-
-            map.current!.easeTo({
-              center: (features[0].geometry as any).coordinates,
-              zoom: zoom
-            });
-          }
-        );
-      });
-
-      // Click on unclustered point to show details
-      map.current.on('click', 'unclustered-point', (e) => {
-        if (!e.features || !e.features[0]) return;
-        const profile = e.features[0].properties as any;
-        
-        // Parse the profile data
-        const parsedProfile: NearbyProfile = {
-          id: profile.id,
-          user_id: profile.user_id,
-          display_name: profile.display_name,
-          avatar_url: profile.avatar_url,
-          distance_km: profile.distance_km,
-          distance_m: profile.distance_m,
-          lat: profile.lat,
-          lng: profile.lng,
-          breed: profile.breed,
-          temperament: profile.temperament,
-          size: profile.size,
-          verified: profile.verified === 'true' || profile.verified === true
-        };
-
-        handleSelectProfile(parsedProfile);
-      });
-
-      // Change cursor on hover
-      map.current.on('mouseenter', 'clusters', () => {
-        map.current!.getCanvas().style.cursor = 'pointer';
-      });
-      map.current.on('mouseleave', 'clusters', () => {
-        map.current!.getCanvas().style.cursor = '';
-      });
-      map.current.on('mouseenter', 'unclustered-point', () => {
-        map.current!.getCanvas().style.cursor = 'pointer';
-      });
-      map.current.on('mouseleave', 'unclustered-point', () => {
-        map.current!.getCanvas().style.cursor = '';
-      });
-    } else {
-      // Update existing source
-      (map.current.getSource('profiles') as mapboxgl.GeoJSONSource).setData(geojsonData);
-    }
 
     // Add POI markers - Filter by selected category
     const filteredPOIs = pois.filter(poi => {
@@ -742,13 +579,11 @@ export default function Map() {
           console.log('✅ Map loaded successfully with Mapbox');
           
           try {
-            // Fetch and display nearby profiles and POIs
+            // Fetch and display POIs only
             setIsLoading(true);
-            const profiles = await fetchNearbyProfiles(coords[0], coords[1]);
             const generatedPOIs = generateMockPOIs(coords[0], coords[1]);
-            setNearbyProfiles(profiles);
             setPois(generatedPOIs);
-            addMarkersToMap(profiles, generatedPOIs, coords);
+            addMarkersToMap(generatedPOIs);
             setIsLoading(false);
           } catch (error) {
             console.error('Error loading markers:', error);
@@ -816,10 +651,10 @@ export default function Map() {
 
   // Update markers when filters change
   useEffect(() => {
-    if (map.current && nearbyProfiles.length > 0) {
-      addMarkersToMap(nearbyProfiles, pois, userLocation);
+    if (map.current && pois.length > 0) {
+      addMarkersToMap(pois);
     }
-  }, [selectedCategory, radius]);
+  }, [selectedCategory, radius, pois]);
 
   const handleGoToUser = () => {
     if (map.current) {
