@@ -917,8 +917,17 @@ export default function Map() {
                   </div>
                 ) : (
                   (() => {
-                    // Trier: en ligne d'abord, puis hors ligne
+                    // Trier: amis en ligne d'abord, puis non-amis en ligne, puis amis hors ligne, puis non-amis hors ligne
                     const sortedProfiles = [...nearbyProfiles].sort((a, b) => {
+                      // Priorité 1: Amis en ligne
+                      if (a.isFriend && a.isOnline && !(b.isFriend && b.isOnline)) return -1;
+                      if (b.isFriend && b.isOnline && !(a.isFriend && a.isOnline)) return 1;
+                      
+                      // Priorité 2: Non-amis en ligne
+                      if (!a.isFriend && a.isOnline && !b.isOnline) return -1;
+                      if (!b.isFriend && b.isOnline && !a.isOnline) return 1;
+                      
+                      // Priorité 3: En ligne vs hors ligne
                       if (a.isOnline === b.isOnline) return 0;
                       return a.isOnline ? -1 : 1;
                     });
@@ -1014,8 +1023,17 @@ export default function Map() {
                   </div>
                 ) : (
                   (() => {
-                    // Trier: en ligne d'abord, puis hors ligne
+                    // Trier: amis en ligne d'abord, puis non-amis en ligne, puis amis hors ligne, puis non-amis hors ligne
                     const sortedProfiles = [...nearbyProfiles].sort((a, b) => {
+                      // Priorité 1: Amis en ligne
+                      if (a.isFriend && a.isOnline && !(b.isFriend && b.isOnline)) return -1;
+                      if (b.isFriend && b.isOnline && !(a.isFriend && a.isOnline)) return 1;
+                      
+                      // Priorité 2: Non-amis en ligne
+                      if (!a.isFriend && a.isOnline && !b.isOnline) return -1;
+                      if (!b.isFriend && b.isOnline && !a.isOnline) return 1;
+                      
+                      // Priorité 3: En ligne vs hors ligne
                       if (a.isOnline === b.isOnline) return 0;
                       return a.isOnline ? -1 : 1;
                     });
