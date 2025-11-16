@@ -184,11 +184,10 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
         {/* Super-like - 1 free per week, unlimited for premium */}
         <button
           onClick={handleSuperLike}
-          disabled={!canUseSuperlike}
           className={`w-12 h-12 rounded-full shadow-lg flex items-center justify-center -mt-8 transition-all ${
             canUseSuperlike
               ? "gradient-hero hover:scale-105"
-              : "bg-gray-200 opacity-50 cursor-not-allowed"
+              : "bg-gray-200 opacity-50 cursor-pointer"
           }`}
         >
           <Star className={`w-6 h-6 ${canUseSuperlike ? "text-white fill-white" : "text-gray-400 fill-gray-400"}`} />
@@ -197,7 +196,7 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
         {/* Like - Always active */}
         <button
           onClick={handleLike}
-          className="w-16 h-16 rounded-full bg-white backdrop-blur shadow-lg flex items-center justify-center hover:scale-105 transition-transform relative overflow-visible"
+          className="w-16 h-16 rounded-full bg-white backdrop-blur shadow-lg flex items-center justify-center hover:scale-105 transition-transform"
         >
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <defs>
@@ -210,10 +209,7 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
             <path
               d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
               fill="url(#heartGradient)"
-              stroke="url(#heartGradient)"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+              stroke="none"
             />
           </svg>
         </button>
