@@ -67,7 +67,7 @@ interface NearbyProfile {
 
 interface POI {
   id: string;
-  type: 'veterinaire' | 'toiletteur' | 'educateur' | 'pet_sitter' | 'pet-sitter' | 'refuge' | 'boutique' | 'pension' | 'photographe' | 'restaurant';
+  type: 'veterinaire' | 'toiletteur' | 'educateur' | 'pet_sitter' | 'pet-sitter' | 'refuge' | 'boutique' | 'pension' | 'photographe' | 'restaurant' | 'friend_walking';
   name: string;
   lat: number;
   lng: number;
@@ -182,9 +182,29 @@ export default function Map() {
       { name: 'Café Canin', address: '67 Rue de Rivoli' },
       { name: 'Restaurant La Patte d\'Or', address: '90 Boulevard Haussmann' }
     ];
+    const friendsWalking = [
+      { name: 'Max en balade', address: 'Parc des Buttes-Chaumont' },
+      { name: 'Luna se promène', address: 'Jardin du Luxembourg' },
+      { name: 'Charlie en balade', address: 'Bois de Vincennes' }
+    ];
 
     const allPOIs: POI[] = [];
     let poiId = 0;
+
+    // Add friends walking
+    friendsWalking.forEach((friend, i) => {
+      const angle = (i / friendsWalking.length) * Math.PI * 2 + Math.PI / 4;
+      const radius = 0.008;
+      allPOIs.push({
+        id: `friend-${poiId++}`,
+        type: 'friend_walking',
+        name: friend.name,
+        address: friend.address,
+        lat: lat + radius * Math.sin(angle),
+        lng: lng + radius * Math.cos(angle),
+        rating: 5
+      });
+    });
 
     // Add vets
     vets.forEach((vet, i) => {
@@ -600,31 +620,44 @@ export default function Map() {
       el.style.transition = 'transform 0.2s';
 
       // Style based on POI type
-      if (poi.type === 'veterinaire') {
+      if (poi.type === 'friend_walking') {
+        // Amis en balade - Tête de chien marron
+        el.style.background = 'linear-gradient(135deg, #92400e 0%, #78350f 100%)';
+        el.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="white" stroke="white" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="14" r="2"/><circle cx="16" cy="14" r="2"/><path d="M12 20c-3.5 0-6-2.5-6-5.5V10c0-3.3 2.7-6 6-6s6 2.7 6 6v4.5c0 3-2.5 5.5-6 5.5z"/><path d="M5 10c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/><path d="M19 10c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/></svg>';
+      } else if (poi.type === 'veterinaire') {
+        // Vétérinaire - Croix médicale VERTE
         el.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
         el.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 2v20"/><path d="M2 11h20"/></svg>';
       } else if (poi.type === 'toiletteur') {
+        // Toiletteur - Peigne ROSE
         el.style.background = 'linear-gradient(135deg, #ec4899 0%, #db2777 100%)';
         el.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h20"/><path d="M6 8h12"/><path d="M6 16h12"/></svg>';
       } else if (poi.type === 'educateur') {
+        // Éducateur - Chapeau de graduation VIOLET
         el.style.background = 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)';
         el.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>';
       } else if (poi.type === 'pet-sitter' || poi.type === 'pet_sitter') {
+        // Pet-sitter - Maison ORANGE
         el.style.background = 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)';
         el.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9Z"/><path d="m3 9 2.45-4.9A2 2 0 0 1 7.24 3h9.52a2 2 0 0 1 1.8 1.1L21 9"/><path d="M12 3v6"/></svg>';
       } else if (poi.type === 'refuge') {
+        // Refuge - Cœur/goutte CYAN
         el.style.background = 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)';
         el.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>';
       } else if (poi.type === 'boutique') {
-        el.style.background = 'linear-gradient(135deg, #f43f5e 0%, #e11d48 100%)';
+        // Boutique - Panier d'achat ROUGE
+        el.style.background = 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
         el.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>';
       } else if (poi.type === 'pension') {
-        el.style.background = 'linear-gradient(135deg, #84cc16 0%, #65a30d 100%)';
-        el.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12s2.545-5 7-5c4.454 0 7 5 7 5s-2.546 5-7 5c-4.455 0-7-5-7-5z"/><path d="M12 13a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/><path d="M21 17v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2"/><path d="M21 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2"/></svg>';
+        // Pension - Œil VERT
+        el.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+        el.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>';
       } else if (poi.type === 'photographe') {
-        el.style.background = 'linear-gradient(135deg, #a855f7 0%, #9333ea 100%)';
+        // Photographe - Appareil photo VIOLET
+        el.style.background = 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)';
         el.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>';
       } else if (poi.type === 'restaurant') {
+        // Restaurant - Couverts ROUGE
         el.style.background = 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
         el.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 2-2.3 2.3a3 3 0 0 0 0 4.2l1.8 1.8a3 3 0 0 0 4.2 0L22 8"/><path d="M15 15 3.3 3.3a4.2 4.2 0 0 0 0 6l7.3 7.3c.7.7 2 .7 2.8 0L15 15Zm0 0 7 7"/><path d="m2.1 21.8 6.4-6.3"/><path d="m19 5-7 7"/></svg>';
       }
