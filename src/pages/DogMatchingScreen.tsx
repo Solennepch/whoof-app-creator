@@ -6,6 +6,7 @@ import { usePremium } from "@/hooks/usePremium";
 import { PremiumDialog } from "@/components/PremiumDialog";
 import { FiltersPanel, Filters } from "@/components/ui/FiltersPanel";
 import { SuperLikeAnimation } from "@/components/match/SuperLikeAnimation";
+import { MatchCounter } from "@/components/ui/MatchCounter";
 import { toast } from "sonner";
 
 type DogProfile = {
@@ -31,6 +32,7 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
   const [showFilters, setShowFilters] = useState(false);
   const [showSuperLikeAnimation, setShowSuperLikeAnimation] = useState(false);
   const [history, setHistory] = useState<number[]>([]);
+  const [adoptionMatchCount, setAdoptionMatchCount] = useState(0);
   const [weeklySuperlikes, setWeeklySuperlikes] = useState(() => {
     const stored = localStorage.getItem('weeklySuperlikes');
     if (!stored) return { count: 0, weekStart: new Date().toISOString() };
@@ -96,6 +98,7 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
 
   const handleLike = () => {
     if (mode === "adoption") {
+      setAdoptionMatchCount(prev => prev + 1);
       // TODO: Rediriger vers la page SPA correspondante
       toast.success(`Tu seras bientôt redirigé vers la SPA de ${currentDog.name}`);
       console.log("Redirection vers SPA:", currentDog.shelterName);
@@ -145,12 +148,21 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
         <h2 className="text-lg font-bold text-gradient font-poppins">
           {mode === "local" ? "Chiens près de toi" : "Adopte ton compagnon"}
         </h2>
-        <button 
-          onClick={() => setShowFilters(true)}
-          className="w-10 h-10 rounded-full bg-muted hover:bg-accent flex items-center justify-center"
-        >
-          <Filter className="w-5 h-5 text-foreground" />
-        </button>
+        <div className="flex items-center gap-2">
+          {mode === "adoption" && (
+            <MatchCounter 
+              count={adoptionMatchCount} 
+              label="Mises en relation"
+              showTrending={false}
+            />
+          )}
+          <button 
+            onClick={() => setShowFilters(true)}
+            className="w-10 h-10 rounded-full bg-muted hover:bg-accent flex items-center justify-center"
+          >
+            <Filter className="w-5 h-5 text-foreground" />
+          </button>
+        </div>
       </div>
 
       {/* Dog card area - takes remaining space */}
