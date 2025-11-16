@@ -580,6 +580,15 @@ export default function Map() {
           'top-right'
         );
 
+        // Force hide Mapbox logo after map is created
+        setTimeout(() => {
+          const logoElements = mapContainer.current?.querySelectorAll('.mapboxgl-ctrl-logo, a.mapboxgl-ctrl-logo');
+          logoElements?.forEach(el => {
+            (el as HTMLElement).style.display = 'none';
+            (el as HTMLElement).style.visibility = 'hidden';
+          });
+        }, 100);
+
         // User marker - position actuelle avec logo Whoof Apps
         const userEl = document.createElement('div');
         userEl.style.width = '44px';
