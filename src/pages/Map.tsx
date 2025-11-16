@@ -615,7 +615,9 @@ export default function Map() {
             // Generate and display profiles
             const profiles = generateMockProfiles(coords[0], coords[1]);
             setNearbyProfiles(profiles);
-            addProfileMarkersToMap(profiles);
+            // Afficher uniquement les profils en ligne ET amis sur la carte
+            const onlineFriendProfiles = profiles.filter(p => p.isOnline && p.isFriend);
+            addProfileMarkersToMap(onlineFriendProfiles);
             
             setIsLoading(false);
           } catch (error) {
