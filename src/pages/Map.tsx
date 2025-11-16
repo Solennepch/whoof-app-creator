@@ -571,12 +571,11 @@ export default function Map() {
           attributionControl: false, // Disable attribution control
         });
 
-        // Add navigation controls (zoom + compass only, no pitch)
+        // Add navigation controls (zoom only, no compass)
         map.current.addControl(
           new mapboxgl.NavigationControl({
-            showCompass: true,
-            showZoom: true,
-            visualizePitch: false
+            showCompass: false,
+            showZoom: true
           }), 
           'top-right'
         );
