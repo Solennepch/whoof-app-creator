@@ -24,6 +24,20 @@ const TEST_ACCOUNTS: TestAccount[] = [
     isPro: true
   },
   {
+    email: "premium.user@whoof.app",
+    password: "PremiumUser2025!",
+    displayName: "⭐ Emma Martin (Premium User)",
+    role: "user",
+    isPro: false
+  },
+  {
+    email: "premium.pro@whoof.app",
+    password: "PremiumPro2025!",
+    displayName: "💼 Dr. Sophie Bernard (Pro Premium)",
+    role: "user",
+    isPro: true
+  },
+  {
     email: "test@whoof.app",
     password: "Test123!",
     displayName: "Solenne Pichon (Perso + Pro)",
@@ -108,6 +122,22 @@ export default function TestAccounts() {
     } catch (error: any) {
       console.error('Error creating test accounts:', error);
       toast.error(error.message || "Erreur lors de la création des comptes");
+    } finally {
+      setIsCreating(false);
+    }
+  };
+
+  const createPremiumAccounts = async () => {
+    setIsCreating(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('create-premium-accounts');
+
+      if (error) throw error;
+
+      toast.success("✨ Comptes Premium créés !\n⭐ Emma Martin - premium.user@whoof.app\n💼 Dr. Sophie Bernard - premium.pro@whoof.app");
+    } catch (error: any) {
+      console.error('Error creating premium accounts:', error);
+      toast.error(error.message || "Erreur lors de la création des comptes premium");
     } finally {
       setIsCreating(false);
     }
@@ -208,6 +238,15 @@ export default function TestAccounts() {
             <Shield className={`h-4 w-4 mr-2 ${isCreating ? 'animate-spin' : ''}`} />
             {isCreating ? 'Création...' : '👑 Créer compte DEV'}
           </Button>
+          <Button 
+            onClick={createPremiumAccounts} 
+            disabled={isCreating} 
+            size="sm" 
+            className="w-full bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700"
+          >
+            <RefreshCw className={`h-4 w-4 mr-2 ${isCreating ? 'animate-spin' : ''}`} />
+            {isCreating ? 'Création...' : '✨ Créer comptes Premium'}
+          </Button>
           <Button onClick={createTestAccounts} disabled={isCreating} size="sm" variant="outline" className="w-full">
             <RefreshCw className={`h-4 w-4 mr-2 ${isCreating ? 'animate-spin' : ''}`} />
             {isCreating ? 'Création...' : 'Créer tous les comptes de test'}
@@ -231,8 +270,10 @@ export default function TestAccounts() {
                 </div>
                 <div className="flex gap-2 flex-wrap">
                   {account.email === 'dev@whoof.app' && <Badge className="bg-gradient-to-r from-purple-600 to-pink-600">👑 DEV</Badge>}
-                  {account.isPro && <Badge variant="secondary">Pro</Badge>}
-                  {!account.isPro && <Badge variant="outline">Particulier</Badge>}
+                  {account.email === 'premium.user@whoof.app' && <Badge className="bg-gradient-to-r from-yellow-500 to-orange-600">⭐ Premium</Badge>}
+                  {account.email === 'premium.pro@whoof.app' && <Badge className="bg-gradient-to-r from-yellow-500 to-orange-600">💼 Pro Premium</Badge>}
+                  {account.isPro && account.email !== 'premium.pro@whoof.app' && account.email !== 'dev@whoof.app' && <Badge variant="secondary">Pro</Badge>}
+                  {!account.isPro && account.email !== 'premium.user@whoof.app' && <Badge variant="outline">Particulier</Badge>}
                 </div>
               </div>
             </CardHeader>
