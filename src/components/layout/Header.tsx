@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { SidebarMenu } from "./SidebarMenu";
 import { ProSidebarMenu } from "./ProSidebarMenu";
 import { QuickSwitchButton } from "./QuickSwitchButton";
-import logoWhoof from "@/assets/logo-whoof-v3.png";
+import logoWhoof from "@/assets/logo-whoof-official.png";
 
 export function Header() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
