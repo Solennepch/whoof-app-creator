@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Filter, ArrowUp, RotateCcw, Star, Heart, Send } from "lucide-react";
+import { Filter, ArrowUp, RotateCcw, Star, Heart, Send, Lock } from "lucide-react";
 import bonesCrossedIcon from "@/assets/bones-crossed.png";
 import { TagChip } from "@/components/ui/TagChip";
+import { usePremium } from "@/hooks/usePremium";
 
 type DogProfile = {
   id: string;
@@ -22,11 +23,16 @@ interface DogMatchingScreenProps {
 
 export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const { data: isPremium = false } = usePremium();
 
   const currentDog = dogs[currentIndex];
   const hasMore = currentIndex < dogs.length;
 
   const handleRewind = () => {
+    if (!isPremium) {
+      alert("Cette fonctionnalité nécessite un compte Premium 👑");
+      return;
+    }
     if (currentIndex > 0) {
       setCurrentIndex(currentIndex - 1);
     }
@@ -38,6 +44,10 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
   };
 
   const handleSuperLike = () => {
+    if (!isPremium) {
+      alert("Cette fonctionnalité nécessite un compte Premium 👑");
+      return;
+    }
     console.log("super-like");
     setCurrentIndex(currentIndex + 1);
   };
@@ -126,43 +136,60 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
         className="relative z-20 flex-shrink-0 py-4 flex justify-center gap-4 px-4 -mt-8"
         style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}
       >
-        {/* Rewind */}
+        {/* Rewind - Premium only */}
         <button
           onClick={handleRewind}
-          disabled={currentIndex === 0}
-          className="w-12 h-12 rounded-full bg-white backdrop-blur shadow-lg flex items-center justify-center disabled:opacity-50 disabled:bg-gray-300"
+          disabled={!isPremium}
+          className={`w-12 h-12 rounded-full backdrop-blur shadow-lg flex items-center justify-center transition-all ${
+            isPremium
+              ? "bg-white hover:scale-105"
+              : "bg-gray-200 opacity-50 cursor-not-allowed"
+          }`}
         >
-          <RotateCcw className="w-5 h-5 text-yellow-500" />
+          {isPremium ? (
+            <RotateCcw className="w-5 h-5 text-yellow-500" />
+          ) : (
+            <Lock className="w-4 h-4 text-gray-400" />
+          )}
         </button>
 
-        {/* Nope - Dog bones crossed */}
+        {/* Nope - Dog bones crossed - Always active */}
         <button
           onClick={handleNope}
-          className="w-16 h-16 rounded-full bg-white backdrop-blur shadow-lg flex items-center justify-center"
+          className="w-16 h-16 rounded-full bg-white backdrop-blur shadow-lg flex items-center justify-center hover:scale-105 transition-transform"
         >
           <img src={bonesCrossedIcon} alt="Nope" className="w-10 h-10" />
         </button>
 
-        {/* Super-like - positioned higher to bridge sections */}
+        {/* Super-like - Premium only - positioned higher to bridge sections */}
         <button
           onClick={handleSuperLike}
-          className="w-12 h-12 rounded-full gradient-hero shadow-lg flex items-center justify-center -mt-8"
+          disabled={!isPremium}
+          className={`w-12 h-12 rounded-full shadow-lg flex items-center justify-center -mt-8 transition-all ${
+            isPremium
+              ? "gradient-hero hover:scale-105"
+              : "bg-gray-200 opacity-50 cursor-not-allowed"
+          }`}
         >
-          <Star className="w-6 h-6 text-white fill-white" />
+          {isPremium ? (
+            <Star className="w-6 h-6 text-white fill-white" />
+          ) : (
+            <Lock className="w-5 h-5 text-gray-400" />
+          )}
         </button>
 
-        {/* Like */}
+        {/* Like - Always active */}
         <button
           onClick={handleLike}
-          className="w-16 h-16 rounded-full bg-white backdrop-blur shadow-lg flex items-center justify-center"
+          className="w-16 h-16 rounded-full bg-white backdrop-blur shadow-lg flex items-center justify-center hover:scale-105 transition-transform"
         >
           <Heart className="w-7 h-7 text-green-500 fill-green-500" />
         </button>
 
-        {/* Boost / Send */}
+        {/* Boost / Send - Always active */}
         <button
           onClick={handleBoost}
-          className="w-12 h-12 rounded-full bg-white backdrop-blur shadow-lg flex items-center justify-center"
+          className="w-12 h-12 rounded-full bg-white backdrop-blur shadow-lg flex items-center justify-center hover:scale-105 transition-transform"
         >
           <Send className="w-5 h-5 text-purple-500" />
         </button>
