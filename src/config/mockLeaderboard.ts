@@ -11,7 +11,8 @@ export const generateMockLeaderboard = () => {
   // Current user (Matcha)
   users.push({
     user_id: "129989e7-4b4c-4c67-ab79-980fb8c04d4a",
-    weekly_xp: 850,
+    weekly_km: 42.5,
+    weekly_walks: 12,
     rank: 1,
     display_name: "⭐ Emma Martin (Premium)",
     avatar_url: "/src/assets/matcha-avatar.png",
@@ -24,13 +25,16 @@ export const generateMockLeaderboard = () => {
     const dogName = dogNames[Math.floor(Math.random() * dogNames.length)];
     const dogImage = `/src/assets/dogs/dog-${(i % 6) + 1}.jpg`;
     
-    // XP decreases with rank
-    const baseXP = 850;
-    const xp = Math.max(10, baseXP - (i - 1) * Math.floor(Math.random() * 5 + 3));
+    // Km and walks decrease with rank
+    const baseKm = 42.5;
+    const baseWalks = 12;
+    const km = Math.max(0.5, baseKm - (i - 1) * (Math.random() * 0.8 + 0.2));
+    const walks = Math.max(1, Math.floor(baseWalks - (i - 1) * 0.08));
     
     users.push({
       user_id: `user-${i}`,
-      weekly_xp: xp,
+      weekly_km: Math.round(km * 10) / 10,
+      weekly_walks: walks,
       rank: i,
       display_name: `${ownerName} & ${dogName}`,
       avatar_url: dogImage,

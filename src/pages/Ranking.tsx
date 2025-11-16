@@ -62,7 +62,8 @@ export default function Ranking() {
   // Use mock data if no real data exists
   const leaderboard = realLeaderboard && realLeaderboard.length > 0 ? realLeaderboard : fullLeaderboard;
   const myXP = realXP || { total_xp: 2450, weekly_xp: 850 };
-
+  
+  // Get user's km and walks from leaderboard
   const myRank = leaderboard?.findIndex(entry => entry.user_id === session?.user?.id);
   const myRanking = myRank !== undefined && myRank !== -1 ? leaderboard?.[myRank] : null;
 
@@ -163,11 +164,11 @@ export default function Ranking() {
                   <div className="flex-1">
                     <div className="flex items-baseline gap-2 mb-1">
                       <span className="text-3xl font-bold text-primary">#{myRank! + 1}</span>
-                      <span className="text-sm text-muted-foreground">sur {TOTAL_LEADERBOARD_USERS}</span>
+                      <span className="text-sm text-muted-foreground">sur {TOTAL_LEADERBOARD_USERS} Whoofers*</span>
                     </div>
                     <div className="text-base font-semibold">{profile.display_name || "Toi"}</div>
                     <div className="text-sm text-muted-foreground">
-                      Niveau {levelForXp(myXP.total_xp)} • {myXP.total_xp} XP
+                      {myRanking.weekly_km} km • {myRanking.weekly_walks} balades
                     </div>
                   </div>
                   <Trophy className="w-10 h-10 text-primary" />
@@ -175,14 +176,14 @@ export default function Ranking() {
                 
                 <div className="space-y-2">
                   <div className="flex justify-between text-xs text-muted-foreground">
-                    <span>{myRanking.weekly_xp} XP cette semaine</span>
-                    <span>Prochain rang : {Math.max(0, (leaderboard?.[Math.max(0, myRank! - 1)]?.weekly_xp || 0) - myRanking.weekly_xp)} XP</span>
+                    <span>{myRanking.weekly_km} km cette semaine</span>
+                    <span>Prochain rang : {Math.max(0, ((leaderboard?.[Math.max(0, myRank! - 1)]?.weekly_km || 0) - myRanking.weekly_km)).toFixed(1)} km</span>
                   </div>
-                  <Progress value={(myRanking.weekly_xp / ((leaderboard?.[Math.max(0, myRank! - 1)]?.weekly_xp || myRanking.weekly_xp) + 1)) * 100} className="h-2" />
+                  <Progress value={(myRanking.weekly_km / ((leaderboard?.[Math.max(0, myRank! - 1)]?.weekly_km || myRanking.weekly_km) + 1)) * 100} className="h-2" />
                   {myRank! > 0 && (
                     <p className="text-xs text-muted-foreground">
                       <TrendingUp className="w-3 h-3 inline mr-1" />
-                      Encore {Math.max(0, (leaderboard?.[myRank! - 1]?.weekly_xp || 0) - myRanking.weekly_xp)} XP pour gagner une place !
+                      Encore {Math.max(0, ((leaderboard?.[myRank! - 1]?.weekly_km || 0) - myRanking.weekly_km)).toFixed(1)} km pour gagner une place !
                     </p>
                   )}
                 </div>
@@ -191,7 +192,7 @@ export default function Ranking() {
               <Card className="border-dashed">
                 <CardContent className="pt-6 text-center">
                   <Trophy className="w-12 h-12 mx-auto mb-2 text-muted-foreground/50" />
-                  <p className="text-sm text-muted-foreground">Commence à gagner de l'XP pour apparaître dans le classement</p>
+                  <p className="text-sm text-muted-foreground">Commence à marcher pour apparaître dans le classement</p>
                 </CardContent>
               </Card>
             )}
@@ -292,8 +293,8 @@ export default function Ranking() {
                               </div>
 
                               <div className="text-right">
-                                <div className="text-base font-bold text-primary">{entry.weekly_xp}</div>
-                                <div className="text-xs text-muted-foreground">XP</div>
+                                <div className="text-base font-bold text-primary">{entry.weekly_km} km</div>
+                                <div className="text-xs text-muted-foreground">{entry.weekly_walks} balades</div>
                               </div>
                             </div>
                           </CardContent>
