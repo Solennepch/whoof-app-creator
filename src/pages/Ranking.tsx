@@ -21,6 +21,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { motion } from "framer-motion";
+import { mockLeaderboardData } from "@/config/mockLeaderboard";
 
 export default function Ranking() {
   const navigate = useNavigate();
@@ -51,8 +52,12 @@ export default function Ranking() {
     enabled: !!session?.user?.id,
   });
 
-  const { data: leaderboard, isLoading } = useWeeklyLeaderboard(profile?.city);
-  const { data: myXP } = useUserXP(session?.user?.id);
+  const { data: realLeaderboard, isLoading } = useWeeklyLeaderboard(profile?.city);
+  const { data: realXP } = useUserXP(session?.user?.id);
+
+  // Use mock data if no real data exists
+  const leaderboard = realLeaderboard && realLeaderboard.length > 0 ? realLeaderboard : mockLeaderboardData;
+  const myXP = realXP || { total_xp: 2450, weekly_xp: 850 };
 
   const myRank = leaderboard?.findIndex(entry => entry.user_id === session?.user?.id);
   const myRanking = myRank !== undefined && myRank !== -1 ? leaderboard?.[myRank] : null;
