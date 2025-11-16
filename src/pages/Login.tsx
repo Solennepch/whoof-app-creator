@@ -15,12 +15,6 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  // Rediriger si déjà connecté
-  useEffect(() => {
-    if (!loading && session) {
-      navigate("/profile/me");
-    }
-  }, [loading, session, navigate]);
 
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
