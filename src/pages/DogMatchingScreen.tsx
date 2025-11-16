@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Filter, ArrowUp, RotateCcw, Star, Heart, Send, Lock } from "lucide-react";
+import { Filter, RotateCcw, Star, Heart, Send, Lock } from "lucide-react";
 import bonesCrossedIcon from "@/assets/bones-crossed.png";
 import { TagChip } from "@/components/ui/TagChip";
 import { usePremium } from "@/hooks/usePremium";
@@ -141,17 +141,13 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
         {/* Rewind - Premium only */}
         <button
           onClick={handleRewind}
-          disabled={!isPremium}
-          className={`w-12 h-12 rounded-full backdrop-blur shadow-lg flex items-center justify-center transition-all ${
-            isPremium
-              ? "bg-white hover:scale-105"
-              : "bg-gray-200 opacity-50 cursor-not-allowed"
-          }`}
+          className="w-12 h-12 rounded-full bg-white backdrop-blur shadow-lg flex items-center justify-center hover:scale-105 transition-transform relative"
         >
-          {isPremium ? (
-            <RotateCcw className="w-5 h-5 text-yellow-500" />
-          ) : (
-            <Lock className="w-4 h-4 text-gray-400" />
+          <RotateCcw className="w-5 h-5 text-yellow-500" />
+          {!isPremium && (
+            <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
+              <Lock className="w-2.5 h-2.5 text-white" />
+            </div>
           )}
         </button>
 
@@ -166,17 +162,13 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
         {/* Super-like - Premium only - positioned higher to bridge sections */}
         <button
           onClick={handleSuperLike}
-          disabled={!isPremium}
-          className={`w-12 h-12 rounded-full shadow-lg flex items-center justify-center -mt-8 transition-all ${
-            isPremium
-              ? "gradient-hero hover:scale-105"
-              : "bg-gray-200 opacity-50 cursor-not-allowed"
-          }`}
+          className="w-12 h-12 rounded-full shadow-lg flex items-center justify-center -mt-8 transition-all gradient-hero hover:scale-105 relative"
         >
-          {isPremium ? (
-            <Star className="w-6 h-6 text-white fill-white" />
-          ) : (
-            <Lock className="w-5 h-5 text-gray-400" />
+          <Star className="w-6 h-6 text-white fill-white" />
+          {!isPremium && (
+            <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-white flex items-center justify-center">
+              <Lock className="w-2.5 h-2.5 text-primary" />
+            </div>
           )}
         </button>
 
