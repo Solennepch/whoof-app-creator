@@ -10,6 +10,7 @@ import { AnimatedLikeButton } from "@/components/ui/AnimatedLikeButton";
 import { Slider } from "@/components/ui/slider";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { StartWalkDialog } from "@/components/walk/StartWalkDialog";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { supabase } from "@/integrations/supabase/client";
@@ -819,6 +820,13 @@ export default function Map() {
           </div>
           
           <div className="flex gap-2">
+            <StartWalkDialog 
+              onStartWalk={(notifyFriends, liveTracking) => {
+                console.log('Starting walk:', { notifyFriends, liveTracking });
+                // TODO: Implement walk start logic
+              }}
+            />
+            
             <Popover>
               <PopoverTrigger asChild>
                 <Button 
