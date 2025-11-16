@@ -49,19 +49,21 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
   const currentDog = dogs[currentIndex];
   const hasMore = currentIndex < dogs.length;
   const canUseSuperlike = isPremium || weeklySuperlikes.count < 1;
-  const canRewind = isPremium && history.length > 0;
+  const hasHistory = history.length > 0;
 
   const handleRewind = () => {
     if (!isPremium) {
       setShowPremiumDialog(true);
       return;
     }
-    if (history.length > 0) {
-      const previousIndex = history[history.length - 1];
-      setHistory(history.slice(0, -1));
-      setCurrentIndex(previousIndex);
-      toast.success("Retour au profil précédent");
+    if (history.length === 0) {
+      toast.info("Aucun profil précédent");
+      return;
     }
+    const previousIndex = history[history.length - 1];
+    setHistory(history.slice(0, -1));
+    setCurrentIndex(previousIndex);
+    toast.success("Retour au profil précédent");
   };
 
   const handleNope = () => {
@@ -189,14 +191,13 @@ export default function DogMatchingScreen({ mode, dogs }: DogMatchingScreenProps
         {/* Rewind - Premium only */}
         <button
           onClick={handleRewind}
-          disabled={!canRewind}
           className={`w-12 h-12 rounded-full backdrop-blur shadow-lg flex items-center justify-center transition-all ${
-            canRewind
+            isPremium
               ? "bg-white hover:scale-105 cursor-pointer"
               : "bg-gray-200 opacity-50 cursor-not-allowed"
           }`}
         >
-          <RotateCcw className={`w-5 h-5 ${canRewind ? "text-yellow-500" : "text-gray-400"}`} />
+          <RotateCcw className={`w-5 h-5 ${isPremium ? "text-yellow-500" : "text-gray-400"}`} />
         </button>
 
         {/* Nope - Dog bones crossed - Always active */}
