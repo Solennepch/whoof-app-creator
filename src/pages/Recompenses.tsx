@@ -189,8 +189,7 @@ export default function Recompenses() {
                     className="w-full rounded-xl h-12 font-semibold"
                     disabled={!selectedReward || totalXP < (XP_REWARDS.find(r => r.id === selectedReward)?.xp || 0)}
                   >
-                    <Gift className="mr-2 h-5 w-5" />
-                    Convertir mes XP
+                    Récupérer mon cadeau
                   </Button>
                 </motion.div>
               )}
