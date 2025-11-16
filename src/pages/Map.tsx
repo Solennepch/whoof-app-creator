@@ -761,15 +761,14 @@ export default function Map() {
   };
 
   return (
-    <div className="h-screen overflow-hidden pb-20 md:pb-6 flex flex-col" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
-      <div className="mx-auto max-w-6xl px-4 pt-16 md:pt-6 flex-1 flex flex-col overflow-hidden">
-        {/* Header */}
-        <div className="mb-2 md:mb-6 flex items-center justify-between gap-2">
+    <div className="h-screen overflow-hidden flex flex-col" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
+      <div className="mx-auto max-w-6xl w-full px-4 pt-16 md:pt-6 pb-20 md:pb-6 flex-1 flex flex-col overflow-hidden gap-3 md:gap-6">
+        {/* Header - Compact on mobile */}
+        <div className="flex items-center justify-between gap-2 shrink-0">
           <div className="min-w-0">
-            <h1 className="mb-1 text-2xl md:text-3xl font-bold truncate text-foreground">
+            <h1 className="text-xl md:text-3xl font-bold truncate text-foreground">
               Carte
             </h1>
-            <p className="text-xs md:text-sm text-muted-foreground hidden sm:block">Trouve des professionnels près de toi</p>
           </div>
           
           <div className="flex gap-2">
@@ -883,22 +882,20 @@ export default function Map() {
           </div>
         </div>
 
-        {/* Geolocation Denied Warning */}
+        {/* Geolocation Denied Warning - Compact */}
         {geoDenied && (
-          <div className="mx-auto max-w-6xl px-4 mb-3">
-            <div className="rounded-lg bg-amber-50 border border-amber-200 px-3 py-2 text-xs text-amber-900">
-              La carte fonctionne mieux avec ta localisation, mais tu peux tout à fait
-              utiliser WHOOF sans 😊  
-              Tu verras les balades et lieux autour de ta ville même sans ta position précise.
+          <div className="shrink-0">
+            <div className="rounded-lg bg-amber-50 border border-amber-200 px-3 py-1.5 text-[10px] md:text-xs text-amber-900">
+              Active la géolocalisation pour voir les chiens autour de toi ! 🐾
             </div>
           </div>
         )}
 
-        <div className="flex flex-col lg:grid gap-4 md:gap-6 lg:grid-cols-3 flex-1 overflow-hidden">
-          {/* Interactive Map - Responsive height */}
-          <div className="lg:col-span-2 flex flex-col">
+        <div className="flex flex-col lg:grid gap-3 md:gap-6 lg:grid-cols-3 flex-1 overflow-hidden min-h-0">
+          {/* Interactive Map */}
+          <div className="lg:col-span-2 flex flex-col min-h-0 flex-1">
             {mapError ? (
-              <Card className="h-[calc(100vh-280px)] md:h-[calc(100vh-300px)] rounded-2xl md:rounded-3xl shadow-soft ring-1 ring-black/5 flex flex-col items-center justify-center p-8 text-center">
+              <Card className="flex-1 min-h-0 rounded-2xl md:rounded-3xl shadow-soft ring-1 ring-black/5 flex flex-col items-center justify-center p-8 text-center">
                 <AlertTriangle className="h-12 w-12 text-muted-foreground mb-4" />
                 <h3 className="text-lg font-semibold mb-2">Carte indisponible</h3>
                 <p className="text-sm text-muted-foreground mb-6 max-w-md">
@@ -923,9 +920,9 @@ export default function Map() {
                     Carte en BÊTA 🚧
                   </span>
                 </div>
-                 <div 
+                <div 
                   ref={mapContainer} 
-                  className="h-[calc(100vh-280px)] md:h-[calc(100vh-300px)] rounded-2xl md:rounded-3xl shadow-soft ring-1 ring-black/5" 
+                  className="flex-1 min-h-0 rounded-2xl md:rounded-3xl shadow-soft ring-1 ring-black/5" 
                 />
               </div>
             )}
@@ -1038,19 +1035,19 @@ export default function Map() {
             </div>
           </div>
 
-          {/* Mobile: Nearby profiles section */}
-          <div className="lg:hidden mt-4 mx-4">
-            <div className="rounded-2xl bg-white p-3 shadow-vibrant ring-1 ring-black/10 backdrop-blur-sm">
-              <h3 className="mb-3 text-sm font-semibold" style={{ color: "var(--ink)" }}>
+          {/* Mobile: Nearby profiles section - Static at bottom */}
+          <div className="lg:hidden shrink-0">
+            <div className="rounded-2xl bg-white p-2 shadow-vibrant ring-1 ring-black/10">
+              <h3 className="mb-2 text-xs font-semibold px-1" style={{ color: "var(--ink)" }}>
                 🐾 {nearbyProfiles.length} profils à proximité
               </h3>
-              <div className="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1">
+              <div className="flex gap-2 overflow-x-auto pb-1">
                 {isLoading ? (
-                  <div className="text-xs text-muted-foreground py-2">
+                  <div className="text-xs text-muted-foreground py-2 px-1">
                     Recherche...
                   </div>
                 ) : nearbyProfiles.length === 0 ? (
-                  <div className="text-xs text-muted-foreground py-2">
+                  <div className="text-xs text-muted-foreground py-2 px-1">
                     Aucun profil trouvé
                   </div>
                 ) : (
@@ -1081,18 +1078,18 @@ export default function Map() {
                     <button
                       key={profile.id}
                       onClick={() => handleSelectProfile(profile)}
-                      className="shrink-0 flex flex-col items-center gap-1.5 p-2 rounded-xl hover:bg-accent/10 transition-smooth"
+                      className="shrink-0 flex flex-col items-center gap-1 p-1.5 rounded-xl hover:bg-accent/10 transition-smooth"
                     >
                       <div className="relative">
                         {profile.isFriend && (
-                          <div className="absolute -top-1 -right-1 z-10 h-5 w-5 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center shadow-md ring-2 ring-white">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="white" stroke="none">
+                          <div className="absolute -top-0.5 -right-0.5 z-10 h-4 w-4 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center shadow-md ring-1 ring-white">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="white" stroke="none">
                               <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
                             </svg>
                           </div>
                         )}
                         <div
-                          className="h-12 w-12 rounded-full ring-2 shadow-sm"
+                          className="h-11 w-11 rounded-full ring-2 shadow-sm"
                           style={{
                             background: profile.avatar_url 
                               ? `url(${profile.avatar_url})` 
@@ -1103,14 +1100,14 @@ export default function Map() {
                           }}
                         />
                         {profile.isOnline && (
-                          <div className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-green-500 ring-2 ring-white" />
+                          <div className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-green-500 ring-2 ring-white" />
                         )}
                       </div>
-                      <div className="text-center max-w-[60px]">
-                        <p className="text-xs font-medium truncate" style={{ color: "var(--ink)" }}>
+                      <div className="text-center max-w-[50px]">
+                        <p className="text-[10px] font-medium truncate" style={{ color: "var(--ink)" }}>
                           {profile.display_name || 'Profil'}
                         </p>
-                        <p className="text-[10px] text-muted-foreground">
+                        <p className="text-[9px] text-muted-foreground">
                           {profile.distance_km ? `${profile.distance_km.toFixed(1)}km` : '?'}
                         </p>
                       </div>
