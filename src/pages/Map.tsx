@@ -568,6 +568,7 @@ export default function Map() {
           style: 'mapbox://styles/mapbox/streets-v12',
           center: coords,
           zoom: 13,
+          attributionControl: false, // Disable attribution control
         });
 
         // Add navigation controls
