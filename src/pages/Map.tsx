@@ -740,8 +740,8 @@ export default function Map() {
           
           <div className="flex gap-2">
             <StartWalkDialog 
-              onStartWalk={(notifyFriends, liveTracking) => {
-                console.log('Starting walk:', { notifyFriends, liveTracking });
+              onStartWalk={(notifyFriends, liveTracking, notifyNearby) => {
+                console.log('Starting walk:', { notifyFriends, liveTracking, notifyNearby });
                 // TODO: Implement walk start logic
               }}
               onPauseWalk={() => {
