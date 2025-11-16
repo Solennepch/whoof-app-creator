@@ -891,11 +891,11 @@ export default function Map() {
           </div>
         )}
 
-        <div className="flex flex-col lg:grid gap-3 md:gap-6 lg:grid-cols-3 flex-1 min-h-0 pb-[150px] lg:pb-0">
-          {/* Interactive Map */}
-          <div className="lg:col-span-2 flex flex-col h-full">
+        <div className="flex flex-col lg:grid gap-3 md:gap-6 lg:grid-cols-3 flex-1 min-h-0 overflow-hidden">
+          {/* Interactive Map - Compact square format on mobile */}
+          <div className="lg:col-span-2 flex flex-col" style={{ height: 'calc(60vh - 80px)' }}>
             {mapError ? (
-              <Card className="h-full rounded-2xl md:rounded-3xl shadow-soft ring-1 ring-black/5 flex flex-col items-center justify-center p-8 text-center">
+              <Card className="h-full w-full rounded-2xl md:rounded-3xl shadow-soft ring-1 ring-black/5 flex flex-col items-center justify-center p-8 text-center">
                 <AlertTriangle className="h-12 w-12 text-muted-foreground mb-4" />
                 <h3 className="text-lg font-semibold mb-2">Carte indisponible</h3>
                 <p className="text-sm text-muted-foreground mb-6 max-w-md">
@@ -1035,13 +1035,13 @@ export default function Map() {
             </div>
           </div>
 
-          {/* Mobile: Nearby profiles section - Fixed at bottom with clear separation */}
-          <div className="lg:hidden fixed bottom-20 left-0 right-0 px-4 z-30">
-            <div className="rounded-2xl bg-white p-2 shadow-vibrant ring-1 ring-black/10">
-              <h3 className="mb-2 text-xs font-semibold px-1" style={{ color: "var(--ink)" }}>
+          {/* Mobile: Nearby profiles section - Directly below map */}
+          <div className="lg:hidden shrink-0" style={{ height: 'calc(40vh - 120px)' }}>
+            <div className="rounded-2xl bg-white p-2 shadow-vibrant ring-1 ring-black/10 h-full flex flex-col">
+              <h3 className="mb-2 text-xs font-semibold px-1 shrink-0" style={{ color: "var(--ink)" }}>
                 🐾 {nearbyProfiles.length} profils à proximité
               </h3>
-              <div className="flex gap-2 overflow-x-auto pb-1">
+              <div className="flex gap-2 overflow-x-auto pb-1 flex-1">
                 {isLoading ? (
                   <div className="text-xs text-muted-foreground py-2 px-1">
                     Recherche...
