@@ -44,8 +44,8 @@ export function StartWalkDialog({ onStartWalk }: StartWalkDialogProps) {
           variant="default"
           className="rounded-2xl shrink-0 bg-primary hover:bg-primary/90"
         >
-          <Play className="h-4 w-4 md:mr-2" />
-          <span className="hidden md:inline">Balade</span>
+          <Play className="h-4 w-4 mr-2" />
+          Balade
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
