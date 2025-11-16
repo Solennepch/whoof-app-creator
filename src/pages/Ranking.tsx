@@ -262,8 +262,8 @@ export default function Ranking() {
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: index * 0.05 }}
                       >
-                        <Card className={`transition-all hover:shadow-md ${
-                          isCurrentUser ? "ring-2 ring-primary bg-primary/10 shadow-lg" : ""
+                        <Card className={`transition-all ${
+                          isCurrentUser ? "ring-2 ring-primary bg-primary/10 shadow-md" : "hover:shadow-md"
                         } ${rank <= 3 ? "bg-gradient-to-r from-amber-50/50 to-transparent dark:from-amber-950/20" : ""}`}>
                           <CardContent className="p-4">
                             <div className="flex items-center gap-3">
