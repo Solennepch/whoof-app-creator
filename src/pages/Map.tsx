@@ -1036,12 +1036,12 @@ export default function Map() {
           </div>
 
           {/* Mobile: Nearby profiles section - Directly below map */}
-          <div className="lg:hidden shrink-0" style={{ height: 'calc(40vh - 120px)' }}>
-            <div className="rounded-2xl bg-white p-2 shadow-vibrant ring-1 ring-black/10 h-full flex flex-col">
-              <h3 className="mb-2 text-xs font-semibold px-1 shrink-0" style={{ color: "var(--ink)" }}>
+          <div className="lg:hidden shrink-0">
+            <div className="rounded-2xl bg-white p-2 shadow-vibrant ring-1 ring-black/10">
+              <h3 className="mb-2 text-xs font-semibold px-1" style={{ color: "var(--ink)" }}>
                 🐾 {nearbyProfiles.length} profils à proximité
               </h3>
-              <div className="flex gap-2 overflow-x-auto pb-1 flex-1">
+              <div className="flex gap-2 overflow-x-auto pb-1">
                 {isLoading ? (
                   <div className="text-xs text-muted-foreground py-2 px-1">
                     Recherche...
