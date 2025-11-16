@@ -156,7 +156,7 @@ export default function Ranking() {
               >
                 <div className="flex items-center gap-4 mb-4">
                   <Avatar className="w-16 h-16 border-2 border-primary">
-                    <AvatarImage src={profile.avatar_url || undefined} />
+                    <AvatarImage src={myRanking.avatar_url || profile.avatar_url || undefined} />
                     <AvatarFallback>
                       <Dog className="w-8 h-8" />
                     </AvatarFallback>
