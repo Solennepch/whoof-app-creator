@@ -14,14 +14,13 @@ export const generateMockLeaderboard = () => {
     weekly_km: 42.5,
     weekly_walks: 12,
     rank: 1,
-    display_name: "⭐ Emma Martin (Premium)",
+    display_name: "Matcha & Solenne",
     avatar_url: "/src/assets/matcha-avatar.png",
     city: "Lyon"
   });
 
   // Generate other users
   for (let i = 2; i <= TOTAL_USERS; i++) {
-    const ownerName = ownerNames[Math.floor(Math.random() * ownerNames.length)];
     const dogName = dogNames[Math.floor(Math.random() * dogNames.length)];
     const dogImage = `/src/assets/dogs/dog-${(i % 6) + 1}.jpg`;
     
@@ -36,7 +35,7 @@ export const generateMockLeaderboard = () => {
       weekly_km: Math.round(km * 10) / 10,
       weekly_walks: walks,
       rank: i,
-      display_name: `${ownerName} & ${dogName}`,
+      display_name: dogName,
       avatar_url: dogImage,
       city: "Lyon"
     });
