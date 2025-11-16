@@ -69,7 +69,7 @@ interface NearbyProfile {
 
 interface POI {
   id: string;
-  type: 'veterinaire' | 'toiletteur' | 'educateur' | 'pet_sitter' | 'pet-sitter' | 'refuge' | 'boutique' | 'pension' | 'photographe' | 'restaurant' | 'friend_walking';
+  type: 'veterinaire' | 'toiletteur' | 'educateur' | 'pet_sitter' | 'pet-sitter' | 'refuge' | 'boutique' | 'pension' | 'photographe' | 'restaurant';
   name: string;
   lat: number;
   lng: number;
@@ -182,7 +182,6 @@ export default function Map() {
     
     // Définir un seul exemple de chaque type avec son angle
     const poiTypes = [
-      { type: 'friend_walking', name: 'Max en balade', address: 'Parc des Buttes-Chaumont', angle: 0 },
       { type: 'veterinaire', name: 'Clinique Vétérinaire', address: '12 Rue de la Paix', angle: Math.PI / 4 },
       { type: 'toiletteur', name: 'Toutou Beauté', address: '8 Rue Saint-Antoine', angle: Math.PI / 2 },
       { type: 'educateur', name: 'École Canine Pro', address: '56 Rue du Faubourg', angle: 3 * Math.PI / 4 },
@@ -415,11 +414,7 @@ export default function Map() {
       el.style.pointerEvents = 'auto';
 
       // Style based on POI type
-      if (poi.type === 'friend_walking') {
-        // Amis en balade - Tête de chien marron
-        el.style.background = 'linear-gradient(135deg, #92400e 0%, #78350f 100%)';
-        el.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="white" stroke="white" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="14" r="2"/><circle cx="16" cy="14" r="2"/><path d="M12 20c-3.5 0-6-2.5-6-5.5V10c0-3.3 2.7-6 6-6s6 2.7 6 6v4.5c0 3-2.5 5.5-6 5.5z"/><path d="M5 10c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/><path d="M19 10c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/></svg>';
-      } else if (poi.type === 'veterinaire') {
+      if (poi.type === 'veterinaire') {
         // Vétérinaire - Croix de pharmacie VERTE
         el.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
         el.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="white" stroke="none"><rect x="9" y="3" width="6" height="18" rx="1"/><rect x="3" y="9" width="18" height="6" rx="1"/></svg>';
