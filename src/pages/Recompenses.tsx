@@ -150,7 +150,7 @@ export default function Recompenses() {
                 <Gift className="w-5 h-5 text-primary" />
                 Convertir mes XP
               </CardTitle>
-              <p className="text-sm text-muted-foreground">Échange tes XP contre des vraies cadeaux ou fais un don pour soutenir une association</p>
+              <p className="text-sm text-muted-foreground">Échange tes XP contre des cadeaux ou fais un don pour soutenir une association</p>
             </CardHeader>
             <CardContent className="space-y-4">
               <Select value={selectedReward} onValueChange={setSelectedReward}>
