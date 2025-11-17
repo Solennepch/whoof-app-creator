@@ -2709,6 +2709,42 @@ export type Database = {
           },
         ]
       }
+      walk_dogs: {
+        Row: {
+          created_at: string | null
+          dog_id: string
+          id: string
+          walk_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          dog_id: string
+          id?: string
+          walk_id: string
+        }
+        Update: {
+          created_at?: string | null
+          dog_id?: string
+          id?: string
+          walk_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "walk_dogs_dog_id_fkey"
+            columns: ["dog_id"]
+            isOneToOne: false
+            referencedRelation: "dogs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "walk_dogs_walk_id_fkey"
+            columns: ["walk_id"]
+            isOneToOne: false
+            referencedRelation: "walks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       walk_events: {
         Row: {
           capacity: number | null
