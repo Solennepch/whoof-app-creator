@@ -90,7 +90,7 @@ export default function Balades() {
             <div>
               <h1 className="text-3xl font-bold">Agenda & Événements</h1>
               <p className="text-sm text-muted-foreground">
-                Balades, rencontres, ateliers et activités dog-friendly.
+                Promenades, rencontres, ateliers et activités dog-friendly.
               </p>
             </div>
           </div>
