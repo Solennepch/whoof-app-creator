@@ -94,51 +94,6 @@ export default function Balades() {
               </p>
             </div>
           </div>
-          <Dialog open={isCreating} onOpenChange={setIsCreating}>
-            <DialogTrigger asChild>
-              <Button size="sm" className="rounded-full flex-shrink-0">
-                <Plus className="h-4 w-4 mr-1" />
-                Créer
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Organiser un événement</DialogTitle>
-              </DialogHeader>
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="title">Titre</Label>
-                  <Input
-                    id="title"
-                    placeholder="Balade au parc..."
-                    value={newEventTitle}
-                    onChange={(e) => setNewEventTitle(e.target.value)}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="date">Date et heure</Label>
-                  <Input
-                    id="date"
-                    type="datetime-local"
-                    value={newEventDate}
-                    onChange={(e) => setNewEventDate(e.target.value)}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="place">Lieu</Label>
-                  <Input
-                    id="place"
-                    placeholder="Parc des Buttes-Chaumont..."
-                    value={newEventPlace}
-                    onChange={(e) => setNewEventPlace(e.target.value)}
-                  />
-                </div>
-                <Button onClick={handleCreateEvent} className="w-full">
-                  Créer l'événement
-                </Button>
-              </div>
-            </DialogContent>
-          </Dialog>
         </div>
 
         {/* Quick Action - Planifier une balade */}
