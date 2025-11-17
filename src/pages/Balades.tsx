@@ -145,7 +145,7 @@ export default function Balades() {
         <Card className="bg-gradient-to-r from-primary/10 to-accent/10 border-primary/20">
           <CardContent className="p-6 flex items-center justify-between">
             <div className="flex-1">
-              <h3 className="font-semibold">Commencer une balade maintenant</h3>
+              <h3 className="font-semibold">Planifier une promenade</h3>
               <p className="text-sm text-muted-foreground">Organise une promenade et propose aux Whoofers de te rejoindre</p>
             </div>
             <Dialog>
