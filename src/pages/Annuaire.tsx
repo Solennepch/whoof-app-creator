@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { usePremium } from "@/hooks/usePremium";
 import { Link } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { MOCK_PROS, getMockProsByCategory, getMockProsNearby } from "@/config/mockPros";
 
 const CATEGORIES = [
   { value: '', label: 'Tous' },
@@ -75,14 +76,23 @@ export default function Annuaire() {
       if (!response.ok) throw new Error('Failed to load directory');
 
       const data = await response.json();
-      setPros(data);
+      
+      // Si aucun résultat, utiliser les données mockées
+      if (!data || data.length === 0) {
+        const mockData = selectedCategory 
+          ? getMockProsByCategory(selectedCategory)
+          : getMockProsNearby(radius);
+        setPros(mockData);
+      } else {
+        setPros(data);
+      }
     } catch (error) {
       console.error("Error loading pros:", error);
-      toast({
-        title: "Impossible de charger l'annuaire",
-        description: "Vérifie ta connexion ou réessaie dans quelques instants.",
-        variant: "destructive",
-      });
+      // En cas d'erreur, charger les données mockées
+      const mockData = selectedCategory 
+        ? getMockProsByCategory(selectedCategory)
+        : getMockProsNearby(radius);
+      setPros(mockData);
     } finally {
       setIsLoading(false);
     }
