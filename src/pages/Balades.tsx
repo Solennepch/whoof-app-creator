@@ -19,7 +19,7 @@ import { cn } from "@/lib/utils";
 
 const categories = [
   { id: "all", label: "Tout" },
-  { id: "balade", label: "Balade" },
+  { id: "balade", label: "Promenades" },
   { id: "rencontre", label: "Rencontre" },
   { id: "atelier", label: "Atelier" },
   { id: "cafe", label: "Café dog-friendly" },
