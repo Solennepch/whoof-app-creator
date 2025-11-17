@@ -13,7 +13,7 @@ export function BottomNavigation() {
     { to: "/map", icon: Map, label: "Explore" },
     { to: "/match", icon: Heart, label: "Matche" },
     { to: "/messages", icon: MessageCircle, label: "Messages" },
-    { to: "/balades", icon: Calendar, label: "Balades" },
+    { to: "/balades", icon: Calendar, label: "Agenda" },
     { to: "/ranking", icon: Trophy, label: "Défis" },
   ];
 
