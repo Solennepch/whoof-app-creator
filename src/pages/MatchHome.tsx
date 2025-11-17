@@ -23,7 +23,7 @@ export default function MatchHome() {
           Trouve ton match <span className="inline-block animate-pulse">🐾</span>
         </h1>
         <p className="text-base text-muted-foreground/80 leading-relaxed font-medium px-4">
-          Choisis comment tu veux rencontrer des chiens
+          Aggrandis ta meute
         </p>
       </div>
 
