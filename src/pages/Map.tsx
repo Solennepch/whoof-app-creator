@@ -879,21 +879,29 @@ export default function Map() {
                 <p>Recentrer sur ma position</p>
               </TooltipContent>
             </Tooltip>
-          </div>
 
-          {/* Button to Directory - Below filters */}
-          <Link to="/annuaire">
-            <Button 
-              variant="outline" 
-              className="w-full rounded-xl flex items-center gap-2 shadow-sm hover:shadow-md transition-all"
-              style={{
-                borderColor: 'hsl(var(--brand-violet-woof))',
-              }}
-            >
-              <Building2 className="h-4 w-4" />
-              <span className="text-sm font-medium">Voir l'annuaire complet</span>
-            </Button>
-          </Link>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link to="/annuaire">
+                  <button
+                    className="bg-white hover:bg-gray-50 text-black rounded-full transition-all flex items-center justify-center shrink-0"
+                    style={{
+                      width: '40px',
+                      height: '40px',
+                      border: '2px solid hsl(var(--brand-violet-woof))',
+                      boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
+                    }}
+                    aria-label="Voir l'annuaire professionnel"
+                  >
+                    <Building2 className="h-5 w-5" style={{ color: 'hsl(var(--brand-violet-woof))' }} />
+                  </button>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Annuaire Pro</p>
+              </TooltipContent>
+            </Tooltip>
+          </div>
         </div>
 
         {/* Geolocation Denied Warning - Compact */}
