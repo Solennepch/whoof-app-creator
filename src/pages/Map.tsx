@@ -764,9 +764,8 @@ export default function Map() {
     <div className="h-screen overflow-hidden flex flex-col" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
       <div className="mx-auto max-w-6xl w-full h-full flex flex-col px-4 pt-16 md:pt-6 md:pb-6 gap-3 md:gap-6">
         {/* Header - Compact on mobile */}
-        <div className="flex items-center justify-center gap-2 shrink-0">
-          <div className="flex gap-2">
-            <StartWalkDialog
+        <div className="flex items-center justify-between gap-2 shrink-0 w-full">
+          <StartWalkDialog
               onStartWalk={(notifyFriends, liveTracking, notifyNearby) => {
                 console.log('Starting walk:', { notifyFriends, liveTracking, notifyNearby });
                 // TODO: Implement walk start logic
@@ -895,7 +894,6 @@ export default function Map() {
                 <p>Annuaire Pro</p>
               </TooltipContent>
             </Tooltip>
-          </div>
         </div>
 
         {/* Geolocation Denied Warning - Compact */}
