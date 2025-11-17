@@ -765,14 +765,8 @@ export default function Map() {
       <div className="mx-auto max-w-6xl w-full h-full flex flex-col px-4 pt-16 md:pt-6 md:pb-6 gap-3 md:gap-6">
         {/* Header - Compact on mobile */}
         <div className="flex items-center justify-between gap-2 shrink-0">
-          <div className="min-w-0">
-            <h1 className="text-xl md:text-3xl font-bold truncate text-foreground">
-              Carte
-            </h1>
-          </div>
-          
-          <div className="flex gap-2">
-            <StartWalkDialog 
+          <div className="flex gap-2 ml-auto">
+            <StartWalkDialog
               onStartWalk={(notifyFriends, liveTracking, notifyNearby) => {
                 console.log('Starting walk:', { notifyFriends, liveTracking, notifyNearby });
                 // TODO: Implement walk start logic
