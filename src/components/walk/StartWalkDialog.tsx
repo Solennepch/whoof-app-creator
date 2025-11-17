@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Play, Pause, Square } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,11 +19,13 @@ import {
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
+import { useDogs } from "@/hooks/useDogs";
+import { DogSelector } from "./DogSelector";
 
 type WalkState = 'inactive' | 'active' | 'paused';
 
 interface StartWalkDialogProps {
-  onStartWalk: (notifyFriends: boolean, liveTracking: boolean, notifyNearby: boolean) => void;
+  onStartWalk: (notifyFriends: boolean, liveTracking: boolean, notifyNearby: boolean, dogIds: string[]) => void;
   onPauseWalk: () => void;
   onResumeWalk: () => void;
   onStopWalk: () => void;
@@ -36,22 +38,43 @@ export function StartWalkDialog({
   onStopWalk 
 }: StartWalkDialogProps) {
   const { toast } = useToast();
+  const { dogs, isLoading: dogsLoading } = useDogs();
   const [open, setOpen] = useState(false);
   const [notifyFriends, setNotifyFriends] = useState(true);
   const [liveTracking, setLiveTracking] = useState(false);
   const [notifyNearby, setNotifyNearby] = useState(true);
+  const [selectedDogIds, setSelectedDogIds] = useState<string[]>([]);
   const [walkState, setWalkState] = useState<WalkState>('inactive');
 
+  // Auto-select all dogs by default
+  useEffect(() => {
+    if (dogs.length > 0 && selectedDogIds.length === 0) {
+      setSelectedDogIds(dogs.map(dog => dog.id));
+    }
+  }, [dogs]);
+
   const handleStart = () => {
-    onStartWalk(notifyFriends, liveTracking, notifyNearby);
+    if (selectedDogIds.length === 0) {
+      toast({
+        title: "Aucun chien sélectionné",
+        description: "Sélectionne au moins un chien pour démarrer la balade",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    onStartWalk(notifyFriends, liveTracking, notifyNearby, selectedDogIds);
     setWalkState('active');
     setOpen(false);
     
+    const selectedDogsNames = dogs
+      .filter(dog => selectedDogIds.includes(dog.id))
+      .map(dog => dog.name)
+      .join(", ");
+    
     toast({
       title: "Balade démarrée ! 🐕",
-      description: notifyFriends 
-        ? "Tes amis ont été notifiés de ta balade"
-        : "Ta balade a commencé",
+      description: `${selectedDogsNames} ${selectedDogIds.length > 1 ? "sont prêts" : "est prêt"} pour l'aventure !`,
     });
   };
 
@@ -96,15 +119,33 @@ export function StartWalkDialog({
             Live Balade
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Démarrer une balade 🐾</DialogTitle>
             <DialogDescription>
-              Configure les options de ta balade avant de commencer
+              Sélectionne tes chiens et configure les options de la balade
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-6 py-4">
-            <div className="flex items-center justify-between">
+            {/* Dog Selection */}
+            <div className="space-y-3">
+              <Label className="text-base font-semibold">Chiens pour cette balade</Label>
+              {dogsLoading ? (
+                <div className="text-center py-4 text-muted-foreground">
+                  Chargement...
+                </div>
+              ) : (
+                <DogSelector
+                  dogs={dogs}
+                  selectedDogIds={selectedDogIds}
+                  onSelectionChange={setSelectedDogIds}
+                  multiSelect={true}
+                />
+              )}
+            </div>
+
+            {/* Options */}
+            <div className="flex items-center justify-between border-t pt-4">
               <div className="space-y-0.5">
                 <Label htmlFor="notify-friends" className="text-base">
                   Notifier mes amis
