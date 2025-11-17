@@ -149,13 +149,13 @@ function DogOnboardingContent() {
             <p className="text-muted-foreground">Nous allons créer un profil pour chacun</p>
           </div>
           <div className="grid gap-3">
-            {[1, 2, 3, 4, 5].map((count) => (
+            {[1, 2, 3].map((count) => (
               <Button key={count} variant="outline" size="lg" onClick={() => setDogCount(count)} className="h-14 text-lg hover:bg-primary/10 hover:border-primary">
                 {count} chien{count > 1 ? "s" : ""}
               </Button>
             ))}
-            <Button variant="outline" size="lg" onClick={() => setDogCount(6)} className="h-14 text-lg hover:bg-primary/10 hover:border-primary">
-              Plus de 5 chiens
+            <Button variant="outline" size="lg" onClick={() => setDogCount(4)} className="h-14 text-lg hover:bg-primary/10 hover:border-primary">
+              Plus de 3 chiens
             </Button>
           </div>
         </Card>
