@@ -854,27 +854,6 @@ export default function Map() {
 
             <Tooltip>
               <TooltipTrigger asChild>
-                <button
-                  onClick={handleGoToUser}
-                  className="bg-white hover:bg-gray-50 text-black rounded-full transition-all flex items-center justify-center shrink-0"
-                    style={{
-                      width: '40px',
-                      height: '40px',
-                      border: '2px solid hsl(var(--brand-violet-woof))',
-                      boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
-                    }}
-                    aria-label="Recentrer sur ma position"
-                  >
-                    <span className="text-xl">📍</span>
-                  </button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Recentrer sur ma position</p>
-              </TooltipContent>
-            </Tooltip>
-
-            <Tooltip>
-              <TooltipTrigger asChild>
                 <Link to="/annuaire">
                   <button
                     className="bg-white hover:bg-gray-50 text-black rounded-full transition-all flex items-center justify-center shrink-0"
@@ -892,6 +871,27 @@ export default function Map() {
               </TooltipTrigger>
               <TooltipContent>
                 <p>Annuaire Pro</p>
+              </TooltipContent>
+            </Tooltip>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={handleGoToUser}
+                  className="bg-white hover:bg-gray-50 text-black rounded-full transition-all flex items-center justify-center shrink-0"
+                    style={{
+                      width: '40px',
+                      height: '40px',
+                      border: '2px solid hsl(var(--brand-violet-woof))',
+                      boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
+                    }}
+                    aria-label="Recentrer sur ma position"
+                  >
+                    <span className="text-xl">📍</span>
+                  </button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Recentrer sur ma position</p>
               </TooltipContent>
             </Tooltip>
         </div>
