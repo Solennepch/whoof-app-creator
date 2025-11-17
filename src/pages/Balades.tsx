@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Calendar, MapPin, Users, Clock, Plus, Dog } from "lucide-react";
+import { Calendar, MapPin, Users, Clock, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -144,12 +144,9 @@ export default function Balades() {
         {/* Quick Action - Planifier une balade */}
         <Card className="bg-gradient-to-r from-primary/10 to-accent/10 border-primary/20">
           <CardContent className="p-6 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Dog className="h-8 w-8 text-primary" />
-              <div>
-                <h3 className="font-semibold">Commencer une balade maintenant</h3>
-                <p className="text-sm text-muted-foreground">Lance une balade spontanée</p>
-              </div>
+            <div className="flex-1">
+              <h3 className="font-semibold">Commencer une balade maintenant</h3>
+              <p className="text-sm text-muted-foreground">Organise une promenade et propose aux Whoofers de te rejoindre</p>
             </div>
             <Dialog>
               <DialogTrigger asChild>
@@ -160,7 +157,7 @@ export default function Balades() {
               </DialogTrigger>
               <DialogContent className="sm:max-w-[500px]">
                 <DialogHeader>
-                  <DialogTitle>Planifier une balade</DialogTitle>
+                  <DialogTitle>Planifier une promenade</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-4">
                   <div>
@@ -374,7 +371,7 @@ export default function Balades() {
                     <CardContent className="p-4">
                       <div className="flex items-center gap-3">
                         <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
-                          <Dog className="h-5 w-5 text-primary" />
+                          <MapPin className="h-5 w-5 text-primary" />
                         </div>
                         <div className="flex-1">
                           <p className="font-semibold">{walk.profiles?.display_name || "Utilisateur"}</p>
