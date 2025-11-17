@@ -87,7 +87,7 @@ export function SidebarMenu({ open, onOpenChange }: SidebarMenuProps) {
     icon: React.ElementType;
     label: string;
   }> = [
-    { to: "/social-events", icon: MapPin, label: "Balades & événements" },
+    { to: "/social-events", icon: MapPin, label: "Agenda & événements" },
     { to: "/annuaire", icon: Building, label: "Annuaire Pro" },
     { to: "/partenariats", icon: Percent, label: "Bons plans" },
   ];
