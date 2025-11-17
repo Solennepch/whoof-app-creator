@@ -93,7 +93,7 @@ export function StartWalkDialog({
             className="rounded-2xl shrink-0 bg-primary hover:bg-primary/90"
           >
             <Play className="h-4 w-4 mr-2" />
-            Balade
+            Livre balade
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
