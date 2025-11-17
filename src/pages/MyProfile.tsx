@@ -43,7 +43,7 @@ interface Profile {
 
 function MyProfileContent() {
   const navigate = useNavigate();
-  const { session } = useAuth();
+  const { session, loading: authLoading } = useAuth();
   const { data: isPremium } = usePremium();
 
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -59,12 +59,16 @@ function MyProfileContent() {
   });
 
   useEffect(() => {
-    loadProfileData();
-  }, [session]);
+    if (!authLoading) {
+      loadProfileData();
+    }
+  }, [session, authLoading]);
 
   const loadProfileData = async () => {
     if (!session?.user) {
-      navigate("/login");
+      if (!authLoading) {
+        navigate("/login");
+      }
       return;
     }
 
@@ -129,7 +133,7 @@ function MyProfileContent() {
     }
   };
 
-  if (isLoading) {
+  if (isLoading || authLoading) {
     return (
       <div className="flex min-h-screen flex-col gap-4 p-4 pb-24">
         <header className="space-y-1">

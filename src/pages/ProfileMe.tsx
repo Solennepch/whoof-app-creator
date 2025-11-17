@@ -16,10 +16,15 @@ function ProfileMeContent() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const { session } = useAuth();
+  const { session, loading: authLoading } = useAuth();
 
   useEffect(() => {
     async function checkAndRedirect() {
+      // Wait for auth to load
+      if (authLoading) {
+        return;
+      }
+
       try {
         if (!session) {
           navigate('/login', { replace: true });
@@ -115,7 +120,7 @@ function ProfileMeContent() {
     }
 
     checkAndRedirect();
-  }, [navigate, searchParams]);
+  }, [session, authLoading, navigate, searchParams]);
 
   // Show onboarding card for empty profile
   if (showOnboarding) {
@@ -170,9 +175,9 @@ function ProfileMeContent() {
   }
 
   // Show loading screen
-  if (isLoading) {
+  if (isLoading || authLoading) {
     return (
-      <div 
+      <div
         className="min-h-screen flex items-center justify-center animate-fade-in" 
         style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}
       >
