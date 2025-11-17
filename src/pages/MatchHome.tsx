@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Heart, Users } from "lucide-react";
+import { Heart, Dog } from "lucide-react";
 
 export default function MatchHome() {
   const navigate = useNavigate();
@@ -33,7 +33,7 @@ export default function MatchHome() {
           className="h-[68px] text-lg font-semibold rounded-3xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.16)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 animate-in fade-in slide-in-from-bottom-6 delay-150"
           onClick={() => navigate('/discover')}
         >
-          <Users className="h-5 w-5" />
+          <Dog className="h-5 w-5" />
           Chiens de ta région
         </Button>
         
