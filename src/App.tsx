@@ -44,7 +44,6 @@ const Ranking = lazy(() => import("./pages/Ranking"));
 const AstroDog = lazy(() => import("./pages/AstroDog"));
 const Annuaire = lazy(() => import("./pages/Annuaire"));
 const AnnuaireDetail = lazy(() => import("./pages/AnnuaireDetail"));
-const AnnuaireMap = lazy(() => import("./pages/AnnuaireMap"));
 const Partenariats = lazy(() => import("./pages/Partenariats"));
 const PartenariatDetail = lazy(() => import("./pages/PartenariatDetail"));
 const BonsPlans = lazy(() => import("./pages/BonsPlans"));
@@ -137,7 +136,6 @@ const App = () => {
                 <Route path="/ranking" element={<PageErrorBoundary><Ranking /></PageErrorBoundary>} />
                 <Route path="/astro-dog" element={<PageErrorBoundary><AstroDog /></PageErrorBoundary>} />
                 <Route path="/annuaire" element={<PageErrorBoundary><Annuaire /></PageErrorBoundary>} />
-                <Route path="/annuaire/map" element={<PageErrorBoundary><AnnuaireMap /></PageErrorBoundary>} />
                 <Route path="/annuaire/:id" element={<PageErrorBoundary><AnnuaireDetail /></PageErrorBoundary>} />
                 <Route path="/partenariats" element={<PageErrorBoundary><Partenariats /></PageErrorBoundary>} />
                 <Route path="/partenariats/:id" element={<PageErrorBoundary><PartenariatDetail /></PageErrorBoundary>} />
