@@ -12,6 +12,7 @@ import { fr } from "date-fns/locale";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -143,7 +144,7 @@ export default function Balades() {
           </Dialog>
         </div>
 
-        {/* Quick Action */}
+        {/* Quick Action - Planifier une balade */}
         <Card className="bg-gradient-to-r from-primary/10 to-accent/10 border-primary/20">
           <CardContent className="p-6 flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -153,10 +154,82 @@ export default function Balades() {
                 <p className="text-sm text-muted-foreground">Lance une balade spontanée</p>
               </div>
             </div>
-            <Button onClick={handleStartWalk}>
-              <Plus className="mr-2 h-4 w-4" />
-              Démarrer
-            </Button>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button>
+                  <Plus className="mr-2 h-4 w-4" />
+                  Démarrer
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[500px]">
+                <DialogHeader>
+                  <DialogTitle>Planifier une balade</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="walk-title">Titre de la balade</Label>
+                    <Input
+                      id="walk-title"
+                      placeholder="Balade au parc..."
+                      value={newEventTitle}
+                      onChange={(e) => setNewEventTitle(e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="walk-date">Date et heure</Label>
+                    <Input
+                      id="walk-date"
+                      type="datetime-local"
+                      value={newEventDate}
+                      onChange={(e) => setNewEventDate(e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="walk-place">Lieu</Label>
+                    <Input
+                      id="walk-place"
+                      placeholder="Parc des Buttes-Chaumont..."
+                      value={newEventPlace}
+                      onChange={(e) => setNewEventPlace(e.target.value)}
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="max-participants">Participants max</Label>
+                      <Input
+                        id="max-participants"
+                        type="number"
+                        min="2"
+                        max="50"
+                        placeholder="10"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="visibility">Visibilité</Label>
+                      <select
+                        id="visibility"
+                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      >
+                        <option value="public">Tout le monde</option>
+                        <option value="friends">Mes amis</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between rounded-lg border p-4">
+                    <div className="space-y-0.5">
+                      <Label className="text-base">Acceptation automatique</Label>
+                      <p className="text-sm text-muted-foreground">
+                        Les participants rejoignent sans validation
+                      </p>
+                    </div>
+                    <Switch defaultChecked />
+                  </div>
+                  <Button onClick={handleCreateEvent} className="w-full">
+                    Créer la balade
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
           </CardContent>
         </Card>
 
