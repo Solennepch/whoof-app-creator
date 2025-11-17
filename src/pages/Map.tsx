@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { MapPin, Locate, MessageCircle, X, Shield, Filter, AlertTriangle, RefreshCw, Building2 } from "lucide-react";
+import { MapPin, Locate, MessageCircle, X, Shield, Filter, AlertTriangle, RefreshCw, Search } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -865,7 +865,7 @@ export default function Map() {
                     }}
                     aria-label="Voir l'annuaire professionnel"
                   >
-                    <Building2 className="h-5 w-5" style={{ color: 'hsl(var(--brand-violet-woof))' }} />
+                    <Search className="h-5 w-5" style={{ color: 'hsl(var(--brand-violet-woof))' }} />
                   </button>
                 </Link>
               </TooltipTrigger>
