@@ -61,9 +61,6 @@ export default function Balades() {
     joinEvent(eventId);
   };
 
-  const handleStartWalk = () => {
-    startWalk({});
-  };
 
   const isLoading = walksLoading || friendsWalksLoading || eventsLoading;
 
@@ -80,8 +77,8 @@ export default function Balades() {
   }
 
   const filteredEvents = selectedCategory === "all" 
-    ? events 
-    : events?.filter((e: any) => e.category === selectedCategory) || [];
+    ? (events || [])
+    : (events?.filter((e: any) => e.category === selectedCategory) || []);
 
   return (
     <div className="min-h-screen pb-24" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
