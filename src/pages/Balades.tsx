@@ -13,6 +13,16 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { motion, AnimatePresence } from "framer-motion";
+import { cn } from "@/lib/utils";
+
+const categories = [
+  { id: "all", label: "Tout" },
+  { id: "balade", label: "Balade" },
+  { id: "rencontre", label: "Rencontre" },
+  { id: "atelier", label: "Atelier" },
+  { id: "cafe", label: "Café dog-friendly" },
+];
 
 export default function Balades() {
   const { user } = useAuth();
@@ -22,6 +32,7 @@ export default function Balades() {
   const [newEventTitle, setNewEventTitle] = useState("");
   const [newEventDate, setNewEventDate] = useState("");
   const [newEventPlace, setNewEventPlace] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
 
   const handleCreateEvent = async () => {
     if (!newEventTitle || !newEventDate || !newEventPlace) {
@@ -57,12 +68,9 @@ export default function Balades() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 p-6">
+      <div className="min-h-screen pb-24 p-6" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
         <div className="max-w-4xl mx-auto space-y-6">
-          <h1 className="text-xl font-semibold">Balades</h1>
-          <p className="text-sm text-muted-foreground">
-            Chargement des balades en cours…
-          </p>
+          <Skeleton className="h-20 w-full" />
           <Skeleton className="h-32 w-full" />
           <Skeleton className="h-64 w-full" />
         </div>
@@ -70,26 +78,34 @@ export default function Balades() {
     );
   }
 
+  const filteredEvents = selectedCategory === "all" 
+    ? events 
+    : events?.filter((e: any) => e.category === selectedCategory) || [];
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 pb-20">
-      <div className="max-w-4xl mx-auto p-6 space-y-6">
+    <div className="min-h-screen pb-24" style={{ background: "linear-gradient(135deg, #FFE4C4 0%, #FFD1E8 30%, #E6DBFF 100%)" }}>
+      <div className="max-w-4xl mx-auto p-4 md:p-6 space-y-6">
         {/* Header */}
-        <div className="mb-4 flex items-center justify-between gap-3">
-          <div>
-            <h1 className="text-xl font-semibold">Balades</h1>
-            <p className="text-xs text-muted-foreground">
-              Trouve ou crée des balades pour ton chien près de chez toi.
-            </p>
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <Calendar className="h-8 w-8 text-primary flex-shrink-0" />
+            <div>
+              <h1 className="text-3xl font-bold">Agenda & Événements</h1>
+              <p className="text-sm text-muted-foreground">
+                Balades, rencontres, ateliers et activités dog-friendly.
+              </p>
+            </div>
           </div>
           <Dialog open={isCreating} onOpenChange={setIsCreating}>
             <DialogTrigger asChild>
-              <Button className="rounded-full px-4" size="sm">
-                + Créer une balade
+              <Button size="sm" className="rounded-full flex-shrink-0">
+                <Plus className="h-4 w-4 mr-1" />
+                Créer
               </Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Organiser une balade</DialogTitle>
+                <DialogTitle>Organiser un événement</DialogTitle>
               </DialogHeader>
               <div className="space-y-4">
                 <div>
@@ -120,7 +136,7 @@ export default function Balades() {
                   />
                 </div>
                 <Button onClick={handleCreateEvent} className="w-full">
-                  Créer la balade
+                  Créer l'événement
                 </Button>
               </div>
             </DialogContent>
@@ -144,6 +160,25 @@ export default function Balades() {
           </CardContent>
         </Card>
 
+        {/* Category Filters */}
+        <div className="flex gap-2 overflow-x-auto pb-2 hide-scrollbar">
+          {categories.map((category) => (
+            <Badge
+              key={category.id}
+              variant={selectedCategory === category.id ? "default" : "outline"}
+              className={cn(
+                "cursor-pointer whitespace-nowrap rounded-full px-4 py-2 transition-all",
+                selectedCategory === category.id
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-background hover:bg-muted"
+              )}
+              onClick={() => setSelectedCategory(category.id)}
+            >
+              {category.label}
+            </Badge>
+          ))}
+        </div>
+
         {/* Tabs */}
         <Tabs defaultValue="events" className="space-y-6">
           <TabsList className="grid w-full grid-cols-3">
@@ -164,65 +199,89 @@ export default function Balades() {
           {/* Events Tab */}
           <TabsContent value="events" className="space-y-4">
             <div className="flex justify-between items-center">
-              <h2 className="text-xl font-semibold">Balades à venir</h2>
+              <h2 className="text-xl font-semibold">À venir cette semaine</h2>
             </div>
 
-            {!eventsLoading && events && events.length === 0 && (
-              <div className="mb-4 rounded-2xl border border-dashed border-amber-200 bg-amber-50 px-4 py-3 text-xs text-amber-900">
-                Aucune balade prévue pour l'instant dans ta zone.  
-                Tu peux lancer la première et donner le ton aux autres maîtres 🐶
-              </div>
-            )}
-
-            {events && events.length > 0 && (
-              <div className="space-y-3">
-                {events.map((event) => {
-                  const isParticipant = event.participants?.some((p: any) => p.user_id === user?.id);
-                  const participantCount = event.participants?.length || 0;
-                  
-                  return (
-                    <Card key={event.id}>
-                      <CardHeader>
-                        <div className="flex items-start justify-between">
-                          <div className="space-y-1">
-                            <CardTitle className="text-lg">{event.title}</CardTitle>
-                            <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                              <div className="flex items-center gap-1">
-                                <Calendar className="h-4 w-4" />
-                                {format(new Date(event.starts_at), "d MMMM 'à' HH:mm", { locale: fr })}
-                              </div>
-                              {event.place_name && (
-                                <div className="flex items-center gap-1">
-                                  <MapPin className="h-4 w-4" />
-                                  {event.place_name}
+            {filteredEvents.length === 0 ? (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="rounded-3xl border-2 border-dashed border-primary/30 bg-gradient-to-br from-primary/5 via-accent/5 to-background p-8 text-center"
+              >
+                <div className="text-6xl mb-4">🐾</div>
+                <h3 className="text-lg font-semibold mb-2">
+                  Aucun événement pour le moment
+                </h3>
+                <p className="text-sm text-muted-foreground mb-6 max-w-md mx-auto">
+                  Crée le premier de ta zone et rencontre des duos près de toi !
+                </p>
+                <Button
+                  size="lg"
+                  className="rounded-full"
+                  onClick={() => setIsCreating(true)}
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Créer un événement
+                </Button>
+              </motion.div>
+            ) : (
+              <div className="space-y-4">
+                <AnimatePresence>
+                  {filteredEvents.map((event: any, index: number) => {
+                    const isParticipant = event.participants?.some((p: any) => p.user_id === user?.id);
+                    const participantCount = event.participants?.length || 0;
+                    
+                    return (
+                      <motion.div
+                        key={event.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ delay: index * 0.05 }}
+                      >
+                        <Card className={cn(
+                          "overflow-hidden border-0 shadow-md hover:shadow-lg transition-all rounded-2xl",
+                          isParticipant && "ring-2 ring-primary/30"
+                        )}>
+                          <CardHeader>
+                            <div className="flex items-start justify-between">
+                              <div className="space-y-1 flex-1">
+                                <CardTitle className="text-lg">{event.title}</CardTitle>
+                                <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+                                  <div className="flex items-center gap-1">
+                                    <Calendar className="h-4 w-4" />
+                                    {event.starts_at && format(new Date(event.starts_at), "EEE d MMM 'à' HH:mm", { locale: fr })}
+                                  </div>
+                                  {event.place_name && (
+                                    <div className="flex items-center gap-1">
+                                      <MapPin className="h-4 w-4" />
+                                      {event.place_name}
+                                    </div>
+                                  )}
+                                  <div className="flex items-center gap-1">
+                                    <Users className="h-4 w-4" />
+                                    {participantCount} participant{participantCount > 1 ? "s" : ""}
+                                  </div>
                                 </div>
+                              </div>
+                              {isParticipant ? (
+                                <Badge variant="secondary" className="ml-2">Inscrit</Badge>
+                              ) : (
+                                <Button 
+                                  size="sm" 
+                                  onClick={() => handleJoinEvent(event.id)}
+                                  className="ml-2"
+                                >
+                                  Rejoindre
+                                </Button>
                               )}
                             </div>
-                          </div>
-                          {isParticipant ? (
-                            <Badge variant="secondary">Inscrit</Badge>
-                          ) : (
-                            <Button
-                              size="sm"
-                              onClick={() => handleJoinEvent(event.id)}
-                            >
-                              Rejoindre
-                            </Button>
-                          )}
-                        </div>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                          <Users className="h-4 w-4" />
-                          <span>{participantCount} participant{participantCount > 1 ? 's' : ''}</span>
-                          {event.capacity && (
-                            <span>/ {event.capacity} max</span>
-                          )}
-                        </div>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
+                          </CardHeader>
+                        </Card>
+                      </motion.div>
+                    );
+                  })}
+                </AnimatePresence>
               </div>
             )}
           </TabsContent>
