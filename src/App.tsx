@@ -36,8 +36,6 @@ const LikesHistory = lazy(() => import("./pages/LikesHistory"));
 const Premium = lazy(() => import("./pages/Premium"));
 const Recompenses = lazy(() => import("./pages/Recompenses"));
 const Events = lazy(() => import("./pages/Events"));
-const SocialEvents = lazy(() => import("./pages/SocialEvents"));
-const SocialEventDetail = lazy(() => import("./pages/SocialEventDetail"));
 const Balades = lazy(() => import("./pages/Balades"));
 const Parrainage = lazy(() => import("./pages/Parrainage"));
 const Ranking = lazy(() => import("./pages/Ranking"));
@@ -130,8 +128,6 @@ const App = () => {
                 <Route path="/recompenses" element={<PageErrorBoundary><Recompenses /></PageErrorBoundary>} />
                 <Route path="/events" element={<PageErrorBoundary><Events /></PageErrorBoundary>} />
                 <Route path="/balades" element={<PageErrorBoundary><Balades /></PageErrorBoundary>} />
-                <Route path="/social-events" element={<PageErrorBoundary><SocialEvents /></PageErrorBoundary>} />
-                <Route path="/social-events/:eventId" element={<PageErrorBoundary><SocialEventDetail /></PageErrorBoundary>} />
                 <Route path="/parrainage" element={<PageErrorBoundary><Parrainage /></PageErrorBoundary>} />
                 <Route path="/ranking" element={<PageErrorBoundary><Ranking /></PageErrorBoundary>} />
                 <Route path="/astro-dog" element={<PageErrorBoundary><AstroDog /></PageErrorBoundary>} />
