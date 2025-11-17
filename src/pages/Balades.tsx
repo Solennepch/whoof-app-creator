@@ -144,9 +144,12 @@ export default function Balades() {
         {/* Quick Action - Planifier une balade */}
         <Card className="bg-gradient-to-r from-primary/10 to-accent/10 border-primary/20">
           <CardContent className="p-6 flex items-center justify-between">
-            <div className="flex-1">
-              <h3 className="font-semibold">Planifier une promenade</h3>
-              <p className="text-sm text-muted-foreground">Organise une promenade et propose aux Whoofers de te rejoindre</p>
+            <div className="flex items-center gap-3 flex-1">
+              <span className="text-3xl">💌</span>
+              <div>
+                <h3 className="font-semibold">Melting Pawtes</h3>
+                <p className="text-sm text-muted-foreground">Planifie ta promenade et propose aux Whoofers de te rejoindre</p>
+              </div>
             </div>
             <Dialog>
               <DialogTrigger asChild>
