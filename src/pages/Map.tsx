@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { MapPin, Locate, MessageCircle, X, Shield, Filter, AlertTriangle, RefreshCw } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { MapPin, Locate, MessageCircle, X, Shield, Filter, AlertTriangle, RefreshCw, Building2 } from "lucide-react";
+import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from "@/components/ui/sheet";
@@ -880,6 +880,20 @@ export default function Map() {
               </TooltipContent>
             </Tooltip>
           </div>
+
+          {/* Button to Directory - Below filters */}
+          <Link to="/annuaire">
+            <Button 
+              variant="outline" 
+              className="w-full rounded-xl flex items-center gap-2 shadow-sm hover:shadow-md transition-all"
+              style={{
+                borderColor: 'hsl(var(--brand-violet-woof))',
+              }}
+            >
+              <Building2 className="h-4 w-4" />
+              <span className="text-sm font-medium">Voir l'annuaire complet</span>
+            </Button>
+          </Link>
         </div>
 
         {/* Geolocation Denied Warning - Compact */}
