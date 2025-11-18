@@ -168,9 +168,10 @@ export default function Annuaire() {
           />
         </div>
 
-        {/* Filtres chips horizontaux */}
-        <div className="overflow-x-auto pb-2 -mx-4 px-4 animate-fade-in" style={{ animationDelay: "200ms" }}>
-          <div className="flex gap-2 min-w-max">
+        {/* Boîte à filtres */}
+        <Card className="p-4 animate-fade-in" style={{ animationDelay: "200ms" }}>
+          <h3 className="text-sm font-semibold mb-3 text-foreground">Filtrer par catégorie</h3>
+          <div className="flex flex-wrap gap-2">
             {CATEGORIES.map((cat) => (
               <button
                 key={cat.value}
@@ -186,7 +187,7 @@ export default function Annuaire() {
               </button>
             ))}
           </div>
-        </div>
+        </Card>
 
         {/* Carte géolocalisation */}
         <Card className="p-4 animate-fade-in" style={{ animationDelay: "300ms" }}>
