@@ -3,7 +3,8 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { MapPin, Building2, Crown, Star, Search, ChevronRight } from "lucide-react";
+import { MapPin, Building2, Crown, Star, Search, ChevronRight, SlidersHorizontal } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import { usePremium } from "@/hooks/usePremium";
@@ -168,26 +169,45 @@ export default function Annuaire() {
           />
         </div>
 
-        {/* Boîte à filtres */}
-        <Card className="p-4 animate-fade-in" style={{ animationDelay: "200ms" }}>
-          <h3 className="text-sm font-semibold mb-3 text-foreground">Filtrer par catégorie</h3>
-          <div className="flex flex-wrap gap-2">
-            {CATEGORIES.map((cat) => (
-              <button
-                key={cat.value}
-                onClick={() => handleCategoryChange(cat.value)}
-                className={`
-                  px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all
-                  ${selectedCategory === cat.value 
-                    ? 'bg-primary text-primary-foreground shadow-sm' 
-                    : 'bg-muted text-muted-foreground hover:bg-muted/80'}
-                `}
-              >
-                {cat.label}
-              </button>
-            ))}
-          </div>
-        </Card>
+        {/* Bouton filtres */}
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button 
+              variant="outline" 
+              className="w-full justify-between animate-fade-in rounded-full" 
+              style={{ animationDelay: "200ms" }}
+            >
+              <span className="flex items-center gap-2">
+                <SlidersHorizontal className="h-4 w-4" />
+                Filtrer par catégorie
+              </span>
+              {selectedCategory && (
+                <span className="bg-primary text-primary-foreground px-2 py-0.5 rounded-full text-xs">
+                  {CATEGORIES.find(c => c.value === selectedCategory)?.label}
+                </span>
+              )}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-[calc(100vw-2rem)] max-w-md p-4">
+            <h3 className="text-sm font-semibold mb-3 text-foreground">Filtrer par catégorie</h3>
+            <div className="flex flex-wrap gap-2">
+              {CATEGORIES.map((cat) => (
+                <button
+                  key={cat.value}
+                  onClick={() => handleCategoryChange(cat.value)}
+                  className={`
+                    px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all
+                    ${selectedCategory === cat.value 
+                      ? 'bg-primary text-primary-foreground shadow-sm' 
+                      : 'bg-muted text-muted-foreground hover:bg-muted/80'}
+                  `}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+          </PopoverContent>
+        </Popover>
 
         {/* Carte géolocalisation */}
         <Card className="p-4 animate-fade-in" style={{ animationDelay: "300ms" }}>
