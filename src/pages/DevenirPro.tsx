@@ -127,7 +127,7 @@ export default function DevenirPro() {
                 </div>
               </div>
               <h1 className="text-3xl font-bold mb-4" style={{ fontFamily: "Fredoka" }}>
-                🎉 Tu es déjà inscrit comme Professionnel WHOOF
+                🎉 Tu es déjà inscrit comme Professionnel PAWTES
               </h1>
               <p className="text-lg text-muted-foreground mb-8">
                 Accède à ton espace Pro pour gérer ton profil et tes offres
@@ -170,7 +170,7 @@ export default function DevenirPro() {
             Devenir Pro
           </h1>
           <p className="text-lg text-muted-foreground">
-            Développe ton activité grâce à la communauté WHOOF
+            Développe ton activité grâce à la communauté PAWTES
           </p>
         </div>
 
@@ -196,7 +196,7 @@ export default function DevenirPro() {
               </div>
             </div>
             <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ fontFamily: "Fredoka" }}>
-              🏢 Rejoins les Pros WHOOF
+              🏢 Rejoins les Pros PAWTES
             </h2>
             <p className="text-xl text-muted-foreground mb-6">
               Plus de 10 000 propriétaires de chiens dans ta ville.
@@ -257,7 +257,7 @@ export default function DevenirPro() {
         <Card className="mb-12 rounded-3xl shadow-soft">
           <CardHeader>
             <CardTitle className="text-2xl" style={{ fontFamily: "Fredoka" }}>
-              Les Pros acceptés sur WHOOF
+              Les Pros acceptés sur PAWTES
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -328,7 +328,7 @@ export default function DevenirPro() {
               <Crown className="w-12 h-12" style={{ color: "var(--brand-yellow)" }} />
             </div>
             <h3 className="text-2xl font-bold mb-3" style={{ fontFamily: "Fredoka" }}>
-              👑 WHOOF Pro Plus
+              👑 PAWTES Pro Plus
             </h3>
             <p className="text-muted-foreground mb-6">
               Mises en avant + Statistiques + Badge "Pro Certifié" (Bientôt disponible)

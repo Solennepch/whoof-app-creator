@@ -18,7 +18,7 @@ interface ShareAchievementProps {
 export function ShareAchievement({ title, description, badge }: ShareAchievementProps) {
   const [copied, setCopied] = useState(false);
 
-  const shareText = `🎉 ${title}\n${description}\n${badge || ''}\n\n#WhoofApps #DogChallenge`;
+  const shareText = `🎉 ${title}\n${description}\n${badge || ''}\n\n#Pawtes #DogChallenge`;
   const shareUrl = window.location.origin;
 
   const handleCopy = async () => {

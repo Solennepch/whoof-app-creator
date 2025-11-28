@@ -186,7 +186,7 @@ export default function ProServices() {
           <div className="flex items-start gap-3">
             <Lightbulb className="h-5 w-5 text-primary mt-0.5" />
             <p className="text-sm">
-              <strong>Conseil:</strong> Les services clairs et illustrés attirent 2x plus de réservations sur Whoof.
+              <strong>Conseil:</strong> Les services clairs et illustrés attirent 2x plus de réservations sur Pawtes.
             </p>
           </div>
         </CardContent>

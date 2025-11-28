@@ -83,7 +83,7 @@ export default function ProOnboarding() {
             Devenir Partenaire Certifié
           </h1>
           <p className="text-muted-foreground">
-            Rejoignez le réseau de professionnels de confiance Whoof
+            Rejoignez le réseau de professionnels de confiance Pawtes
           </p>
         </div>
 

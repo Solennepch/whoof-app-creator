@@ -56,7 +56,7 @@ export const useAppStore = create<AppState>()(
       setDiscoveryMode: (mode) => set({ discoveryMode: mode }),
     }),
     {
-      name: 'whoof-app-storage',
+      name: 'pawtes-app-storage',
       storage: createJSONStorage(() => localStorage),
     }
   )

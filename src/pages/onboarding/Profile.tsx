@@ -161,7 +161,7 @@ function ProfileOnboardingContent() {
             </h1>
             
             <p className="text-muted-foreground">
-              Commence par te présenter à la communauté Whoof
+              Commence par te présenter à la communauté Pawtes
             </p>
           </div>
 

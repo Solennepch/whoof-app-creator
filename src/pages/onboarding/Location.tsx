@@ -44,7 +44,7 @@ export default function Location() {
   const handleFinish = () => {
     // Mark onboarding as complete
     localStorage.setItem("onboardingCompleted", "true");
-    toast.success("Bienvenue sur Whoof ! 🎉");
+    toast.success("Bienvenue sur Pawtes ! 🎉");
     navigate("/discover");
   };
 

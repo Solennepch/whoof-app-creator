@@ -1,7 +1,7 @@
 export const TUTORIALS = {
   welcome: {
     id: 'welcome',
-    name: 'Bienvenue sur Whoof Apps',
+    name: 'Bienvenue sur Pawtes',
     steps: [
       {
         id: 'intro',
@@ -63,7 +63,7 @@ export const TUTORIALS = {
       {
         id: 'intro',
         title: 'Comprendre la gamification',
-        description: 'Whoof Apps utilise des éléments de jeu pour rendre votre expérience plus engageante et amusante.',
+        description: 'Pawtes utilise des éléments de jeu pour rendre votre expérience plus engageante et amusante.',
         showFor: ['moderate', 'complete'] as ('minimal' | 'moderate' | 'complete')[],
       },
       {

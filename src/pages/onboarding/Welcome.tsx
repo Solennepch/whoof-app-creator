@@ -17,7 +17,7 @@ export default function Welcome() {
         <div className="text-center mb-8">
           <motion.img
             src={logoWhoof}
-            alt="Whoof Logo"
+            alt="Pawtes Logo"
             className="h-24 w-24 mx-auto mb-6"
             animate={{ rotate: [0, 10, -10, 0] }}
             transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
@@ -25,7 +25,7 @@ export default function Welcome() {
           <h1 className="text-4xl font-bold mb-2">
             Bienvenue sur{" "}
             <span className="bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent">
-              Whoof
+              Pawtes
             </span>
           </h1>
           <p className="text-muted-foreground">

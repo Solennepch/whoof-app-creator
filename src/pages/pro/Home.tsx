@@ -226,7 +226,7 @@ export default function ProHome() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <HelpCircle className="h-5 w-5" />
-              Support Whoof
+              Support Pawtes
             </CardTitle>
             <CardDescription>
               Besoin d'aide ? Contactez notre équipe

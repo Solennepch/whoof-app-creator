@@ -27,7 +27,7 @@ export function PremiumDialog({ open, onOpenChange }: PremiumDialogProps) {
             <Crown className="w-8 h-8 text-white" />
           </div>
           <DialogTitle className="text-2xl font-bold text-center text-gradient">
-            Passe à Whoof Premium
+            Passe à Pawtes Premium
           </DialogTitle>
           <DialogDescription className="text-center text-base mt-2">
             Débloque toutes les fonctionnalités pour trouver le match parfait !

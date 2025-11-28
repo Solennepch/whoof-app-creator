@@ -94,7 +94,7 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
       navigate('/home');
     }
 
-    toast.success(`Vous utilisez Whoof en tant que ${account.name}`);
+    toast.success(`Vous utilisez Pawtes en tant que ${account.name}`);
   };
 
   useEffect(() => {

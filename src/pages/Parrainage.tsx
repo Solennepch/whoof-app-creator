@@ -5,8 +5,8 @@ import { Copy, Gift, Users, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 
 export default function Parrainage() {
-  const referralCode = "WHOOF-AB12";
-  const referralLink = `https://app.whoof.io/i/${referralCode}`;
+  const referralCode = "PAWTES-AB12";
+  const referralLink = `https://app.pawtes.io/i/${referralCode}`;
   const [filleuls] = useState([
     { name: "Sophie M.", date: "15 Jan 2025", xp: 200 },
     { name: "Thomas B.", date: "8 Jan 2025", xp: 200 }
@@ -16,8 +16,8 @@ export default function Parrainage() {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: "Rejoins-moi sur Whoof !",
-          text: `Utilise mon code ${referralCode} pour rejoindre Whoof et gagner des récompenses !`,
+          title: "Rejoins-moi sur Pawtes !",
+          text: `Utilise mon code ${referralCode} pour rejoindre Pawtes et gagner des récompenses !`,
           url: referralLink
         });
         // Track analytics

@@ -54,7 +54,7 @@ export const useReactivationNotifications = () => {
     });
   };
 
-  // Notifier d'un Whoof en attente
+  // Notifier d'un like en attente
   const notifyPendingWhoof = async (daysPending: number) => {
     if (!user) return;
 

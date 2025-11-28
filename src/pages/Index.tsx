@@ -25,7 +25,7 @@ const Index = () => {
         <div className="text-center">
           <img 
             src={logoWhoof} 
-            alt="Whoof Logo" 
+            alt="Pawtes Logo"
             className="h-24 w-24 sm:h-32 sm:w-32 mx-auto mb-4 animate-pulse"
           />
           <p className="text-muted-foreground">Chargement...</p>
@@ -47,14 +47,14 @@ const Index = () => {
             <div className="mb-6 inline-flex">
               <img 
                 src={logoWhoof} 
-                alt="Whoof Logo" 
+                alt="Pawtes Logo"
                 className="h-24 w-24 sm:h-32 sm:w-32"
               />
             </div>
             <h1 className="mb-4 text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
               Bienvenue sur{" "}
               <span className="bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent">
-                Whoof Apps
+                Pawtes
               </span>
             </h1>
             <p className="mb-12 text-lg text-muted-foreground max-w-md mx-auto">
