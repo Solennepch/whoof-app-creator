@@ -145,11 +145,11 @@ function ProfileMeContent() {
             className="text-2xl font-bold mb-4" 
             style={{ fontFamily: "Fredoka", color: "var(--ink)" }}
           >
-            Bienvenue sur Whoof !
+            Bienvenue sur Pawtes !
           </h2>
           
           <p className="text-muted-foreground mb-6">
-            Crée ton profil et celui de ton chien pour démarrer l'aventure avec la communauté Whoof.
+            Crée ton profil et celui de ton chien pour démarrer l'aventure avec la communauté Pawtes.
           </p>
 
           <div className="flex flex-col gap-3">
@@ -192,11 +192,11 @@ function ProfileMeContent() {
             </Alert>
           )}
 
-          {/* Logo Whoof with scale-in animation */}
+          {/* Logo Pawtes with scale-in animation */}
           <div className="mb-8 animate-scale-in">
             <img 
               src={logoWhoof} 
-              alt="Whoof Logo" 
+              alt="Pawtes Logo" 
               className="w-32 h-32 mx-auto"
             />
           </div>

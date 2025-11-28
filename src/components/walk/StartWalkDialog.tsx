@@ -244,8 +244,8 @@ export function StartWalkDialog({
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label htmlFor="notify-nearby" className="text-base">
-                      Notifier les Whoofers à proximité
+                  <Label htmlFor="notify-nearby" className="text-base">
+                      Notifier les Pawters à proximité
                     </Label>
                     <p className="text-sm text-muted-foreground">
                       Apparaître dans le bloc "chiens à proximité" des autres utilisateurs

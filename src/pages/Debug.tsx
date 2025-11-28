@@ -75,7 +75,7 @@ export default function Debug() {
             <h1 className="text-4xl font-bold">Debug Tools</h1>
           </div>
           <p className="text-muted-foreground text-lg">
-            Outils de développement et de débogage pour Whoof Apps
+            Outils de développement et de débogage pour Pawtes
           </p>
         </div>
 
@@ -189,7 +189,7 @@ export default function Debug() {
                 <strong>Comptes de Test :</strong> Génère automatiquement des comptes admin, modérateur et utilisateurs standard
               </p>
               <p>
-                <strong>Pour accéder à l'admin :</strong> Créez les comptes de test puis connectez-vous avec <code className="bg-blue-100 px-2 py-1 rounded">test.admin@whoof.app</code>
+                <strong>Pour accéder à l'admin :</strong> Créez les comptes de test puis connectez-vous avec <code className="bg-blue-100 px-2 py-1 rounded">test.admin@pawtes.app</code>
               </p>
             </div>
           </CardContent>

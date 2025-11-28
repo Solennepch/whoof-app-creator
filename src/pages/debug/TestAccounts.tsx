@@ -17,42 +17,42 @@ interface TestAccount {
 
 const TEST_ACCOUNTS: TestAccount[] = [
   {
-    email: "dev@whoof.app",
+    email: "dev@pawtes.app",
     password: "DevMaster2025!",
     displayName: "👑 Dev Master (Particulier + Pro)",
     role: "user",
     isPro: true
   },
   {
-    email: "premium.user@whoof.app",
+    email: "premium.user@pawtes.app",
     password: "PremiumUser2025!",
     displayName: "⭐ Emma Martin (Premium User)",
     role: "user",
     isPro: false
   },
   {
-    email: "premium.pro@whoof.app",
+    email: "premium.pro@pawtes.app",
     password: "PremiumPro2025!",
     displayName: "💼 Dr. Sophie Bernard (Pro Premium)",
     role: "user",
     isPro: true
   },
   {
-    email: "test@whoof.app",
+    email: "test@pawtes.app",
     password: "Test123!",
     displayName: "Solenne Pichon (Perso + Pro)",
     role: "user",
     isPro: true
   },
   {
-    email: "test.user@whoof.app",
+    email: "test.user@pawtes.app",
     password: "TestUser123!",
     displayName: "Anthony Groubé (Particulier)",
     role: "user",
     isPro: false
   },
   {
-    email: "test.pro@whoof.app",
+    email: "test.pro@pawtes.app",
     password: "TestPro123!",
     displayName: "Rodolphe Pichon (Pro)",
     role: "user",
@@ -100,7 +100,7 @@ export default function TestAccounts() {
 
       if (error) throw error;
 
-      toast.success("👑 Compte DEV créé avec tous les accès ! Email: dev@whoof.app");
+      toast.success("👑 Compte DEV créé avec tous les accès ! Email: dev@pawtes.app");
     } catch (error: any) {
       console.error('Error creating dev account:', error);
       toast.error(error.message || "Erreur lors de la création du compte dev");
@@ -134,7 +134,7 @@ export default function TestAccounts() {
 
       if (error) throw error;
 
-      toast.success("✨ Comptes Premium créés !\n⭐ Emma Martin - premium.user@whoof.app\n💼 Dr. Sophie Bernard - premium.pro@whoof.app");
+      toast.success("✨ Comptes Premium créés !\n⭐ Emma Martin - premium.user@pawtes.app\n💼 Dr. Sophie Bernard - premium.pro@pawtes.app");
     } catch (error: any) {
       console.error('Error creating premium accounts:', error);
       toast.error(error.message || "Erreur lors de la création des comptes premium");
@@ -256,12 +256,12 @@ export default function TestAccounts() {
 
       <div className="grid gap-4">
         {TEST_ACCOUNTS.map((account) => (
-          <Card key={account.email} className={account.email === 'dev@whoof.app' ? 'border-2 border-purple-500 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-950/20 dark:to-pink-950/20' : ''}>
+          <Card key={account.email} className={account.email === 'dev@pawtes.app' ? 'border-2 border-purple-500 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-950/20 dark:to-pink-950/20' : ''}>
             <CardHeader>
               <div className="flex items-start justify-between">
                 <div>
                   <CardTitle className="flex items-center gap-2">
-                    {account.email === 'dev@whoof.app' && <Shield className="h-5 w-5 text-purple-500" />}
+                    {account.email === 'dev@pawtes.app' && <Shield className="h-5 w-5 text-purple-500" />}
                     {account.isPro && <Briefcase className="h-5 w-5 text-primary" />}
                     {!account.isPro && <User className="h-5 w-5 text-muted-foreground" />}
                     {account.displayName}
@@ -269,11 +269,11 @@ export default function TestAccounts() {
                   <CardDescription className="mt-1">{account.email}</CardDescription>
                 </div>
                 <div className="flex gap-2 flex-wrap">
-                  {account.email === 'dev@whoof.app' && <Badge className="bg-gradient-to-r from-purple-600 to-pink-600">👑 DEV</Badge>}
-                  {account.email === 'premium.user@whoof.app' && <Badge className="bg-gradient-to-r from-yellow-500 to-orange-600">⭐ Premium</Badge>}
-                  {account.email === 'premium.pro@whoof.app' && <Badge className="bg-gradient-to-r from-yellow-500 to-orange-600">💼 Pro Premium</Badge>}
-                  {account.isPro && account.email !== 'premium.pro@whoof.app' && account.email !== 'dev@whoof.app' && <Badge variant="secondary">Pro</Badge>}
-                  {!account.isPro && account.email !== 'premium.user@whoof.app' && <Badge variant="outline">Particulier</Badge>}
+                  {account.email === 'dev@pawtes.app' && <Badge className="bg-gradient-to-r from-purple-600 to-pink-600">👑 DEV</Badge>}
+                  {account.email === 'premium.user@pawtes.app' && <Badge className="bg-gradient-to-r from-yellow-500 to-orange-600">⭐ Premium</Badge>}
+                  {account.email === 'premium.pro@pawtes.app' && <Badge className="bg-gradient-to-r from-yellow-500 to-orange-600">💼 Pro Premium</Badge>}
+                  {account.isPro && account.email !== 'premium.pro@pawtes.app' && account.email !== 'dev@pawtes.app' && <Badge variant="secondary">Pro</Badge>}
+                  {!account.isPro && account.email !== 'premium.user@pawtes.app' && <Badge variant="outline">Particulier</Badge>}
                 </div>
               </div>
             </CardHeader>

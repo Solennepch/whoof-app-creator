@@ -33,10 +33,10 @@ export function Header() {
               </Button>
             </div>
             
-            {/* Centre: Whoof Apps + badges */}
+            {/* Centre: Pawtes + badges */}
             <div className="flex items-center justify-center gap-2 whitespace-nowrap">
               <span className="text-xl font-bold text-foreground whitespace-nowrap">
-                Whoof Apps
+                Pawtes
               </span>
               {isProRoute && (
                 <Badge 
@@ -60,7 +60,7 @@ export function Header() {
               )}
               <img 
                 src={logoWhoof} 
-                alt="Whoof Apps Logo" 
+                alt="Pawtes Logo" 
                 className="h-10 w-10"
               />
             </div>

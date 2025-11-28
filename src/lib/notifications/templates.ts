@@ -23,8 +23,8 @@ export const NOTIFICATION_TEMPLATES: NotificationTemplate[] = [
   {
     id: 'match_whoofed',
     category: 'matching',
-    title: 'Nouveau Whoof',
-    message: 'Quelqu\'un vient de Whoofer ton profil 👀🐾',
+    title: 'Nouveau Like',
+    message: 'Quelqu\'un vient de liker ton profil 👀🐾',
     priority: 'high',
   },
   {
@@ -72,8 +72,8 @@ export const NOTIFICATION_TEMPLATES: NotificationTemplate[] = [
   {
     id: 'match_waiting',
     category: 'matching',
-    title: 'Whoof en attente',
-    message: 'Tu as un Whoof en attente, va jeter un œil 👀',
+    title: 'Like en attente',
+    message: 'Tu as un like en attente, va jeter un œil 👀',
     priority: 'medium',
   },
   {
@@ -151,7 +151,7 @@ export const NOTIFICATION_TEMPLATES: NotificationTemplate[] = [
     id: 'walk_neighborhood_active',
     category: 'walks',
     title: 'Quartier animé',
-    message: 'Il y a du monde dans ton quartier, c\'est l\'heure Whoof ! 🐾',
+    message: 'Il y a du monde dans ton quartier, c\'est l\'heure Pawtes ! 🐾',
     priority: 'medium',
     timing: { minHour: 8, maxHour: 20 },
   },
@@ -206,7 +206,7 @@ export const NOTIFICATION_TEMPLATES: NotificationTemplate[] = [
     id: 'game_streak_fire',
     category: 'gamification',
     title: 'Série impressionnante',
-    message: 'Ton streak Whoof est impressionnant 🔥',
+    message: 'Ta série Pawtes est impressionnante 🔥',
     priority: 'low',
   },
   {
@@ -278,8 +278,8 @@ export const NOTIFICATION_TEMPLATES: NotificationTemplate[] = [
   {
     id: 'reactive_pending_whoof',
     category: 'reactivation',
-    title: 'Whoof en attente',
-    message: 'Un Whoof en attente depuis 5 jours… tu le laisses mariner ? 😏',
+    title: 'Like en attente',
+    message: 'Un like en attente depuis 5 jours… tu le laisses mariner ? 😏',
     priority: 'high',
   },
   {

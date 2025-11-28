@@ -77,7 +77,7 @@ export default function Partenariats() {
           <div className="text-center">
             <p className="text-muted-foreground mb-4">Aucune offre disponible pour le moment</p>
             <p className="text-sm text-muted-foreground">
-              Les partenaires Whoof ajouteront bientôt des offres exclusives !
+              Les partenaires Pawtes ajouteront bientôt des offres exclusives !
             </p>
           </div>
         ) : (

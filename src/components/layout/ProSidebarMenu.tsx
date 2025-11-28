@@ -107,7 +107,7 @@ export function ProSidebarMenu({ open, onOpenChange }: ProSidebarMenuProps) {
         <SheetHeader>
           <SheetTitle className="flex items-center gap-2">
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#7B61FF] to-[#FF5DA2]">
-              Whoof Apps
+              Pawtes
             </span>
             <Badge 
               className="text-white font-bold"

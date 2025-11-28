@@ -18,7 +18,7 @@ export default function ProPartners() {
           Offres partenaires
         </h1>
         <p className="text-muted-foreground">
-          Bénéficiez d'avantages exclusifs réservés aux professionnels Whoof
+          Bénéficiez d'avantages exclusifs réservés aux professionnels Pawtes
         </p>
         </div>
       </div>
@@ -33,7 +33,7 @@ export default function ProPartners() {
             badge: "Nouveau"
           },
           { 
-            company: "Whoof Pro+", 
+            company: "Pawtes Pro+", 
             offer: "Formation 'Bien-être animal' gratuite",
             description: "Formation en ligne de 3h avec certificat",
             badge: "Populaire"
@@ -78,7 +78,7 @@ export default function ProPartners() {
           </div>
           <CardTitle>Devenez Partenaire Premium</CardTitle>
           <CardDescription>
-            Bénéficiez d'une visibilité maximale dans l'annuaire Whoof Apps
+            Bénéficiez d'une visibilité maximale dans l'annuaire Pawtes
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -106,7 +106,7 @@ export default function ProPartners() {
               <div>
                 <p className="font-medium">Campagnes promotionnelles</p>
                 <p className="text-sm text-muted-foreground">
-                  Créez des codes promo exclusifs pour les utilisateurs Whoof
+                  Créez des codes promo exclusifs pour les utilisateurs Pawtes
                 </p>
               </div>
             </div>

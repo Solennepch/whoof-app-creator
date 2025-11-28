@@ -25,7 +25,7 @@ export default function PremiumPricing() {
       // Call the edge function to create checkout session
       const { data, error } = await supabase.functions.invoke('stripe-create-checkout-session', {
         body: {
-          lookupKey: 'whoof_premium_monthly',
+          lookupKey: 'pawtes_premium_monthly',
           priceId: 'price_1SMZuHDL0qnGuzb7rPxyAqZq',
           type: 'user',
           successUrl: `${window.location.origin}/profile/me?success=true`,
@@ -60,10 +60,10 @@ export default function PremiumPricing() {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-5xl font-bold mb-4 text-foreground">
-            Whoof Premium
+            Pawtes Premium
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Débloquez toutes les fonctionnalités premium pour une expérience Whoof optimale
+            Débloquez toutes les fonctionnalités premium pour une expérience Pawtes optimale
           </p>
         </div>
 
@@ -91,7 +91,7 @@ export default function PremiumPricing() {
 
             {/* Plan Name */}
             <h3 className="text-2xl font-bold text-center mb-2" style={{ fontFamily: "Fredoka" }}>
-              Whoof Premium
+              Pawtes Premium
             </h3>
 
             {/* Price */}

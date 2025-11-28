@@ -64,7 +64,7 @@ function LikesHistoryContent() {
                 <Crown className="h-6 w-6 text-white" />
               </div>
               <div className="flex-1">
-                <p className="text-sm font-semibold text-amber-900">WHOOF Premium</p>
+                <p className="text-sm font-semibold text-amber-900">PAWTES Premium</p>
                 <p className="text-xs text-amber-700">
                   Accède à tous tes likes, même les plus anciens.
                 </p>

@@ -28,7 +28,7 @@ export default function NotFound() {
         <div className="mb-8 inline-flex">
           <img 
             src={logoWhoof} 
-            alt="Whoof Logo" 
+            alt="Pawtes Logo" 
             className="h-24 w-24 sm:h-32 sm:w-32 opacity-50"
           />
         </div>

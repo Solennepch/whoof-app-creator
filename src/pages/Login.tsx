@@ -66,7 +66,7 @@ export default function Login() {
         <div className="text-center mb-6">
           <h1 className="text-3xl font-bold text-foreground">Connexion</h1>
           <p className="text-muted-foreground mt-2">
-            Bienvenue sur Whoof
+            Bienvenue sur Pawtes
           </p>
         </div>
 

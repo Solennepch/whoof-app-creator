@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "./useAuth";
 
 const DEV_PREMIUM_OVERRIDE_KEY = 'dev_premium_override';
-const DEV_EMAIL = 'dev@whoof.app';
+const DEV_EMAIL = 'dev@pawtes.app';
 
 export function useDevTools() {
   const { user } = useAuth();

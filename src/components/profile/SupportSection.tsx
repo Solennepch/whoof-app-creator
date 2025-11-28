@@ -17,7 +17,7 @@ export const SupportSection = memo(function SupportSection({ onClick }: SupportS
           <Heart className="w-6 h-6" />
           <div>
             <p className="font-bold">Nous soutenir</p>
-            <p className="text-xs opacity-90">Soutenez le développement de Whoof</p>
+            <p className="text-xs opacity-90">Soutenez le développement de Pawtes</p>
           </div>
         </div>
         <ChevronRight className="w-5 h-5" />

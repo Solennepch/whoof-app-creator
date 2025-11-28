@@ -32,7 +32,7 @@ export async function generateInvoicePDF(data: InvoiceData): Promise<Blob> {
       // For now, we'll just add a placeholder
       doc.setFontSize(24);
       doc.setTextColor(...primaryColor);
-      doc.text('WHOOF APPS', 20, yPos);
+      doc.text('PAWTES', 20, yPos);
     } catch (error) {
       console.error('Error loading logo:', error);
     }
@@ -132,8 +132,8 @@ export async function generateInvoicePDF(data: InvoiceData): Promise<Blob> {
   yPos = 270;
   doc.setFontSize(8);
   doc.setTextColor(150, 150, 150);
-  doc.text('Whoof Apps - Plateforme de services canins', 105, yPos, { align: 'center' });
-  doc.text('contact@whoof.app - www.whoof.app', 105, yPos + 5, { align: 'center' });
+  doc.text('Pawtes - Plateforme de services canins', 105, yPos, { align: 'center' });
+  doc.text('contact@pawtes.app - www.pawtes.app', 105, yPos + 5, { align: 'center' });
   
   return doc.output('blob');
 }

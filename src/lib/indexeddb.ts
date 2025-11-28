@@ -5,7 +5,7 @@
  * This is the first level in the multi-tier caching strategy.
  */
 
-const DB_NAME = 'whoof-cache';
+const DB_NAME = 'pawtes-cache';
 const STORE_NAME = 'cache-store';
 const DB_VERSION = 1;
 

@@ -172,7 +172,7 @@ export default function ProPayments() {
           <div className="flex items-start gap-3">
             <span className="text-xl">🔒</span>
             <p className="text-sm">
-              Whoof utilise Stripe pour garantir la sécurité de vos paiements.
+              Pawtes utilise Stripe pour garantir la sécurité de vos paiements.
             </p>
           </div>
         </CardContent>

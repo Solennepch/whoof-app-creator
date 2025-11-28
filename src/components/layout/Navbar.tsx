@@ -47,7 +47,7 @@ export function Navbar() {
                   <Dog className="h-5 w-5 text-white" />
                 </div>
                 <span className="text-xl font-bold" style={{ color: "var(--ink)" }}>
-                  Whoof
+                  Pawtes
                 </span>
               </div>
             </div>

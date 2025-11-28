@@ -63,7 +63,7 @@ export default function Messages() {
           <p className="text-sm text-muted-foreground">
             {threads?.length === 0 
               ? "Discute avec les duos que tu rencontres 🌟" 
-              : `Toutes tes discussions avec les duos WHOOF`
+              : `Toutes tes discussions avec les duos PAWTES`
             }
           </p>
         </div>

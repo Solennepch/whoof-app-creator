@@ -101,7 +101,7 @@ export default function Balades() {
           <CardContent className="p-6 flex items-center justify-between">
             <div className="flex-1">
               <h3 className="font-semibold">Melting Pawtes</h3>
-              <p className="text-sm text-muted-foreground">Planifie ta promenade et propose aux Whoofers de te rejoindre</p>
+              <p className="text-sm text-muted-foreground">Planifie ta promenade et propose aux Pawters de te rejoindre</p>
             </div>
             <Dialog>
               <DialogTrigger asChild>
@@ -315,7 +315,7 @@ export default function Balades() {
             {!friendsWalksLoading && friendsWalks && friendsWalks.length === 0 && (
               <div className="mb-4 rounded-2xl border border-dashed border-blue-200 bg-blue-50 px-4 py-3 text-xs text-blue-900">
                 Aucun ami en balade pour le moment.  
-                Invite tes amis à rejoindre Whoof pour suivre leurs balades 🤝
+                Invite tes amis à rejoindre Pawtes pour suivre leurs balades 🤝
               </div>
             )}
             

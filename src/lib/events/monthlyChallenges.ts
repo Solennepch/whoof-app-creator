@@ -38,8 +38,8 @@ export const MONTHLY_CHALLENGES: MonthlyChallenge[] = [
     badge: '💘',
     notificationMessages: [
       'C\'est la saison de l\'amour… et ton chien le sent 😏❤️',
-      'Premier Whoof envoyé ! Continue de flairer 👃',
-      '5 Whoofs déjà ! Ton chien est populaire 🌟',
+      'Premier like envoyé ! Continue de flairer 👃',
+      '5 likes déjà ! Ton chien est populaire 🌟',
       'Encore 3 rencontres pour devenir Dog Lover ! 💕',
     ],
   },
