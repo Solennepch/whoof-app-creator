@@ -1,4 +1,4 @@
-import { Forward, Twitter, Facebook, MessageCircle, Copy, Check } from "lucide-react";
+import { Share2, Twitter, Facebook, MessageCircle, Copy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -65,14 +65,14 @@ export function ShareAchievement({ title, description, badge }: ShareAchievement
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="sm" className="gap-2">
-          <Forward className="h-4 w-4" />
+          <Share2 className="h-4 w-4" />
           Partager
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">
         {navigator.share && (
           <DropdownMenuItem onClick={handleNativeShare}>
-            <Forward className="h-4 w-4 mr-2" />
+            <Share2 className="h-4 w-4 mr-2" />
             Partager...
           </DropdownMenuItem>
         )}
